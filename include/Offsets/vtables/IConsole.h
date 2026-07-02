@@ -49,13 +49,16 @@ struct IConsole {
     virtual ICVar* RegisterFloat(const char* name, float value, int flags,
                                  const char* help = "", ConsoleVarFunc cb = nullptr) = 0;                // [5]  0x180e3e59c  new CXConsoleVariableFloat    VERIFIED
     virtual ICVar* RegisterVariable(ICVar* pVar) = 0;                                                    // [6]  0x18247ee58  inserts an already-built ICVar (Warhorse extra)  /* tentative */
-    virtual ICVar* Register(const char* name, const char** src, const char* defaultValue,
+    // Ref-binding registers. DISTINCT names (not overloads of Register) on purpose: MSVC
+    // reverses adjacent same-name virtual overloads in the vtable, which would swap the
+    // [7]/[9] slots vs the binary. Distinct names keep declaration order == slot order.
+    virtual ICVar* RegisterCVarStr(const char* name, const char** src, const char* defaultValue,
                             int flags = 0, const char* help = "", ConsoleVarFunc cb = nullptr,
                             bool allowModify = true) = 0;                                                 // [7]  0x180600178  CXConsoleVariableStringRef    VERIFIED
-    virtual ICVar* Register(const char* name, int* src, int defaultValue,
+    virtual ICVar* RegisterCVarInt(const char* name, int* src, int defaultValue,
                             int flags = 0, const char* help = "", ConsoleVarFunc cb = nullptr,
                             bool allowModify = true) = 0;                                                 // [8]  0x180b94300  CXConsoleVariableIntRef       VERIFIED
-    virtual ICVar* Register(const char* name, float* src, float defaultValue,
+    virtual ICVar* RegisterCVarFloat(const char* name, float* src, float defaultValue,
                             int flags = 0, const char* help = "", ConsoleVarFunc cb = nullptr,
                             bool allowModify = true) = 0;                                                 // [9]  0x180b94208  CXConsoleVariableFloatRef     VERIFIED
     virtual void   UnregisterVariable(const char* name, bool bDelete = false) = 0;                       // [10] 0x18158fc44  erase from registry@0xC0     VERIFIED

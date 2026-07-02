@@ -18,9 +18,9 @@ typedef unsigned int EntityId;
 // re-aligning by [17]). The subsystem *offsets* drifted +0x08..+0x10 from KCD1.
 // Slots [30]+ are partially reshuffled (e.g. GetIGameStatistics moved to [142]);
 // names there marked "tentative" are inferred from the accessor's target offset and
-// KCD1 semantics -- decompile before a plugin relies on them.
+// KCD1 semantics -- decompile before relying on them.
 //
-// Confirmed CCryAction member offsets (from accessor disasm; see CryCommon/IGameFramework.h):
+// Confirmed CCryAction member offsets (from accessor disasm; see crysystem/CCryAction.h):
 //   +0x048 ISystem*            +0x510 CLevelSystem        +0x518 CActorSystem
 //   +0x520 CItemSystem         +0x530 CActionMapManager   +0x538 CViewSystem
 //   +0x558 CGameObjectSystem   +0x560 CUIDraw             +0x578 CMannequinInterface
@@ -35,6 +35,20 @@ struct SActionEvent {
     int         m_event;        // +0x00  event type (EActionEvent)
     int         m_value;        // +0x04  context-dependent (e.g. ESaveGameReason)
     const char* m_description;  // +0x08  optional string (e.g. checkpoint name)
+
+    // EActionEvent ordinals broadcast via the OnActionEvent slot-120 broadcaster
+    // (sub_180668D48). The stock CryAction save/load events (0xA-0xD) are UNCHANGED from
+    // KCD1, emitted by CCryAction::SaveGame (sub_183582A68) / LoadGame (sub_18357594C)
+    // around (de)serialization. 0xE is a separate Warhorse event, broadcast by
+    // C_SaveGameManager::PostLoadGame (sub_1825BDA54) after the whole load pipeline
+    // finishes (name INFERRED; sits where stock eAE_inGame would).
+    enum : int {
+        eAE_PreSave  = 0xA,   // CCryAction::SaveGame, before serialize
+        eAE_PostSave = 0xB,   // CCryAction::SaveGame, after serialize (m_description = checkpoint name)
+        eAE_PreLoad  = 0xC,   // CCryAction::LoadGame, before deserialize
+        eAE_PostLoad = 0xD,   // CCryAction::LoadGame, after deserialize
+        eAE_InGame   = 0xE,   // WH C_SaveGameManager::PostLoadGame, load pipeline done (INFERRED)
+    };
 };
 
 namespace Offsets {
@@ -163,10 +177,12 @@ struct IGameFramework {
     virtual void _vf117() = 0;                                     // [117] 0x3A8 42 bytes
     virtual void _vf118() = 0;                                     // [118] 0x3B0 121 bytes
     virtual void _vf119() = 0;                                     // [119] 0x3B8 199 bytes
-    virtual void _vf120() = 0;                                     // [120] 0x3C0 500 bytes
+    virtual void OnActionEvent(SActionEvent* a_event) = 0;         // [120] 0x3C0 sub_180668D48
+                                                                   //       broadcaster: loops listener
+                                                                   //       list @+0x758, calls each +0x28  VERIFIED
     virtual void _vf121() = 0;                                     // [121] 0x3C8 uses ItemSystem@+0x520
     virtual void _vf122() = 0;                                     // [122] 0x3D0 uses +0x88
-    virtual void _vf123() = 0;                                     // [123] 0x3D8 100 bytes  (KCD1 OnActionEvent-adjacent)
+    virtual void _vf123() = 0;                                     // [123] 0x3D8 100 bytes  sub_183576D00 (game-context forwarder; NOT OnActionEvent -- that is slot 120)
     virtual void _vf124() = 0;                                     // [124] 0x3E0 41 bytes
     virtual void _vf125() = 0;                                     // [125] 0x3E8 71 bytes
     virtual void _vf126() = 0;                                     // [126] 0x3F0 105 bytes

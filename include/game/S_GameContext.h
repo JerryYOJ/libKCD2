@@ -13,8 +13,8 @@
 //
 // [MODERATE vs KCD1] sizeof 0x170 -> 0x1F0; module block relocated/reordered and
 // gained C_MusicModule (+0x108) and C_ConceptModule (+0x120).
-// [MODERATE vs KCD1] m_pPlayerModule +0xE8 -> +0x128 (AutoSave / FastTravelTweaks).
-// [MODERATE vs KCD1] m_pActorSystem  +0x128 -> +0x180 (CombatAssist); GetActor slot unchanged.
+// [MODERATE vs KCD1] m_pPlayerModule +0xE8 -> +0x128.
+// [MODERATE vs KCD1] m_pActorSystem  +0x128 -> +0x180; GetActor slot unchanged.
 // [MODERATE vs KCD1] singleton global qword_1834FFD10 -> qword_18549D388.
 //
 // Verified members are named; unpinned module slots (+0xF0/+0x118/+0x140/+0x148/

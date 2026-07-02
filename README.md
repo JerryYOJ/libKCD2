@@ -1,45 +1,71 @@
 # `libKCD2`
+[![C++17](https://img.shields.io/static/v1?label=standard&message=C%2B%2B17&color=blue&logo=c%2B%2B&&logoColor=white&style=flat)](https://en.cppreference.com/w/cpp/compiler_support)
+[![Platform](https://img.shields.io/static/v1?label=platform&message=windows&color=dimgray&style=flat)](#)
 
-Reverse-engineered headers and runtime library for **Kingdom Come: Deliverance 2**
-(Warhorse-evolved CryEngine 3 fork). Sibling to [`libKCD1`](../../KCD1/RE), sharing the
-same SKSE-style architecture: a `REL::ID` abstract-address library, a KASL address
-database, `kcd_cast` RTTI, and the KCSE `dinput8.dll` proxy loader.
+Reverse-engineered headers and runtime library for **Kingdom Come: Deliverance 2** (CryEngine 3 + Warhorse modules). Includes **KCSE** (Kingdom Come Script Extender) — an SKSE-style native plugin framework.
 
-> Status: **foundation stage.** The KCD2 engine is a re-target of libKCD1, not a rewrite
-> (~75% of RE'd class names survive by exact `Class@module` match), but every concrete
-> offset / vtable slot / size must be re-measured against the KCD2 binary. See
-> [../MIGRATION_ASSESSMENT.md](../MIGRATION_ASSESSMENT.md) for the full plan.
+> This is a hobby project. Not every RE'd member is guaranteed correct — verify before use. Contributions welcome.
 
-## Target build
+## Build Dependencies
 
-| | |
-|---|---|
-| Game version | **1.5.6** (branch `release_1_5`, assembly `15693`) |
-| `WHGame.dll` md5 | `170a55fe1ef804b4a9ac6fbf9f6843e5` |
-| Image base | `0x180000000`, ~95 MB, 360,206 functions |
-| Binary dir | `Bin\Win64MasterMasterSteamPGO` (Steam) — exe + WHGame.dll |
-| Renderer | DX12 (+ D3D11 fallback), DLSS / FSR2 |
-| Anti-tamper | none on the DLL (imports: ntdll, BugSplat64, WS2_32) |
+- [spdlog](https://github.com/gabime/spdlog)
+- [Visual Studio 2022+](https://visualstudio.microsoft.com/)
+  - Desktop development with C++
+- [CMake 3.15+](https://cmake.org/)
+- [vcpkg](https://github.com/microsoft/vcpkg)
 
-## What is ported so far
+## End User Dependencies
 
-- **`REL/` runtime** — `ID`, `Offset`, `Relocation`, `IDDatabase` (KASL loader),
-  `BranchTrampoline` copied verbatim from libKCD1 (version-agnostic).
-- **`REL::Module`** — adapted for KCD2: `build_code()` reads `whdlversions.json`
-  (`<Branch.Name>-<Assembly.Id>`, e.g. `release_1_5-15693`) instead of the KCD1
-  `whdlversions.txt`; `release()` still reads `system.cfg` `wh_sys_version`;
-  `resolve_game_root()` and `detect_distribution()` are unchanged (strip-depth 3 still
-  lands on the game root; Steam/GOG/Epic markers still present).
-- **`Offsets/RTTI.h`** — `kcd_cast` (version-independent) copied verbatim.
-- **`KCSE/Trampoline.h`** — copied verbatim.
+- [Kingdom Come: Deliverance 2](https://store.steampowered.com/app/1771300/Kingdom_Come_Deliverance_II/)
 
-## Not yet regenerated (blocking, see MIGRATION_ASSESSMENT.md)
+## Notes
 
-- KCD2 KASL address library (`kcd_addresslib_steam_release_1_5-15693.bin`) + ID registry
-  — **brand-new ID namespace; do not reuse KCD1 IDs**.
-- `Offsets_RTTI.h` / `Offsets_VTABLE.h` and all `Offsets/vtables/*.h` (interfuscator
-  reshuffles vtable order — every slot re-verified).
-- Warhorse module headers (`rpgmodule`, `entitymodule`, `combatmodule`, plus new
-  `conceptmodule`, `xbehaviormodule`, `musicmodule`) — layouts re-measured per class.
-- `CrySDKStubs.cpp` (needs `Offsets.h` + the malloc/free thunk IDs) — re-enabled in the
-  build once the address library lands.
+- libKCD2 targets game version **1.5.6**. CryEngine's interfuscator shuffles vtable order in release builds — SDK headers cannot be used for direct virtual calls across versions.
+
+## Developing a KCSE Plugin
+
+1. Create your plugin repo under `Projects/` (or add it as a submodule):
+   ```
+   Projects/MyPlugin/
+   ├── .buildenv/
+   │   └── CMakeLists.txt
+   └── src/
+       └── plugin.cpp
+   ```
+
+2. Minimal `CMakeLists.txt`:
+   ```cmake
+   project(MyPlugin LANGUAGES CXX)
+
+   file(GLOB_RECURSE PLUGIN_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../src/*.cpp")
+   add_library(MyPlugin SHARED ${PLUGIN_SOURCES})
+
+   target_precompile_headers(MyPlugin PRIVATE "${RE_BUILDENV}/PCH.h")
+   target_compile_definitions(MyPlugin PRIVATE _ITERATOR_DEBUG_LEVEL=0 WIN32_LEAN_AND_MEAN NOMINMAX)
+   target_compile_options(MyPlugin PRIVATE /utf-8 /W4 /wd4819 /wd4100)
+   target_include_directories(MyPlugin PRIVATE
+       ${RE_ROOT}/include ${RE_ROOT}/include/CryEngine/CryCommon ${CMAKE_CURRENT_SOURCE_DIR}/../src)
+   target_link_libraries(MyPlugin PRIVATE kcd_re spdlog::spdlog)
+   ```
+
+3. Minimal `plugin.cpp`:
+   ```cpp
+   #include "KCSE/KCSEAPI.h"
+
+   KCSE_PLUGIN_INFO("MyPlugin", "Author", 1);
+
+   KCSE_PLUGIN_LOAD(kcse)
+   {
+       return true;
+   }
+   ```
+
+Any subproject with a `.buildenv/CMakeLists.txt` is auto-discovered by the root build.
+
+## Acknowledgements
+
+Inspired by [SKSE](https://skse.silverlock.org/) and [CommonLibSSE](https://github.com/powerof3/CommonLibSSE).
+
+## License
+
+[GPLv3](LICENSE)

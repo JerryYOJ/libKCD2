@@ -12,16 +12,15 @@
 //
 // Bases (from ctor vtable writes): C_BaseModule/I_ModuleMessageListener @+0x00,
 // ISystemEventListener @+0x10. All members from +0x18 are owned sub-managers built
-// by the ctor; only the two named ones below are load-bearing for the plugins.
+// by the ctor; only the two named ones below have verified identities.
 //
-// [FUNDAMENTAL vs KCD1] The KCD1 autosave mechanic is gone. KCD1 AutoSave set
-// bool m_autoSaveRequested@+0x108 and the per-frame tick polled/cleared it and
+// [FUNDAMENTAL vs KCD1] The autosave-request mechanic changed. In KCD1 the module
+// stored bool m_autoSaveRequested@+0x108 and the per-frame tick polled/cleared it and
 // dispatched C_ModuleMessageSaveGameRequest(saveType=1). In KCD2, Update (slot4,
 // sub_180533478) polls no such byte and no method reads +0x98 as a flag; save
-// requests are driven from other subsystems and E_SaveType values shifted (KCD1
-// autosave=1; KCD2 callers use 2/6/8). Writing a bool here will NOT trigger a save
-// -- AutoSave must be re-implemented (call the SaveGameRequest dispatch directly).
-// m_98 below is exposed only as an UNVERIFIED placeholder, not the KCD1 flag.
+// requests are driven from other subsystems and the E_SaveType values shifted (KCD1
+// autosave=1; KCD2 callers use 2/6/8). So a bool written here will NOT trigger a save;
+// +0x98 below is exposed only as an UNVERIFIED placeholder, not the KCD1 flag.
 //
 // [MODERATE vs KCD1] m_pFastTravel moved +0xB0 -> +0x28 (still an owned C_FastTravel*).
 

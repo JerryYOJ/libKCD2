@@ -9,11 +9,11 @@ typedef unsigned int EntityId;
 // Target: WHGame.dll 1.5.6 (release_1_5 / assembly 15693), md5 170a55fe1ef804b4a9ac6fbf9f6843e5
 // RTTI:   .?AVCEntity@@   TypeDescriptor 0x185042118
 // vtable: 0x184072c78 (image-relative 0x4072c78), 158 slots, COL 0x184626b88
-// Concrete data layout: see CryEngine/CryCommon/IEntity.h (class CEntity, sizeof 0xF8).
+// Concrete data layout: see crysystem/CEntity.h (class CEntity, sizeof 0xF8).
 //
 // Confidence: offsets + accessor identities marked VERIFIED are read straight from the
 // disasm/ctor. Names on non-accessor slots ("tentative") are inferred from KCD1 slot
-// position and want a decompile pass before a plugin relies on them.
+// position and want a decompile pass before relying on them.
 
 struct IEntityProxy;
 

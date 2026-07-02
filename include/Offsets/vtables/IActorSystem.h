@@ -17,8 +17,8 @@ typedef unsigned int EntityId;
 //   IActorSystem        @ +0x00  primary   vtable 0x184048340 (19 slots)
 //   IEntityPoolListener @ +0x08  secondary vtable 0x184048300 ( 7 slots)
 //   IEntitySystemSink   @ +0x10  tertiary  vtable 0x1840482B8 ( 8 slots)
-// Only IActorSystem (primary) is modeled here -- the plugins reach the actor system via
-// S_GameContext+0x180 and call GetActor (slot 3, +0x18), which is the primary vtable.
+// Only IActorSystem (primary) is modeled here; the actor system is reached via
+// S_GameContext+0x180, and GetActor is slot 3 (+0x18) on this primary vtable.
 //
 // Key CActorSystem data members: m_actorMap @+0x38 (EntityId->IActor*), m_actorCount @+0x48,
 // m_pEntitySystem @+0x30, actor-class set @+0x78, m_actorParams @+0xA0, m_scanFolder @+0xB0.

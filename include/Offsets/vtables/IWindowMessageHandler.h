@@ -5,7 +5,7 @@
 // Offsets::IWindowMessageHandler -- CryEngine window-message sink (KCD2 1.5.6, kd7u)
 // -----------------------------------------------
 // 3-slot interface (size 8). Single canonical definition; used as a secondary base in:
-//   CSystem        @ +0x18  (CryCommon/CSystem.h, via Offsets/vtables/ISystem.h)
+//   CSystem        @ +0x18  (crysystem/CSystem.h, via Offsets/vtables/ISystem.h)
 //   C_GameStartup  @ +0x08  (game/C_GameStartup.h, vtable 0x183D18730)
 // Slot identities VERIFIED from the C_GameStartup secondary vtable.
 

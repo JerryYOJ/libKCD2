@@ -20,10 +20,9 @@ find_package(boost_container CONFIG REQUIRED)   # boost::container::vector / fla
 file(GLOB_RECURSE RE_HEADERS "${RE_ROOT}/include/*.h")
 file(GLOB_RECURSE RE_SOURCES "${RE_ROOT}/src/*.cpp")
 
-# FOUNDATION STAGE: only the version-agnostic REL layer + adapted Module exist.
-# CrySDKStubs.cpp (needs Offsets.h + REL::ID(887..890)) is intentionally NOT built
-# yet -- add it back once the KCD2 address library / Offsets are regenerated.
-add_library(kcd_re STATIC check_sizes.cpp ${RE_SOURCES} ${RE_HEADERS})
+# CrySDKStubs.cpp provides the CryEngine SDK glue (allocators, critical sections)
+# the vendored CryCommon headers reference; CRT/Win32-backed (no address library).
+add_library(kcd_re STATIC check_sizes.cpp CrySDKStubs.cpp ${RE_SOURCES} ${RE_HEADERS})
 
 target_precompile_headers(kcd_re PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/PCH.h")
 

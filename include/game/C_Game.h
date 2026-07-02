@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include "REL/Offset.h"
 #include "../Offsets/vtables/IGame.h"
 
 // -----------------------------------------------
@@ -49,10 +50,7 @@ class C_Game : public Offsets::IGame,                    // +0x00
                public Offsets::I_ModuleMessageListener   // +0x20
 {
 public:
-    // Singleton accessor. The engine stores the live instance in a fixed global;
-    // via the KCD2 address library that is REL::Relocation<C_Game*>{ RELOCATION_ID(...) }.
-    // Raw form for reference (distribution-specific absolute address):
-    //   static C_Game* GetInstance() { return *reinterpret_cast<C_Game**>(0x18549D300); }
+    static C_Game* GetInstance() { return *reinterpret_cast<C_Game**>(REL::Offset(0x549D300).address()); }
 
     // ===================================================================
     // Data members (+0x28 onwards, after the five interface vptrs)

@@ -30,11 +30,14 @@ namespace Offsets {
 
 struct IGameObject;
 
-// IGameObjectExtension - SDK base of IActor. In the interfuscated build the
-// virtuals live on IActor; only the data survives here. Includes IComponent
-// data. First member sits at +0x08 so the derived IActor's vptr occupies +0x00.
+// IGameObjectExtension - SDK base of IActor, flattening the extension chain
+//   IComponent (empty root; its virtuals are folded onto IActor in this interfuscated build)
+//   + std::enable_shared_from_this<IComponent> (the weak_ptr subobject at +0x08)
+//   + IGameObjectExtension's own data (+0x18..+0x3F).
+// Only the data survives here (virtuals live on IActor). First member sits at +0x08 so the
+// derived IActor's vptr occupies +0x00; sizeof 0x38 so IActor rounds to 0x40.
 struct IGameObjectExtension {
-    uint64_t        m_weakPtr[2];              // +0x08  enable_shared_from_this<IComponent>
+    uint64_t        m_weakPtr[2];              // +0x08  std::enable_shared_from_this<IComponent> weak_ptr
     void*           m_pDistributer;            // +0x18  IComponentEventDistributer*
     uint32_t        m_componentEntityId;       // +0x20
     uint32_t        m_componentFlags;          // +0x24
@@ -147,12 +150,23 @@ struct IActor : IGameObjectExtension {
     virtual bool  _vf98() = 0;                              // [98]  ret false  MustBreakGlass (tentative)
     virtual void  _vf99()  = 0;                             // [99]  retn 0
     // ---- C_Actor-specific / extended slots (100..274) ----
-    virtual void  _vf100() = 0;  virtual void  _vf101() = 0;  virtual bool  _vf102() = 0; // [102] dispatch by dl
-    virtual void  _vf103() = 0;  virtual void  _vf104() = 0;  virtual void  _vf105() = 0;
-    virtual bool  _vf106() = 0;  virtual void  _vf107() = 0;  virtual bool  _vf108() = 0; // [108] ret true
-    virtual void  _vf109() = 0;  virtual void  _vf110() = 0;  virtual void  _vf111() = 0;
-    virtual void  _vf112() = 0;  virtual void  _vf113() = 0;  virtual void  _vf114() = 0;
-    virtual void  _vf115() = 0;  virtual void  _vf116() = 0;                              // [116] jmp vfunc[0x5E0]
+    virtual void  _vf100() = 0;
+    virtual void  _vf101() = 0;
+    virtual bool  _vf102() = 0; // [102] dispatch by dl
+    virtual void  _vf103() = 0;
+    virtual void  _vf104() = 0;
+    virtual void  _vf105() = 0;
+    virtual bool  _vf106() = 0;
+    virtual void  _vf107() = 0;
+    virtual bool  _vf108() = 0; // [108] ret true
+    virtual void  _vf109() = 0;
+    virtual void  _vf110() = 0;
+    virtual void  _vf111() = 0;
+    virtual void  _vf112() = 0;
+    virtual void  _vf113() = 0;
+    virtual void  _vf114() = 0;
+    virtual void  _vf115() = 0;
+    virtual void  _vf116() = 0;                              // [116] jmp vfunc[0x5E0]
     virtual uint8_t _vf117() = 0;                            // [117] return *(uint8*)(this+0x163)
     virtual void  _vf118(uint8_t) = 0;                       // [118] *(this+0x160+idx)=arg (m_specMode[])
     virtual void  _vf119() = 0;
@@ -165,83 +179,152 @@ struct IActor : IGameObjectExtension {
     virtual void  _vf126() = 0;
     virtual void  _vf127() = 0;                              // [127] uses ptr@0x688
     virtual void  _vf128() = 0;                              // [128] uses obj@0x990
-    virtual bool  _vf129() = 0;  virtual void  _vf130() = 0;
+    virtual bool  _vf129() = 0;
+    virtual void  _vf130() = 0;
     virtual void  _vf131() = 0;                              // [131] 983 bytes
     virtual void  _vf132() = 0;
     virtual void* _vf133() = 0;                              // [133] ptr@0x738
     virtual void* _vf134() = 0;                              // [134] ptr@0x738
     virtual void  _vf135(uint8_t) = 0;                       // [135] add [this+0x174], counter
     virtual void  _vf136(uint8_t) = 0;                       // [136] add [this+0x178], counter
-    virtual bool  _vf137() = 0;  virtual int  _vf138() = 0;  virtual int  _vf139() = 0;
+    virtual bool  _vf137() = 0;
+    virtual int  _vf138() = 0;
+    virtual int  _vf139() = 0;
     virtual void  _vf140() = 0;                              // [140] uses ptr@0x260
     virtual void  _vf141() = 0;                              // [141] uses soul@0x668
     virtual void* GetActionActor() = 0;                      // [142] return *(this+0x1A8)          VERIFIED
     virtual void  _vf143() = 0;                              // [143] checks ptr@0x1A8
-    virtual int   _vf144() = 0;  virtual void  _vf145() = 0;
+    virtual int   _vf144() = 0;
+    virtual void  _vf145() = 0;
     virtual void  _vf146(int) = 0;                           // [146] *(int*)(this+0x560)=arg (audio id)
-    virtual void  _vf147() = 0;  virtual void  _vf148() = 0;  virtual void  _vf149() = 0;
-    virtual void  _vf150() = 0;  virtual void  _vf151() = 0;  virtual void  _vf152() = 0;
+    virtual void  _vf147() = 0;
+    virtual void  _vf148() = 0;
+    virtual void  _vf149() = 0;
+    virtual void  _vf150() = 0;
+    virtual void  _vf151() = 0;
+    virtual void  _vf152() = 0;
     virtual void  _vf153() = 0;                              // [153] or byte[this+0x9B3],1 (set flag)
-    virtual void  _vf154() = 0;  virtual void  _vf155() = 0;  virtual void  _vf156() = 0;
-    virtual bool  _vf157() = 0;  virtual void  _vf158() = 0;  virtual void  _vf159() = 0;
-    virtual void  _vf160() = 0;  virtual bool  _vf161() = 0;  virtual void  _vf162() = 0;
-    virtual bool  _vf163() = 0;  virtual bool  _vf164() = 0;  virtual bool  _vf165() = 0;
-    virtual void  _vf166() = 0;  virtual void  _vf167() = 0;  virtual void  _vf168() = 0;
-    virtual void  _vf169() = 0;  virtual bool  _vf170() = 0;
+    virtual void  _vf154() = 0;
+    virtual void  _vf155() = 0;
+    virtual void  _vf156() = 0;
+    virtual bool  _vf157() = 0;
+    virtual void  _vf158() = 0;
+    virtual void  _vf159() = 0;
+    virtual void  _vf160() = 0;
+    virtual bool  _vf161() = 0;
+    virtual void  _vf162() = 0;
+    virtual bool  _vf163() = 0;
+    virtual bool  _vf164() = 0;
+    virtual bool  _vf165() = 0;
+    virtual void  _vf166() = 0;
+    virtual void  _vf167() = 0;
+    virtual void  _vf168() = 0;
+    virtual void  _vf169() = 0;
+    virtual bool  _vf170() = 0;
     virtual bool  _vf171() = 0;                              // [171] *(this+0x250); byte@+0x18
     virtual void  _vf172() = 0;                              // [172] uses obj@0x238
     virtual void  _vf173() = 0;                              // [173] jmp vfunc[0x560]
     virtual float _vf174() = 0;                              // [174] movss xmm0, const
     virtual void  _vf175() = 0;                              // [175] uses soul@0x668
-    virtual void  _vf176() = 0;  virtual void  _vf177() = 0;  virtual void  _vf178() = 0;
-    virtual void  _vf179() = 0;  virtual void  _vf180() = 0;  virtual void  _vf181() = 0;
-    virtual void  _vf182() = 0;  virtual void  _vf183() = 0;
+    virtual void  _vf176() = 0;
+    virtual void  _vf177() = 0;
+    virtual void  _vf178() = 0;
+    virtual void  _vf179() = 0;
+    virtual void  _vf180() = 0;
+    virtual void  _vf181() = 0;
+    virtual void  _vf182() = 0;
+    virtual void  _vf183() = 0;
     virtual void  _vf184() = 0;                              // [184] *(this+0x990)+0x310
-    virtual void  _vf185() = 0;  virtual void  _vf186() = 0;  virtual void  _vf187() = 0;
-    virtual void  _vf188() = 0;  virtual void  _vf189() = 0;  virtual void  _vf190() = 0;
-    virtual int   _vf191() = 0;  virtual void  _vf192() = 0;
+    virtual void  _vf185() = 0;
+    virtual void  _vf186() = 0;
+    virtual void  _vf187() = 0;
+    virtual void  _vf188() = 0;
+    virtual void  _vf189() = 0;
+    virtual void  _vf190() = 0;
+    virtual int   _vf191() = 0;
+    virtual void  _vf192() = 0;
     virtual void* GetCombatActor() = 0;                      // [193] return *(this+0x1A0)          VERIFIED
     virtual void* _vf194() = 0;                              // [194] return *(this+0x1B0)          VERIFIED
-    virtual void  _vf195() = 0;  virtual void  _vf196() = 0;  virtual void  _vf197() = 0;
-    virtual bool  _vf198() = 0;  virtual void  _vf199() = 0;  virtual void  _vf200() = 0;
-    virtual void  _vf201() = 0;  virtual void  _vf202() = 0;                              // [202] lea "Collisions..."
+    virtual void  _vf195() = 0;
+    virtual void  _vf196() = 0;
+    virtual void  _vf197() = 0;
+    virtual bool  _vf198() = 0;
+    virtual void  _vf199() = 0;
+    virtual void  _vf200() = 0;
+    virtual void  _vf201() = 0;
+    virtual void  _vf202() = 0;                              // [202] lea "Collisions..."
     virtual void  _vf203() = 0;                              // [203] uses obj@0x280
-    virtual void  _vf204() = 0;  virtual void  _vf205() = 0;
+    virtual void  _vf204() = 0;
+    virtual void  _vf205() = 0;
     virtual void* _vf206() = 0;                              // [206] &member@0xB0 (signal)
     virtual void* _vf207() = 0;                              // [207] &member@0xC0 (signal)
     virtual void  _vf208() = 0;
     virtual void  _vf209() = 0;                              // [209] clears dword@0x564 + qword@0x568
-    virtual void  _vf210() = 0;  virtual void  _vf211() = 0;  virtual void  _vf212() = 0;
-    virtual void  _vf213() = 0;  virtual void  _vf214() = 0;  virtual void  _vf215() = 0;
-    virtual void  _vf216() = 0;  virtual void  _vf217() = 0;
+    virtual void  _vf210() = 0;
+    virtual void  _vf211() = 0;
+    virtual void  _vf212() = 0;
+    virtual void  _vf213() = 0;
+    virtual void  _vf214() = 0;
+    virtual void  _vf215() = 0;
+    virtual void  _vf216() = 0;
+    virtual void  _vf217() = 0;
     virtual float _vf218() = 0;                              // [218] movss xmm0,[this+0x4C8]
     virtual float _vf219() = 0;                              // [219] movss xmm0,[this+0x4CC]
     virtual void* _vf220() = 0;                              // [220] return *(this+0x268) (anim char) VERIFIED
     virtual void* GetAnimatedCharacter() = 0;                // [221] return *(this+0x268)          VERIFIED
-    virtual void  _vf222() = 0;  virtual void  _vf223() = 0;  virtual void  _vf224() = 0;
-    virtual void  _vf225() = 0;  virtual void  _vf226() = 0;  virtual bool  _vf227() = 0;
-    virtual bool  _vf228() = 0;  virtual bool  _vf229() = 0;
+    virtual void  _vf222() = 0;
+    virtual void  _vf223() = 0;
+    virtual void  _vf224() = 0;
+    virtual void  _vf225() = 0;
+    virtual void  _vf226() = 0;
+    virtual bool  _vf227() = 0;
+    virtual bool  _vf228() = 0;
+    virtual bool  _vf229() = 0;
     virtual bool  _vf230() = 0;                              // [230] return *(uint8*)(this+0x5FC) & 1
     virtual void  _vf231() = 0;                              // [231] uses obj@0x990
-    virtual bool  _vf232() = 0;  virtual void  _vf233() = 0;                              // [233] jmp vfunc[0x150]
+    virtual bool  _vf232() = 0;
+    virtual void  _vf233() = 0;                              // [233] jmp vfunc[0x150]
     virtual void  _vf234() = 0;                              // [234] uses soul@0x668
     virtual void  _vf235() = 0;                              // [235] uses obj@0x990
     virtual int   _vf236() = 0;                              // [236] return 0x65
     virtual void  _vf237() = 0;                              // [237] uses ptr@0x68
-    virtual void  _vf238() = 0;  virtual void  _vf239() = 0;  virtual void  _vf240() = 0;
-    virtual void  _vf241() = 0;  virtual void  _vf242() = 0;  virtual int  _vf243() = 0;
-    virtual void  _vf244() = 0;  virtual void  _vf245() = 0;  virtual void  _vf246() = 0;
-    virtual void  _vf247() = 0;  virtual void  _vf248() = 0;  virtual void  _vf249() = 0;
-    virtual void  _vf250() = 0;  virtual void  _vf251() = 0;  virtual void  _vf252() = 0; // [252] jmp vfunc[0x7D8]
-    virtual void  _vf253() = 0;  virtual void  _vf254() = 0;  virtual void  _vf255() = 0;
+    virtual void  _vf238() = 0;
+    virtual void  _vf239() = 0;
+    virtual void  _vf240() = 0;
+    virtual void  _vf241() = 0;
+    virtual void  _vf242() = 0;
+    virtual int  _vf243() = 0;
+    virtual void  _vf244() = 0;
+    virtual void  _vf245() = 0;
+    virtual void  _vf246() = 0;
+    virtual void  _vf247() = 0;
+    virtual void  _vf248() = 0;
+    virtual void  _vf249() = 0;
+    virtual void  _vf250() = 0;
+    virtual void  _vf251() = 0;
+    virtual void  _vf252() = 0; // [252] jmp vfunc[0x7D8]
+    virtual void  _vf253() = 0;
+    virtual void  _vf254() = 0;
+    virtual void  _vf255() = 0;
     virtual float _vf256() = 0;                              // [256] movss xmm0,[rax+0x34C]
-    virtual bool  _vf257() = 0;  virtual void  _vf258() = 0;  virtual void  _vf259() = 0; // [259] vfunc[0x6E0]
-    virtual void  _vf260() = 0;  virtual void  _vf261() = 0;  virtual void  _vf262() = 0;
-    virtual void  _vf263() = 0;  virtual void  _vf264() = 0;  virtual void  _vf265() = 0;
-    virtual void  _vf266() = 0;  virtual void  _vf267() = 0;  virtual void  _vf268() = 0;
-    virtual void  _vf269() = 0;  virtual void  _vf270() = 0;  virtual void  _vf271() = 0;
+    virtual bool  _vf257() = 0;
+    virtual void  _vf258() = 0;
+    virtual void  _vf259() = 0; // [259] vfunc[0x6E0]
+    virtual void  _vf260() = 0;
+    virtual void  _vf261() = 0;
+    virtual void  _vf262() = 0;
+    virtual void  _vf263() = 0;
+    virtual void  _vf264() = 0;
+    virtual void  _vf265() = 0;
+    virtual void  _vf266() = 0;
+    virtual void  _vf267() = 0;
+    virtual void  _vf268() = 0;
+    virtual void  _vf269() = 0;
+    virtual void  _vf270() = 0;
+    virtual void  _vf271() = 0;
     virtual void  _vf272() = 0;                              // [272] __purecall
-    virtual void  _vf273() = 0;  virtual void  _vf274() = 0;
+    virtual void  _vf273() = 0;
+    virtual void  _vf274() = 0;
 };
 static_assert(sizeof(IActor) == 0x40);
 
@@ -257,5 +340,11 @@ struct IGameObjectProfileManager {
     virtual void _vf0() = 0;                                 // secondary vtable {for IGameObjectProfileManager}
 };
 static_assert(sizeof(IGameObjectProfileManager) == 0x08);
+
+// CGameObjectExtensionHelper<T, I, N> - CryEngine game-object-extension helper (CRTP over T).
+// Thin: derives the interface I (=IActor) and adds NO data -- it only provides the static N-slot
+// RMI dispatch. It is C_Actor's direct primary base; sizeof == sizeof(I) so the layout is IActor's.
+template<typename T, typename I, int N>
+struct CGameObjectExtensionHelper : I {};
 
 }  // namespace Offsets

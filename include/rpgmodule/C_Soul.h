@@ -1,0 +1,102 @@
+#pragma once
+#include <cstdint>
+#include <vector>
+#include "I_Soul.h"
+#include "S_ModifierNode.h"
+#include "C_SoulPropertyNotifier.h"
+#include "C_CombatSoul.h"
+#include "C_InventorySoul.h"
+#include "C_SoulRPGStats.h"
+#include "S_SoulRegistry.h"
+#include "C_SoulBuffList.h"
+#include "../entitymodule/I_ItemCollectionListener.h"
+#include "../framework/CryDeferrable.h"
+#include "../framework/WUID.h"
+#include "../CryEngine/CryCommon/CryString.h"
+#include "../CryEngine/CryCommon/CryExtension/CryGUID.h"
+
+// -----------------------------------------------
+// wh::rpgmodule::C_Soul -- KCD2 WHGame.dll 1.5.6 (kd7u).  sizeof 0xD20 (pool stride 3360, PROVEN).
+// -----------------------------------------------
+// RTTI .?AVC_Soul@rpgmodule@wh@@ (TD 0x184D72390)  primary vtable 0x183F44F28 (~60 slots, NOT
+// enumerated)  ctor 0x1803F1C7C  base dtor 0x180966104.  Allocated from the C_SoulList slot pool
+// (sub_181FE2CC0: addr = 3360*slotIdx + poolBase; pool block = 3360*64).
+// KCD1 C_Soul was 0xC38; KCD2 grew +0xE8.
+//
+// [FUNDAMENTAL vs KCD1] KCD1's standalone S_SoulStatBlock / S_StatModifierBlock moved INSIDE the
+// +0x498 RPG aggregate; S_SoulWaitConfig-style timing folded into the +0xAF8 buff list. No
+// faction/reputation scalar lives in C_Soul (external managers keyed by the soul WUID, as KCD1).
+//
+// The +0xA8 block: the C_Soul deep map typed it only as a zeroed 0x48 POD ("derived-stat cache"
+// candidate, LOW). The buff-hierarchy deep map INDEPENDENTLY proves CommitModifiers
+// (sub_18063B7C8) sorted-inserts modifier nodes into sub-lists at C_Soul+0xA8 and sets the dirty
+// byte @+0xE8 -- so it is typed here as the soul-side SORTED modifier list heads (cross-dossier
+// synthesis, MED confidence, flagged).
+
+namespace wh::rpgmodule {
+
+// 0x10 mailbox subscription (ctor sub_1803F1F40(this, soul); callback sub_180F42930; msg id 102).
+struct S_SoulMailboxSub {
+    C_Soul* m_pOwner;    // +0x00
+    int32_t m_msgId;     // +0x08  = 102
+    uint8_t m_flag0C;    // +0x0C
+    uint8_t _pad0D[3];   // +0x0D
+};
+static_assert(sizeof(S_SoulMailboxSub) == 0x10, "S_SoulMailboxSub must be 0x10");
+
+class C_Soul
+    : public I_Soul                                      // +0x00  primary vtable 0x183F44F28
+    , public wh::entitymodule::I_ItemCollectionListener  // +0x08  secondary vtable 0x183F45508
+    , public UnsafeOp::CryDeferrableSlot                 // +0x10  stateful 0x10 deferrable (RTTI CHD base)
+{
+public:
+    UnsafeOp::CryDeferrableSlot m_deferred2;   // +0x20  second deferrable -- MEMBER, not in the CHD
+    wh::framework::WUID m_selfWuid;            // +0x30  ctor inits INVALID (-1, qword_185332358); factory
+                                               //        writes slotIdx | 0x05 << 56 (soul WUID tag = 5)
+    uint64_t m_unk38;                          // +0x38  (ctor 0; possibly the S_WuidSlot pair half -- LOW)
+    CryStringT<char> m_name;                   // +0x40  init "<not-initialized-soul>"
+    CryGUID  m_guid;                           // +0x48  SetGuid sub_1803F1A60; registered in the global
+                                               //        GUID->Soul map @(qword_1853322A0 + 128)
+    C_SoulPropertyNotifier m_propertyNotifier; // +0x58  (0x50) THE property-changed signal C_Actor+0xF0 connects to
+    S_ModifierNode* m_sortedModifierLists[8];  // +0xA8  soul-side SORTED modifier lists (CommitModifiers inserts
+                                               //        keyed on eOp; 8 heads mirror the 8 staging lists --
+                                               //        cross-dossier synthesis, MED, see header comment)
+    bool     m_modifierListsDirty;             // +0xE8  set by the unsorted cat7 commit
+    uint8_t  _padE9[7];                        // +0xE9
+    C_CombatSoul    m_combatSoul;              // +0x0F0  (0xA8; 7 signals + 2 smart-ptrs)
+    C_InventorySoul m_inventorySoul;           // +0x198  (0x148; MI, 3 vtables)
+    void*    m_pOwned2E0;                      // +0x2E0  4 individually-destroyed owned handles
+    void*    m_pOwned2E8;                      // +0x2E8  (_smart_ptr/container semantics; classes
+    void*    m_pOwned2F0;                      // +0x2F0   unresolved -- dtors sub_18096630C/2EC/2FC/35C)
+    void*    m_pOwned2F8;                      // +0x2F8
+    uint64_t m_unk300[2];                      // +0x300  OWORD zero-init
+    uint32_t m_unk310;                         // +0x310
+    uint32_t _pad314;                          // +0x314
+    uint64_t m_lock318;                        // +0x318  lock/handle (unknown_libname_5 init; dtor sub_180966374)
+    std::vector<void*> m_list320;              // +0x320  element type unresolved
+    C_Soul*  m_list320Owner;                   // +0x338  owner back-ptr (ctor sub_1803F1EBC writes triple + this)
+    S_SoulRegistry m_registry;                 // +0x340  (0x158; relationship/reputation candidate, UNCONFIRMED)
+    C_SoulRPGStats m_rpgStats;                 // +0x498  (0x660; stats/skills/perks/companions)
+    C_SoulBuffList m_buffList;                 // +0xAF8  (0x198; OWNS the buff instances)
+    uint32_t m_stateC90;                       // +0xC90  init 2 (state/enum, meaning unresolved)
+    uint32_t _padC94;                          // +0xC94
+    uint64_t m_unkC98[2];                      // +0xC98  OWORD zero-init
+    uint64_t m_unkCA8[2];                      // +0xCA8  OWORD zero-init
+    const void* m_pDescriptorCB8;              // +0xCB8  = &qword_185584090  } static descriptor triple
+    const void* m_pDescriptorCC0;              // +0xCC0  = &dword_1855840F0  } (model-property/descriptor
+    const void* m_pDescriptorCC8;              // +0xCC8  = &unk_18493C848    }  hypothesis -- UNVERIFIED)
+    void*    m_weakRefCD0[2];                  // +0xCD0  weak-ref/observer pair (sub_1803F28C8 registers into target+120/+128)
+    uint64_t m_unkCE0[2];                      // +0xCE0  0x10 std object (shared_ptr/function -- unresolved; ctor sub_1823C92A0)
+    uint32_t m_flagsCF0;                       // +0xCF0  bit5 = byte_1856698FA (ctor sub_1803F1ED4)
+    uint32_t _padCF4;                          // +0xCF4
+    uint64_t m_unkCF8;                         // +0xCF8
+    void*    m_pManagerD00;                    // +0xD00  = singleton qword_1854B95A0 (identity tentative)
+    S_SoulMailboxSub m_mailboxSub;             // +0xD08  (0x10; msg id 102)
+    void*    m_srwLock;                        // +0xD18  SRWLOCK (ctor sub_180BBD62C -> InitializeSRWLock)
+};
+static_assert(sizeof(C_Soul) == 0xD20, "C_Soul must be 0xD20");
+static_assert(offsetof(C_Soul, m_sortedModifierLists) == 0xA8, "sorted modifier lists at 0xA8");
+static_assert(offsetof(C_Soul, m_rpgStats) == 0x498, "rpg stats at 0x498");
+static_assert(offsetof(C_Soul, m_buffList) == 0xAF8, "buff list at 0xAF8");
+
+}  // namespace wh::rpgmodule

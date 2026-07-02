@@ -1,147 +1,200 @@
 #pragma once
-
 #include <cstdint>
+#include <vector>
 #include "../Offsets/vtables/IActor.h"
+#include "../framework/C_Signal.h"
+#include "../framework/CryDeferrable.h"
+#include "../framework/CStateMachine.h"
+#include "../CryEngine/CryCommon/CryString.h"   // CryStringT<char>
+#include "../CryEngine/CryCommon/Cry_Math.h"
+#include "C_PhysicsIgnoreLists.h"
+#include "C_BoneSlotSystem.h"
+#include "C_IdleState.h"
+#include "C_StanceState.h"
+#include "C_ActorMoveParams.h"
+#include "C_ActorBounds.h"
+#include "../animationmodule/C_LookAimIK.h"
 
 // -----------------------------------------------
-// C_Actor - Warhorse base actor class (KCD2)
+// wh::entitymodule::C_Actor -- Warhorse base actor (KCD2 WHGame.dll 1.5.6, kd7u).  sizeof 0x9C0.
 // -----------------------------------------------
-// RTTI:  .?AVC_Actor@entitymodule@wh@@
-// Target: WHGame.dll 1.5.6 (KCD2), image base 0x180000000
-// Constructor:          0x1803f0be9  (sub_1803F0BB8)
-// Base-object dtor:     0x1808e120c  (sub_1808E120C)
-// Scalar deleting dtor: 0x18285a354  -> operator delete(this, 0x9C0)
+// RTTI .?AVC_Actor@entitymodule@wh@@  primary vtable 0x183E74198 (275 slots)
+// ctor 0x1803F0BB8  real dtor 0x1808E120C  scalar-deleting dtor 0x18285A354 (operator delete this,0x9C0)
+// GetOrCreateCombatActor (non-virtual) 0x18072DC90 -> returns m_pCombatActor, lazily creating it.
 //
-// vtable (IActor primary):          0x183e74198  (275 slots, +0x00)
-// vtable (IGameObjectView):         +0x40
-// vtable (IGameObjectProfileMgr):   +0x48
+// Full MI hierarchy reconstructed and inherited (ClassInformer / 11-entry CHD):
+//   CGameObjectExtensionHelper<C_Actor,IActor,64> -> IActor -> IGameObjectExtension
+//        (-> IComponent + std::enable_shared_from_this<IComponent>)   @ +0x00  (0x40)
+//   IGameObjectView                                                   @ +0x40
+//   IGameObjectProfileManager                                         @ +0x48
+//   UnsafeOp::CryDeferrable<0> (-> UnsafeOp::ICryDeferrable)  empty    @ +0x50
+//   wh::xgenaimodule::I_SystemFromMonsterLODPostponer         empty    @ +0x51
+// The two empty trailing bases occupy 1 byte each under MSVC; C_Actor's own members begin at +0x58.
 //
-// sizeof = 0x9C0 (recovered from the scalar deleting dtor's operator delete).
-// KCD1 was 0x930; KCD2 grew by 0x90 and reorganised the health / pointer blocks.
+// [FUNDAMENTAL vs KCD1] sizeof 0x930 -> 0x9C0; managers relocated (m_pCombatActor 0x1A0 -> 0x278,
+//   m_pRagdollManager 0x178 -> 0x190, m_pActionActor 0x1A8 -> 0x280, m_lookAimIK 0x1B0 -> 0x288,
+//   m_pActorModel 0x908 -> 0x990, bone system 0x728 -> 0x7A0, m_pPhysicsState 0x4C0 -> 0x238);
+//   C_Signal shrank 0x30 -> 0x10 (denser signal block); NEW managers m_pHitDeathReactions @0x240 and
+//   m_pConditionController @0x258; m_damageZones (KCD1 inline) became m_pDamageZoneManager @0x1B0.
+// [MODERATE vs KCD1] health/maxHealth/gravity -> 0x164/0x168/0x16C; perception -> 0x570/0x574/0x578;
+//   view distance -> 0x4D0/0x4D4 (same init values 100/100/9.81, 5deg/30deg/1.0, 11.0).
 //
-// -------- Verification status --------
-// VERIFIED (ctor stores / decompiled accessors): the three MI vtables, m_health/
-//   m_maxHealth/m_gravity (+0x164/+0x168/+0x16C, ctor 100/100/9.81), viewDist
-//   (+0x4D0/+0x4D4 = 11.0), perception angles (+0x570/+0x574/+0x578 = 5deg/30deg/1),
-//   m_pMovementController(+0x180, slot 69), m_pRagdollManager(+0x190, slot 37 IsDead),
-//   m_pCombatActor(+0x1A0, slot 193), m_pActionActor(+0x1A8, slot 142),
-//   m_pAnimatedCharacter(+0x268, slot 220/221 + ctor arg), m_pSoul(+0x668, GetHealth),
-//   the +0x160 spec-mode byte block (slot 117/118), tail flags @0x9B0..0x9B4.
-// TENTATIVE: sub-object *sizes* are bounded by the gap between adjacent ctor/dtor
-//   member touches (same technique as the KCD1 header) and their semantic names are
-//   ported from KCD1 - each is flagged inline. The offsets themselves are exact.
+// Pointer slots set OUTSIDE the ctor were traced through their setters: five are RTTI-confirmed
+// (ShoutManager/DirtHelper/EquipmentHandler/AIAnimationState/MannequinStateParams), one is
+// behavioral (IAnimatedCharacter). Slots still typed void* are honestly unresolved. The IActor
+// virtual-getter slot comments (GetCombatActor[193] @0x1A0, GetAnimatedCharacter[221] @0x268)
+// carry stale KCD1 offsets.
 
-namespace wh::combatmodule { class C_CombatActor; }
+namespace wh::xgenaimodule {
+// Empty tag interface, unique to C_Actor (0 RTTI referrers). RTTI TD 0x184B73C80.
+struct I_SystemFromMonsterLODPostponer {};
+}
+struct IMovementController;   // CryEngine
+struct IAnimatedCharacter;    // CryAction (behavioral identification)
+
+namespace wh::combatmodule { class I_CombatActor; class C_CombatActor; }
 
 namespace wh::entitymodule {
 
 class C_RagdollManager;
 class C_ActionActor;
+class C_HitDeathReactions;
+class C_ActorConditionController;
+class C_ClothingAttachmentOwnerActor;
+class C_ActorModel;
+class C_ActorPhysicsState;
+class C_ActorHelper;
+class C_DamageZoneManager;
+class C_ActorShoutManager;         // 56B; registers hit-reaction shout weights ("noHit".."fatalHit")
+class C_ActorDirtHelper;           // 0x50; name string "ActorDirtHelper"
+class C_ActorEquipmentHandler;     // 24B; self-registers into an owner list
+class C_AIAnimationState;          // 48B; AI-only, parses entity "Properties/TagList"
+class SMannequinActorStateParams;  // 288B; Mannequin-manager owned (init aborts if null)
 
-class C_Actor : public Offsets::IActor,                    // +0x00  (0x40 bytes)
-                public Offsets::IGameObjectView,            // +0x40  (0x08 bytes)
-                public Offsets::IGameObjectProfileManager   // +0x48  (0x08 bytes)
+class C_Actor
+    : public Offsets::CGameObjectExtensionHelper<C_Actor, Offsets::IActor, 64>  // +0x00  (0x40: 275-slot vtable + extension data)
+    , public Offsets::IGameObjectView                                          // +0x40
+    , public Offsets::IGameObjectProfileManager                                // +0x48
+    , public UnsafeOp::CryDeferrable<0>                                         // +0x50  (empty; -> UnsafeOp::ICryDeferrable)
+    , public wh::xgenaimodule::I_SystemFromMonsterLODPostponer                  // +0x51  (empty)
 {
 public:
-    // ---- data members (+0x50 onward; base data at +0x08..+0x3F lives in IActor) ----
+    // Non-virtual: sub_18072DC90 returns m_pCombatActor, allocating it (C_CombatActor, 0x448) if null.
+    wh::combatmodule::C_CombatActor* GetOrCreateCombatActor();
 
-    void*    m_pUnk50;                       // +0x50   dtor sub_1823C8B4C            /* tentative */
-    uint8_t  m_stateMachine[0x48];           // +0x58   CStateMachine<C_Actor>; ctor sub_1809CEFA0 (ptr@+0x68) /* tentative size */
-    uint8_t  m_unkA0[0x10];                  // +0xA0   ctor sub_1808DDC28            /* tentative */
+    ::CStateMachine<C_Actor> m_stateMachine;           // +0x58   (0x48) transition signal + state ptr + event ring FIFO
 
-    // C_Signal / delegate list objects (each 0x10). KCD1 had CombatChanged x2 +
-    // ItemChanged (0x30 each); KCD2 uses a wider set of 0x10-sized slots.
-    uint8_t  m_signalB0[0x10];               // +0xB0   ctor sub_1803F0B9C; slot 206 returns &this
-    uint8_t  m_signalC0[0x10];               // +0xC0   ctor sub_1803F0B9C; slot 207 returns &this
-    uint8_t  m_signalD0[0x10];               // +0xD0   ctor sub_1803F0B80
-    uint8_t  m_signalE0[0x10];               // +0xE0   ctor sub_1803F0B80
-    uint8_t  m_signalF0[0x10];               // +0xF0   ctor sub_1803F1230
-    uint8_t  m_signal100[0x10];              // +0x100  ctor sub_1803F1230
-    uint8_t  m_signal110[0x10];              // +0x110  ctor sub_1803F1214
-    uint8_t  m_signal120[0x10];              // +0x120  ctor sub_1803F1214
-    uint8_t  m_signal130[0x10];              // +0x130  ctor sub_180BC83B4
-    uint8_t  m_signal140[0x10];              // +0x140  ctor sub_1803F1140
-    uint8_t  m_signal150[0x10];              // +0x150  ctor sub_1803F1140
+    // Signals (each 0x10; all 12 heads verified C_Signal by their init/grow/append helper sets).
+    // Emit sites are fully inlined, so arg lists below come from CONNECT-THUNK signatures (a lower
+    // bound on arity); arg TYPES beyond arity are inferred from the sharing class, not symbols.
+    wh::shared::C_Signal<> m_signalUnkA0;              // +0xA0   T UNRECOVERABLE (sentinel is the process-wide shared empty-COW sentinel)
+    wh::shared::C_Signal<wh::combatmodule::I_CombatActor&> m_signalCombatChanged1;  // +0xB0   VERIFIED (same offset/T as KCD1)
+    wh::shared::C_Signal<wh::combatmodule::I_CombatActor&> m_signalCombatChanged2;  // +0xC0   VERIFIED (ctor sub_1803F0B9C)
+    wh::shared::C_Signal<> m_signalCombatResetD0;      // +0xD0   NO payload (2 independent thunks ignore all args); T shared w/ C_CombatModule+0x10 & combo mgr; name tentative
+    wh::shared::C_Signal<> m_signalCombatResetE0;      // +0xE0   pair of +0xD0 (same T)
+    wh::shared::C_Signal<> m_signalSoulPropertyF0;     // +0xF0   1 ref arg (thunk sub_1829A9EB8); T shared w/ C_SoulPropertyNotifier; name tentative
+    wh::shared::C_Signal<> m_signalSoulProperty100;    // +0x100  pair of +0xF0 (connect via sub_180D5A7C4)
+    wh::shared::C_Signal<> m_signalItemChanged110;     // +0x110  >=4 args (subject*, int flags [bit 0x20000000], bool added, bool removed; thunk sub_180879408); KCD1 m_signalItemChanged successor
+    wh::shared::C_Signal<> m_signalItemChanged120;     // +0x120  pair of +0x110 (same T)
+    wh::shared::C_Signal<> m_signalUnk130;             // +0x130  1 ref arg (thunk sub_18330283C); semantic unresolved
+    wh::shared::C_Signal<> m_signalRagdoll140;         // +0x140  1 ref arg; T shared w/ C_RagdollManager+0x38; name tentative
+    wh::shared::C_Signal<> m_signalRagdoll150;         // +0x150  pair of +0x140 (connect sub_180B1CAA4, thunk sub_1828F8F3C)
 
-    uint8_t  m_specMode[4];                  // +0x160  indexed byte block; slot 117 reads [+3], slot 118 writes; ctor sub_182864BC4
-    float    m_health;                       // +0x164  100.0    VERIFIED (GetHealth/IsDeadByHealth fallback)
-    float    m_maxHealth;                    // +0x168  100.0    VERIFIED (Get/SetMaxHealth slots 33/32)
-    float    m_gravity;                      // +0x16C  9.81
-    uint32_t m_unk170;                       // +0x170  0
-    int32_t  m_counter174;                   // +0x174  slot 135 increments
-    int32_t  m_counter178;                   // +0x178  slot 136 increments
-    float    m_unk17C;                       // +0x17C  1.0
-
-    void*    m_pMovementController;          // +0x180  VERIFIED (slot 69 GetMovementController)
-    void*    m_pTaskHandle188;               // +0x188  dtor _AutoDeleter<_TaskProcHandle>   /* tentative */
-    C_RagdollManager* m_pRagdollManager;     // +0x190  VERIFIED (slot 37 IsDead -> vfunc[1])
-    void*    m_pUnk198;                       // +0x198  dtor sub_1808E15C8                   /* tentative */
-    wh::combatmodule::C_CombatActor* m_pCombatActor; // +0x1A0  VERIFIED (slot 193 getter)
-    C_ActionActor* m_pActionActor;           // +0x1A8  VERIFIED (slot 142 getter)
-    void*    m_pUnk1B0;                       // +0x1B0  VERIFIED getter (slot 194); dtor sub_1808E1800
-    void*    m_pUnk1B8;                       // +0x1B8  dtor sub_1808E15E8                   /* tentative */
-    void*    m_pUnk1C0;                       // +0x1C0  dtor sub_1808E1730                   /* tentative */
-    void*    m_pUnk1C8;                       // +0x1C8  dtor sub_1808E15E8                   /* tentative */
-
-    uint8_t  m_lookAimIK[0x58];              // +0x1D0  ctor sub_1811FF97C (look/aim IK)     /* tentative size */
-
-    CryStringT<char> m_string228;                    // +0x228  CryStringT<char>; ctor sub_1803D1670 /* tentative */
-    CryStringT<char> m_string230;                    // +0x230  CryStringT<char>; ctor sub_1803D1670 /* tentative */
-    void*    m_pStanceState;                 // +0x238  alloc 0x98; eye height @+0x48 (slot 59), view rot @+0x24 (slots 56-58)
-    void*    m_pUnk240;                       // +0x240  dtor sub_18046B5D8                   /* tentative */
-    void*    m_pUnk248;                       // +0x248  dtor sub_1808E165C                   /* tentative */
-    void*    m_pUnk250;                       // +0x250  dtor sub_1808E1830; slot 171 (byte@+0x18) /* tentative */
-    void*    m_pUnk258;                       // +0x258  dtor sub_1808E1670                   /* tentative */
-    void*    m_pUnk260;                       // +0x260  dtor sub_1808E16B8; slot 140         /* tentative */
-    void*    m_pAnimatedCharacter;           // +0x268  VERIFIED (slots 220/221 GetAnimatedCharacter; = ctor 2nd arg)
-    uint64_t m_unk270;                       // +0x270  0
-    uint64_t m_unk278;                       // +0x278  0
-    void*    m_pUnk280;                       // +0x280  dtor sub_18048D5D0; slot 203         /* tentative */
-
-    uint8_t  m_subObject288[0x188];          // +0x288  ctor sub_180F2CEB4 (stance / damage zones region) /* tentative */
-    uint8_t  m_unk410[0x20];                 // +0x410  ctor sub_1809CF028                   /* tentative */
-    uint32_t m_unk430;                       // +0x430  0
-    uint8_t  m_stateBlock[0x94];             // +0x434  memset 0x94 (state block)            /* tentative */
-    float    m_unk4C8;                       // +0x4C8  1.0 (slot 218 getter)
-    float    m_unk4CC;                       // +0x4CC  (slot 219 getter)
-    float    m_viewDist1;                    // +0x4D0  11.0
-    float    m_viewDist2;                    // +0x4D4  11.0
-    uint8_t  _pad4D8[0x10];                  // +0x4D8
-    uint8_t  m_unk4E8[0x0C];                 // +0x4E8  memset region                        /* tentative */
-    uint32_t m_unk4F4;                       // +0x4F4  0  (unaligned qword in binary -> split to keep offset)
-    uint32_t m_unk4F8;                       // +0x4F8  0
-    uint32_t m_unk4FC;                       // +0x4FC  0
-    float    m_unk500;                       // +0x500  1.0
-    uint32_t _pad504;                        // +0x504
-    uint8_t  m_unk508[0x58];                 // +0x508  ctor sub_180705668                   /* tentative */
-    int32_t  m_audioId560;                   // +0x560  slot 146 setter (audio id)
-    int32_t  m_bIsAIControlled;              // +0x564  cleared by slot 209                  /* tentative name */
-    uint64_t m_unk568;                       // +0x568  cleared by slot 209
-    float    m_perceptionMinAngle;           // +0x570  0.0872665 (5 deg)
-    float    m_perceptionConeHalfAngle;      // +0x574  0.5235988 (30 deg)
-    float    m_perceptionRangeScale;         // +0x578  1.0
-    uint8_t  m_unk57C[0x84];                 // +0x57C  ctor sub_1810F44DC (flag byte @+0x5FC, slot 230) /* tentative */
-
-    uint8_t  m_subObject600[0x48];           // +0x600  ctor sub_181237C88 (byte @+0x63D slot 125) /* tentative */
-    uint8_t  m_unk648[0x10];                 // +0x648  ctor sub_1812B0C50                   /* tentative */
-    uint8_t  m_unk658[0x10];                 // +0x658  ctor sub_180C48214                   /* tentative */
-    void*    m_pSoul;                        // +0x668  VERIFIED (GetHealth/IsDeadByHealth read this; non-owning I_Soul*)
-    uint8_t  m_unk670[0x10];                 // +0x670  ctor sub_1809CF050; dtor sub_1803D1648 /* tentative */
-    uint8_t  m_unk680[0x10];                 // +0x680  subscription slot (ptr @+0x688, slot 127) /* tentative */
-    uint8_t  m_subObject690[0xA8];           // +0x690  ctor sub_1808E25C4 / fini sub_1808DDEA8 /* tentative */
-    void*    m_pUnk738;                       // +0x738  slots 133/134 getter                 /* tentative */
-    uint8_t  m_navBlock740[0x60];            // +0x740  dtor sub_1823CF004 (invalid-id -1 @+0x768) /* tentative */
-    uint8_t  m_boneSystem[0x1F0];            // +0x7A0  ctor sub_1809CEA50 (bone/slot system) /* tentative */
-    void*    m_pUnk990;                       // +0x990  obj with vtable (+0x310 used, slots 122/184/231/235) /* tentative */
-    uint8_t  m_unk998[0x18];                 // +0x998  memset region                        /* tentative */
-
-    uint16_t m_flags9B0;                     // +0x9B0  initialised to 3
-    uint8_t  m_flags9B2;                     // +0x9B2  bit4 set in ctor; slot 120 clears bit2
-    uint8_t  m_flags9B3;                     // +0x9B3  slot 153 sets bit0
-    uint8_t  m_flag9B4;                      // +0x9B4  0; checked by FullSerialize (slot 14)
-    uint8_t  _pad9B5[3];                     // +0x9B5
-    void*    m_pUnk9B8;                       // +0x9B8  last member; subscription; dtor sub_1808E15D8 /* tentative */
+    uint8_t  m_flags160[3];                            // +0x160  flags (ctor sub_182864BC4)
+    uint8_t  m_flag163;                                // +0x163  (ctor 0)
+    float    m_health;                                 // +0x164  init 100.0
+    float    m_maxHealth;                              // +0x168  init 100.0
+    float    m_gravity;                                // +0x16C  init 9.81
+    uint32_t m_unk170;                                 // +0x170  (ctor 0, gravity qword high dword)
+    uint8_t  m_unk174[8];                              // +0x174  qword (ctor 0; unaligned)
+    float    m_someScale17C;                           // +0x17C  init 1.0
+    IMovementController* m_pMovementController;         // +0x180  IActor GetMovementController[69]  VERIFIED
+    void*    m_deferTaskHandle;                        // +0x188  Concurrency::_AutoDeleter<_TaskProcHandle> (CryDeferrable task)
+    C_RagdollManager* m_pRagdollManager;               // +0x190  (0xD0, ctor sub_181366514)  VERIFIED
+    C_ActorShoutManager* m_pShoutManager;              // +0x198  OWNED 56B (PostInit; RTTI-verified)
+    void*    m_pHelper1A0;                             // +0x1A0  OWNED 16B {C_Actor* owner, int32, bool} (lazy sub_180C02EA0; class name unresolved)
+    void*    m_subscription1A8;                        // +0x1A8  delegate/subscription token
+    C_DamageZoneManager* m_pDamageZoneManager;         // +0x1B0  (0x90, ctor sub_181366548)  tentative (no RTTI; KCD1 m_damageZones)
+    void*    m_pUnk1B8;                                // +0x1B8  raw ptr (external setter)
+    void*    m_pUnk1C0;                                // +0x1C0  raw ptr (external setter)
+    void*    m_pUnk1C8;                                // +0x1C8  raw ptr (external setter)
+    C_PhysicsIgnoreLists m_physicsIgnore;              // +0x1D0  (0x58)
+    CryStringT<char> m_str228;                         // +0x228
+    CryStringT<char> m_str230;                         // +0x230
+    C_ActorPhysicsState* m_pPhysicsState;              // +0x238  (owns 0x98 alloc, ctor sub_181110A8C)  VERIFIED
+    C_HitDeathReactions* m_pHitDeathReactions;         // +0x240  (0x290, ctor sub_180515D90)  VERIFIED (NEW in KCD2)
+    void*    m_pHelper248;                             // +0x248  OWNED 32B {C_Actor* owner, ...} (PostInit sub_18124D554; class name unresolved)
+    C_ActorHelper* m_pHelper250;                       // +0x250  (0x20 alloc, ctor sub_181332C70)
+    C_ActorConditionController* m_pConditionController; // +0x258  (0x80, ctor sub_18136662C)  VERIFIED (NEW in KCD2)
+    C_ActorDirtHelper* m_pDirtHelper;                  // +0x260  OWNED 0x50 polymorphic (setter sub_1808DD578; RTTI-verified)
+    Offsets::IGameObject* m_pGameObjectOwner;          // +0x268  owning IGameObject (ctor arg a2)  VERIFIED
+    void*    m_pUnk270;                                // +0x270  raw ptr (ctor 0; no setter isolable)
+    wh::combatmodule::C_CombatActor* m_pCombatActor;   // +0x278  VERIFIED (GetOrCreateCombatActor this[79])  [KCD1 was +0x1A0]
+    C_ActionActor* m_pActionActor;                     // +0x280  (0x80, ctor sub_180515D90)  VERIFIED
+    wh::animationmodule::C_LookAimIK m_lookAimIK;      // +0x288  (0x188) "Bip01 Head", 6 blend channels
+    void*    m_block410[3];                            // +0x410  3 zeroed pointers (vector-shaped but never destructed; identity unresolved)
+    uint8_t  _pad428[8];                               // +0x428
+    uint32_t m_unk430;                                 // +0x430  (ctor 0)
+    uint8_t  m_stateBlock[0x94];                       // +0x434  zeroed state block (ctor memset 0x94; internals unresolved)
+    float    m_unk4C8;                                 // +0x4C8  init 1.0
+    uint8_t  _pad4CC[4];                               // +0x4CC
+    float    m_viewDist1;                              // +0x4D0  init 11.0
+    float    m_viewDist2;                              // +0x4D4  init 11.0
+    uint8_t  m_block4D8[0x1C];                          // +0x4D8  zero-init block (mirror target of C_StanceState fields)
+    uint32_t m_linkedEntityId;                         // +0x4F4  EntityId (ctor 0)  tentative
+    uint8_t  _pad4F8[4];                               // +0x4F8
+    uint32_t m_unk4FC;                                 // +0x4FC  (ctor 0)
+    float    m_moveSpeedModifier;                      // +0x500  init 1.0
+    uint8_t  _pad504[4];                               // +0x504
+    C_StanceState m_stanceState;                       // +0x508  (0x4C)
+    uint8_t  _pad554[0x10];                            // +0x554
+    Vec3     m_lastNavMeshPos;                         // +0x564  zeroed Vec3 (KCD1-correlated name; tentative)
+    float    m_perceptionMinAngle;                     // +0x570  init 0.0872665 (~5 deg)
+    float    m_perceptionConeHalfAngle;                // +0x574  init 0.5235988 (30 deg)
+    float    m_perceptionRangeScale;                   // +0x578  init 1.0
+    C_ActorMoveParams m_moveParams;                    // +0x57C  (0x84; m_maxSpeed 80.0 @abs 0x5D8)
+    C_ActorBounds m_bounds;                            // +0x600  (0x3C; not a clean AABB -- see its header)
+    uint32_t m_unk63C;                                 // +0x63C  (ctor 0)
+    uint16_t m_unk640;                                 // +0x640  (ctor 0)
+    uint8_t  _pad642[6];                               // +0x642
+    wh::shared::C_Signal<> m_observer648;              // +0x648  1 entity-ref arg (thunk sub_1829AA0E8 via connect sub_180AAFDC8)
+    wh::shared::C_Signal<> m_observer658;              // +0x658  1 entity-ref arg (same handler as +0x648 but distinct T)
+    IAnimatedCharacter* m_pAnimatedCharacter;          // +0x668  manager-owned (setter sub_18068A324; behavioral identification)
+    CryStringT<char> m_fragmentName;                   // +0x670  "m_FragmentID" (ctor sub_1809CF050)
+    C_ActorEquipmentHandler* m_pEquipmentHandler;      // +0x678  list-owned 24B (setter sub_1808D28FC; RTTI-verified)
+    C_ClothingAttachmentOwnerActor* m_pClothingOwner;  // +0x680  (0x10, ctor sub_18136657C)  VERIFIED
+    void*    m_aiSubMgrCache;                          // +0x688  lazy AI-only cache from a gEnv submanager (pointee unresolved)
+    C_IdleState m_idleState;                           // +0x690  (0xA8)
+    C_AIAnimationState* m_pAIAnimationState;           // +0x738  OWNED 48B, AI-only (PostInit; RTTI-verified)
+    std::vector<void*> m_vec740;                       // +0x740  element type unidentified
+    const void* m_pEntityClassParams;                  // +0x758  NON-OWNED per-entity-class registry entry (element type unresolved)
+    SMannequinActorStateParams* m_pMannequinStateParams; // +0x760  Mannequin-manager owned (PostInit; RTTI-verified)
+    int32_t  m_invalidId;                              // +0x768  init -1
+    uint32_t m_unk76C;                                 // +0x76C  (ctor 0)
+    uint32_t m_unk770;                                 // +0x770  (ctor 0)
+    uint32_t m_unk774;                                 // +0x774  (ctor 0)
+    uint64_t m_unk778;                                 // +0x778  (ctor 0)
+    uint8_t  m_block780[0x20];                         // +0x780  zero-init block (internals unresolved)
+    C_BoneSlotSystem m_boneSlotSystem;                 // +0x7A0  (0x1E0) flat S_BoneSlot[10] -- NOT a hash map
+    uint8_t  m_block980[0x10];                         // +0x980  ctor zeroes 12B here (Vec3-shaped) + 4 pad; identity unresolved
+    C_ActorModel* m_pActorModel;                       // +0x990  (0x408, ctor sub_1813665D4)  VERIFIED
+    uint8_t  m_block998[0x10];                         // +0x998  ctor zeroes 12B (Vec3-shaped) + 4 pad; identity unresolved
+    void*    m_pUnk9A8;                                // +0x9A8  raw ptr (ctor 0; pointee polymorphic but base unproven)
+    uint16_t m_stateWord9B0;                           // +0x9B0  init 3
+    uint8_t  m_flags9B2;                               // +0x9B2  bitflags (ctor (x&1)|0x10)
+    uint8_t  m_flags9B3;                               // +0x9B3  bitflags (ctor &= 0xFC)
+    uint8_t  m_flag9B4;                                // +0x9B4  (ctor 0; FullSerialize[14] checks it)
+    uint8_t  _pad9B5[3];                               // +0x9B5
+    void*    m_pDeferredMonster;                       // +0x9B8  I_SystemFromMonsterLODPostponer deferred node (last member)
 };
-static_assert(sizeof(C_Actor) == 0x9C0);
+static_assert(sizeof(C_Actor) == 0x9C0, "C_Actor must be 0x9C0");
+static_assert(offsetof(C_Actor, m_stateMachine) == 0x58, "m_stateMachine offset");
+static_assert(offsetof(C_Actor, m_physicsIgnore) == 0x1D0, "m_physicsIgnore offset");
+static_assert(offsetof(C_Actor, m_lookAimIK) == 0x288, "m_lookAimIK offset");
+static_assert(offsetof(C_Actor, m_stanceState) == 0x508, "m_stanceState offset");
+static_assert(offsetof(C_Actor, m_moveParams) == 0x57C, "m_moveParams offset");
+static_assert(offsetof(C_Actor, m_bounds) == 0x600, "m_bounds offset");
+static_assert(offsetof(C_Actor, m_idleState) == 0x690, "m_idleState offset");
+static_assert(offsetof(C_Actor, m_boneSlotSystem) == 0x7A0, "m_boneSlotSystem offset");
 
-} // namespace wh::entitymodule
+}  // namespace wh::entitymodule
