@@ -15,6 +15,8 @@ namespace wh::rpgmodule {
 
 class C_WorldTimeTimedBuff : public C_TimedSoulBuffInstance   // +0x00  (0xE8; no own members)
 {
+public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_WorldTimeTimedBuff;
 };
 static_assert(sizeof(C_WorldTimeTimedBuff) == 0xE8, "C_WorldTimeTimedBuff must be 0xE8");
 

@@ -15,6 +15,7 @@ namespace wh::rpgmodule {
 
 class I_BuffInitParams {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_I_BuffInitParams;
     virtual ~I_BuffInitParams() = default;   // [0]  (sub_182878EC8 in the interface vtable)
     virtual void vf1() = 0;                  // [1]  _purecall -- signature/semantics UNRESOLVED
     virtual void vf2() = 0;                  // [2]  _purecall -- signature/semantics UNRESOLVED

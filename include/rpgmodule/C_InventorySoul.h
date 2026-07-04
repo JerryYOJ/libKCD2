@@ -15,6 +15,7 @@ class C_Soul;
 
 class C_InventorySoul {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_InventorySoul;
     virtual ~C_InventorySoul() = default;   // +0x00  primary vptr
     void*    m_secondaryVptr08;             // +0x08  secondary base vptr (base identity unresolved)
     void*    m_secondaryVptr10;             // +0x10  secondary base vptr (base identity unresolved)

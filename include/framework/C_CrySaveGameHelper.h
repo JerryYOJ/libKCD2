@@ -14,6 +14,7 @@ namespace wh::framework {
 
 class C_CrySaveGameHelper {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_CrySaveGameHelper;
     virtual ~C_CrySaveGameHelper() = default;   // +0x00  vptr (slot order UNVERIFIED)
     int32_t  m_int08;             // +0x08  ctor init 3 (role unresolved)
     uint32_t _pad0C;              // +0x0C

@@ -20,6 +20,7 @@ namespace wh::framework {
 
 class C_SaveGameDescription {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_SaveGameDescription;
     // DLC presence record (RTTR-confirmed vector<C_DLCDescription> element; interior not RE'd).
     class C_DLCDescription;
 

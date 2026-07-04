@@ -38,6 +38,7 @@ static_assert(sizeof(S_BuffRecord16) == 0x10, "S_BuffRecord16 must be 0x10");
 
 class C_BuffInstanceBase {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_BuffInstanceBase;
     // 16 virtual slots (vtable 0x183A38BA0). Slot NAMES/semantics are KCD1 priors except where noted.
     virtual bool Init(void* a_pBuffData, I_BuffInitParams* a_pInitParams) = 0;  // [0]  KCD2 leaf impl 0x18063A8F0
     virtual bool Update() = 0;                                                  // [1]  KCD2 leaf impl 0x1811908DC

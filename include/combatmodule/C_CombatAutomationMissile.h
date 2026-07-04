@@ -12,6 +12,7 @@ namespace wh::combatmodule {
 
 class C_CombatAutomationMissile : public C_CombatAutomationAction {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_CombatAutomationMissile;
     const char* GetName() const override { return "AutomationMissile"; }   // [3] 0x181A7E200
     int GetActionKind() const override { return 15; }                      // [10] 0x181A7D840
 

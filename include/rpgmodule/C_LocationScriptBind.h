@@ -26,6 +26,8 @@ namespace wh::rpgmodule {
 
 class C_LocationScriptBind : public ::CScriptableBase   // +0x00  (0x60; no own members)
 {
+public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_LocationScriptBind;
 };
 static_assert(sizeof(C_LocationScriptBind) == 0x60, "C_LocationScriptBind must be 0x60");
 

@@ -13,6 +13,8 @@ namespace wh::rpgmodule {
 
 class C_ModifiableTimedBuff : public C_TimedSoulBuffInstance   // +0x00  (0xE8; no own members)
 {
+public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_ModifiableTimedBuff;
 };
 static_assert(sizeof(C_ModifiableTimedBuff) == 0xE8, "C_ModifiableTimedBuff must be 0xE8");
 

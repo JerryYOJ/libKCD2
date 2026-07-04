@@ -24,6 +24,11 @@
 //
 // [MODERATE vs KCD1] m_pFastTravel moved +0xB0 -> +0x28 (still an owned C_FastTravel*).
 
+namespace rttr {
+class type;
+namespace detail { struct derived_info; }
+}  // namespace rttr
+
 namespace wh::playermodule {
 
 class C_FastTravel;
@@ -34,6 +39,16 @@ class C_PlayerModule
     , public Offsets::ISystemEventListener
 {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_PlayerModule;
+
+    // C_BaseModule contributes slots [0..6] only (7-slot base vtable 0x183A83EA8);
+    // the 4 extra slots in the 11-slot C_PlayerModule vtable are its OWN:
+    virtual void _vf7();                                     // [7]  0x1809DD2D0  role unresolved
+    // RTTR_ENABLE() expansion (same trio as C_GUIModule/C_UIBase [7..9]):
+    virtual rttr::type get_type() const;                     // [8]  0x182EB7BB0
+    virtual void* get_ptr();                                 // [9]  0x1805F5DA0  `return this`
+    virtual rttr::detail::derived_info get_derived_info();   // [10] 0x182EB7954
+
     // C_BaseModule base occupies +0x00 (vtable) / +0x08 (m_state) / +0x0C (pad);
     // ISystemEventListener base occupies +0x10 (vtable). Members follow at +0x18.
     void*                   m_sub18;            // +0x18  sub-manager (0xB0,  ctor sub_180EF7184)

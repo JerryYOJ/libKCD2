@@ -11,6 +11,7 @@ namespace wh::entitymodule {
 
 class C_ItemHolder {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_ItemHolder;
     virtual ~C_ItemHolder() = default;   // [0]
 };
 

@@ -10,6 +10,7 @@ namespace wh::entitymodule {
 
 class I_InventoryListener {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_I_InventoryListener;
     virtual ~I_InventoryListener() = default;   // [0]
     virtual void OnInventoryChanged() {}        // [1]  (KCD1-derived; KCD2 slots unverified)
 };

@@ -22,6 +22,7 @@ class C_Inventory
     , public C_ItemCollection      // +0xE8   (0x70: sub-vtable + collection listeners)
 {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_Inventory;
     void*    m_registryOrManager;              // +0x158  owning manager/registry back-ptr (runtime-set)  tentative
     CryGUID  m_guid;                           // +0x160  16-byte registry key (the C_InventoryManager map key)  VERIFIED (key)
     void*    m_sharedState;                    // +0x170  intrusive-refcounted shared default block

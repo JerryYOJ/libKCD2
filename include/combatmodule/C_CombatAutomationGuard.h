@@ -22,6 +22,7 @@ enum class E_CombatExplicitGuardRequest : uint8_t {
 
 class C_CombatAutomationGuard : public C_CombatAutomationAction {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_CombatAutomationGuard;
     const char* GetName() const override { return "AutomationGaurd"; }   // [3] 0x181A7E1E0 (sic -- binary typo)
     int GetActionKind() const override { return 2; }                     // [10] 0x181A72480
 

@@ -620,6 +620,9 @@ protected:
 
 // Summary:
 //	 Color transformation to control flash movie clips
+// [STALE vs KCD2 BINARY] the shipping binary expects {float mul[4]; uint8 add[4]} (0x14), not
+// this 0x20 shape. Use the canonical replica CryEngine/CryCommon/SFlashCxform.h instead (and do
+// NOT include this stock header in the same TU as the replicas).
 struct SFlashCxform
 {
 	ColorF mul;
@@ -760,6 +763,9 @@ private:
 	float m_alpha;
 	bool m_visible;
 
+	// [STALE vs KCD2 BINARY] the shipping binary's layout has 8 unknown bytes @+0x2C..+0x33 and
+	// m_varsSet at +0x34 (sizeof 0x38, not 0x2C). Use the canonical replica
+	// CryEngine/CryCommon/SFlashDisplayInfo.h instead.
 	unsigned short m_varsSet;
 };
 

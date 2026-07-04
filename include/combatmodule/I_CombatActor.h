@@ -24,6 +24,7 @@ namespace wh::combatmodule {
 
 class I_CombatActor {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_I_CombatActor;
     virtual ~I_CombatActor() = default;                 // [0]
     virtual void unk_1() = 0;                           // [1]
     virtual void unk_2() = 0;                           // [2]

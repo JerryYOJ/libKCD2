@@ -16,6 +16,7 @@ namespace wh::rpgmodule {
 
 class C_FactionBase {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_FactionBase;
     virtual ~C_FactionBase() = default;   // +0x00  vptr (C_Faction vtable 0x183B1DF10 in the derived object)
     void*          m_debugRepLogVptr;     // +0x08  embedded C_DebugReputationLog vptr (extent unresolved)
     uint64_t       m_unk10[6];            // +0x10..+0x40  C_DebugReputationLog interior / unresolved (ctor-zeroed)

@@ -12,6 +12,7 @@ namespace wh::game {
 
 class I_EntitySideEffectCallback {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_I_EntitySideEffectCallback;
     virtual ~I_EntitySideEffectCallback() = default;              // [0] (ICF-folded with [1])
     virtual void OnEntitySideEffect(void* sideEffect) = 0;        // [1] sub_182767740
 };

@@ -22,6 +22,7 @@ class I_WorldInventoryListener;
 
 class C_WorldInventory : public C_InventoryBase {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_WorldInventory;
     // 4-byte-element vector; element type only size-proven (EntityId / enum / uint32) -- tentative.
     std::vector<uint32_t>                                                  m_vecE8;           // +0x0E8
     std::unordered_set<C_Item*, wh::shared::S_DefaultHash<C_Item*>>        m_registeredItems; // +0x100  (FNV-1a of 8B ptr)

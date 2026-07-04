@@ -72,6 +72,7 @@ namespace wh::rpgmodule {
 class C_ScriptBindSoul : public ::CScriptableBase   // +0x00  (0x60)
 {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_ScriptBindSoul;
     Offsets::IScriptSystem* m_pSS2;        // +0x60  raw ctor pSS (*a2; base +0x50 holds the vf[+0x278] accessor result)
     void*                   m_pGlobalSys;  // +0x68  = qword_18492D8A0 (runtime-init global, 0 statically; INFERRED gEnv/module singleton)
     void*                   m_pOwner;      // +0x70  ctor a4 (INFERRED owning module/context)

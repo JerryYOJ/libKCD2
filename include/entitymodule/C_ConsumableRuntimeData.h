@@ -14,6 +14,7 @@ namespace wh::entitymodule {
 class C_ConsumableRuntimeData : public I_ItemRuntimeData   // +0x00  (0x58)
 {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_ConsumableRuntimeData;
     uint32_t m_state58[4];   // +0x58  OWORD zero-init; internal split UNRESOLVED (INFERRED
                              //        {doses/charges, potency, ...}; no reader decompiled)
 };

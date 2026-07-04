@@ -14,6 +14,7 @@ namespace wh::combatmodule {
 
 class I_CombatActorHuntAttack {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_I_CombatActorHuntAttack;
     virtual ~I_CombatActorHuntAttack() = default;            // [0] (thunk to primary dtor)
     virtual int  TryHuntAttack(uint32_t victimEntityId) = 0; // [1] sub_180A512B0
     virtual void Request(uint32_t victimEntityId) = 0;       // [2] sub_18275EB64

@@ -16,6 +16,7 @@ namespace wh::framework {
 
 class C_ModuleMessage {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_ModuleMessage;
     virtual ~C_ModuleMessage() = default;                      // [0]  0x18257DCDC
     virtual void OnProcessed() {}                              // [1]  nullsub in base
     virtual void _vf2() {}                                     // [2]  nullsub (distinct slot; role unresolved)
@@ -45,6 +46,7 @@ enum class E_SaveType : uint8_t {
 // vtable 0x183E19478 (same 5-slot shape as the base); m_type == 4.
 class C_ModuleMessageSaveGameRequest : public C_ModuleMessage {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_ModuleMessageSaveGameRequest;
     E_SaveType saveType;   // +0x18  builder arg
     uint8_t    _pad19[7];  // +0x19  (heap size not literal-confirmed; layout rounds to 0x20)
 };

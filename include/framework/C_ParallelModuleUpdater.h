@@ -17,6 +17,7 @@ namespace wh::framework {
 
 class C_ParallelModuleUpdater : public Offsets::IGameFrameworkListener {   // vptr +0x00
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_ParallelModuleUpdater;
     uint64_t m_unk08;                     // +0x08  interior not walked
     JobManager::SJobState* m_pJobState;   // +0x10  update-job state (impl object 2096B, sub_18078BDEC)
     uint64_t m_unk18[8];                  // +0x18..+0x58  interior not walked (flagged)

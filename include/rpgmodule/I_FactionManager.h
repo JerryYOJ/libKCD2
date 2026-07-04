@@ -12,6 +12,7 @@ namespace wh::rpgmodule {
 
 class I_FactionManager {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_I_FactionManager;
     virtual ~I_FactionManager() = default;   // slot position UNVERIFIED
 };
 

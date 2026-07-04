@@ -28,6 +28,7 @@ enum class E_RelationType : int32_t {
 
 class C_FactionRelation {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_FactionRelation;
     virtual ~C_FactionRelation() = default;   // +0x00  own vtable (standalone polymorphic)
 
     CryStringT<char> m_target;      // +0x08  RTTR "target" (target-faction name)

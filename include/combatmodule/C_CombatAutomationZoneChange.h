@@ -31,6 +31,7 @@ struct S_ZoneMapEntry {
 
 class C_CombatAutomationZoneChange : public C_CombatAutomationAction {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_CombatAutomationZoneChange;
     const char* GetName() const override { return "AutomationZoneChange"; }   // [3] 0x181A7E260
     int GetActionKind() const override { return 3; }                          // [10] 0x181A72CF0
 

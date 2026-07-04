@@ -7,6 +7,7 @@
 #include "C_CryLoadGameHelper.h"
 #include "S_SaveGameTypeSlot.h"
 #include "S_SaveBuildStamp.h"
+#include "E_SaveGameType.h"
 
 // -----------------------------------------------
 // wh::framework::C_SaveGameManager -- KCD2 WHGame.dll 1.5.6 (kd7u).  sizeof 0x230.
@@ -39,6 +40,13 @@ namespace wh::framework {
 class C_SaveGameManager : public wh::I_ReadinessTask   // +0x00  (0x8; : I_ReadinessDebuggable)
 {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_SaveGameManager;
+    // The readiness chain is dtor-less (see I_ReadinessTask.h); this class introduces the
+    // virtual dtor itself, landing the deleting dtor at slot [5] of its primary vtable.
+    virtual ~C_SaveGameManager();          // [5]  deleting dtor sub_1825BC4F0
+    // 0x180794928 (see hook surface above); index < 0 resolves the slot by name.
+    bool CreateSaveGame(E_SaveGameType type, int32_t index, const char* name);
+
     S_SaveGameTypeSlot m_slotsByType[5];   // +0x008  (5 x 0x48) per-type save lists; indexed by
                                            //         the active slot selector (this + 0x48*idx)
     C_CrySaveGameHelper* m_pSaveHelper;    // +0x170  (mirrored to qword_18547BD38)

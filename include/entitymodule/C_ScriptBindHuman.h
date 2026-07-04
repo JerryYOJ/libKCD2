@@ -60,6 +60,7 @@ namespace wh::entitymodule {
 class C_ScriptBindHuman : public ::CScriptableBase   // +0x00  (0x60)
 {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_ScriptBindHuman;
     ::CScriptTable* m_pParamTable;   // +0x60  obj created via sub_180AED4A8, released via sub_1804FB980 (INFERRED SmartScriptTable)
     void*           m_pContext;      // +0x68  ctor ctx arg (env; pointee unresolved)
     void*           m_pManager;      // +0x70  = ctxProxy->vf89()->vf16() (manager ptr; pointee unresolved)

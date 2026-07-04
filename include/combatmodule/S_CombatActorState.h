@@ -27,8 +27,13 @@
 // opponent tracking moved to C_CombatActorOpponentManager (C_CombatActor+0x3B8).
 //
 // Types/offsets/defaults are ctor-verified. Names marked (tentative) are inferred from type,
-// default value and KCD1 ordering, NOT accessor-verified. The exact committed-attack-zone slot
-// (KCD1 m_committedAttackZone) is one of the StaticDefault<-1> int properties -- unresolved.
+// default value and KCD1 ordering, NOT accessor-verified. Three zone slots are now
+// accessor-PROVEN by 1:1 reader correspondence with the named KCD1 functions (combatmodule
+// src-port session): +0x150 = defense zone (KCD1 +0xBFC), +0x180 = committed attack zone
+// (KCD1 +0xC00), +0x270 = executed attack zone (KCD1 +0xBF4). NOTE: KCD1's standalone
+// notify-setter S_CombatActorState::SetCommittedAttackZone (sub_18045D1EC) has NO KCD2
+// equivalent symbol -- property writes go through template code inlined at the writer sites,
+// so no setter forwarder is ported (write path: unresolved).
 
 namespace wh::entitymodule { enum class E_HandSlot : int32_t; }
 
@@ -68,13 +73,24 @@ struct S_CombatActorState {
     PropCustom<int>                                  m_pIntCfg0C0;         // +0x0C0  init dword_185320BDC
     PropCustom<int>                                  m_pIntCfg0F0;         // +0x0F0  init dword_1853218D0
     PropStatic<int, -1>                              m_pZone120;           // +0x120  -1-reset zone/id candidate (name unresolved)
-    PropCustom<int>                                  m_pIntCfg150;         // +0x150  init dword_1853218D0
-    PropStatic<int, -1>                              m_pZone180;           // +0x180
+    // +0x150  defense zone id (KCD1 m_defenseZoneId +0xBFC). PROVEN: the counter dispatch
+    // sub_181483580 reads the OPPONENT's property +0x150 at exactly the two positions where
+    // KCD1 sub_1805633D0 read opponent state +0xBFC (query init + SyncBlock zone pick); the
+    // combo state-handler sub_180911250 case-8 keys the qword_185321770 map on it.
+    PropCustom<int>                                  m_pDefenseZoneId;     // +0x150  init dword_1853218D0
+    // +0x180  committed/aimed attack zone (KCD1 m_committedAttackZone +0xC00, the swing-
+    // direction lever). PROVEN: combo state-handler correspondence -- KCD1 sub_18045C17C
+    // case-4 latches state+0xC00 into m_lastComboZone; KCD2 sub_180911250 case-4 latches
+    // this property's value. Writer path (aim system) not located -- see header note.
+    PropStatic<int, -1>                              m_pCommittedAttackZone;  // +0x180
     PropStatic<E_HandSlot, (E_HandSlot)1>            m_pHandSlot1B0;       // +0x1B0
     Prop<float>                                      m_pFloat1E0;          // +0x1E0
     PropStatic<int, -1>                              m_pZone210;           // +0x210
     PropStatic<int, -1>                              m_pZone240;           // +0x240
-    PropStatic<int, -1>                              m_pZone270;           // +0x270
+    // +0x270  executed attack zone of the EXECUTING action (KCD1 m_executedAttackZone +0xBF4).
+    // PROVEN: the combo-advance handler sub_180C5C52C reads this property's value exactly
+    // where KCD1 sub_180602C34 read state+0xBF4 (the advance core's match key).
+    PropStatic<int, -1>                              m_pExecutedAttackZone;   // +0x270
     Prop<bool>                                       m_pBool2A0;           // +0x2A0
     Prop<bool>                                       m_pBool2D0;           // +0x2D0
     Prop<bool>                                       m_pBool300;           // +0x300

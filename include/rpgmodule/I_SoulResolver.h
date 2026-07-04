@@ -16,6 +16,7 @@ class C_Soul;
 
 class I_SoulResolver {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_I_SoulResolver;
     virtual C_Soul* GetSoulByWuid(wh::framework::WUID a_wuid) = 0;   // [0]
 };
 

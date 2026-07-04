@@ -14,6 +14,7 @@ namespace wh::combatmodule {
 
 class C_CombatActorHuntAttack : public C_CombatActorObject, public I_CombatActorHuntAttack {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_CombatActorHuntAttack;
     uint32_t m_victimEntityId;   // +0x18  EntityId latched by Request; cleared by Reset
     uint32_t _pad1C;             // +0x1C  tail alignment (never touched)
 };

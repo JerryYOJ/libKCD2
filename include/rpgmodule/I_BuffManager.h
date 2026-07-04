@@ -15,6 +15,7 @@ class C_BuffInstanceBase;
 
 class I_BuffManager {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_I_BuffManager;
     virtual void* AddBuffToSoul(void* a_pSoul, const void* a_buffGuid, const void* a_paramsGuid) = 0; // [0]  sub_1804711BC (soul, guid, guid)
     virtual void* AddBuffByEntity(void* a_entity, const void* a_buffGuid) = 0;  // [1]  sub_1809DC070 (resolves soul via world ctx qword_1853322A0)
     virtual void* CreateBuffInstance(const void* a_buffGuid, void* a_params) = 0; // [2]  sub_1804675A8 -> global RTTR factory sub_18063ACE4

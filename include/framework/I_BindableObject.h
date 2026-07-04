@@ -11,6 +11,7 @@ namespace wh::framework {
 
 class I_BindableObject {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_I_BindableObject;
     virtual ~I_BindableObject() = default;   // [0]
 };
 

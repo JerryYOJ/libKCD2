@@ -7,7 +7,7 @@
 #include "S_FastTravelConfig.h"
 
 // -----------------------------------------------
-// wh::playermodule::C_FastTravel -- KCD2 WHGame.dll 1.5.6 (kd7u).  sizeof 0x130.
+// wh::playermodule::C_FastTravel -- KCD2 WHGame.dll 1.5.6.  sizeof 0x130.
 // -----------------------------------------------
 // RTTI .?AVC_FastTravel@playermodule@wh@@ (TD 0x184DCF148, COL 0x18411DB20, CHD 0x184431CC8)
 // vtable 0x183A84288 (100+ slots)  inline ctor sub_180BE9BA0  dtor sub_182DDD76C.
@@ -19,8 +19,10 @@
 // interfaces) -- flagged, not modeled.
 //
 // === CONTROL / CHEAT SURFACE ===
-//   0x182DE2CC0  StartFastTravel(this, Vec3* target, bool, bool storeToSkipTimeMgr, bool fake)
-//                [cancels if busy; kicks the executor @+0x38 via its vtable[0]]
+//   0x182DE2CC0  StartFastTravel(this, ...) -- misnamed wrapper (cancel-if-busy + delegate to
+//                SetDestination = arm); NOT forwarded. Arm via C_UIMap::SetDestination.
+//   0x182DE28F4  StartTravel(this) -- the real start of an armed travel; tail-calls sub_182DE0DE8
+//                whose ctx+0x130->+0x98 vtable[67] executor moves the player + skips time.
 //   0x182DDFBD0  CancelFastTravel/Stop(this)
 //   0x182DE2D98  EndFastTravel/FinalizeArrival(this, char endReason, ...) [clears +0x48/+0x4A,
 //                teleports, notifies fog/streaming via the +0x58/+0x60 controllers]
@@ -45,12 +47,24 @@ namespace wh::playermodule {
 class C_FastTravel : public wh::I_ReadinessDebuggable   // +0x00  (0x8; RTTI-literal only base)
 {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_FastTravel;
+    // Forwarders for the control surface above (returns not traced -> void where unknown).
+    // Start an already-armed travel (arm first via C_UIMap::SetDestination).  NOP if the
+    // path is not ready.
+    void StartTravel();                                                                               // 0x182DE28F4
+    void CancelFastTravel();                                                                          // 0x182DDFBD0
+    bool IsFastTraveling() const;                                                                     // 0x180534E5C
+
     wh::shared::C_Signal<> m_sig08;   // +0x08  (0x10) delegate table &unk_185665430; signature unresolved
     wh::shared::C_Signal<> m_sig18;   // +0x18  (0x10) delegate table &unk_185665430; signature unresolved
     wh::shared::C_Signal<> m_sig28;   // +0x28  (0x10) FastTravelStarted/Ended broadcast
                                       //        (distinct delegate table &unk_185669B60)
-    void*    m_pTravelExecutor;       // +0x38  runtime-assigned; StartFastTravel invokes its
-                                      //        vtable[0] (beginMovement); concrete type UNRESOLVED
+    void*    m_pTravelExecutor;       // +0x38  = the map UI's I_UIFastTravel base (C_UIMap+0x18)!
+                                      //        Registered by C_UIMap::Init via sub_180ED10A8
+                                      //        (writes a1+0x38 = listener); C_FastTravel reaches
+                                      //        I_UIFastTravel::SetDestination (slot 0) through it.
+                                      //        Typed void* to avoid a guimodule dependency; cast to
+                                      //        wh::playermodule::I_UIFastTravel*.
     uint64_t m_qw40;                  // +0x40  (ctor 0; role unresolved)
     bool     m_isFastTraveling;       // +0x48  half of IsFastTraveling(); cleared by EndFastTravel
     uint8_t  m_flags49;               // +0x49  low 3 bits used (ctor &= 0xF8); bit 0x4 cleared by reset
@@ -66,8 +80,9 @@ public:
                                       //        vtable +0x38/+0x1D0/+0x398; type UNRESOLVED)
     void*    m_pCtrl1;                // +0x60  secondary controller (invoked if != m_pCtrl0;
                                       //        vtable +0x398/+0x3B8; type UNRESOLVED)
-    Vec3     m_posA;                  // +0x68  ctor memset 12B; GetPos returns this (RTTI binder
-                                      //        0x1849E4140)
+    Vec3     m_destination;           // +0x68  FT destination: the arm (sub_182DE27D0) stores the
+                                      //        SetDestination arg here verbatim; mover goal; GetPos
+                                      //        binder 0x1849E4140 returns it
     Vec3     m_dirA;                  // +0x74  arrival/heading dir (runtime-set; EndFastTravel lenSq)
     Vec3     m_dirB;                  // +0x80  second dir/look vector (runtime-set)
     uint32_t _pad8C;                  // +0x8C
@@ -83,7 +98,10 @@ public:
                                       //        byte); released via virtual +0x38 (sub_180968324);
                                       //        concrete type UNRESOLVED
     void*    m_handleA;               // +0x118  owning ptr (dtor sub_1807D048C ->
-                                      //        sub_18194B6E0(obj,1)); type UNRESOLVED
+                                      //        sub_18194B6E0(obj,1)); built by the I_UIFastTravel
+                                      //        registration sub_180ED10A8 (sub_180ED11B8 from the
+                                      //        GUI module's C_FaderController, backref@+0x18=this);
+                                      //        concrete type UNRESOLVED
     uint64_t m_qw120;                 // +0x120  (ctor 0; role unresolved)
     void*    m_handleB;               // +0x128  owning ptr, released via virtual[2]/Release
                                       //        (dtor sub_1804A760C; fog-of-war reveal or cutscene

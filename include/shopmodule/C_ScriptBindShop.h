@@ -31,6 +31,7 @@ namespace wh::shopmodule {
 class C_ScriptBindShop : public ::CScriptableBase   // +0x00  (0x60)
 {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_ScriptBindShop;
     Offsets::IScriptSystem* m_pSS2;          // +0x60  raw ctor pScriptSystem
     void*                   m_pSubsystem;    // +0x68  = pScriptSys->vf79() result (pointee unresolved)
     void*                   m_pShopManager;  // +0x70  0 at ctor; populated during module wiring --

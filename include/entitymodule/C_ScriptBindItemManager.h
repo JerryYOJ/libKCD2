@@ -26,6 +26,7 @@ namespace wh::entitymodule {
 class C_ScriptBindItemManager : public ::CScriptableBase   // +0x00  (0x60)
 {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_ScriptBindItemManager;
     void* m_pSystem;   // +0x60  entity/game system ptr (factory-written)
 };
 static_assert(sizeof(C_ScriptBindItemManager) == 0x68, "C_ScriptBindItemManager must be 0x68");

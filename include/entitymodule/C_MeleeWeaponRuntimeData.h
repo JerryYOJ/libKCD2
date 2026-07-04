@@ -13,6 +13,8 @@ namespace wh::entitymodule {
 
 class C_MeleeWeaponRuntimeData : public C_WeaponRuntimeData   // +0x00  (0xD8; no own members)
 {
+public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_MeleeWeaponRuntimeData;
 };
 static_assert(sizeof(C_MeleeWeaponRuntimeData) == 0xD8, "C_MeleeWeaponRuntimeData must be 0xD8");
 

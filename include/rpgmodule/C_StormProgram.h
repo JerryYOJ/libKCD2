@@ -12,6 +12,7 @@ namespace wh::rpgmodule::storm {
 
 class C_StormProgram {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_StormProgram;
     virtual ~C_StormProgram() = default;   // slot order UNVERIFIED
     uint64_t m_unk08[15];                  // +0x08..+0x80  unresolved interior
 };

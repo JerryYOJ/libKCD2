@@ -17,6 +17,7 @@ namespace wh::entitymodule {
 class C_WeaponRuntimeData : public C_WeaponEquipRuntimeData   // +0x00  (0xC0)
 {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_WeaponRuntimeData;
     uint32_t m_unkC0;    // +0xC0  ctor-unwritten gap (late-init; type/role unresolved)
     int32_t  m_fieldC4;  // +0xC4  (=0; role unresolved)
     void*    m_fieldC8;  // +0xC8  (=0; role unresolved)

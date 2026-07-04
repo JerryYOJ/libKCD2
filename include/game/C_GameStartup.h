@@ -30,6 +30,7 @@ class C_GameStartup : public Offsets::IGameStartup,          // +0x00  primary v
                       public Offsets::IWindowMessageHandler   // +0x08  secondary vtable 0x183d18730
 {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_GameStartup;
     // ---- C_GameStartup's own virtuals (extend the primary/IGameStartup vtable) ----
     virtual bool     _vf9(int* pOut) = 0;   // [9]  0x181ab13b0  *pOut = 0; return false                                 /* tentative */
     virtual intptr_t _vf10() = 0;           // [10] 0x1839e3f1c  forwards to IGame(g_pGame)::vftable[36] (+0x120)         /* tentative */

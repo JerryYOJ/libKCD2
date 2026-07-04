@@ -59,6 +59,7 @@ namespace wh::entitymodule {
 class C_ScriptBindPlayer : public ::CScriptableBase   // +0x00  (0x60)
 {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_ScriptBindPlayer;
     ::CScriptTable* m_pParamTable;   // +0x60  ref-counted SmartScriptTable (CreateTable via sub_180AED4A8,
                                      //        released via sub_1804FB980 in dtor; purpose name INFERRED)
     void*           m_pSystemArg;    // +0x68  ctor a2

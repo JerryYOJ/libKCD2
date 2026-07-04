@@ -14,6 +14,7 @@ namespace wh::entitymodule {
 class C_AmmoRuntimeData : public C_WeaponEquipRuntimeData   // +0x00  (0xC0)
 {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_AmmoRuntimeData;
     int32_t  m_ammoCount;   // +0xC0  (=0; INFERRED stack/charge/ammo count -- no reader decompiled)
     uint32_t _padC4;        // +0xC4
 };

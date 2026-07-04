@@ -27,6 +27,7 @@ namespace wh::rpgmodule {
 
 class C_BuffInitParamsDefault : public I_BuffInitParams {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_BuffInitParamsDefault;
     void vf1() override;   // [1] = sub_181A730F0
     void vf2() override;   // [2] = sub_18066CD10
     void vf3() override;   // [3] = sub_181A82500

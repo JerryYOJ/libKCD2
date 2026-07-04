@@ -15,6 +15,7 @@ namespace wh::entitymodule {
 
 class C_Animal : public C_Actor {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_Animal;
     int32_t  m_animalId;                               // +0x9C0  init -1 (character/skeleton system id)
     int32_t  m_unk9C4;                                 // +0x9C4  (ctor 0)
     int32_t  m_unk9C8;                                 // +0x9C8  (ctor 0)

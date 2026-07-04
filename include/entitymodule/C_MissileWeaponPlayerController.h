@@ -11,13 +11,7 @@
 // primary vtable (0x183A80E30: [0] dtor, [1] event callback sub_182AA91C4) +
 // wh::framework::I_SourceMonitorListener @+0x08 (0x183A80E20, 1 slot).
 
-namespace wh::framework {
-// 1-slot listener (callback sub_1814DBC2C); no dtor slot observed -- declaration minimal.
-class I_SourceMonitorListener {
-public:
-    virtual void OnSourceEvent() = 0;   // [0]
-};
-}
+#include "../framework/I_SourceMonitorListener.h"   // canonical 1-slot listener (callback here: sub_1814DBC2C)
 
 // CryAction action-map event listener (merged primary base; 2-slot vtable).
 struct IActionMapEventListener {
@@ -34,8 +28,9 @@ class C_MissileWeaponPlayerController
     , public wh::framework::I_SourceMonitorListener   // +0x08
 {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_MissileWeaponPlayerController;
     void OnActionMapEvent(void* event) override {}
-    void OnSourceEvent() override {}
+    void OnSourceEvent(void* a2, bool bActive) override {}
 
     int64_t  m_field10;          // +0x10  init -100000 (sentinel; meaning unresolved)
     C_Player* m_pOwner;          // +0x18

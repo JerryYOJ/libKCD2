@@ -12,6 +12,7 @@ namespace wh::rpgmodule {
 
 class C_CompanionManager {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_CompanionManager;
     virtual ~C_CompanionManager() = default;   // slot order UNVERIFIED
     uint64_t m_unk08[23];                      // +0x08..+0xC0  unresolved interior
 };

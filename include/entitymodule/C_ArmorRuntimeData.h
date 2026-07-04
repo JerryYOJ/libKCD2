@@ -18,6 +18,7 @@ namespace wh::entitymodule {
 class C_ArmorRuntimeData : public C_EquippableItemRuntimeData   // +0x00  (0xA8)
 {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_ArmorRuntimeData;
     uint8_t  m_flagA8;       // +0xA8  (=0)
     uint8_t  m_flagsA9[4];   // +0xA9  ctor unaligned dword-write 0 (packed flag bytes)
     uint8_t  m_flagsAD[2];   // +0xAD  ctor word-write 0

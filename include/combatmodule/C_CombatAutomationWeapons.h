@@ -22,6 +22,7 @@ class C_CombatAutomationWeapons
     , public wh::game::I_EntitySideEffectCallback      // +0x38  (vtable 0x183B0A260)
 {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_CombatAutomationWeapons;
     const char* GetName() const override { return "AutomationWeapons"; }   // [3] 0x181A7E250
     int GetActionKind() const override { return 14; }                      // [10] 0x181A7D850
     void OnEntitySideEffect(void* sideEffect) override {}                  // sub_182767740: sets the bool in m_stateFlags80 on match

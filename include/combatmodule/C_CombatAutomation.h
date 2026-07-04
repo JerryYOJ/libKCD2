@@ -38,6 +38,7 @@ class C_CombatAutomation
     , public I_CombatAutomation           // +0x18  (vptr only)
 {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_CombatAutomation;
     E_CombatSubsystem GetSubsystemId() const override { return static_cast<E_CombatSubsystem>(25); }  // 0x181A7E2D0
     const char* GetName() const override { return "Automation"; }                                     // 0x181A7E150
 

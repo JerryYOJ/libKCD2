@@ -19,6 +19,7 @@ namespace wh::entitymodule {
 class C_EquippableItemRuntimeData : public I_ItemRuntimeData   // +0x00  (0x58)
 {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_EquippableItemRuntimeData;
     void*    m_sentinel58;       // +0x58  single-qword node the second list points at (UNRESOLVED)
     bool     m_flag60;           // +0x60  (=0)
     uint8_t  _pad61[7];          // +0x61

@@ -21,6 +21,7 @@ namespace wh::entitymodule {
 
 class I_ItemAttachmentListener {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_I_ItemAttachmentListener;
     virtual ~I_ItemAttachmentListener() = default;                              // [0]  0x1829FD7E4
     virtual void OnItemAttached(uint64_t entityId, unsigned int handSlot) = 0;  // [1]  (attach; order inferred from KCD1)
     virtual void OnItemDetached(uint64_t entityId, unsigned int handSlot) = 0;  // [2]  (detach)

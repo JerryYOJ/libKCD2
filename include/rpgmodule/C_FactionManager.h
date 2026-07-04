@@ -48,6 +48,12 @@ class C_FactionManager
     , public wh::databasemodule::I_DatabaseListener  // +0x08  (secondary vtable)
 {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_FactionManager;
+
+    // Forwards to the engine accessor sub_180471F74 (TLS-guarded lazy init of the
+    // 0x1854B88C0 static, atexit dtor). Impl in src/rpgmodule/C_FactionManager.cpp.
+    static C_FactionManager* GetInstance();
+
     S_FactionCompactMap m_factionIndex;   // +0x10  role inferred: faction index (key8 -> value8; LOW)
     S_FactionCompactMap m_relationIndex;  // +0x20  role inferred: cross-faction relations (RTTR
                                           //        GetFactionRelation(string,string) -> C_FactionRelation; LOW)

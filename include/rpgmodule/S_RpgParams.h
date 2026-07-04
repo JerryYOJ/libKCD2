@@ -21,6 +21,7 @@ static_assert(sizeof(S_RPGValue) == 4);
 // Live RPG value store. Slots begin at +0x08 (offset already skips the vtable); a S_RPGParam's
 // byte offset indexes this array as values[offset/4].
 struct S_Constants {
+    inline static constexpr auto RTTI = Offsets::RTTI_S_Constants;
     virtual void _vf0() = 0;                 // [0]
     virtual void _vf1() = 0;                 // [1]
     virtual void _vf2() = 0;                 // [2]

@@ -26,6 +26,11 @@ namespace wh::rpgmodule {
 
 class C_BuffManager : public I_BuffManager {   // +0x00  vptr (I_BuffManager base is data-less)
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_BuffManager;
+
+    // Forwards to the engine's lazy allocator sub_180E820D4 (mutex-guarded; instance
+    // qword_18548E360), so first-call init runs. Impl in src/rpgmodule/rpgmodule.cpp.
+    static C_BuffManager* GetInstance();
     wh::shared::C_Signal<> m_signalA;   // +0x08  buff removed/changed (fired by RemoveBuff sub_18063A664
                                         //        + exclusivity resolver sub_18063B300); connect [11]/disconnect [12].
                                         //        Published name UNVERIFIED ("rpgModule:buffTagChanged" family?)

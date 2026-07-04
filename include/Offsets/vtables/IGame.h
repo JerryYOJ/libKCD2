@@ -1,5 +1,8 @@
 #pragma once
 #include <cstdint>
+#include "IGameFrameworkListener.h"   // Offsets::IGameFrameworkListener (moved to its own header,
+                                      // slot order re-verified from the CCryAction broadcast sites)
+#include "IInputEventListener.h"      // Offsets::IInputEventListener (extracted to its own header)
 
 // -----------------------------------------------
 // IGame + game-framework listener interfaces — KCD2 binary vtable order
@@ -73,21 +76,9 @@ struct IGame {
     virtual void        _vf40(void* p) = 0;                   // [40] 0x180EC7810  (*(void**)(this+0x130))[0x70]=p
 };
 
-// ---------------------------------------------------------------------------
-// IGameFrameworkListener — IGameFramework update/save listener (9 slots).
-// this-adjust: subobject at C_Game+0x08.  Names tentative (SDK order + fingerprints).
-// ---------------------------------------------------------------------------
-struct IGameFrameworkListener {
-    virtual void _vf0(char flags) = 0;                        // [0] thunk (sub rcx,8) -> C_Game scalar deleting dtor
-    virtual void OnPostUpdate(float dt) = 0;                  // [1] 0x180FC45FC  sends C_ModuleMessage 0x24   tentative
-    virtual void OnSaveGame(void* pSaveGame) = 0;             // [2] ret 0                                    tentative
-    virtual void OnLoadGame(void* pLoadGame) = 0;             // [3] ret 0                                    tentative
-    virtual void OnLevelEnd(const char* nextLevel) = 0;       // [4] ret 0                                    tentative
-    virtual void OnActionEvent(void* action) = 0;             // [5] 0x180668FF0  cmp [action],0x14           tentative
-    virtual void OnPreRender() = 0;                           // [6] ret 0                                    tentative
-    virtual void OnSavegameFileLoadedInMemory(const char*) = 0; // [7] ret 0                                  tentative
-    virtual void OnForceLoadingWithFlash() = 0;              // [8] ret 0                                    tentative
-};
+// (IGameFrameworkListener lives in IGameFrameworkListener.h; C_Game implements it at +0x08 --
+//  its [0] is a thunk `sub rcx,8` into the C_Game scalar deleting dtor, [1] OnPostUpdate
+//  0x180FC45FC sends C_ModuleMessage 0x24, [5] OnActionEvent 0x180668FF0.)
 
 // ---------------------------------------------------------------------------
 // ILevelSystemListener — level load/unload listener (10 slots; classic SDK is 7,
@@ -104,17 +95,6 @@ struct ILevelSystemListener {
     virtual void OnUnloadComplete(void* pLevel) = 0;          // [7] ret 0                                    tentative
     virtual void _vf8() = 0;                                  // [8] 0x180FC4194
     virtual void _vf9() = 0;                                  // [9] 0x180FC4248
-};
-
-// ---------------------------------------------------------------------------
-// IInputEventListener — raw input listener (4 slots, NO virtual dtor).
-// this-adjust: C_Game+0x18.
-// ---------------------------------------------------------------------------
-struct IInputEventListener {
-    virtual bool OnInputEvent(const void* event) = 0;         // [0] 0x1809E4E84
-    virtual bool OnInputEventUI(const void* event) = 0;       // [1] 0x181500E50  reads C_Game+0x70
-    virtual int  GetPriority() const = 0;                     // [2] ret 0
-    virtual bool _vf3(const void* event) = 0;                 // [3] 0x180838AE0  ret false (OnInputEventPostProcess? tentative)
 };
 
 // ---------------------------------------------------------------------------

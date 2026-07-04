@@ -19,11 +19,13 @@ class I_PerkEffect;   // owned polymorphic element of m_effects (vfuncs @+16/+24
 // Minimal event-listener base (vtable-only; slot layout not enumerated).
 class I_EventListener {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_I_EventListener;
     virtual ~I_EventListener() = default;
 };
 
 class C_PerkList : public I_EventListener {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_PerkList;
     C_Soul*  m_pOwner;                       // +0x08  owner soul
     std::vector<uint32_t> m_vec1;            // +0x10  trivially-destructible elems (reset = clear); element type UNRESOLVED
     std::vector<void*>    m_vec2;            // +0x18? -> actually +0x28; see note. elems destroyed via sub_18046C388; type UNRESOLVED

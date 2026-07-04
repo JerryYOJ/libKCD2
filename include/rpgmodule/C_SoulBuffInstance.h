@@ -24,6 +24,7 @@ namespace wh::rpgmodule {
 
 class C_SoulBuffInstance : public C_BuffInstance<C_Soul> {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_SoulBuffInstance;
     virtual int16_t ApplyMaterialEffect(C_Soul* a_pSoul);   // [22]  [KCD1 prior]
     virtual void RemoveMaterialEffect(C_Soul* a_pSoul);     // [23]  [KCD1 prior]
     virtual bool HasLuaScript() { return false; }           // [24]  [KCD1 prior]

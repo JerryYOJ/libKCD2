@@ -16,6 +16,8 @@ namespace wh::rpgmodule {
 
 class C_WantedBuff : public C_TwoStateSoulBuffInstance   // +0x00  (0xD8; no own members)
 {
+public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_WantedBuff;
 };
 static_assert(sizeof(C_WantedBuff) == 0xD8, "C_WantedBuff must be 0xD8");
 

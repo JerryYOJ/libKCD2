@@ -16,6 +16,7 @@ namespace wh::rpgmodule {
 class C_TwoStateWithActivationSoulBuffInstance : public C_TwoStateSoulBuffInstance   // +0x00  (0xD8)
 {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_TwoStateWithActivationSoulBuffInstance;
     bool    m_activated;   // +0xD8  activation latch (name INFERRED; ctor inits false)
     uint8_t _padD9[7];     // +0xD9
 };

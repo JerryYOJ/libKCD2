@@ -19,10 +19,12 @@ class C_Actor;
 // MI bases (vtable-only; slot roles beyond those cited not enumerated).
 class I_IdleState {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_I_IdleState;
     virtual ~I_IdleState() = default;
 };
 class I_SynchronizedActorAnim {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_I_SynchronizedActorAnim;
     virtual ~I_SynchronizedActorAnim() = default;    // [0] nullsub
     virtual void* _vf1() = 0;                        // [1] sub_181E80970 (reads owner)
     virtual void* GetOwner() = 0;                    // [2] sub_18113CE50: returns owner
@@ -42,6 +44,7 @@ static_assert(sizeof(S_IdleRegistration) == 0x28, "S_IdleRegistration must be 0x
 
 class C_IdleState : public I_IdleState, public I_SynchronizedActorAnim {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_IdleState;
     void* _vf1() override { return nullptr; }
     void* GetOwner() override { return m_pOwner; }
 

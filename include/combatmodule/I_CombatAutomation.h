@@ -10,6 +10,7 @@ namespace wh::combatmodule {
 
 class I_CombatAutomation {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_I_CombatAutomation;
     virtual ~I_CombatAutomation() = default;   // [0] (thunk to the automation dtor)
 };
 

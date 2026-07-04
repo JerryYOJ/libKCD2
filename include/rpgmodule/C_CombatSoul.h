@@ -16,6 +16,7 @@ class C_Soul;
 
 class C_CombatSoul {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_CombatSoul;
     virtual ~C_CombatSoul() = default;    // slot order UNVERIFIED
     wh::shared::C_Signal<> m_signal08;    // +0x08  purpose unresolved
     wh::shared::C_Signal<> m_signal18;    // +0x18

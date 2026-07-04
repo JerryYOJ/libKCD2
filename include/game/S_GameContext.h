@@ -28,6 +28,7 @@ namespace wh::soundmodule      { class C_SoundModule; }
 namespace wh::musicmodule      { class C_MusicModule; }
 namespace wh::shopmodule       { class C_ShopModule; }
 namespace wh::conceptmodule    { class C_ConceptModule; }
+namespace wh::questmodule      { class C_QuestModule; }
 namespace wh::playermodule     { class C_PlayerModule; }
 namespace wh::rpgmodule        { class C_RPGModule; }
 namespace wh::environmentmodule{ class C_EnvironmentModule; }
@@ -49,7 +50,7 @@ struct S_GameContext {
     soundmodule::C_SoundModule*             m_pSoundModule;       // +0x100                                     VERIFIED
     musicmodule::C_MusicModule*             m_pMusicModule;       // +0x108  NEW in KCD2                        VERIFIED
     shopmodule::C_ShopModule*               m_pShopModule;        // +0x110                                     VERIFIED
-    uint8_t                                 _pad118[0x08];        // +0x118 module ptr (unpinned)
+    questmodule::C_QuestModule*             m_pQuestModule;       // +0x118  (registrar sub_180C9DA44)   VERIFIED
     conceptmodule::C_ConceptModule*         m_pConceptModule;     // +0x120  NEW in KCD2                        VERIFIED
     playermodule::C_PlayerModule*           m_pPlayerModule;      // +0x128  (was +0xE8)                        VERIFIED
     rpgmodule::C_RPGModule*                 m_pRPGModule;         // +0x130                                     VERIFIED

@@ -17,6 +17,7 @@ enum E_CombatSubsystem : int32_t;   // subsystem ids (KCD2 values: 3=ActionManag
 
 class C_CombatActorObject {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_CombatActorObject;
     virtual ~C_CombatActorObject() = default;                    // [0]
     virtual void Reset() {}                                      // [1]  subsystem state reset
     virtual E_CombatSubsystem GetSubsystemId() const = 0;        // [2]

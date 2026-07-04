@@ -6,7 +6,9 @@
 // -----------------------------------------------
 // CryCommon/IFlashPlayer.h type, GLOBAL namespace (matches the binary; the
 // IFlashPlayer replica's SetVariable/GetVariable/Invoke take it by const ref /
-// as a 0x10-stride array, converted to GFxValue by sub_18020C590).
+// as a 0x10-stride array). KCD2 1.5.6: converted to GFxValue by sub_1807F6490
+// and back by sub_1807F659C — layout {Type@0, Data@8} and Type order verified
+// unchanged vs KCD1 (eInt/eUInt/eFloat all -> GFx number 3, str->4, wstr->5).
 //
 // Lifted from the SDK struct verbatim: the body is pure POD + inline accessors
 // with NO engine deps — it is only the SDK *header* that pulls Cry_Math.h

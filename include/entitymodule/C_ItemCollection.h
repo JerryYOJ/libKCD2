@@ -15,6 +15,7 @@ namespace wh::entitymodule {
 
 class C_ItemCollection {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_ItemCollection;
     virtual ~C_ItemCollection() = default;      // +0x00  own sub-vtable 0x183A2D698
     // Keyed collection-listener registry (0x68): inner vtable @+0x08, delegate vector, WUID guards.
     wh::shared::C_DependentListeners<I_ItemCollectionListener, wh::framework::WUID, 2> m_collectionListeners;  // +0x08

@@ -16,6 +16,7 @@ namespace wh::entitymodule {
 
 class C_InventoryBase : public C_ItemHolder {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_InventoryBase;
     std::vector<C_ItemHolder*> m_items;        // +0x08  held items  VERIFIED layout
     std::vector<C_ItemHolder*> m_items2;       // +0x20  secondary list (role UNVERIFIED)
     // Keyed listener registry (0xB0): delegate vector @+0x40, primary/secondary WUID guard stacks.

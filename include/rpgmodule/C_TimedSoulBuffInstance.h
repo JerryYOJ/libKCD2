@@ -22,6 +22,7 @@ namespace wh::rpgmodule {
 
 class C_TimedSoulBuffInstance : public C_SoulBuffInstance {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_TimedSoulBuffInstance;
     double m_duration;      // +0xD8  seconds (widened from float def+0x30; < 0 = infinite)
     double m_elapsedTime;   // +0xE0  seconds accumulator (Init zeroes; Update += dt)
 };

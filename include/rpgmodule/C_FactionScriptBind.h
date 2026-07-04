@@ -23,6 +23,8 @@ namespace wh::rpgmodule {
 
 class C_FactionScriptBind : public ::CScriptableBase   // +0x00  (0x60; no own members)
 {
+public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_FactionScriptBind;
 };
 static_assert(sizeof(C_FactionScriptBind) == 0x60, "C_FactionScriptBind must be 0x60");
 

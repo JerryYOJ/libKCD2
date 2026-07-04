@@ -36,6 +36,7 @@ namespace wh::entitymodule {
 class C_ScriptBindInventory : public ::CScriptableBase   // +0x00  (0x60)
 {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_ScriptBindInventory;
     void* m_pSystem;     // +0x60  entity/game system ptr (factory-written)
     void* m_pGlobal68;   // +0x68  = qword_18492D8A0 (runtime-init global; pointee unresolved)
 };

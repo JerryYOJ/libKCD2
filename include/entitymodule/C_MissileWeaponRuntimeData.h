@@ -21,6 +21,7 @@ namespace wh::entitymodule {
 class C_MissileWeaponRuntimeData : public C_WeaponRuntimeData   // +0x00  (0xD8)
 {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_MissileWeaponRuntimeData;
     uint8_t  m_fieldD8;      // +0xD8  (=0; copied individually by clone fn; role unresolved)
     uint8_t  m_fieldD9;      // +0xD9  (=0; copied individually by clone fn; role unresolved)
     uint8_t  _padDA[6];      // +0xDA

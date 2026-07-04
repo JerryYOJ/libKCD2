@@ -24,6 +24,7 @@ static_assert(sizeof(S_AttackOverride) == 0x14, "S_AttackOverride must be 0x14")
 
 class C_CombatAutomationAttack : public C_CombatAutomationAction {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_CombatAutomationAttack;
     const char* GetName() const override { return "AutomationAttack"; }   // [3] 0x181A7E170
     int GetActionKind() const override { return 10; }                     // [10] 0x181A74D20
 

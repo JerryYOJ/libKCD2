@@ -50,6 +50,7 @@ class C_Game : public Offsets::IGame,                    // +0x00
                public Offsets::I_ModuleMessageListener   // +0x20
 {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_Game;
     static C_Game* GetInstance() { return *reinterpret_cast<C_Game**>(REL::Offset(0x549D300).address()); }
 
     // ===================================================================

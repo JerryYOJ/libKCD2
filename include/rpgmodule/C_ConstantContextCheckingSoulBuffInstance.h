@@ -14,6 +14,8 @@ namespace wh::rpgmodule {
 
 class C_ConstantContextCheckingSoulBuffInstance : public C_ConstantSoulBuffInstance   // +0x00  (0xD8)
 {
+public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_ConstantContextCheckingSoulBuffInstance;
 };
 static_assert(sizeof(C_ConstantContextCheckingSoulBuffInstance) == 0xD8,
               "C_ConstantContextCheckingSoulBuffInstance must be 0xD8");

@@ -1,6 +1,8 @@
 #pragma once
 #include <cstdint>
 #include "I_CombatActor.h"
+#include "E_CounterActionType.h"
+#include "../CryEngine/CryCommon/smartptr.h"
 #include "../crysystem/EntityEventListenerWithCleanup.h"
 #include "../framework/C_Signal.h"
 #include "../framework/C_Listeners.h"
@@ -15,8 +17,10 @@
 //
 // Bases: I_CombatActor @+0x00 (provides the interface vtable incl. GetEntity), EntityEventListenerWithCleanup
 // @+0x08. Own members from +0x10. The 217-slot primary vtable is not re-enumerated here (only the base
-// interface slots are declared); SetAction / DispatchCounterAction could NOT be located statically (the
-// action/combo dispatch was reworked) -- do NOT hardcode a slot, find it via a runtime vtable dump.
+// interface slots are declared). The counter dispatch was located as the non-virtual core sub_181483580
+// (see DispatchCounterAction below); the actor-level SetAction entry is the non-virtual sub_18090C850
+// (copies the smart_ptr and forwards to the director's sub_1809CC3D4). Their vtable SLOT numbers (if any)
+// remain unknown -- do NOT hardcode a slot, find it via a runtime vtable dump.
 //
 // [FUNDAMENTAL vs KCD1] sizeof 0x780 -> 0x448; every offset moved. MI: I_ItemAttachmentListener base
 //   REMOVED, IEntityEventListener folded into EntityEventListenerWithCleanup. C_Signal shrank 0x30 -> 0x10;
@@ -35,7 +39,8 @@ namespace wh::combatmodule {
 enum class E_CombatActorStateId : int32_t;
 namespace E_SignalSource { enum Type : int32_t; }
 namespace E_WeaponKind   { enum Type : int32_t; }
-class  I_CombatActorActionPtr;   // smart-ptr to an I_CombatActorAction
+class  I_CombatActorAction;
+typedef _smart_ptr<I_CombatActorAction> I_CombatActorActionPtr;   // identical typedef in I_CombatActorAction.h
 struct S_HitInfo;
 struct S_MeleeHitDetails;
 
@@ -82,6 +87,31 @@ class C_CombatActor
     , public ::EntityEventListenerWithCleanup          // +0x08  (2-slot secondary vtable)
 {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_CombatActor;
+
+    // ---- non-virtual methods (forwarders in src/combatmodule/C_CombatActor.cpp) ----
+
+    // Creates a counter action through the matching factory AND dispatches it (SetAction +
+    // opponent-manager SetLockAction internally). Core sub_181483580 (KCD1 sub_1805633D0
+    // analogue; KCD1's 3-arg thin wrapper sub_18069536C has no KCD2 equivalent -- the engine
+    // uses per-type wrappers instead, see E_CounterActionType.h). pOutAction receives the
+    // created action (caller must Release). scopeIndex: animation scope index (0 = primary).
+    // useOpponentDefenseZone: SyncBlock path only -- pick the opponent's LIVE defense-zone
+    // property (+0x150) instead of the trigger's stored zone (KCD1 a5 semantics, identical).
+    // queryId: second field of the perfect-block factory query; the engine's own wrappers pass
+    // the resolved id global dword_18532102C for PerfectBlock/SyncPerfectBlock and -1/caller
+    // values elsewhere; -1 mirrors the KCD1 thin-wrapper default.
+    void DispatchCounterAction(I_CombatActorActionPtr* pOutAction, E_CounterActionType type,
+                               uint32_t scopeIndex = 0, bool useOpponentDefenseZone = false,
+                               int32_t queryId = -1);
+
+    // Engage `target` as this actor's 1v1 opponent: extracts the target's entity handle
+    // (target->GetEntity()+0x38, identical to KCD1) and forwards through the gate helper
+    // sub_180B21328 (no-op unless m_isFullyBuilt @+0x27A) into m_pOpponentManager's
+    // UpdateOpponent (sub_180B2158C). The hunt-attack Request (sub_18275EB64) calls this both
+    // ways to establish the attacker<->victim link, exactly like KCD1. sub_182757B10.
+    void SetOpponent(C_CombatActor* target);
+
     uint8_t  m_updateMode;                             // +0x28   init 4
     uint8_t  _pad29[7];                                // +0x29
     uint64_t m_field30;                                // +0x30   (zero-init; unverified)

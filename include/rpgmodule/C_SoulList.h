@@ -9,6 +9,7 @@
 #include "C_StormProgram.h"
 #include "../framework/I_WUIDMappingProvider.h"
 #include "../framework/S_WuidSlot.h"
+#include "../framework/WUID.h"
 #include "../framework/C_Signal.h"
 #include "../framework/HashPrimitives.h"
 #include "../databasemodule/I_DatabaseListener.h"
@@ -49,6 +50,12 @@ class C_SoulList
     , public wh::databasemodule::I_DatabaseListener  // +0x10
 {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_SoulList;
+
+    // ---- engine-function forwarders (src/rpgmodule/C_Soul.cpp) ----
+    static C_SoulList* GetInstance();                          // C_RPGModule::GetInstance()->m_pSoulList
+    C_Soul* LookupByWUID(const wh::framework::WUID& wuid);     // sub_181F985D0(&m_soulTable, &wuid)
+
     wh::shared::C_Signal<> m_onSoulAdded;    // +0x18  (purpose inferred from context; dtor sub_182D2532C)
     wh::shared::C_Signal<> m_onSoulRemoved;  // +0x28  (purpose inferred; dtor sub_182D25384)
     S_SoulWuidTable m_soulTable;             // +0x38  slots @abs +0x60 (lookup base = this+0x38)

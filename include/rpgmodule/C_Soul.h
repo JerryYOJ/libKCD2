@@ -50,6 +50,18 @@ class C_Soul
     , public UnsafeOp::CryDeferrableSlot                 // +0x10  stateful 0x10 deferrable (RTTI CHD base)
 {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_Soul;
+
+    // ---- engine-function forwarders (src/rpgmodule/C_Soul.cpp) ----
+    // sub_180648B18(soul, statId, 0) -- derived-stat evaluator (the Lua GetDerivedStat
+    // impl rejects statId >= 218 before calling it).
+    float GetDerivedStat(int statId) const;
+    // Lua HasAbility semantics (handler 0x182CF7D88): worker sub_1809DCC70 searches the
+    // sorted ability block @+0x320 (also true when the all-abilities cvar is set); ids
+    // 0 / 73 additionally require derived stat 186 / 187 > 0. KCD2 ability ids differ
+    // from KCD1's E_SoulAbility -- not yet enumerated, hence the raw uint32_t.
+    bool HasAbility(uint32_t abilityId) const;
+
     UnsafeOp::CryDeferrableSlot m_deferred2;   // +0x20  second deferrable -- MEMBER, not in the CHD
     wh::framework::WUID m_selfWuid;            // +0x30  ctor inits INVALID (-1, qword_185332358); factory
                                                //        writes slotIdx | 0x05 << 56 (soul WUID tag = 5)

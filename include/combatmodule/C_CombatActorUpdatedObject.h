@@ -14,6 +14,7 @@ namespace wh::combatmodule {
 
 class C_CombatActorUpdatedObject : public C_CombatActorObject {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_CombatActorUpdatedObject;
     // Four per-phase tick callbacks [6..9], one per m_updateFlags bit (mapping = inference from the
     // four registration lists in sub_180914834; all resolve to no-op stubs in the automation vtables).
     virtual void UpdatePhase1() {}       // [6]

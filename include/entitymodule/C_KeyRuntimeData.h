@@ -14,6 +14,7 @@ namespace wh::entitymodule {
 class C_KeyRuntimeData : public I_ItemRuntimeData   // +0x00  (0x58)
 {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_KeyRuntimeData;
     int64_t m_keyRef;   // +0x58  (=0; INFERRED key/lock reference -- no reader decompiled)
 };
 static_assert(sizeof(C_KeyRuntimeData) == 0x60, "C_KeyRuntimeData must be 0x60");

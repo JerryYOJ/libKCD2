@@ -25,6 +25,7 @@ class C_CombatActorDirector
     , public C_CombatActorObject               // +0x90  (vtable @+0x90, C_CombatActor* owner @+0x98)
 {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_CombatActorDirector;
     // channel id -> connection handle (node 0x30 => 16-byte pair payload; value = signal/connection
     // handle per KCD1 correspondence, insert site not decompiled).
     std::map<int32_t, void*> m_channelSubscriptions;   // +0xA0

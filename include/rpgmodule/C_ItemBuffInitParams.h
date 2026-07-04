@@ -16,6 +16,7 @@ namespace wh::rpgmodule {
 
 class C_ItemBuffInitParams : public C_BuffInitParamsDefault {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_ItemBuffInitParams;
     uint64_t m_itemParam;   // +0x08  source-item id (likely item WUID -- UNVERIFIED)
 };
 static_assert(sizeof(C_ItemBuffInitParams) == 0x10, "C_ItemBuffInitParams must be 0x10");

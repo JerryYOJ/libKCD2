@@ -46,6 +46,7 @@ class C_Faction
     , public std::enable_shared_from_this<C_Faction>  // +0x78  (0x10 weak_ptr; CHD mdisp 0x78)
 {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_Faction;
     std::vector<std::shared_ptr<C_Faction>> m_children;  // +0x88  RTTR "Children" (sub-factions;
                                                           //        strong _Decref sub_1804F6588)
     CryStringT<char> m_uiName;             // +0xA0  RTTR "UIName" (reg offset 160)

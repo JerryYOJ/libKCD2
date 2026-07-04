@@ -32,6 +32,14 @@ struct S_InventoryPoolBlock {
 
 class C_InventoryManager : public wh::framework::I_WUIDMappingProvider {  // +0x00  (combined vtable; also I_InventoryListener)
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_InventoryManager;
+    // Created by the C_EntityModule ctor (sub_180BE8968, slot a1[29], alloc 0x100280 == sizeof);
+    // mirrored to global qword_185487A58.
+    static C_InventoryManager* GetInstance();
+    // Registry lookup sub_181EC6B20(this+0x28, &wuid): validates type byte 3 + generation
+    // (WUID bits 16..31) + the inventory's stored WUID.
+    C_Inventory* LookupByWUID(const wh::framework::WUID& wuid);
+
     wh::shared::C_Signal<const CryGUID&, C_Inventory*> m_onInventoryCreated;   // +0x08  emitted on create
     wh::shared::C_Signal<const CryGUID&, C_Inventory*> m_onInventoryRemoved;   // +0x18  emitted on remove
     // --- bespoke C_Inventory object pool (+0x28..+0x50) ---

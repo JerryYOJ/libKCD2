@@ -55,7 +55,12 @@ class C_RPGModule
     , public wh::framework::C_ParallelModuleUpdater   // +0x10  (0x70; vptr also serves IGameFrameworkListener)
 {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_RPGModule;
     // Owned sub-objects, all ctor-allocated (alloc size + pointee RTTI vtable verified):
+    // Instance global qword_1853322A0 (written by ctor sub_180BE8EEC; also read by the
+    // soul ability worker sub_1809DCC70). Impl in src/rpgmodule/rpgmodule.cpp.
+    static C_RPGModule* GetInstance();
+
     C_SoulList*     m_pSoulList;          // +0x80  (0x100220, ctor sub_180BEAE80)  VERIFIED
     C_Calendar*     m_pCalendar;          // +0x88  (0xA0)  VERIFIED
     C_RPGDialog*    m_pRPGDialog;         // +0x90  (8)  VERIFIED

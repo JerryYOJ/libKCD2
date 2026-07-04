@@ -8,18 +8,29 @@
 // Address: WHGame+0x492D7F8 (.data, IDA labels as gEnv)
 // Non-polymorphic global; every +0x08 slot from +0x00 to +0x1B8 named.
 // VERIFIED slots recovered from direct-absolute field reads + the vtable call each reader makes.
-// Offsets that differ from KCD1: pPhysicalWorld +0x28->+0x38, pLog +0xE0->+0xE8, pFlashUI +0x130->+0x140.
+// Offsets that differ from KCD1: pPhysicalWorld +0x28->+0x38, pLog +0xE0->+0xE8,
+// pFlashUI +0x130->+0x140, pHardwareMouse +0x110->+0x120.
+//
+// gEnv base note: CSystem keeps its gEnv pointer at CSystem+0x20, pointing at
+// 0x18492D800 (== this struct base 0x18492D7F8 + 8). So a writer that stores to
+// "gEnv+0xE0" in code coordinates lands at header offset +0xE8 (both = 0x18492D8E8).
+// The +0x08 skew was cross-checked on three known slots: code+0xA8 -> pConsole
+// (header +0xB0, 0x18492D8A8), code+0xE0 -> pLog (header +0xE8, 0x18492D8E8),
+// code+0x118 -> pHardwareMouse (header +0x120, 0x18492D918).
 
 namespace Offsets {
     struct IScriptSystem; struct IPhysicalWorld; struct IInput; struct ITimer;
     struct IGame; struct IEntitySystem; struct IConsole; struct ISystem;
-    struct ILog; struct IRenderer; struct IFlashUI;
+    struct ILog; struct IRenderer; struct IFlashUI; struct I3DEngine;
+    struct IHardwareMouse;
 }
 
 struct SSystemGlobalEnvironment {
     void*                       pDialogSystem;          // +0x00
     void*                       p3DEngine_DEAD;         // +0x08  guarded dead slot (as in KCD1)
-    void*                       pNetwork;               // +0x10
+    Offsets::I3DEngine*         p3DEngine;              // +0x10  VERIFIED live I3DEngine* (CScriptBind_System +
+                                                        //        e_TimeOfDay handler dispatch through it, 833 refs;
+                                                        //        earlier "pNetwork" label was wrong)
     void*                       pLobby;                 // +0x18
     void*                       _unk20;                 // +0x20
     void*                       _unk28;                 // +0x28
@@ -53,11 +64,11 @@ struct SSystemGlobalEnvironment {
     void*                       _unk108;                // +0x108
     Offsets::IRenderer*         pRenderer;              // +0x110  VERIFIED: renderer vtable calls
     void*                       _unk118;                // +0x118
-    void*                       _unk120;                // +0x120
+    Offsets::IHardwareMouse*    pHardwareMouse;         // +0x120  VERIFIED: writer sub_18079FFD4 @ 0x1807A110F stores (CHardwareMouse*)+8 (the IHardwareMouse subobject) into gEnv->pHardwareMouse; abs 0x18492D918. Reader: CHardwareMouse dtor sub_1824226F0 unregisters from gEnv->pInput. (KCD1 was +0x110; that slot is now pRenderer in KCD2.)
     void*                       _unk128;                // +0x128
     void*                       _unk130;                // +0x130
     void*                       _unk138;                // +0x138
-    Offsets::IFlashUI*          pFlashUI;               // +0x140  VERIFIED: GetUIElement("hud") (was +0x130)
+    Offsets::IFlashUI*          pFlashUI;               // +0x140  VERIFIED: abs 0x18492D938 = the CFlashUI self-singleton (qword_18492D938) read by the whole CFlashUI method family via its own vtable (e.g. GetUIElement(int) +0xA8); CFlashUI::Shutdown (vtable [10] sub_1835C0FB0 @ 0x1835C1265) zeroes it. GetUIElement("hud"). (was +0x130)
     void*                       _unk148;                // +0x148
     void*                       _unk150;                // +0x150
     void*                       _unk158;                // +0x158

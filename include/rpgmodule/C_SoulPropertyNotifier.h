@@ -13,6 +13,7 @@ namespace wh::rpgmodule {
 
 class C_SoulPropertyNotifier {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_SoulPropertyNotifier;
     virtual ~C_SoulPropertyNotifier() = default;   // slot order UNVERIFIED
     wh::shared::C_Signal<> m_onPropertyChanged;    // +0x08  (empty sentinel &unk_1856671F8; arg signature unresolved)
     uint64_t m_unk18[7];                           // +0x18..+0x50  ctor-zeroed, unresolved

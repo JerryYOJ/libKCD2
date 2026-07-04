@@ -13,6 +13,8 @@ namespace wh::rpgmodule {
 
 class C_InstantSoulBuffInstance : public C_SoulBuffInstance   // +0x00  (0xD8; no own members)
 {
+public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_InstantSoulBuffInstance;
 };
 static_assert(sizeof(C_InstantSoulBuffInstance) == 0xD8, "C_InstantSoulBuffInstance must be 0xD8");
 

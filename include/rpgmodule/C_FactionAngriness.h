@@ -17,6 +17,7 @@ class C_Faction;
 
 class C_FactionAngriness {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_FactionAngriness;
     virtual ~C_FactionAngriness() = default;   // slot order UNVERIFIED
     int32_t    m_value;       // +0x08  angriness value; ctor default = global tuning table
                               //        sub_180649D30()[721] (value not dereferenced)

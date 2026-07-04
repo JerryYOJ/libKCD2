@@ -22,6 +22,7 @@ class S_HorseData;
 
 class C_Horse : public C_Animal {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_Horse;
     S_HorseData* m_pHorseData;                         // +0x9E8  (0x4C8 heap controller, OWNED: dtor frees via sub_181AB5160(.,0x4C8))  VERIFIED offset/size
     // POD mount-anim state-event record (round-3 deep map, verify-confirmed byte boundaries).
     // Also constructed standalone on the stack (sub_181E7D6F0) for the CryMannequin state-event

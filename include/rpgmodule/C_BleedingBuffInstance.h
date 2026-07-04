@@ -15,6 +15,7 @@ namespace wh::rpgmodule {
 class C_BleedingBuffInstance : public C_ConstantSoulBuffInstance   // +0x00  (0xD8)
 {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_BleedingBuffInstance;
     float   m_intensity;   // +0xD8  ctor default 1.0f (bleed intensity/rate -- name INFERRED)
     uint8_t _padDC[4];     // +0xDC
 };

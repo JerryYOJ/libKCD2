@@ -11,6 +11,7 @@ namespace wh::entitymodule {
 
 class I_ItemCollectionListener : public I_InventoryListener {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_I_ItemCollectionListener;
     virtual void OnItemCollectionChanged() {}   // (KCD1-derived; KCD2 slots unverified)
 };
 

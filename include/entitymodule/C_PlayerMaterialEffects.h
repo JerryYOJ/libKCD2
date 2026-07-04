@@ -45,6 +45,7 @@ static_assert(offsetof(SMfxInstance, paramProvider) == 0x08, "paramProvider at 0
 
 class C_ActorMaterialEffects {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_ActorMaterialEffects;
     virtual ~C_ActorMaterialEffects() = default;               // [0]
     virtual bool IsEnabled() const { return m_enabled; }       // [1]  sub_181A7DE10: *(u8*)(this+8)
     virtual void _vf2() { m_flag2 = false; }                   // [2]  sub_181A81F40 (clears +0x09)
@@ -65,6 +66,7 @@ static_assert(offsetof(C_ActorMaterialEffects, m_pendingStart) == 0x80, "pending
 
 class C_PlayerMaterialEffects : public C_ActorMaterialEffects {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_PlayerMaterialEffects;
     const char* GetFxGroupName() const override { return "player_fx"; }   // [3] sub_182AA7374
 
     C_Player* m_pOwner;                  // +0xB0  back-ptr (abs C_Player+0xCA0)

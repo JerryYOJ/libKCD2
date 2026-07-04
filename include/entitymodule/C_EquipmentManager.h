@@ -29,6 +29,7 @@ struct S_EquipmentSlotIdWrapper {
 
 class C_EquipmentManager : public I_ItemCollectionListener {   // +0x00  (vtable only)
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_EquipmentManager;
     C_Entity* m_owner;                                 // +0x08  owning entity/item-collection back-ptr (class tentative)
     std::vector<uint32_t> m_equippedAttachSlotIds;     // +0x10  skeleton attach/joint ids  VERIFIED
     std::vector<S_EquipmentSlotIdWrapper> m_equipmentSlotCache;  // +0x28  cached slot entries  VERIFIED (16B elems)

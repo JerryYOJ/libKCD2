@@ -11,6 +11,7 @@ namespace wh::combatmodule {
 
 class I_CombatComboManager {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_I_CombatComboManager;
     virtual ~I_CombatComboManager() = default;   // [0] (thunk to the combo manager dtor)
 };
 

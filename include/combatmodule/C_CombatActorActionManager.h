@@ -44,6 +44,7 @@ struct S_ActionMapKeyHash {
 
 class C_CombatActorActionManager : public C_CombatActorObject {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_CombatActorActionManager;
     std::unordered_map<S_ActionMapKey, int32_t, S_ActionMapKeyHash> m_activeActions;  // +0x10  (0x40)
     _smart_ptr<C_CombatActionAttackFactory>       m_pAttackFactory;        // +0x50  CreateAndDispatch entry point
     _smart_ptr<C_CombatActionGuardFactory>        m_pGuardFactory;         // +0x58  NEW in KCD2

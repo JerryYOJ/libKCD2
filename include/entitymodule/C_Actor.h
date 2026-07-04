@@ -47,7 +47,10 @@
 
 namespace wh::xgenaimodule {
 // Empty tag interface, unique to C_Actor (0 RTTI referrers). RTTI TD 0x184B73C80.
-struct I_SystemFromMonsterLODPostponer {};
+struct I_SystemFromMonsterLODPostponer {
+public:
+    inline static constexpr auto RTTI = Offsets::RTTI_I_SystemFromMonsterLODPostponer;
+};
 }
 struct IMovementController;   // CryEngine
 struct IAnimatedCharacter;    // CryAction (behavioral identification)
@@ -79,6 +82,7 @@ class C_Actor
     , public wh::xgenaimodule::I_SystemFromMonsterLODPostponer                  // +0x51  (empty)
 {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_Actor;
     // Non-virtual: sub_18072DC90 returns m_pCombatActor, allocating it (C_CombatActor, 0x448) if null.
     wh::combatmodule::C_CombatActor* GetOrCreateCombatActor();
 

@@ -15,6 +15,7 @@ struct S_ComboStepDesc;   // combo-step row (floats @+0/+4/+8, name id @+0xC via
 
 class C_CombatAutomationCombo : public C_CombatAutomationAction {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_CombatAutomationCombo;
     const char* GetName() const override { return "AutomationCombo"; }   // [3] 0x181A7E1A0
     int GetActionKind() const override { return 12; }                    // [10] 0x181A74D00
 

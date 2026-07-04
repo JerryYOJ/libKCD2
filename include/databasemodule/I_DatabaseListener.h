@@ -12,6 +12,7 @@ namespace wh::databasemodule {
 
 class I_DatabaseListener {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_I_DatabaseListener;
     virtual void OnDatabaseEvent(void* a_event) = 0;   // [0]  (name/args tentative)
 };
 

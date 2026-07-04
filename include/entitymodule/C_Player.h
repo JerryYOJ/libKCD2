@@ -53,6 +53,7 @@ class C_Player
     , public Offsets::IGameFrameworkListener           // +0xA68  (secondary vtable)
 {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_Player;
     wh::shared::C_Signal<> m_onRecipeAdded;            // +0xA70  1 recipe-handle arg (thunk sub_182AFF8E8 fires GUI "Recipes"/"AddRecipe"); name tentative
     wh::shared::C_Signal<> m_onRecipeAdded2;           // +0xA80  second recipe-add channel (different payload builder); name tentative
     wh::shared::C_Signal<> m_onEquipVisualSlotChanged; // +0xA90  1 uint8 slot-index arg (thunk sub_182B8E574); name tentative

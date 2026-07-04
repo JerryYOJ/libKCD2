@@ -15,6 +15,7 @@ namespace wh::framework {
 
 class C_CryLoadGameHelper {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_CryLoadGameHelper;
     virtual ~C_CryLoadGameHelper() = default;   // +0x00  vptr (slot order UNVERIFIED)
     CryStringT<char> m_str08;     // +0x08  (source name/path -- INFERRED)
     uint64_t m_state10[6];        // +0x10..+0x40  io/stream state (ctor-zeroed; UNRESOLVED)

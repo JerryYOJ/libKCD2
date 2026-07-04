@@ -15,6 +15,7 @@ namespace wh::entitymodule {
 class C_WeaponEquipRuntimeData : public C_EquippableItemRuntimeData   // +0x00  (0xA8)
 {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_WeaponEquipRuntimeData;
     float    m_equipState[4];   // +0xA8  OWORD zero-init (INFERRED 4 floats, equip/aim state --
                                 //        no reader decompiled)
     int32_t  m_fieldB8;         // +0xB8  (=0; role unresolved)

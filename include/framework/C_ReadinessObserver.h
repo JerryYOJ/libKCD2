@@ -18,6 +18,7 @@ namespace wh {
 
 class C_ReadinessObserver {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_ReadinessObserver;
     virtual ~C_ReadinessObserver() = default;   // +0x00  vptr (slot order UNVERIFIED)
     void*    m_pReadinessSystem;   // +0x08  readiness-system backref (ctor arg; concrete type not RE'd)
     CryStringT<char> m_eventName;  // +0x10  observed event (e.g. "AfterGameLoad")

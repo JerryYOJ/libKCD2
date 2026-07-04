@@ -29,6 +29,7 @@ class C_Item;
 
 class I_ItemRuntimeData {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_I_ItemRuntimeData;
     virtual ~I_ItemRuntimeData() = 0;   // vtable slot0 = _purecall in the binary (abstract);
                                         // real deletion goes through slot22 (ref-release, vf(obj,1))
 

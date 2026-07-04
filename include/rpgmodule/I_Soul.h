@@ -11,6 +11,7 @@ namespace wh::rpgmodule {
 
 class I_Soul {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_I_Soul;
     virtual ~I_Soul() = default;   // slot position UNVERIFIED
 };
 

@@ -401,6 +401,8 @@ namespace NAlloc
 
 	struct StandardAlloc;
 
+	inline size_t ReallocSize( size_t nMinSize );	// KCD-RE patch: fwd-decl (defined below) for WHDynStorage
+
 	template<class T, class I, class A>
 	T* reallocate( A& a, T* old_elems, I old_size, I new_size, I& new_cap, bool allow_slack = false, I alignment = 1 )
 	{
@@ -799,13 +801,18 @@ namespace NArray
 
 };
 
+// KCD-RE patch: the game's own DynArray storage policy (used as the default below).
+#include "WHDynStorage.h"
+
 //---------------------------------------------------------------------------
 
 // DynArrayRef<T,STORAGE>: Non-growing access to a DynArray (see below).
 // Does not specify allocation scheme, any DynArray can convert to it.
 // Simply an Array alias.
+// KCD-RE patch: default storage = WHDynStorage (the game's block format).
+// SmallDynStorage (stock CryEngine, module-local heap) kept for reference.
 
-template< class T, class I = int, class S = NArray::SmallDynStorage<T,I> >
+template< class T, class I = int, class S = NArray::WHDynStorage<T,I> >
 struct DynArrayRef: Array<T,I,S>
 {
 };
@@ -815,7 +822,7 @@ struct DynArrayRef: Array<T,I,S>
 // S specifies storage scheme, as with Array, but adds resize(), capacity(), ...
 // A specifies the actual memory allocation function: alloc()
 
-template< class T, class I = int, class S = NArray::SmallDynStorage<T,I> >
+template< class T, class I = int, class S = NArray::WHDynStorage<T,I> >
 struct DynArray: DynArrayRef<T,I,S>
 {
 	typedef DynArray<T,I,S> self_type;

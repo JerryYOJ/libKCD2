@@ -87,6 +87,14 @@ class C_ItemManager
     , public UnsafeOp::CryDeferrable<0>             // empty mixin (-> ICryDeferrable)
 {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_ItemManager;
+    // Created by the C_EntityModule ctor (sub_180BE8968, slot a1[25], alloc 0x5B9070 == sizeof);
+    // mirrored to global qword_185487A78.
+    static C_ItemManager* GetInstance();
+    // Registry lookup sub_181E3E090(&m_itemTable, &wuid): validates type byte 2 + generation
+    // (WUID >> 18) + the item's stored WUID.
+    C_Item* LookupByWUID(const wh::framework::WUID& wuid);
+
     S_WuidKeyHolder m_keyHolderA;                      // +0x08   {sentinel, WUID key} holder
     S_WuidKeyHolder m_keyHolderB;                      // +0x18
     S_WuidHash40    m_wuidHashA;                        // +0x28   WUID->u16 inline-bucket hash (40 buckets)

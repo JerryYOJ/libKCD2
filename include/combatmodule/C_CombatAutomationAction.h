@@ -17,6 +17,7 @@ namespace wh::combatmodule {
 
 class C_CombatAutomationAction : public C_CombatActorUpdatedObject {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_CombatAutomationAction;
     E_CombatSubsystem GetSubsystemId() const override { return static_cast<E_CombatSubsystem>(26); }  // [2] shared family id
 
     virtual int  GetActionKind() const = 0;        // [10]  per-leaf id (Director 1, Guard 2, ZoneChange 3, Attack 10, Combo 12, Weapons 14, Missile 15, Battlement 16)

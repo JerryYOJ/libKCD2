@@ -37,6 +37,7 @@ namespace wh::rpgmodule {
 class C_ScriptBindRPGModule : public ::CScriptableBase   // +0x00  (0x60)
 {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_ScriptBindRPGModule;
     Offsets::IScriptSystem* m_pSS2;      // +0x60  raw ctor pSS (a2)
     void*                   m_pOwner;    // +0x68  ctor a4 (INFERRED owning module/context)
     C_FactionScriptBind     m_faction;   // +0x70  (0x60) faction-userdata metatable methods

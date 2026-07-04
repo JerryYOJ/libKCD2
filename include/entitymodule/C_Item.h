@@ -30,6 +30,7 @@ class C_Item
     , public ::EntityEventListenerWithCleanup              // +0x08  (vtable + event vector, 0x20)
 {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_Item;
     uint8_t  m_state;                                  // +0x28  init 5 (state/enum; no reader isolated)
     uint8_t  _pad29[7];                                // +0x29
     wh::framework::WUID m_wuid;                        // +0x30  registry key (tag 2 = Item)  VERIFIED
