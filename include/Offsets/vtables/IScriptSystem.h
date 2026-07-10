@@ -73,7 +73,7 @@ struct IScriptSystem {
     virtual void ReleaseFunc(HSCRIPTFUNCTION f) = 0;                              // [27] 0x0D8  luaL_unref                                                 VERIFIED
 
     // ---- any-value helpers ----
-    virtual ScriptAnyValue* CloneAny(ScriptAnyValue* pRet, const ScriptAnyValue& src) = 0;   // [28] 0x0E0  sret; deep-refs tables/funcs      VERIFIED
+    virtual ScriptAnyValue CloneAny(const ScriptAnyValue& src) = 0;                          // [28] 0x0E0  deep-refs tables/funcs            VERIFIED
     virtual void ReleaseAny(const ScriptAnyValue& any) = 0;                        // [29] 0x0E8  releases ref if function/table                             VERIFIED
     virtual void PushFuncParamAny(const ScriptAnyValue& any) = 0;                 // [30] 0x0F0  push param; ++m_nParamCount @this+0x28                     VERIFIED
 

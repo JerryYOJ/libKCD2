@@ -1,5 +1,5 @@
 #pragma once
-#include <cstdint>
+#include "../CryEngine/CryCommon/CryExtension/CryGUID.h"
 
 // -----------------------------------------------
 // wh::rpgmodule::S_LocationId -- KCD2 WHGame.dll 1.5.6 (kd7u).  sizeof 0x10 (PROVEN).
@@ -12,17 +12,22 @@
 // +0x268 id array (slot [7]) and of the POI-type registry rows, OWORD copies at every id
 // handoff, and the unordered_map node layouts (value @node+0x18 after an 8-byte key / key
 // @node+0x10 spanning 16 bytes).
-// INTERIOR TILING UNRESOLVED: represented as two raw qwords (likely {uint64 id, uint64 aux}
-// or a CryGUID-like pair -- UNVERIFIED; comparisons are plain 16-byte equality, invalid/none =
-// the all-zero constant xmmword_183A38AF0, and a distinct "default" constant xmmword_18409A0B0
-// is used by ctors). Namespace placement inferred from its C_Faction / rpg-table usage
-// (mangled-name backreference not expanded).
+// RESOLVED (was "interior tiling UNVERIFIED"): S_LocationId IS a 128-bit GUID -- the two qwords are
+// the hi/lo halves of a CryGUID {uint64 hipart, uint64 lopart}, parsed from location.xml's
+// `location_id` column, which holds literal GUID strings, e.g.
+// "0855c91f-2ce2-413f-b16a-113754d2cebe" (location_cikanskyTabor). That is exactly what the RTTR
+// type_converter to/from std::string (@0x184D529B0 / 0x184D53670) does -- the GUID<->string parse --
+// and why compares/hash treat it as 16 raw bytes (invalid/none = all-zero xmmword_183A38AF0).
+//
+// The binary registers a DISTINCT RTTR type named "S_LocationId" (its own string converter), but the
+// layout and value semantics are exactly CryGUID, so we keep the binary name as a typedef rather than
+// duplicate the type. std::hash is provided the same way the game's GUID maps get it:
+// wh::shared::S_DefaultHash<S_LocationId> (FNV-1a over the 16 raw bytes).
 
 namespace wh::rpgmodule {
 
-struct S_LocationId {
-    uint64_t m_raw[2];   // +0x00  interior split UNRESOLVED (zero-init = invalid/none)
-};
-static_assert(sizeof(S_LocationId) == 0x10, "S_LocationId must be 0x10");
+using S_LocationId = ::CryGUID;   // 128-bit location GUID (location.xml `location_id`)
 
 }  // namespace wh::rpgmodule
+
+static_assert(sizeof(wh::rpgmodule::S_LocationId) == 0x10, "S_LocationId (= CryGUID) must be 0x10");

@@ -56,7 +56,7 @@ struct IUIEventSystem {
     virtual void RegisterListener(IUIEventListener* pListener, const char* name) = 0; // [4]  0x20  0x180606EF0  VERIFIED: dedup-append pListener into listeners vector this+0x30
     virtual void UnregisterListener(IUIEventListener* pListener) = 0;           // [5]  0x28  0x18357FB9C  VERIFIED: remove from this+0x30 (deferred if iterating: guard this+0x48)
 
-    virtual SUIArguments* SendEvent(SUIArguments* sret, const SUIEvent& event) = 0; // [6]  0x30  0x180557468  VERIFIED: walks listeners this+0x30, dispatches event, aggregates return SUIArguments (SDK returns by value -> hidden sret)
+    virtual SUIArguments SendEvent(const SUIEvent& event) = 0;                       // [6]  0x30  0x180557468  VERIFIED: walks listeners this+0x30, dispatches event, aggregates and returns the SUIArguments by value
 
     // OVERLOAD PAIR (declare HIGHER-slot int overload FIRST; see banner)
     virtual const SUIEventDesc* GetEventDesc(int index) const = 0;              // [8]  0x40  0x1806079B4  VERIFIED: bounds-checked index into the events array this+0x18

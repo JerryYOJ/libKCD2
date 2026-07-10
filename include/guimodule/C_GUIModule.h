@@ -63,6 +63,7 @@
 namespace wh::guimodule {
 
 class C_UIBase;
+class C_UICompass;
 class C_FaderController;
 class C_UIPlayer;                 // 0x98, ctor sub_1819B0BCC
 class C_CutscenePlayer;           // 0xD8, ctor sub_1818AB4B8
@@ -98,6 +99,10 @@ public:
     // The live module instance, held by S_GameContext @+0xE8 (KCD1's CUIManager
     // singleton is gone -- see banner). Impl in src/guimodule/C_GUIModule.cpp.
     static C_GUIModule* GetInstance();
+
+    // The compass screen out of m_uiElements (rttr type match, cached process-wide
+    // in qword_18548B068; null until the UI is built). Impl in src/guimodule/C_GUIModule.cpp.
+    C_UICompass* GetUICompass();
 
     // ISystemEventListener base occupies +0x10, IServiceListener base +0x18.
     C_UIPlayer*               m_pUIPlayer;             // +0x20  fade/letterbox + E_UITimerHit ticker (Init)

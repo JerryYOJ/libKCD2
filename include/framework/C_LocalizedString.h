@@ -1,25 +1,58 @@
 #pragma once
 #include <cstdint>
+#include <string>
 
 // -----------------------------------------------
 // wh::framework::C_LocalizedString -- KCD2 WHGame.dll 1.5.6 (kd7u).  sizeof 0x10.
 // -----------------------------------------------
-// Polymorphic localized-string holder: {vfptr @+0x00, CryStringT<char> @+0x08}.
-// Default ctor sub_1803D28B4 (writes &wh::framework::C_LocalizedString::vftable),
-// copy ctor sub_1803D32D0. Embedded BY VALUE throughout the guimodule menu element
-// data classes (C_UIMenuButton/Choice/Confirmation/Page) as an rttr property type.
-// [G4d] Vtable slot roles NOT enumerated -- the [0] virtual dtor below is the standard
-// polymorphic assumption, UNVERIFIED; do not call through it until certified. Flagged
-// for the framework wave to deep-RE (localization-key resolution etc.).
+// Thin polymorphic holder for a localizable UI string: {vfptr @+0x00, CryStringT<char>
+// m_text @+0x08}.  Its whole job is to TAG a string field as "this is display text that
+// goes through localization", so the editor/rttr treat it differently from a raw string.
+//
+// RTTI .?AVC_LocalizedString@framework@wh@@ (COL 0x1841C1F00).  Vtable 0x183E1DF40, 3
+// slots -- ALL trivial (no localization happens in the vtable; resolution is external,
+// via the rttr string converter / the loc system when the text is fetched):
+//   [0] dtor           0x180D216C0  -> destroys m_text (CryStringT dtor sub_180D864C0)
+//   [1] _vf1_returnThis 0x1805F5DA0 -> `return this;` (ICF-folded identity; this is the
+//                                    "get" used inline in the quest path sub_181F46F40)
+//   [2] _vf2_copyOut   0x180F42C14  -> writes vfptr to out[0] then destroys out->m_text
+//                                    (compiler move/copy-out helper)
+//
+// Ctors: default sub_1803D28B4 (sets vftable, m_text = empty), copy sub_1803D32D0.
+// rttr registration: BIDIRECTIONAL type_converter with CryStringT<char>
+//   - C_LocalizedString -> CryStringT (COL 0x18416EC50): produce the plain string
+//   - CryStringT -> C_LocalizedString (COL 0x18416EC78): wrap a raw string/key
+//   plus a constructor from `const CryStringT&` (0x18416E520) and a property_wrapper
+//   exposing m_text.  So the type interconverts freely with a plain string.
+//
+// EMBEDDED BY VALUE throughout the data classes (it is NOT heap/shared):
+//   * wh::questmodule::C_LogBase @+0x18 (m_text @+0x20) -- ctor sub_181F43240; this is the
+//     QUEST-LOG / objective display-text field (the objective "name" the map shows and the
+//     compass does NOT carry -- see C_CompassMark / the sub_180DC5F24 producer).
+//   * guimodule menu data (C_UIMenuButton / C_UIMenuChoice / C_UIMenuPage /
+//     C_UIMenuConfirmation) as an rttr property.
+//
+// m_text SEMANTICS: the authored localizable string -- a localization key / "@"-tag or the
+// literal text as tabled.  It is stored verbatim (the vtable never resolves it); the plain
+// display string is obtained through the rttr CryStringT converter / the localization
+// system at fetch time.  [Key-vs-already-resolved is NOT fully certified -- the converter
+// invoke fn was not decompiled; do not assume a runtime loc lookup without checking it.]
 
 namespace wh::framework {
 
 class C_LocalizedString {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_LocalizedString;
-    virtual ~C_LocalizedString();   // [0] slot roles UNVERIFIED (see header note)
+    virtual ~C_LocalizedString();          // [0] 0x180D216C0  destroys m_text
+    // [1]/[2] are compiler-trivial (return-this / copy-out); kept as raw slots to preserve
+    // the 3-entry vtable layout -- do NOT invent signatures for them.
+    virtual void* _vf1_returnThis();       // [1] 0x1805F5DA0  `return this`
+    virtual void* _vf2_copyOut(void* out); // [2] 0x180F42C14  copy-out helper
 
-    CryStringT<char> m_text;        // +0x08  localized text / key [semantics UNVERIFIED]
+    CryStringT<char> m_text;               // +0x08  authored localizable string (key/text)
+
+    // Impl in src/framework/C_LocalizedString.cpp.
+    static CryStringT<char> Resolve(const CryStringT<char>& label);
 };
 static_assert(sizeof(C_LocalizedString) == 0x10, "C_LocalizedString must be 0x10 (ctor sub_1803D28B4)");
 

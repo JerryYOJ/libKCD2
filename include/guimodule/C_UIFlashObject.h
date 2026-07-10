@@ -46,7 +46,12 @@ public:
     virtual void* get_ptr();                                 // [4] 0x1805F5DA0
     virtual rttr::detail::derived_info get_derived_info();   // [5] 0x182B038DC
 
-    CryStringT<char> m_id;      // +0x08  flash-side object id (C_CompassMark: rendered counter)
+    CryStringT<char> m_id;      // +0x08  flash-side object id (decimal string). The KEY flash
+                                //        uses to create/update/remove the marker clip (fc_add/
+                                //        remove/changeCompassMarkerState `id`, g_MarkersO dict).
+                                //        C_CompassMark: fresh UNIQUE monotonic counter
+                                //        str(++dword_18548B09C) (ctor sub_181F479C0).
+                                //        C_UIFlashMapPoiMarker: instead str(S_EntityMapMark.m_id).
     CryStringT<char> m_str10;   // +0x10  second serialized string (empty for marks; role UNVERIFIED)
 };
 static_assert(sizeof(C_UIFlashObject) == 0x18, "C_UIFlashObject must be 0x18");

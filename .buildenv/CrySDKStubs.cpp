@@ -1,5 +1,6 @@
 #include <Windows.h>
 #include <cstddef>
+#include <cstring>
 #include "REL.h"
 
 // CryEngine SDK glue the vendored CryCommon headers reference but no game module
@@ -12,43 +13,63 @@ void CryDeleteCriticalSectionInplace(void* p) { DeleteCriticalSection(static_cas
 struct IMemoryManager;
 IMemoryManager* CryGetIMemoryManager() { return nullptr; }
 
-// Forward to WHGame.dll's own ucrtbase CRT thunks (malloc/calloc/realloc/free import
-// thunks, api-ms-win-crt-heap) so blocks allocated by SDK types compiled into this
-// module and freed by the game -- or vice versa -- share one heap.
+// Forward to WHGame.dll's OWN CryModule allocator -- the retail-compiled
+// _CryMemoryManagerPoolHelper backed by the process-global BucketAllocator
+// (kd7u-verified; the pool-helper fn table at 0x18549D348..78 is filled by
+// sub_18045AAA0 with exactly these):
+//   CryMalloc  0x4F7610  (size, &allocated, alignment) -- align 0 & size<=0x200 ->
+//              bucket SLIST; bigger -> game ucrt malloc; aligned -> malloc + shift
+//              byte count stored at [p-4]
+//   CryRealloc 0x490CFC  (p, size, &allocated, &oldSize, alignment)
+//   CryFree    0x4FD8D0  (p, alignment) -- routes BY ADDRESS: bucket-segment scan
+//              (push back to SLIST) with ucrt free fallback (un-shifting via [p-4]
+//              when alignment != 0), so it correctly frees ANYTHING CryMalloc
+//              returns, whichever module allocated it.
+// This is what makes refcounted Cry types (CryStringT!) safe to OWN across the
+// module boundary in both directions: the game's CryStringT buffers come from
+// this allocator, and freeing them with anything else corrupts the heap (that
+// exact crash: game bucket block released by a plugin-compiled ~CryStringT
+// while the stubs still pointed at plain ucrt free).
 __declspec(dllexport) void* CryModuleMalloc(size_t size) throw()
 {
-    static REL::Relocation<void* (__cdecl*)(size_t)> f{ REL::Offset(0x4F7BA0) };
-    return f(size);
+    static REL::Relocation<void* (__fastcall*)(size_t, size_t*, size_t)> f{ REL::Offset(0x4F7610) };
+    size_t allocated;
+    return f(size, &allocated, 0);
 }
 __declspec(dllexport) void* CryModuleCalloc(size_t count, size_t size)
 {
-    static REL::Relocation<void* (__cdecl*)(size_t, size_t)> f{ REL::Offset(0x1D93F11) };
-    return f(count, size);
+    void* p = CryModuleMalloc(count * size);
+    if (p)
+        memset(p, 0, count * size);
+    return p;
 }
 __declspec(dllexport) void* CryModuleRealloc(void* p, size_t size) throw()
 {
-    static REL::Relocation<void* (__cdecl*)(void*, size_t)> f{ REL::Offset(0x1D93F2F) };
-    return f(p, size);
+    static REL::Relocation<void* (__fastcall*)(void*, size_t, size_t*, size_t*, size_t)> f{ REL::Offset(0x490CFC) };
+    size_t allocated, oldSize;
+    return f(p, size, &allocated, &oldSize, 0);
 }
 __declspec(dllexport) void CryModuleFree(void* p) throw()
 {
-    static REL::Relocation<void (__cdecl*)(void*)> f{ REL::Offset(0x1D93F17) };
-    f(p);
+    static REL::Relocation<void (__fastcall*)(void*, size_t)> f{ REL::Offset(0x4FD8D0) };
+    f(p, 0);
 }
 
-// Aligned pair (used by CryArray's NAlloc::StandardAlloc / StdAllocator for over-aligned
-// element types).  Forward to WHGame.dll's own _aligned_malloc / _aligned_free thunks so
-// aligned blocks share the game's aligned heap -- consistent with the plain pair above and
-// safe to hand across the module boundary.  Note: no throw() (matches the header decls).
+// Aligned pair (used by CryArray's NAlloc::StandardAlloc / StdAllocator for
+// over-aligned element types). Same allocator: CryMalloc's aligned path either
+// returns a naturally-aligned bucket block or a shifted malloc block; CryFree
+// with alignment != 0 handles both (the shift lives at [p-4], read by the free
+// itself -- callers only signal "was an aligned alloc").
 __declspec(dllexport) void* CryModuleMemalign(size_t size, size_t alignment)
 {
-    static REL::Relocation<void* (__cdecl*)(size_t, size_t)> f{ REL::Offset(0x1D93FAD) };  // _aligned_malloc
-    return f(size, alignment);
+    static REL::Relocation<void* (__fastcall*)(size_t, size_t*, size_t)> f{ REL::Offset(0x4F7610) };
+    size_t allocated;
+    return f(size, &allocated, alignment);
 }
 __declspec(dllexport) void CryModuleMemalignFree(void* p)
 {
-    static REL::Relocation<void (__cdecl*)(void*)> f{ REL::Offset(0x1D93FB3) };             // _aligned_free
-    f(p);
+    static REL::Relocation<void (__fastcall*)(void*, size_t)> f{ REL::Offset(0x4FD8D0) };
+    f(p, 1);
 }
 
 // WHGame retail-DynArray bridge (NArray::WHDynStorage, WHDynStorage.h).  Our blocks must be

@@ -19,6 +19,16 @@ C_GUIModule* C_GUIModule::GetInstance()
     return ctx ? ctx->m_pGUIModule : nullptr;
 }
 
+C_UICompass* C_GUIModule::GetUICompass()
+{
+    // sub_180C4E098 -- rttr scan of m_uiElements for the C_UICompass-typed screen,
+    // cached process-wide in qword_18548B068 (cleared with the UI). Used by the
+    // quest-log marker producer sub_180DC5F24 and the checkpoint/POI paths.
+    using Fn = C_UICompass*(__fastcall*)(C_GUIModule*);
+    static REL::Relocation<Fn> fn{ REL::Offset(0xC4E098) };
+    return fn(this);
+}
+
 std::map<std::string, std::shared_ptr<C_UIBase>> C_GUIModule::GetUIElementsByName() const
 {
     // sub_182B8D8D8 -- the rttr "UIElementsByName" read-only property getter:

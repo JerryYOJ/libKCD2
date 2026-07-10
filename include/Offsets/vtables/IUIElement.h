@@ -1,5 +1,8 @@
 #pragma once
 #include <cstdint>
+#include <memory>
+#include <vector>
+#include "CryEngine/CryCommon/smartptr.h"
 
 // -----------------------------------------------
 // IUIElement -- KCD2 binary vtable order (REORDERED vs KCD1)
@@ -88,10 +91,10 @@ struct IUIElement {
 
     // instances (IUIElementIterator is GONE -- see banner)
     virtual unsigned int GetInstanceID() const = 0;                                 // [3]   0x018  0x181A88CE0  returns dword this+0xD8
-    virtual void* GetInstance(void* sretSmartPtr, unsigned int instanceID) = 0;     // [4]   0x020  0x180555EE4  VERIFIED: searches root instances vector +0xE8 by id +0xD8; on miss pool-allocs 0x250 CFlashUIElement (ctor sub_18088DF88(elem, this+0x28 pFlashUI, this, id)), appends, notifies listeners OnInstanceCreated (+0x28); id 0 returns self; returns _smart_ptr<IUIElement> (intrusive refcount +0x20) via sret
+    virtual _smart_ptr<IUIElement> GetInstance(unsigned int instanceID) = 0;        // [4]   0x020  0x180555EE4  VERIFIED: searches root instances vector +0xE8 by id +0xD8; on miss pool-allocs 0x250 CFlashUIElement (ctor sub_18088DF88(elem, this+0x28 pFlashUI, this, id)), appends, notifies listeners OnInstanceCreated (+0x28); id 0 returns self (intrusive refcount +0x20)
     virtual bool DestroyInstance(unsigned int instanceID) = 0;                      // [5]   0x028  0x180564A68  VERIFIED: removes matching instance from root vector +0xE8 (rejects id 0), notifies listeners OnInstanceDestroyed (+0x30)
     virtual bool DestroyThis() = 0;                                                 // [6]   0x030  0x180564E54  DestroyInstance(this->m_iInstanceID)
-    virtual void* GetInstances(void* sretVector) = 0;                               // [7]   0x038  0x18085EDFC  VERIFIED: fills caller {begin,end,cap} vector with root + instances (each AddRef'd) under shared lock +0xE0 (REPLACES IUIElementIteratorPtr); caller must Release [2] every entry + free the storage
+    virtual std::vector<IUIElement*> GetInstances() = 0;                            // [7]   0x038  0x18085EDFC  VERIFIED: returns a {begin,end,cap} vector of root + instances (each AddRef'd) built under shared lock +0xE0 (REPLACES IUIElementIteratorPtr); caller must Release [2] every entry
     virtual void ForEachInstance(void* pFunctor) = 0;                               // [8]   0x040  0x180564CF4  KCD2-added: visits root+instances with std::function<bool(IUIElement*)> (functor cell at arg+0x38) until it returns false [name coined]
 
     // common
@@ -135,7 +138,7 @@ struct IUIElement {
     virtual void LazyRendered() = 0;                                                // [40]  0x140  0x181AAF110  byte +0x8A = 0
     virtual bool NeedLazyRender() const = 0;                                        // [41]  0x148  0x1835B2720  !(flags & 0x1800) || byte +0x8A
 
-    virtual void* GetFlashPlayer(void* sretSharedPtr) = 0;                          // [42]  0x150  0x1803FA4AC  VERIFIED: lazy-inits then copies the 2-qword smart pointer (std::shared_ptr<IFlashPlayer>-style; CFlashPlayer is shared_ptr-managed, see IFlashPlayer.h) from +0x58 into sret (KCD1 returned a raw ptr)
+    virtual std::shared_ptr<IFlashPlayer> GetFlashPlayer() = 0;                     // [42]  0x150  0x1803FA4AC  VERIFIED: lazy-inits (creates the player if absent) then returns the shared_ptr copied from m_pFlashPlayer +0x58 (CFlashPlayer is shared_ptr-managed, see IFlashPlayer.h; KCD1 returned a raw ptr)
     virtual bool _vf43() = 0;                                                       // [43]  0x158  0x180773960  UNVERIFIED name: identical body to IsInit [18] (this+0x58 != 0); likely HasFlashPlayer/IsLoaded
 
     // descs. Each (int)/(const char*) pair: char* = LOWER slot, int = HIGHER slot
@@ -229,7 +232,7 @@ struct IUIElement {
     virtual void SetWorldHost(void* pHost, const char* subMtlName) = 0;             // [105] 0x348  0x18073EF78  +0x198 = pHost, +0x1A0 = subMtlName [UNVERIFIED name]
     virtual void ClearWorldHost() = 0;                                              // [106] 0x350  0x180564E60  +0x198 = 0 [UNVERIFIED name]
     virtual void SetWorldCursorActive(bool bActive) = 0;                            // [107] 0x358  0x180562B58  !bActive -> synth mouse-leave SendCursorEvent(0,-1,-1,0,0); byte +0x1A8 = bActive [UNVERIFIED name]
-    virtual void* FlashToWorldPos(void* sretVec3) = 0;                              // [108] 0x360  0x1820E3640  flash coords -> WORLD position: raycasts host StatObj sub-objects filtered by +0x1A0 sub-mtl, transforms by host world TM; (-1,-1,-1) on miss [UNVERIFIED name]
+    virtual Vec3 FlashToWorldPos() = 0;                                             // [108] 0x360  0x1820E3640  flash coords -> WORLD position: raycasts host StatObj sub-objects filtered by +0x1A0 sub-mtl, transforms by host world TM; returns (-1,-1,-1) on miss [UNVERIFIED name]
     virtual void FlashToScreenCoords(int a2, int a3, int a4, void* a5) = 0;         // [109] 0x368  0x1816CF8F4  flash coords -> screen pixel coords ([108] raycast + camera projection via pSystem vf+0x438) [UNVERIFIED name]
     virtual bool WorldHitTest(int iX, int iY) = 0;                                  // [110] 0x370  0x1816BD548  screen (x,y) -> flash coords via mapper sub_180568FD4; false if no world host (+0x198) or coord == -1 [UNVERIFIED name]
     virtual unsigned int _vf111() const = 0;                                        // [111] 0x378  0x1820E34A0  UNVERIFIED: returns dword +0x1CC

@@ -48,6 +48,7 @@ struct IUIAction;
 struct IUIActionManager;
 struct IUIModule;
 struct IUIEventSystem;
+struct IUIEventSystemIterator;
 struct IVirtualKeyboardEvents;
 struct ITexture;
 struct ICrySizer;
@@ -99,7 +100,7 @@ struct IFlashUI {
     // event systems
     virtual IUIEventSystem* CreateEventSystem(const char* name, int eType) = 0;  // [30] 0xF0  0x180605404  VERIFIED: GetEventSystem [31] first, else pool-allocs 0x58-byte CFlashUIEventSystem; eType = IUIEventSystem::EEventSystemType
     virtual IUIEventSystem* GetEventSystem(const char* name, int eType) = 0;     // [31] 0xF8  0x1806054C0  VERIFIED: name lookup in the per-type event-system map, returns existing or 0
-    virtual void* CreateEventSystemIterator(void* sret, int eType) = 0;          // [32] 0x100 0x180605530  VERIFIED: news a CUIEventSystemIterator (vftable stored); SDK returns IUIEventSystemIteratorPtr by value -> hidden sret
+    virtual _smart_ptr<IUIEventSystemIterator> CreateEventSystemIterator(int eType) = 0; // [32] 0x100 0x180605530  VERIFIED: news a CUIEventSystemIterator (vftable stored); returns IUIEventSystemIteratorPtr by value
 
     // input events
     virtual void DispatchControllerEvent(int event, unsigned int state, float arg) = 0; // [33] 0x108 0x18359C728  VERIFIED shape: UI-blocked gate (sub_1835B1A48), broadcasts a controller event to elements

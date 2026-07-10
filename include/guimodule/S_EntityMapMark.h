@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include "guimodule/E_MarkType.h"
 
 // -----------------------------------------------
 // wh::guimodule::S_EntityMapMark -- KCD2 WHGame.dll 1.5.6 (kd7u).  sizeof 0x20.
@@ -27,7 +28,7 @@ namespace wh::guimodule {
 
 struct S_EntityMapMark {
     int32_t  m_id;         // +0x00  unique mark id (global counter sub_1803A480C); flash key
-    uint32_t m_type;       // +0x04  POI/filter type id (C_ShowMapMarker: converted from E_ConceptMarkerType via sub_180C4DC78)
+    E_MarkType::Type m_type;  // +0x04  marker-category (C_ShowMapMarker: E_ConceptMarkerType remapped in via sub_180C4DC78)
     uint32_t m_param;      // +0x08  creation param (2 from C_ShowMapMarker + checkpoint path) [role UNVERIFIED]
     uint32_t _pad0C;       // +0x0C  creator-untouched
     wh::xgenaimodule::C_LinkableObject* m_pObject;  // +0x10  tracked entity/object

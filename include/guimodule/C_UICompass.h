@@ -6,6 +6,8 @@
 #include "guimodule/C_UIFlashBase.h"
 #include "guimodule/C_CompassMark.h"
 #include "rpgmodule/I_LocationListener.h"
+#include "rpgmodule/S_LocationId.h"         // = CryGUID (location.xml location_id)
+#include "framework/HashPrimitives.h"       // wh::shared::S_DefaultHash
 #include "CryEngine/CryCommon/Cry_Math.h"   // Vec3
 
 // -----------------------------------------------
@@ -35,8 +37,8 @@
 // +0x10C8 sub_181F49B40), refresh marks sub_1805673A8, collect visible m_marks'
 // C_UIFlashObjects (visibility sub_18065CD84) and flash "CompassMarkers"(array) +
 // "UpdateCompass"(heading from camera atan2f); [7]/[9] per-class rttr trio impls.
-// I_LocationListener: [1] 0x181746AB0 location-state change -> FNV-1a(location) lookup
-// in m_trackedLocations -> m_dirty; [2] 0x181A71940 m_dirty = 1 (FLIRT-mislabeled
+// I_LocationListener: [1] 0x181746AB0 location-state change -> S_LocationId (GUID) lookup
+// in m_marksByLocation -> m_dirty; [2] 0x181A71940 m_dirty = 1 (FLIRT-mislabeled
 // "decline_incoming_messages"); rest nullsub.
 //
 // C_UIMap pushes S_EntityMapMark-derived marks into m_marks via sub_180C4D1E8
@@ -48,10 +50,16 @@ class C_UICompass : public C_UIFlashBase, public wh::rpgmodule::I_LocationListen
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_UICompass;
     std::vector<std::shared_ptr<C_CompassMark>> m_marks;   // +0x60  live compass marks
-    // FNV-1a(location) -> tracked state; a hit on location change sets m_dirty.
-    // K proven 8-byte hash (hasher sub_1808B7C70, seed 0xCBF29CE484222325); V UNVERIFIED.
-    std::unordered_map<uint64_t, void*> m_trackedLocations;   // +0x78  (0x40 _Hash)
-    std::unordered_map<uint64_t, void*> m_unkB8;              // +0xB8  (0x40 _Hash) K/V + role UNVERIFIED
+    // Double-buffered index of the live location marks, keyed by the location's S_LocationId
+    // (= 128-bit GUID). Value = the C_CompassMark shown for that location. The refresh
+    // (sub_1805673A8) swaps 0x78<->0xB8 each tick, drains the previous buffer, and rebuilds 0x78;
+    // the I_LocationListener (0x181746AB0) looks a changed location up in m_marksByLocation -> m_dirty.
+    // (K/V RESOLVED: node writes a 16-byte key @+0x10 then a 16-byte shared_ptr value @+0x20 whose
+    //  raw ptr -> C_CompassMark +0x4C/+0x74 = m_type/m_state; both maps are the stock 0x40 _Hash.)
+    std::unordered_map<wh::rpgmodule::S_LocationId, std::shared_ptr<C_CompassMark>,
+                       wh::shared::S_DefaultHash<wh::rpgmodule::S_LocationId>> m_marksByLocation;      // +0x78  current frame
+    std::unordered_map<wh::rpgmodule::S_LocationId, std::shared_ptr<C_CompassMark>,
+                       wh::shared::S_DefaultHash<wh::rpgmodule::S_LocationId>> m_marksByLocationPrev;  // +0xB8  previous-frame buffer
     bool     m_dirty;                  // +0xF8  ctor 1; set by location-listener slots
     uint8_t  _padF9[3];                // +0xF9
     float    m_poiDistanceRatio;       // +0xFC  CVar-bound "wh_map_CompassPOIDistanceRatio"
@@ -60,7 +68,7 @@ public:
 };
 static_assert(sizeof(C_UICompass) == 0x110, "C_UICompass must be 0x110");
 static_assert(offsetof(C_UICompass, m_marks) == 0x60, "marks vector at 0x60");
-static_assert(offsetof(C_UICompass, m_trackedLocations) == 0x78, "location map at 0x78");
+static_assert(offsetof(C_UICompass, m_marksByLocation) == 0x78, "location-mark map at 0x78");
 static_assert(offsetof(C_UICompass, m_dirty) == 0xF8, "dirty flag at 0xF8");
 
 }  // namespace wh::guimodule
