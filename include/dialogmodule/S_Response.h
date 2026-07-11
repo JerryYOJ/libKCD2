@@ -27,7 +27,7 @@ struct S_Response {
     framework::C_LocalizedString m_text;   // +0x10  16-byte loc-string [type INFERRED]
     uint64_t m_q20;                        // +0x20  [role UNVERIFIED]
     CryStringT<char> m_ref28;              // +0x28  COW handle [role UNVERIFIED]
-    void*    m_pObj30;                     // +0x30  object ref [role UNVERIFIED]
+    void*    m_pObj30;                     // +0x30  DynArray<T> (WHDynStorage single ptr; empty=&unk_1855D8328; blk hdr {allocFn@-16,cap@-8,cnt@-4}; elem 16B {val, +8=_smart_ptr AddRef}) [elem T UNVERIFIED]
     uint64_t m_q38;                        // +0x38  [role UNVERIFIED]
     uint64_t m_q40;                        // +0x40  [role UNVERIFIED]
 };

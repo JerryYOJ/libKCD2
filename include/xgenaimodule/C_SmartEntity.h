@@ -58,20 +58,11 @@ public:
     void XseVf0() override; void XseVf1() override; void XseVf2() override;
     void XseVf3() override; void XseVf4() override; void XseVf5() override;
 
-    void*    m_defaultB8;      // +0xB8  &unk_1856099A0 (embedded default-constructed obj) [U type]
-    int16_t  m_idC0;           // +0xC0  ctor: -1 [U role]
-    int16_t  m_idC2;           // +0xC2  ctor: -1 [U role]
-    uint8_t  _padC4[4];        // +0xC4
-    void*    m_containerRepC8; // +0xC8  &unk_18566C430 (container default rep) [U type]
-    int16_t  m_idD0;           // +0xD0  ctor: -1
-    int16_t  m_idD2;           // +0xD2  ctor: -1
-    uint8_t  _padD4[4];        // +0xD4
-    void*    m_containerRepD8; // +0xD8  &unk_18566C430 (2nd container default rep) [U type]
-    int16_t  m_idE0;           // +0xE0  ctor: -1
-    int16_t  m_idE2;           // +0xE2  ctor: -1
-    uint8_t  _padE4[4];        // +0xE4
+    wh::shared::C_Signal<> m_signalB8;   // +0xB8  (0x10) C_Signal; idle delegate-table sentinel &unk_1856099A0; teardown sub_180A2DC18 [sig U]
+    wh::shared::C_Signal<> m_signalC8;   // +0xC8  (0x10) C_Signal; idle delegate-table sentinel &unk_18566C430; teardown sub_180A2DBC0 [sig U]
+    wh::shared::C_Signal<> m_signalD8;   // +0xD8  (0x10) C_Signal; idle delegate-table sentinel &unk_18566C430; teardown sub_180A2DBC0 [sig U]
     uint8_t  m_containersE8[0x70]; // +0xE8..+0x158  zeroed vector/map skeletons [U types]
-    void*    m_entity;         // +0x158  *a2 copied by ctor (entity/AIObject ptr) [U pointee]
+    framework::WUID m_wuid158;  // +0x158  copy of ctor WUID arg (*a2); base C_IntelligentObject stores the same value at +0x98
     uint8_t  _unk160[0x20];    // +0x160..+0x180  zeroed (+0x174 dword, +0x17C byte) [U roles]
     uint8_t  m_flags180;       // +0x180  3 bool bits (&= 0xF8)
     uint8_t  _pad181[7];       // +0x181

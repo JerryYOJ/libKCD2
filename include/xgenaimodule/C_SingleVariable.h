@@ -44,8 +44,9 @@ public:
 
     // 16-byte typed-value element; interior fields NOT itemized [U]
     struct S_Value {
-        uint64_t _unk0;   // +0x00 [U]
-        uint64_t _unk8;   // +0x08 [U]
+        uint32_t type;    // +0x00  value-type tag (3=CryStringT<char>, 6=refcounted obj; <=2 = inline POD)
+        uint32_t _pad04;  // +0x04  padding (inferred: teardown touches only DWORD@+0 and ptr@+8)
+        uint64_t payload; // +0x08  variant by 'type': tag3 CryStringT<char> (decref *p-12), tag6 refcounted obj (Release@vf1), else inline POD
     };
 
     std::vector<S_Value> m_value;   // +0x40  the value container (sub_1805B8EF8)

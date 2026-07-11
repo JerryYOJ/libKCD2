@@ -27,7 +27,7 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_CombatActorMercyKill;
     // GetSubsystemId() -> 30 ; GetName() -> "MERCY_KILL" ; Can/Request implemented in binary
     // (sub_1816043EC / sub_18275ED74) -- overrides omitted (layout-only header).
-    uint32_t m_state18;    // +0x18  (init 0; zeroed by Reset)   [KCD1: latched victim id / state]
+    EntityId m_victimEntityId;  // +0x18  latched mercy-kill target (Request sub_18275ED74 stores it @0x18275EE9E; 0 = idle)
     uint32_t _pad1C;       // +0x1C
 };
 static_assert(sizeof(C_CombatActorMercyKill) == 0x20, "C_CombatActor+0x408 subsystem is 0x20");

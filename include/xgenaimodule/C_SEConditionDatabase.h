@@ -23,17 +23,17 @@ class C_SEConditionDatabase {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_SEConditionDatabase;
 
-    void*              m_colSituation;              // +0x00  col "situation" (row size 72)
-    void*              m_colSituationRole;          // +0x08  col "situation_role" (64)
-    void*              m_colSituationVariant;       // +0x10  col "situation_variant" (48)
-    void*              m_colSituationRoleBehavior;  // +0x18  col "situation_role_behavior" (40)
-    void*              m_colSituationFrequency;     // +0x20  col "situation_frequency" (48)
-    void*              m_colSituationGlobalCondition; // +0x28 col "situation_global_condition" (56)
-    void*              m_colSituationRoleCondition; // +0x30  col "situation_role_condition" (40)
+    void*              m_colSituation;              // +0x00  I_DatabaseModule::GetTableMetadata handle "situation" (row stride 72)
+    void*              m_colSituationRole;          // +0x08  I_DatabaseModule::GetTableMetadata handle "situation_role" (stride 64)
+    void*              m_colSituationVariant;       // +0x10  I_DatabaseModule::GetTableMetadata handle "situation_variant" (stride 48)
+    void*              m_colSituationRoleBehavior;  // +0x18  I_DatabaseModule::GetTableMetadata handle "situation_role_behavior" (stride 40)
+    void*              m_colSituationFrequency;     // +0x20  I_DatabaseModule::GetTableMetadata handle "situation_frequency" (stride 48)
+    void*              m_colSituationGlobalCondition; // +0x28 I_DatabaseModule::GetTableMetadata handle "situation_global_condition" (stride 56)
+    void*              m_colSituationRoleCondition; // +0x30  I_DatabaseModule::GetTableMetadata handle "situation_role_condition" (stride 40); also cached @+0x58
     std::vector<void*> m_colHandles;                // +0x38  the 7 column handles
-    const void*        m_reloadListenerVptr;        // +0x50  3-slot reload-listener vtable (rva 0x3A40A40) -- raw-modeled, base identity [U]
+    const void*        m_reloadListenerVptr;        // +0x50  vptr of the class's 2nd (polymorphic) base -- 3-slot query iface over the cached cols (vtable rva 0x3A40A40: [0]sub_180C78760 [1]sub_180C776FC [2]sub_180C7706C); SHOULD be virtual-via-inheritance, base identity [U]
     uint64_t           m_cachedSituationCol;        // +0x58  cached copy of m_colSituation
-    void*              m_colSeConditionType;        // +0x60  col "se_condition_type" (16)
+    void*              m_colSeConditionType;        // +0x60  I_DatabaseModule::GetTableMetadata handle "se_condition_type" (stride 16); 2nd-base data member
 };
 static_assert(sizeof(C_SEConditionDatabase) == 0x68, "C_SEConditionDatabase must be 0x68 (SituationManager +0x38..+0xA0)");
 

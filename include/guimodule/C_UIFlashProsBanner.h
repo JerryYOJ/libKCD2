@@ -22,7 +22,8 @@ public:
     CryStringT<char> m_description;   // +0x20  "ui_pros_banner_Description"
     CryStringT<char> m_tag;           // +0x28  "PROS"
     CryStringT<char> m_texture;       // +0x30  "Libs/UI/Textures/Dynamic/pros_reward.dds"
-    uint64_t         m_unk38;         // +0x38  ctor tail, not serialized [UNVERIFIED]
+    int32_t          m_unk38;         // +0x38  ctor stores *(int*)a6 (record int, @0x18239c7e1); not serialized by FillUIArgs [role UNVERIFIED]
+    uint8_t          _pad3C[4];       // +0x3C
 };
 static_assert(sizeof(C_UIFlashProsBanner) == 0x40, "C_UIFlashProsBanner must be 0x40 (creator sub_181782924)");
 

@@ -14,7 +14,7 @@ namespace wh::rpgmodule {
 class C_CodexPerk : public C_Perk {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_CodexPerk;
-    uint64_t m_unk30;    // +0x30  not written by the ctor [UNVERIFIED]
+    void*    m_pResolvedEntry;   // +0x30  NOT set by ctor; Resolve[9] override (0x181608C90) caches the sub_18046B3C0(m_id) lookup result here [pointer to the codex definition/entry; pointee not RE'd]. Name inferred.
     uint8_t  m_flag38;   // +0x38  ctor 0 [role UNVERIFIED]
     uint8_t  _pad39[7];  // +0x39
 };

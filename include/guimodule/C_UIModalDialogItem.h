@@ -23,7 +23,7 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_UIModalDialogItem;
     std::function<void()> m_callback58;   // +0x58  (0x40) [role/signature UNVERIFIED]
     uint64_t              m_unk98;        // +0x98  ctor 0 [role UNVERIFIED]
-    uint64_t              m_unkA0;        // +0xA0  ctor 0 [role UNVERIFIED]
+    void*                 m_pFaderHandle; // +0xA0  owning smart-handle to a "ModalDialog" fade obj: show sub_182B14E80 move-assigns via sub_180C08F90(this+0xA0, module->m_pFaderController->vtbl[0](&out,"ModalDialog",0)); pointee released via vf[1](bool); class UNRESOLVED
     bool                  m_flagA8;       // +0xA8  ctor 0 [dialog-open flag? UNVERIFIED]
     uint8_t               _padA9[7];      // +0xA9
 };

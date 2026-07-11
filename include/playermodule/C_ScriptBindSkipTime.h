@@ -18,7 +18,8 @@ namespace wh::playermodule {
 class C_ScriptBindSkipTime : public CScriptableBase {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_ScriptBindSkipTime;
-    void* m_pOwner;   // +0x60  ctor-zeroed (no owner passed; slot exists for the shared layout)
+    void* m_pOwner;   // +0x60  ctor sub_18181A7A0 zeroes it; takes no owner arg (standalone C_SkipTime
+                      //        bind stored at qword_1854C00A8). Vestigial slot from the shared bind layout.
 };
 static_assert(sizeof(C_ScriptBindSkipTime) == 0x68, "C_ScriptBindSkipTime must be 0x68");
 

@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include "C_CombatActorUpdatedObject.h"
+#include "E_CombatAutomationActionKind.h"
 #include "../CryEngine/CryCommon/TimeValue.h"
 
 // -----------------------------------------------
@@ -20,7 +21,7 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_CombatAutomationAction;
     E_CombatSubsystem GetSubsystemId() const override { return static_cast<E_CombatSubsystem>(26); }  // [2] shared family id
 
-    virtual int  GetActionKind() const = 0;        // [10]  per-leaf id (Director 1, Guard 2, ZoneChange 3, Attack 10, Combo 12, Weapons 14, Missile 15, Battlement 16)
+    virtual E_CombatAutomationActionKind GetActionKind() const = 0;  // [10]  per-leaf constant
     virtual bool _vf11() { return false; }         // [11]  default-false predicate (role unresolved)
     virtual void _vf12() {}                        // [12]
     virtual void _vf13() {}                        // [13]

@@ -24,7 +24,7 @@ public:
     int32_t  m_unk9D4;                                 // +0x9D4  (ctor 0)
     IPhysicalEntity* m_pNeckPhysics;                   // +0x9D8  procedural neck-mass capsule (builder sub_1804CB1E4)  VERIFIED
     int32_t  m_neckPhysAddedParts;                     // +0x9E0  gates neck-physics part re-add (ctor 0)
-    bool     m_unk9E4;                                 // +0x9E4  (ctor 0)
+    bool     m_unk9E4;                                 // +0x9E4  cached phys-param toggle: writer sub_1804CB17C stores 0/1 here and applies it to the actor phys-entity via SetParams (vfunc+32)
     uint8_t  _pad9E5[3];                               // +0x9E5
 };
 static_assert(sizeof(C_Animal) == 0x9E8, "C_Animal must be 0x9E8");

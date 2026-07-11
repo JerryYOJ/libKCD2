@@ -36,8 +36,8 @@ public:
     wh::shared::C_Signal<> m_deviceChangedSignal;  // +0x10  empty-sentinel unk_1856692D0 (arg signature UNVERIFIED)
     uint32_t m_deviceClass;                        // +0x20  ctor 0; returned by I_UIActionHintManager[0]
     uint32_t _pad24;                               // +0x24
-    void*    m_28;                                 // +0x28  ctor-untouched (role UNVERIFIED)
-    void*    m_pDeviceState;                       // +0x30  ctor 0; device-class holder: OnInputEvent (listener-relative +0x28) compares vf[+0x10]() and pushes vf[+0x38](cls); I_UIActionHintManager[1] forwards vf[+0x10] (identity UNVERIFIED)
+    void*    m_28;                                 // +0x28  ctor-untouched; setup sub_180C3C314 caches framework-singleton subobject: qword_18549D388[+8]->vf[0xE0]() (subsystem ptr; pointee type UNVERIFIED)
+    ICVar*   m_pDeviceState;                       // +0x30  "wh_ui_InputDevice" CVar (input-device class 1=KB/M 2=pad 16=PS-pad); setup sub_180C3C314 GetCVar+SetOnChangeCallback(sub_182BBA0E0)+Set(2)+GetIVal; OnInputEvent GetIVal()==vf+0x10 / Set(cls)==vf+0x38
 };
 static_assert(sizeof(C_UIActionHintManager) == 0x38, "C_UIActionHintManager must be 0x38");
 

@@ -28,8 +28,7 @@ public:
     CryStringT<char> m_group;       // +0x58  e.g. "rpg"
     uint8_t  m_flag60;              // +0x60  ctor 0 [role UNVERIFIED]
     uint8_t  _pad61[7];             // +0x61
-    void*    m_pRoot;               // +0x68  sub_1803F7FAC() allocation [tree root INFERRED]
-    uint64_t m_unk70;               // +0x70  ctor 0 [role UNVERIFIED]
+    std::set<void*> m_registry;     // +0x68  MSVC std::set {_Myhead +0x68, _Mysize +0x70}; ctor sub_1803F7FAC allocs empty-set sentinel (40-byte _Tree node, L=P=R=self, _Color=1 _Isnil=1) -> 8-byte value (T*/CryStringT candidate, UNRESOLVED)
 };
 
 }  // namespace wh::databasemodule

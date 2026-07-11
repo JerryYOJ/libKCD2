@@ -12,12 +12,14 @@
 
 namespace wh::xgenaimodule::BehaviorTree::Expressions {
 
+class I_Expression;   // RTTI .?AVI_Expression@Expressions@BehaviorTree@xgenaimodule@wh@@
+
 class C_ExpressionRef {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_ExpressionRef;
     virtual ~C_ExpressionRef();   // [0] [U -- vtable not enumerated]
 
-    void* m_expression;           // +0x08  expression payload ptr (0 at construction) [U pointee type]
+    I_Expression* m_expression;   // +0x08  referenced BT expression (0 at ctor); C_ExpressionRef vtable slots forward to m_expression->vf[n], else log "Expression not initialized."
 };
 static_assert(sizeof(C_ExpressionRef) == 0x10, "C_ExpressionRef must be 0x10 (vptr + ptr)");
 

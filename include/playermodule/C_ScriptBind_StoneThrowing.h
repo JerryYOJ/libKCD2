@@ -19,7 +19,7 @@ namespace wh::playermodule {
 class C_ScriptBind_StoneThrowing : public CScriptableBase {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_ScriptBind_StoneThrowing;
-    void* m_pOwner;   // +0x60  the C_PlayerModule+0x18 bind holder (concrete class unresolved)
+    void* m_pOwner;   // +0x60  = C_PlayerModule::m_sub18 (+0x18) bind holder (0xB0, ctor sub_180EF7184); ctor 0x180EF78A8 stores a2; holder has no RTTI/vtable -> concrete class unnamed
 };
 static_assert(sizeof(C_ScriptBind_StoneThrowing) == 0x68, "C_ScriptBind_StoneThrowing must be 0x68");
 

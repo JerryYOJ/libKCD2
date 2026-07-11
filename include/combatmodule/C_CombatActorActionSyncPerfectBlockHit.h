@@ -36,17 +36,17 @@ class C_CombatActorActionSyncPerfectBlockHit
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_CombatActorActionSyncPerfectBlockHit;
     // ---- own members (leaf tail begins at +0x88, after the I_CombatCollisionProcessOwner base) ----
-    uint32_t                  m_field88;     // +0x88  init 0
-    uint16_t                  m_field8C;     // +0x8C  init 0
+    uint32_t                  m_field88;     // +0x88  uint32 query-id: while zero, OnTick 0x180D4BB64 caches HIDWORD of a subsystem vf[0x118] result (same pattern as SyncHit m_unknown_80)
+    uint16_t                  m_field8C;     // +0x8C  two byte-flags: low byte (+0x8C) tested in OnStop 0x180E7B032, high byte (+0x8D) gates OnStart step calc at 0x18155EB39
     uint8_t                   _pad8E[2];     // +0x8E
     C_CombatActionEarlyExitHelper* m_pSyncHelper; // +0x90  owned; alloc 0x18 in ctor; deleting-dtor'd
-    uint32_t                  m_field98;     // +0x98  init 0
+    float                     m_field98;     // +0x98  float; OnStart 0x18155EBA6 stores (v5 + anim-offset), later read as float and epsilon-tested (>1.19e-7) at 0x18155ED85
     uint8_t                   _pad9C[4];     // +0x9C
-    uint64_t                  m_fieldA0;     // +0xA0  init 0
+    C_CombatActorActionSyncPerfectBlock* m_pSyncOwner; // +0xA0  raw weak back-ref to the owning block action (set by 0x1810F30E5 partner->+0xA0=block; checked/nulled in OnStop 0x180E7B055; cleared by the block dtor at 0x18236822C)
     // embedded C_CombatActionHelperHit by value (ctor sub_180D4A034; sizeof 0x30; vtable 0x183A99D48).
     // Held as a raw buffer here so this header's size claim is self-contained.
     alignas(8) uint8_t        m_hitHelper[0x30];   // +0xA8  [+0xA8..+0xD8)
-    void*                     m_pTaskHandle; // +0xD8  init 0  (Concurrency _TaskProcHandle*; _AutoDeleter'd in dtor -- UNVERIFIED)
+    void*                     m_pTaskHandle; // +0xD8  VERIFIED: holds Concurrency::details::_AutoDeleter<_TaskProcHandle> (8B); task scheduled in OnStart 0x18155EC8A, ~_AutoDeleter in dtor 0x1810F3497
 };
 static_assert(sizeof(C_CombatActorActionSyncPerfectBlockHit) == 0xE0, "C_CombatActorActionSyncPerfectBlockHit must be 0xE0");
 

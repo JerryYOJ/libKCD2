@@ -2,6 +2,8 @@
 #include <cstdint>
 #include "C_SoundPropagationLayerBase.h"
 
+namespace wh::rpgmodule { class C_RPGHearing; }
+
 // -----------------------------------------------
 // wh::xgenaimodule::C_SoundPropagationLayerWeather : C_SoundPropagationLayerBase
 // -- weather attenuation layer of the sound grid (KCD2 WHGame.dll 1.5.6, kd7u).
@@ -19,7 +21,7 @@ public:
     void _vf1() override;    // [1] sub_181A6DD38 [U role]
     void _vf2() override;    // [2] sub_1810494EC -- query/update [U exact signature]
 
-    uint64_t m_unk08;        // +0x08 [U role]
+    wh::rpgmodule::C_RPGHearing* m_soundCategoryRegistry;  // +0x08  &C_RPGHearing global (0x18492EC80), cached by vf[1] sub_181A6DD38
 };
 static_assert(sizeof(C_SoundPropagationLayerWeather) == 0x10, "alloc 16");
 

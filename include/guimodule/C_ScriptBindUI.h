@@ -33,7 +33,7 @@ public:
     // vf[+0x278]() (the Init a2 / script-system accessor) at +0x68. Names follow the
     // KCD1 C_ScriptBindMap precedent (identity of +0x60 UNVERIFIED beyond "framework
     // object the script system hangs off").
-    void*                   m_pGameFramework;   // +0x60
+    Offsets::ISystem*       m_pSystem;          // +0x60  gEnv ISystem: framework->GetISystem() (IGameFramework vf[0x98]); its vf[0x278]() = gEnv->pScriptSystem -> m_pScriptSystem@+0x68
     Offsets::IScriptSystem* m_pScriptSystem;    // +0x68
 };
 static_assert(sizeof(C_ScriptBindUI) == 0x70, "C_ScriptBindUI must be 0x70");

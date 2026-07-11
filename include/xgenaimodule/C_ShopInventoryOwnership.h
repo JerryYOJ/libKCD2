@@ -19,7 +19,7 @@ public:
     ~C_ShopInventoryOwnership() override;                  // [0] sub_1809674DC
     const framework::WUID* GetEffectiveOwner() override;   // [2] sub_181601E10
 
-    void* m_shopData;   // +0x10  shop-data record (sub_180A30B08 hit) [U type]
+    void* m_shopData;   // +0x10  ptr to shop-data record from sub_180A30B08 (intrusive-list lookup by 16B WUID key @rec+0xC0/+0xC8); GetEffectiveOwner fwds to (rec+8)->vf0(); class identity [U]
 };
 static_assert(sizeof(C_ShopInventoryOwnership) == 0x18, "C_ShopInventoryOwnership must be 0x18");
 

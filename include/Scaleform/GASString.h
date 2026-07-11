@@ -24,8 +24,7 @@
 // (non-empty test), 0x181C25150 (substring/index access).
 
 struct GASStringNode {
-    uint32_t         _unk0;       // +0x00  [UNVERIFIED: hash]
-    uint32_t         _unk4;       // +0x04  [UNVERIFIED: size]
+    size_t           m_size;      // +0x00  byte length (low 63 bits); bit63 = ASCII/char-len-verified cache flag (ctor 0x181C23278, GetLength 0x181C24D40)
     volatile int32_t m_refCount;  // +0x08  VERIFIED
     char             m_data[4];   // +0x0C  inline NUL-terminated text (VERIFIED; extends past the struct)
 };

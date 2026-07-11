@@ -33,7 +33,7 @@ public:
     int32_t  m_50;            // +0x50  ctor: -1 [U role]
     int32_t  m_54;            // +0x54  ctor: 0 [U role]
     uint8_t  m_zero58[0x60];  // +0x58..+0xB8  zeroed containers/vectors [U types]
-    uint8_t  _unkB8[8];       // +0xB8  [U]
+    I_IntermissionInvoker* m_current;  // +0xB8  active invoker; wr 0x180623445 (queue head @+0x58) / 0x180623851 (next via sub_1806238E8), cleared 0x18062383a; vf4 derefs -> calls its vf[1]
 };
 static_assert(sizeof(C_IntermissionManager) == 0xC0, "must be 0xC0 (alloc 192 at sub_1817897FC)");
 

@@ -17,7 +17,7 @@ public:
     void FillUIArgs(void* pArgs) const override;   // [1] 0x18186152C
 
     CryStringT<char> m_name;     // +0x18
-    int32_t          m_type;     // +0x20  [may be an enum]
+    int32_t          m_type;     // +0x20  marker-STATE param (= S_EntityMapMark::m_param, ctor sub_1815B9D70 copies src+8), NOT E_MarkType (that lives in m_name); shared domain with C_CompassMark::m_state (2 = discovered/shown observed)
     bool             m_bool24;   // +0x24
     uint8_t          _pad25[3];  // +0x25
     int32_t          m_int28;    // +0x28

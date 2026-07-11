@@ -27,7 +27,7 @@ class C_UnstanceDatabase : public databasemodule::C_ObjectTreeDatabase<S_Unstanc
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_UnstanceDatabase;
 
-    const void* m_iface78Vptr;   // +0x78  2nd-base subobject vptr (vtable rva 0x3AD8050, 6 slots) -- raw-modeled, iface identity [U]
+    const void* m_iface78Vptr;   // +0x78  vptr of 2nd base wh::xgenaimodule::I_UnstanceDatabase (RTTI-certified; vtable rva 0x3AD8050, 6 slots) -- SHOULD be a public base; raw-modeled per escape hatch
     uint8_t     m_zero80[0x38];  // +0x80..+0xB8  zero-init block (xmm @+0x80/+0x90/+0xA0, dword @+0xB0); container kind unproven [U]
 };
 // sizeof ~0xB8 (trailing extent UNVERIFIED) -- no static_assert.

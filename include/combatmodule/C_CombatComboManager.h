@@ -39,9 +39,9 @@ static_assert(sizeof(S_ComboState) == 0x18, "S_ComboState must be 0x18");
 
 // One in-flight combo (0x28; iteration stride proven in sub_180C5C594 / sub_180C5C71C).
 struct S_ActiveCombo {
-    void*    _unk00;                           // +0x00  copied wholesale on compaction
+    void*    __vftable;                        // +0x00  ComboState vtable 0x183B529A0 (RTTI ??_7ComboState@C_CombatComboManager@combatmodule@wh@@6B@; 2 vfuncs sub_181A72970/sub_180C60F24) -- struct is polymorphic, model as class
     int32_t  m_currentStep;                    // +0x08  ++ on advance
-    int32_t  _unk0C;                           // +0x0C
+    uint8_t  _pad0C[4];                        // +0x0C  alignment pad before 8-aligned m_candidates (unwritten by emplace sub_1812C6028/sub_1812C5D3C; uncopied by compaction sub_180C5C71C)
     std::vector<S_ComboState> m_candidates;    // +0x10
 };
 static_assert(sizeof(S_ActiveCombo) == 0x28, "S_ActiveCombo must be 0x28");

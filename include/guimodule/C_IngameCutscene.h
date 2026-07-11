@@ -22,7 +22,7 @@ public:
     void Update() override;          // [3] 0x182B37E44
     void Reset() override;           // [4] 0x182B380AC
     void _vf5() override;            // [5] 0x182B38EDC
-    int  GetType() const override;   // [6] 0x181A74A40
+    E_CutsceneType::Type GetType() const override;   // [6] 0x181A74A40  Ingame(2)
     bool IsActive() const override;  // [7] 0x181A834D0
 
     // Sparse ctor-anchored state (bytes @+0xC0/+0xD0/+0xE0/+0xF0/+0x100, flags 0x0100

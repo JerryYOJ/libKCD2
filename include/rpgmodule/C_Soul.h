@@ -35,6 +35,9 @@
 
 namespace wh::rpgmodule {
 
+class C_DogSoulComponent;           // dog-archetype component (vtable via dtor sub_180964110)
+class C_SkillTeacherSoulComponent;  // 0xF0 skill-teacher component (ctor sub_180A1A4A8)
+
 // 0x10 mailbox subscription (ctor sub_1803F1F40(this, soul); callback sub_180F42930; msg id 102).
 struct S_SoulMailboxSub {
     C_Soul* m_pOwner;    // +0x00
@@ -77,10 +80,10 @@ public:
     uint8_t  _padE9[7];                        // +0xE9
     C_CombatSoul    m_combatSoul;              // +0x0F0  (0xA8; 7 signals + 2 smart-ptrs)
     C_InventorySoul m_inventorySoul;           // +0x198  (0x148; MI, 3 vtables)
-    void*    m_pOwned2E0;                      // +0x2E0  4 individually-destroyed owned handles
-    void*    m_pOwned2E8;                      // +0x2E8  (_smart_ptr/container semantics; classes
-    void*    m_pOwned2F0;                      // +0x2F0   unresolved -- dtors sub_18096630C/2EC/2FC/35C)
-    void*    m_pOwned2F8;                      // +0x2F8
+    C_DogSoulComponent* m_pDogComponent;       // +0x2E0  owned; alloc'd when archetype-desc(+0xCB8)[+0x18]==6 via sub_180964FDC; dtor sub_180964110 stores C_DogSoulComponent vtable
+    void*    m_pOwned2E8;                      // +0x2E8  owned ptr, POD pointee (dtor sub_1809662EC just frees via sub_181AB5160); pointee class unresolved
+    C_SkillTeacherSoulComponent* m_pSkillTeacher; // +0x2F0  owned 0xF0 obj; ctor sub_180A1A4A8 stores C_SkillTeacherSoulComponent vtable; dtor sub_1809662FC deletes via vslot+0x10
+    void*    m_pOwned2F8;                      // +0x2F8  owned ptr to 8-byte soul-listener holding C_Soul* (ctor sub_1809649C8 when archetype-desc(+0xCB8)[+0x18]==1; dtor sub_180964298 unregisters + frees)
     uint64_t m_unk300[2];                      // +0x300  OWORD zero-init
     uint32_t m_unk310;                         // +0x310
     uint32_t _pad314;                          // +0x314
@@ -94,17 +97,17 @@ public:
     uint32_t _padC94;                          // +0xC94
     uint64_t m_unkC98[2];                      // +0xC98  OWORD zero-init
     uint64_t m_unkCA8[2];                      // +0xCA8  OWORD zero-init
-    const void* m_pDescriptorCB8;              // +0xCB8  = &qword_185584090  } static descriptor triple
-    const void* m_pDescriptorCC0;              // +0xCC0  = &dword_1855840F0  } (model-property/descriptor
-    const void* m_pDescriptorCC8;              // +0xCC8  = &unk_18493C848    }  hypothesis -- UNVERIFIED)
-    void*    m_weakRefCD0[2];                  // +0xCD0  weak-ref/observer pair (sub_1803F28C8 registers into target+120/+128)
-    uint64_t m_unkCE0[2];                      // +0xCE0  0x10 std object (shared_ptr/function -- unresolved; ctor sub_1823C92A0)
+    const void* m_pDescriptorCB8;              // +0xCB8  non-owning; interned from registry qword_1853302B0 by id@soul+0x374 (sub_1803F354C), default &qword_185584090; [+0x18]=archetype/race enum (6->dog,1->listener)
+    const void* m_pDescriptorCC0;              // +0xCC0  non-owning; interned from registry qword_185330030 by id@soul+0x370 (sub_1803F354C), default &dword_1855840F0
+    const void* m_pDescriptorCC8;              // +0xCC8  non-owning; interned from registry qword_1853322A0 by id@soul+0x368 (sub_1803F36E0), default &unk_18493C848 (=0xFFFFFFFF null record)
+    void*    m_weakRefCD0[2];                  // +0xCD0  intrusive weak-observer hook {subject+0x10, subject}; sub_1803F28C8 links into subject+0x78/+0x80 with refcounts; dtor sub_18096638C + TaskStack-like unlink
+    uint64_t m_unkCE0[2];                      // +0xCE0  non-owning 16-byte pair, zero-init (ctor sub_1823C92A0 duplicates a source handle into both slots); NO dtor -> not owning; exact type unresolved
     uint32_t m_flagsCF0;                       // +0xCF0  bit5 = byte_1856698FA (ctor sub_1803F1ED4)
     uint32_t _padCF4;                          // +0xCF4
-    uint64_t m_unkCF8;                         // +0xCF8
-    void*    m_pManagerD00;                    // +0xD00  = singleton qword_1854B95A0 (identity tentative)
+    void*    m_pOwnedCF8;                      // +0xCF8  owned, lazily-alloc'd heap object (ctor 0); dtor sub_180966574 destroys a 16-byte-element sub-container@pointee+0x20 then frees
+    void*    m_pManagerD00;                    // +0xD00  non-owning cached ptr to the global soul-manager singleton qword_1854B95A0 (sub_180966488/sub_18063BC1C register the soul and cache the singleton); never freed
     S_SoulMailboxSub m_mailboxSub;             // +0xD08  (0x10; msg id 102)
-    void*    m_srwLock;                        // +0xD18  SRWLOCK (ctor sub_180BBD62C -> InitializeSRWLock)
+    void*    m_srwLock;                        // +0xD18  SRWLOCK (ctor sub_180BBD62C zeroes Ptr then InitializeSRWLock)
 };
 static_assert(sizeof(C_Soul) == 0xD20, "C_Soul must be 0xD20");
 static_assert(offsetof(C_Soul, m_sortedModifierLists) == 0xA8, "sorted modifier lists at 0xA8");

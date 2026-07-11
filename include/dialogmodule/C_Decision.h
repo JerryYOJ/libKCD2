@@ -21,7 +21,7 @@ public:
     virtual void _vf1();         // [1] [role UNVERIFIED]
     virtual void _vf2();         // [2] [role UNVERIFIED]
 
-    void*    m_pHead08;          // +0x08  container head [role UNVERIFIED]
+    void*    m_pHead08;          // +0x08  DynArray<T> (CryEngine SmallDynStorage, single ptr; empty=&gEmptyHeaderPtr 0x185666F18; blk hdr {cap@-8,cnt@-4}) [elem T UNVERIFIED]
     CryStringT<char> m_arr10;    // +0x10  COW array [role UNVERIFIED]
     CryStringT<char> m_arr18;    // +0x18  COW array [role UNVERIFIED]
     CryStringT<char> m_arr20;    // +0x20  COW array [role UNVERIFIED]
@@ -33,8 +33,8 @@ public:
     uint64_t _q38;               // +0x38  [not walked]
     uint64_t _q40;               // +0x40  [not walked]
     CryStringT<char> m_arr48;    // +0x48  COW array [role UNVERIFIED]
-    void*    m_pHead50;          // +0x50  container head [role UNVERIFIED]
-    void*    m_pHead58;          // +0x58  container head [role UNVERIFIED]
+    void*    m_pHead50;          // +0x50  DynArray<T> (CryEngine SmallDynStorage, single ptr; empty=&gEmptyHeaderPtr 0x185666EE8; blk hdr {cap@-8,cnt@-4}) [elem T UNVERIFIED]
+    void*    m_pHead58;          // +0x58  DynArray<T> (CryEngine SmallDynStorage, single ptr; empty=&gEmptyHeaderPtr 0x185666EF8; blk hdr {cap@-8,cnt@-4}) [elem T UNVERIFIED]
 };
 static_assert(sizeof(C_Decision) == 0x60, "C_Decision must be 0x60");
 

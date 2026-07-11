@@ -22,15 +22,13 @@ namespace wh::databasemodule {
 template <typename TObject>
 class C_ObjectTreeDatabaseList : public C_ObjectDatabaseBase {
 public:
-    void*            m_rowsHead;    // +0x30  std::list _Myhead (node = 0x10 + sizeof(TObject))
-    uint64_t         m_rowsSize;    // +0x38  std::list _Mysize
+    std::list<TObject> m_rows;      // +0x30  MSVC std::list {_Myhead +0x30, _Mysize +0x38}; ctor sub_181977C80 allocs 216B sentinel node (_Next=_Prev=self), node = 0x10 + sizeof(TObject)
     CryStringT<char> m_namespace;   // +0x40
     CryStringT<char> m_name;        // +0x48
     CryStringT<char> m_group;       // +0x50
     uint8_t          m_loaded;      // +0x58  vtable slot [6] returns it
     uint8_t          _pad59[7];     // +0x59
-    void*            m_pRoot;       // +0x60  reg handle (sub_1803F7FAC)
-    uint64_t         m_unk68;       // +0x68  ctor 0 [role UNVERIFIED]
+    std::set<void*>  m_registry;    // +0x60  MSVC std::set {_Myhead +0x60, _Mysize +0x68}; ctor sub_1803F7FAC empty-set sentinel (40-byte _Tree node, L=P=R=self, _Color=1 _Isnil=1) -> 8-byte value (UNRESOLVED)
 };
 static_assert(sizeof(C_ObjectTreeDatabaseList<int>) == 0x70,
               "list-variant tree DB subobject must be 0x70");

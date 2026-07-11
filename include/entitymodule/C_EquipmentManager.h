@@ -2,6 +2,7 @@
 #include <cstdint>
 #include <vector>
 #include <unordered_map>
+#include "E_QuickSlotSpec.h"
 #include "I_ItemCollectionListener.h"
 #include "../framework/WUID.h"
 
@@ -23,7 +24,7 @@ class I_EquipmentObserver;
 // two fields are size-placeholders (co-registered E_QuickSlotSpec + a likely WUID) -- unverified.
 struct S_EquipmentSlotIdWrapper {
     uint32_t equipmentSlot;   // +0x00  EquipmentSlotId (reflected "EquipmentSlot")
-    uint32_t quickSlotSpec;   // +0x04  E_QuickSlotSpec::Type (tentative)
+    E_QuickSlotSpec::Type quickSlotSpec;  // +0x04  (RTTR reg sub_180129670)
     uint64_t data08;          // +0x08  (likely wh::framework::WUID; unverified)
 };
 

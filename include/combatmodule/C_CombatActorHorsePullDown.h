@@ -29,7 +29,7 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_CombatActorHorsePullDown;
     // GetSubsystemId() -> 28 ; GetName() -> "HORSE_PULLDOWN" ; Can/Request implemented in binary
     // (sub_18072FA9C / sub_18275E848) -- overrides omitted (layout-only header).
-    uint32_t m_state20;    // +0x20  (init 0; zeroed by Reset)
+    EntityId m_victimEntityId;  // +0x20  latched pulldown target (Request sub_18275E848 stores it @0x18275EA49; 0 = idle)
     bool     m_flag24;     // +0x24  (init 0; zeroed by Reset)
     uint8_t  _pad25[3];    // +0x25
 };

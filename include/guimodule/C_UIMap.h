@@ -197,7 +197,7 @@ public:
     uint8_t                    _pad679[7];           // +0x679
     std::vector<S_Unk38>       m_vec680;             // +0x680  0x38-byte elements (dtor sub_18178736C); role UNVERIFIED
     C_UIMapCloudAtlas          m_cloudAtlas;         // +0x698  (0x20) fog-of-war cloud overlay ("Libs\UI\mapClouds.xml")
-    void*                      m_pFaderHandle;       // +0x6B8  "UIMap" fader handle from C_FaderController (module+0x58); released via vf[1](1)
+    void*                      m_pFaderHandle;       // +0x6B8  owning smart-handle to a refcounted "UIMap" fade obj: OnFastTravelStarted acquires m_pModule->m_pFaderController->vtbl[0](&out,"UIMap",0), move-assigns via sub_180C08F90, activates/releases pointee via vf[1](bool); pointee class UNRESOLVED
     ::ICVar*                   m_pCVarMoveCursorSens;// +0x6C0  cached "wh_map_MoveCursorSens"
     C_ScriptBindMap            m_scriptBindMap;      // +0x6C8  (0x70) Lua "UIMap" (GoToCheckpointMark only)
     std::map<const char*, S_ActionHandler> m_actionHandlers;   // +0x738  action id -> handler (OnAction 0x18168C72C; K comparator UNVERIFIED)

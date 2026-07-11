@@ -35,13 +35,13 @@ public:
     int32_t         m_handle54;      // +0x54  ctor: -1
     float           m_scale58;       // +0x58  ctor: 1.0f [U role]
     uint8_t         _pad5C[4];       // +0x5C
-    void*           m_listHead60;    // +0x60  intrusive list head (32-byte node)
-    uint8_t         _unk68[8];       // +0x68  [U]
+    void*           m_mapHead60;     // +0x60  std::unordered_map (+0x58..+0x98) sentinel list-head node* (32B self-linked)
+    size_t          m_mapSize68;     // +0x68  std::unordered_map element count (_List._Mysize)
     uint8_t         m_hash70[0x28];  // +0x70..+0x98  hash-map (mask 7 @+0x88, count 8 @+0x90) [U interior]
     uint8_t         m_vec98[0x18];   // +0x98..+0xB0  vector [U elem type]
     uint8_t         m_subB0[0x40];   // +0xB0..+0xF0  sub-object (sub_1803E52BC) [U interior]
     uint8_t         m_zeroF0[0x40];  // +0xF0..+0x130  zeroed containers [U types]
-    uint8_t         _unk130[8];      // +0x130  [U]
+    uint8_t         _unk130[8];      // +0x130  owned-gate: dtor frees heap buf @+0x120 if nonzero (qword_18549D358, size->dword_1851DFB1C) [U scalar]
     uint8_t         m_byte138;       // +0x138  ctor: 0 [U role]
     uint8_t         _pad139[7];      // +0x139
 };

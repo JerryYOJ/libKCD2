@@ -25,7 +25,7 @@ struct S_CombatActorActionSyncPerfectBlockParams
       public I_CombatActionAttackHelperParams             // +0x18  (0x10: vtable + m_pAttackData @+0x20)
 {
     inline static constexpr auto RTTI = Offsets::RTTI_S_CombatActorActionSyncPerfectBlockParams;
-    uint64_t m_field28;      // +0x28  (payload; UNVERIFIED)
+    uint64_t m_field28;      // +0x28  zero-initialized by ctor helper sub_181A73BA0 (adjacent to m_pAttackData@+0x20); fill-later payload, write path/type unrecovered
 };
 static_assert(sizeof(S_CombatActorActionSyncPerfectBlockParams) == 0x30,
               "S_CombatActorActionSyncPerfectBlockParams = 3 poly subobjects (0x28) + 0x08 payload");

@@ -17,6 +17,8 @@
 
 namespace wh::xgenaimodule {
 
+namespace navigation { class I_SmartObjectNavigationComponent; }   // RTTI .?AVI_SmartObjectNavigationComponent@navigation@xgenaimodule@wh@@; concrete: ...ComponentDoor/Ledge/Ladder
+
 class I_Ownership;
 
 class C_NavigationSmartObject : public C_SmartObject {
@@ -27,7 +29,7 @@ public:
     void* _vf40() override;                 // [40] 0x8FE2E0
 
     C_Ownership m_ownership;   // +0x1A0  embedded (0x30)
-    void*       m_navLink;     // +0x1D0  linked navigation object (ctor a4; *(a4+8)=this) [U pointee]
+    navigation::I_SmartObjectNavigationComponent* m_navLink;  // +0x1D0  owned nav component (base iface per RTTI; concrete Door/Ledge/Ladder, sub_1804CF5EC); ctor stores it and back-links *(m_navLink+8)=this
 };
 // sizeof >= 0x1D8 INFERRED (ctor writes only) -- no static_assert.
 

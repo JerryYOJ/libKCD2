@@ -18,7 +18,7 @@ namespace wh::dialogmodule {
 class C_BarberExtensionController : public Offsets::IUIActionListener {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_BarberExtensionController;
-    void*    m_pBarberExt;             // +0x08  C_DialogueBarberExtension* (ctor arg2)
+    C_DialogueBarberExtension* m_pBarberExt;  // +0x08  ctor sub_181E5DFB0 arg2 (non-owning back-ptr)
     uint64_t _q10;                     // +0x10  [not walked]
     std::vector<void*> m_stylesA;      // +0x18  copied from ext +0x30 [elem type UNVERIFIED]
     std::vector<void*> m_stylesB;      // +0x30  copied from ext +0x48 [elem type UNVERIFIED]

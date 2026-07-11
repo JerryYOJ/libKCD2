@@ -94,9 +94,9 @@ public:
         wh::shared::traits::C_OwnershipEmpty> m_combatState;     // +0xB60  (0x20; vtable 0x183A80F50)
     void*    m_deferredB80;                            // +0xB80  independent deferred-init member (parent ctor skips it)
     C_PlayerInput* m_pPlayerInput;                     // +0xB88  C_Ptr (0x2D8)  VERIFIED (pointee name from alloc site; slot name tentative)
-    uint64_t m_unkB90;                                 // +0xB90  (ctor 0)
+    void*    m_unkB90;                                 // +0xB90  owning smart-ptr (ctor 0; member dtor sub_180DA753C: *this -> Release sub_1804B2F14); pointee class UNRESOLVED
     uint64_t m_unkB98;                                 // +0xB98  (ctor 0)
-    uint64_t m_unkBA0;                                 // +0xBA0  (ctor 0)
+    void*    m_unkBA0;                                 // +0xBA0  _smart_ptr<T> (ctor 0; member dtor sub_1804B40E0: intrusive refcnt-- @pointee+0x58, if 0 vdtor vtbl+0xB8); pointee class UNRESOLVED
     C_AuxLightAttachment m_auxLight;                   // +0xBA8  (0x48) torch/aux-light attachment (the old "camera/aim helper" label was wrong)
     C_PlayerMaterialEffects m_materialEffects;         // +0xBF0  (0xB8)
     C_RigidOnlyCollision* m_pRigidOnlyCollision;       // +0xCA8  C_Ptr (0x30)  VERIFIED
@@ -107,30 +107,30 @@ public:
     uint64_t m_unkCD0;                                 // +0xCD0  (ctor 0)
     uint32_t m_unkCD8;                                 // +0xCD8  (ctor 0)
     float    m_floatCDC;                               // +0xCDC  init 1.0
-    void*    m_pHelperCE0;                             // +0xCE0  C_Ptr player-bound helper (0x28; -100000 timer)
+    void*    m_pHelperCE0;                             // +0xCE0  owns 0x28 POD {C_Player*@0, u32@8, u8@0xC, u32@0x10, CTimeValue@0x18=-100000, u8@0x20}; alloc sub_180BC750C, dtor frees size 0x28; pointee unnamed (no vtable)
     C_ChatFollowManager* m_pChatFollowManager;         // +0xCE8  C_Ptr (0x78)  VERIFIED (NEW in KCD2)
-    void*    m_pManagerCF0;                            // +0xCF0  C_Ptr manager (0x98)  tentative
+    void*    m_pManagerCF0;                            // +0xCF0  owns 0x98 polymorphic obj (ctor sub_180BC7590; vptr=&unk_185666D28; C_Player*@0x10; 2x CTimeValue=-100000 @0x48/0x50; float 1.0 @0x64; identity-quat @0x68); class UNRESOLVED (vtable in unloaded .data)
     int32_t  m_arrayCF8[8];                            // +0xCF8  inline int32 array (ctor zeroed)
-    void*    m_pDelegateD18;                           // +0xD18  C_Ptr player-back-ptr wrapper (8B)
+    void*    m_pDelegateD18;                           // +0xD18  owns 8B {C_Player*@0}; shared factory sub_18099D100 (identical to D28/D30); no vtable; dtor frees size 8
     C_PlayerCarryCorpse* m_pCarryCorpse;               // +0xD20  C_Ptr (0x18)  VERIFIED (NEW in KCD2)
-    void*    m_pDelegateD28;                           // +0xD28  C_Ptr player-back-ptr wrapper (8B)
-    void*    m_pDelegateD30;                           // +0xD30  C_Ptr player-back-ptr wrapper (8B)
-    uint64_t m_unkD38;                                 // +0xD38  (ctor 0)
-    void*    m_pDelegateD40;                           // +0xD40  C_Ptr wrapper (0x10 {player,byte})
+    void*    m_pDelegateD28;                           // +0xD28  owns 8B {C_Player*@0}; shared factory sub_18099D100 (identical to D18/D30); no vtable; dtor frees size 8
+    void*    m_pDelegateD30;                           // +0xD30  owns 8B {C_Player*@0}; shared factory sub_18099D100 (identical to D18/D28); no vtable; dtor frees size 8
+    void*    m_unkD38;                                 // +0xD38  owning unique-ptr (ctor 0; member dtor sub_180DA7030: destroy sub_180DA6D24 then free sub_181AB5160); pointee class UNRESOLVED
+    void*    m_pDelegateD40;                           // +0xD40  owns 0x10 {C_Player*@0, u8@8=0}; factory sub_180BC87EC; no vtable; dtor frees size 0x10
     C_PlayerUnconscious* m_pPlayerUnconscious;         // +0xD48  C_Ptr (0x30)  VERIFIED (NEW in KCD2)
-    void*    m_pHandlerD50;                            // +0xD50  C_Ptr handler (0x20)
-    void*    m_pHandlerD58;                            // +0xD58  C_Ptr wrapper (0x10 {player,0})
+    void*    m_pHandlerD50;                            // +0xD50  owns 0x20 {C_Player*@0, u8@8, 4 subscription handles@0xC/0x10/0x14/0x18}; ctor sub_180BC88D4 binds brain-vars "player_armorload","player_hit_side","is_master_strike","player_bushman"
+    void*    m_pHandlerD58;                            // +0xD58  owns 0x10 {C_Player*@0, u64@8=0}; factory sub_180BC877C; no vtable; ctor/dtor release via cleanup sub_180BC6A64
     C_PlayerTenseCircumstance* m_pTenseCircumstance;   // +0xD60  C_Ptr (0x20)  VERIFIED (NEW in KCD2)
-    void*    m_pRefCountedD68;                         // +0xD68  ref-counted ptr (Init-set; dtor releases)
+    void*    m_pRefCountedD68;                         // +0xD68  intrusive smart-ptr to polymorphic obj (ctor 0, assigned post-Init); dtor releases via vfunc (*(vtbl+0x18))(p,1); pointee class UNRESOLVED
     C_MissileWeaponPlayerController m_missileWeaponController;   // +0xD70  (0x40)
     wh::shared::C_Signal<> m_signalDB0;                // +0xDB0  verified C_Signal; args/purpose UNRESOLVED (uses the binary-wide shared "default" signal family)
     uint64_t m_unkDC0;                                 // +0xDC0  (ctor 0)
     uint8_t  m_reservedDC8[0x14];                      // +0xDC8  (untouched by ctor)
     uint32_t m_actionMapFilterId;                      // +0xDDC  init 4 (KCD1 action-map filter; tentative)
-    void*    m_pActionMapManager;                      // +0xDE0  runtime singleton qword_185325EE8 (tentative)
+    void*    m_pActionMapManager;                      // +0xDE0  cached global qword_185325EE8 (runtime-filled .data singleton); "IActionMapManager" is UNVERIFIED; concrete type unresolved
     uint64_t m_unkDE8;                                 // +0xDE8  (ctor 0)
     uint64_t m_reservedDF0;                            // +0xDF0  (untouched by ctor)
-    void*    m_globalDF8;                              // +0xDF8  runtime singleton qword_185325B58 (tentative)
+    void*    m_globalDF8;                              // +0xDF8  cached global qword_185325B58 (runtime-filled singleton); reassigned+released by sub_182BDB208 (old released via sub_181F23710); concrete type unresolved
 };
 static_assert(sizeof(C_Player) == 0xE00, "C_Player must be 0xE00");
 

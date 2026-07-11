@@ -32,7 +32,8 @@ public:
     void _vf2() override;   // [2] 0x1809E5BE8  role UNVERIFIED
 
     wh::shared::C_Signal<> m_signal18;  // +0x18  delegate table &unk_185665430 [signature UNVERIFIED]
-    uint8_t   m_unk28[0xD0];            // +0x28  sub_18146D7C0(this+0x28) sub-object [identity UNVERIFIED]
+    uint8_t   m_unk28[0xCC];            // +0x28  POD block; ctor sub_18146D7C0 (0x18146D7CA..0x18146DA52) zero-inits as 17 contiguous 12-byte (Vec3-sized) groups; element type/roles UNVERIFIED, no reader/writer located (hypothesis: Vec3 m_vecs28[17])
+    uint8_t   _padF4[4];                // +0xF4  uninitialized by ctor; alignment pad before 8-aligned C_UILightsManager @+0xF8
     C_UILightsManager m_lights;         // +0xF8  (0x40) UI lights rig (ctor sub_18146D41C; matches spine.md)
     float     m_floats138[12];          // +0x138..+0x168  ctor float block [roles UNVERIFIED]
     uint8_t   m_fade168[0x38];          // +0x168..+0x1A0  fade timing (sub_180A70610(this+0x16C, ...)) [layout UNVERIFIED]

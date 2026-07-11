@@ -29,6 +29,8 @@
 
 namespace wh::xgenaimodule {
 
+class C_SituationSubsystem;
+
 class C_NPC : public I_NPC {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_NPC;
@@ -97,7 +99,7 @@ public:
     uint8_t            _block1A0[0x308];    // +0x1A0..+0x4A7  incl. big member +0x1C0 (sub_180BDD268)
     C_NoOwnerOwnership m_ownership;         // +0x4A8  embedded; returned by GetOwnership slot [11] [V]
     uint8_t            _block4C8[0xBB8];    // +0x4C8..+0x107F member blocks (see header comment)
-    void*              m_optInfoComponent;  // +0x1080 optional new(0x88) -> sub_180BDBFDC(obj,this), gated by a bool entity property (name global unk_1853386E0, runtime-init) [U -- likely the information holder]
+    C_SituationSubsystem* m_situationSubsystem;  // +0x1080 optional heap C_SituationSubsystem (new 0x88, ctor sub_180BDBFDC, back-refs this NPC @obj+0x18); gated by entity bool property (unk_1853386E0)
     uint8_t            _block1088[0x6C0];   // +0x1088..+0x1747 member blocks
     C_NPC*             m_self1748;          // +0x1748 self back-ref
     uint8_t            _block1750[0x28];    // +0x1750..+0x1777 zeroed

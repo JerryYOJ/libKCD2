@@ -56,7 +56,7 @@ public:
     bool        m_isRunning;               // +0x29  set 1 by Stop (KCD1-correlated name; role UNVERIFIED)
     bool        m_isCompleted;             // +0x2A  set by Stop(reason == 1)
     uint8_t     _pad2B[5];                 // +0x2B
-    void*       m_pActionParams;           // +0x30  ref-counted params/definition object; Released in dtor (UNVERIFIED exact type)
+    _smart_ptr<I_Action> m_pActionParams;  // +0x30  ref-counted params/definition action; assigned via _smart_ptr op= (sub_1809CCE24: AddRef slot[1]/Release slot[2]); Released (slot[2]) in dtor sub_18090D288
     int32_t     m_priority;                // +0x38  ctor init -1
     int32_t     m_actionSequenceId;        // +0x3C  ctor init -1
     void*       m_pOwnerSubsystem;         // +0x40  ctor arg (creating subsystem)

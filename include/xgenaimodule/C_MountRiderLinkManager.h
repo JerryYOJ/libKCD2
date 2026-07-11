@@ -19,7 +19,7 @@ public:
     ~C_MountRiderLinkManager() override;   // [0] sub_180A9E5D4
     void OnNPCAttachEvent() override;      // [1] sub_180A9E6C8
 
-    void* m_attachSubsystem;   // +0x08  registration target (qword_185338CC8+360)
+    void* m_attachSubsystem;   // +0x08  cached NPC-attach subsystem = *(g_systems qword_185338CC8 + 0x168); non-null gates listener add/remove into C_NPCManager (q_185494490 vf+128/+136); passed to attach/detach handlers [U pointee type]
 };
 static_assert(sizeof(C_MountRiderLinkManager) == 0x10, "must be 0x10 (alloc 16 at sub_181822290)");
 

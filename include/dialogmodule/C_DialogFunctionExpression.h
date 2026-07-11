@@ -20,7 +20,7 @@ class C_DialogFunctionExpression : public framework::I_EEFunction {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_DialogFunctionExpression;
     CryStringT<char> m_exprSource;   // +0x08  expression source text
-    void* m_pCompiledExpr;           // +0x10  compiled expression (owned)
+    void* m_pCompiledExpr;           // +0x10  owned* -> 0x38 compiled-expr {CryStringT compiled@+0, CryStringT src@+8, int status@+0x10, std::vector@+0x18, u8@+0x30}; built sub_180782828/sub_180781820, freed sub_1803C14C4
     bool  m_isValid;                 // +0x18  compile succeeded
     uint8_t _pad19[7];               // +0x19
 };

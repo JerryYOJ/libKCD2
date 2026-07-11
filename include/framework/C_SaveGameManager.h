@@ -35,6 +35,8 @@
 // CVars: wh_sys_GameSaveName / GameSaveId / GameSaveInstallCompleted / GameSaveForceLoadingError
 // / LastLoadedSave.
 
+namespace wh::shared { class I_InputStream; }
+
 namespace wh::framework {
 
 class C_SaveGameManager : public wh::I_ReadinessTask   // +0x00  (0x8; : I_ReadinessDebuggable)
@@ -45,7 +47,7 @@ public:
     // virtual dtor itself, landing the deleting dtor at slot [5] of its primary vtable.
     virtual ~C_SaveGameManager();          // [5]  deleting dtor sub_1825BC4F0
     // 0x180794928 (see hook surface above); index < 0 resolves the slot by name.
-    bool CreateSaveGame(E_SaveGameType type, int32_t index, const char* name);
+    bool CreateSaveGame(E_SaveGameType::Type type, int32_t index, const char* name);
 
     S_SaveGameTypeSlot m_slotsByType[5];   // +0x008  (5 x 0x48) per-type save lists; indexed by
                                            //         the active slot selector (this + 0x48*idx)
@@ -54,18 +56,19 @@ public:
     int32_t  m_forceInstallCompleted;      // +0x180  cvar wh_sys_GameSaveInstallCompleted (-1)
     int32_t  m_forceLoadingError;          // +0x184  cvar wh_sys_GameSaveForceLoadingError (-1;
                                            //         2 = force cry-data error, 1 = desc error)
-    int32_t  m_activeSlotType;             // +0x188  m_slotsByType selector (INFERRED from the
-                                           //         `this + 0x48*idx` indexing; setter not traced)
-    int32_t  m_field18C;                   // +0x18C  init 0x7FFFFFFF; 4th arg to description
-                                           //         populate (INFERRED id/order)
+    int32_t  m_activeSlotType;             // +0x188  m_slotsByType selector: 5-bucket save CATEGORY
+                                           //         index 0..4 (sub_1806E5274 loop), NOT E_SaveGameType
+    int32_t  m_field18C;                   // +0x18C  init 0x7FFFFFFF (INT_MAX sentinel); passed as arg5
+                                           //         to the description populate sub_181E21850 (id/sort key)
     uint8_t  m_flag190;                    // +0x190  set 1 while inside LoadCryEngineData
     uint8_t  _pad191[7];                   // +0x191
     wh::C_ReadinessObserver m_afterGameLoadObserver;  // +0x198  (0x70) watches "AfterGameLoad"
                                            //         (built by sub_180B3FF14)
     uint64_t m_field208;                   // +0x208  (ctor 0; role unresolved)
-    void*    m_pendingModuleMsg;           // +0x210  set only in the type==6 checkpoint branch
-                                           //         (sub_180794BD0); dtor releases via vtable --
-                                           //         concrete class UNRESOLVED (INFERRED async ctx)
+    wh::shared::I_InputStream* m_pendingModuleMsg;  // +0x210  owning; I_InputStream base (+0x08) of a heap
+                                           //         C_FragmentedMemoryIOStream (pending checkpoint save buffer, built
+                                           //         by sub_180794C08); set in type==6 branch (sub_180794BD0 stores
+                                           //         stream+8); deleted via vtable[0] deleting-dtor in dtor sub_1825BC4F0
     std::vector<S_SaveBuildStamp> m_buildStamps;  // +0x218  (0x18) build stamps of the loaded save
 };
 static_assert(sizeof(C_SaveGameManager) == 0x230, "C_SaveGameManager must be 0x230");

@@ -22,9 +22,7 @@ public:
     int32_t  m_param30;       // +0x30  ctor arg 7, factory default 0 [role UNVERIFIED]
     float    m_param34;       // +0x34  ctor arg 9, factory default -1.0f [role UNVERIFIED -- health/quality candidate]
     CryGUID  m_guid38;        // +0x38  16-byte ctor arg 8, factory default = xmmword_183A79D88 [role UNVERIFIED]
-    uint64_t m_unk48;         // +0x48  ctor 0 } three zeroed qwords -- vector-shaped
-    uint64_t m_unk50;         // +0x50  ctor 0 } [std::vector INFERRED, element type unknown]
-    uint64_t m_unk58;         // +0x58  ctor 0 }
+    std::vector<uint64_t> m_createdItemIds;   // +0x48  ctor zeroes {first,last,cap}; Apply(0x181666970) push_back's *(spawnedItem+0x48) once per created item; element = 8-byte handle (wh::framework::WUID candidate, INFERRED). Name inferred.
 };
 static_assert(sizeof(C_AddItemEffect) == 0x60, "C_AddItemEffect must be 0x60 (operator new(96))");
 

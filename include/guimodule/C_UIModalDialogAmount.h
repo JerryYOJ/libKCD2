@@ -24,7 +24,7 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_UIModalDialogAmount;
     std::function<void()> m_onConfirm;   // +0x58  (0x40) "OnAmountDialogConfirmClicked" [role from name]
     std::function<void()> m_onCancel;    // +0x98  (0x40) "OnAmountDialogCancelClicked" [role from name]
-    uint64_t              m_unkD8;       // +0xD8  ctor 0 [role UNVERIFIED]
+    void*                 m_pDelegate;   // +0xD8  dim-delegate (owner iface subobject): show sub_1808EC58C stores the arg here + calls vf[0](0) to dim; undimmed via vf[1](0) on close -- identical slot/role to C_UIModalDialogQuestion::m_pDelegate; iface class UNRESOLVED
     bool                  m_flagE0;      // +0xE0  ctor 0 [dialog-open flag? UNVERIFIED]
     uint8_t               _padE1[7];     // +0xE1
 };

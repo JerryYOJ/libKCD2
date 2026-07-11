@@ -24,8 +24,8 @@ public:
     uint64_t m_arena[16];       // +0x20  inline storage for 16 items
     uint8_t  m_arenaClaimed;    // +0xA0  set when the inline storage backs the vector
     uint8_t  _padA1[7];         // +0xA1
-    void*    m_pArena;          // +0xA8  -> m_arena
-    void*    m_allocArena;      // +0xB0  vector's arena/allocator handle (-> m_arena at ctor)
+    void*    m_pArena;          // +0xA8  -> &m_arena (ctor 0x182CA8078 stores this+0x20); inline-arena base ptr
+    void*    m_allocArena;      // +0xB0  std::vector allocState -> &m_arena (ctor 0x182CA807F); reserve sub_18046E158 reads base+0x80 = m_arenaClaimed to grab the inline buffer
     uint64_t* m_itemsBegin;     // +0xB8  8-byte elements [item WUIDs INFERRED]
     uint64_t* m_itemsEnd;       // +0xC0
     uint64_t* m_itemsCapEnd;    // +0xC8

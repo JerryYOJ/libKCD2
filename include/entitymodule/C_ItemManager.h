@@ -23,6 +23,7 @@
 namespace wh::entitymodule {
 
 class C_Item;
+class C_ItemReservationManager;   // RTTI .?AVC_ItemReservationManager@entitymodule@wh@@
 
 // One entry of the bespoke inline-bucket WUID hash (16B; internal field split tentative).
 struct S_WuidHashEntry {
@@ -100,7 +101,7 @@ public:
     S_WuidHash40    m_wuidHashA;                        // +0x28   WUID->u16 inline-bucket hash (40 buckets)
     S_WuidHash40    m_wuidHashB;                        // +0x88
     S_WuidKeyedHash m_wuidHashC;                        // +0xE8   keyed variant (0x70)
-    uint64_t        m_reserved158[2];                  // +0x158  reserved (untouched by ctor/dtor)
+    uint64_t        m_cachedCtxHandles158[2];          // +0x158  cached in deferred init sub_18106498C: [0]=*(entityCtx+0x190), [1]=*(entityCtx+0x188) (entityCtx = sub_1809155C8; pointee types unverified)
     S_ItemWuidTable m_itemTable;                       // +0x168  the giant WUID->C_Item* registry
     // owning polymorphic handlers (released via virtual deleting dtor in ~C_ItemManager); iface unresolved
     std::vector<void*> m_ownedHandlers;                // +0x5B8F50
@@ -108,15 +109,16 @@ public:
     std::unordered_map<S_ItemMapKey, void*,                           wh::shared::S_DefaultHash<S_ItemMapKey>> m_mapA;  // +0x5B8F68  value = owning intrusive-refcount ptr (class unresolved)
     std::unordered_map<S_ItemMapKey, C_Item*,                         wh::shared::S_DefaultHash<S_ItemMapKey>> m_mapB;  // +0x5B8FA8  value = non-owning C_Item*
     std::unordered_map<S_ItemMapKey, std::vector<wh::framework::WUID>, wh::shared::S_DefaultHash<S_ItemMapKey>> m_mapC; // +0x5B8FE8
-    uint64_t m_field5B9028;                            // +0x5B9028  (per-tree guard/version; unverified)
+    C_ItemReservationManager* m_pReservationManager;   // +0x5B9028  owning; alloc'd 0x68B in sub_18106498C, released via vtbl[0](obj,1) deleting-dtor in sub_182A68FC4
     std::map<wh::framework::WUID, uint64_t> m_treeA;   // +0x5B9030
-    uint64_t m_field5B9040;                            // +0x5B9040
+    uint64_t m_treeAKeyCounter;                        // +0x5B9040  pre-incremented in sub_1808D08C8; the ++value is the key inserted into m_treeA
     std::map<wh::framework::WUID, S_TreeBValue> m_treeB;// +0x5B9048
     int32_t  m_mapLock;                                // +0x5B9058  RW spinlock (writer bit 0x10000)
     uint32_t _pad5B905C;                               // +0x5B905C
-    uint64_t m_field5B9060;                            // +0x5B9060
-    uint32_t m_field5B9068;                            // +0x5B9068
-    uint8_t  m_field5B906C;                            // +0x5B906C
+    int32_t  m_itemTableLock;                          // +0x5B9060  spinlock (sub_18083EB2C = _InterlockedExchange(&,1) spin); guards m_itemTable
+    uint32_t _pad5B9064;                               // +0x5B9064
+    int32_t  m_wuidHashLock;                           // +0x5B9068  spinlock (sub_18083EB2C); guards the WUID key holders / m_keyHolderA (base+8)
+    bool     m_treeBRecording;                         // +0x5B906C  gates m_treeB writes: set 1 @0x1809B4930, cleared @sub_180D1E180/0x1829E1BA6, tested @sub_180468578
     uint8_t  _pad5B906D[3];                            // +0x5B906D  align to 0x5B9070
 };
 static_assert(sizeof(C_ItemManager) == 0x5B9070, "C_ItemManager must be 0x5B9070");

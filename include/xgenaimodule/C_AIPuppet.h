@@ -50,13 +50,13 @@ public:
     // [22] return-1 / [23] nullsub / [24] sub_180F8CC10 defaults inherited unchanged.
 
     uint8_t         m_cachedTransform[0x18];  // +0x08..+0x1F  cached pos @+0x08 (Vec3), rot region follows -- exact split UNVERIFIED (not touched by ctor)
-    const void*     m_tickCounter;            // +0x20  = sub_1804FD80C()+3 (frame/tick counter ptr idiom, same as C_MessageInbox+0x18)
+    CryStringT<char> m_name;                  // +0x20  CryString name (ctor = shared empty atom sub_1804FD80C()+0xC); base dtor decrefs via sub_1804FD898(ptr-12) [U exact role; empty at ctor]
     uint32_t        m_dirtyFlags;             // +0x28  transform dirty flags (0x400000 = cached transform stale)
     bool            m_staticTransform;        // +0x2C  true = non-moving smart object (4-arg ctor only)
     uint8_t         _pad2D[3];                // +0x2D
     framework::WUID m_wuid;                   // +0x30
     IGameObject*    m_hostGameObject;         // +0x38  host game object [V]
-    void*           m_hostRecord;             // +0x40  per-entity record resolved from the module at S_GameContext+0x180 by host id (sub_18047E548) [U role]
+    entitymodule::C_Actor* m_hostActor;       // +0x40  = m_pActorSystem->GetActor(m_hostGameObject->GetId()) (S_GameContext+0x180, slot 3); the host's IActor
 };
 static_assert(sizeof(C_AIPuppet) == 0x48, "C_AIPuppet must be 0x48");
 

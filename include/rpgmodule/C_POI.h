@@ -41,13 +41,13 @@ public:
     S_LocationId m_locationId;          // +0x28  owning location (ctor: invalid; m_poisByLocation key)
     CryStringT<char> m_layerName;       // +0x38  serializer "layerName"
     uint64_t m_entityId;                // +0x40  I_POI Get/SetEntityId [id kind UNVERIFIED]
-    uint32_t m_unk48;                   // +0x48  ctor 0; no reader located [UNVERIFIED]
+    uint32_t m_unk48;                   // +0x48  ctor 0; deserialized u32 from POI msg 0x4464 "dD" (read after the 16B id), writer 0x181FBF856
     int32_t  m_markTypeOverride;        // +0x4C  -1 = use the type-registry row's markType
     S_LocationId m_typeId;              // +0x50  POI-type registry key (serializer "typeId")
     CryStringT<char> m_uiLabel;         // +0x60  serializer "uiLabel" (fallback chain in I_POI [34])
     CryStringT<char> m_ftConfirmText;   // +0x68  default "ui_dlg_fasttravel_confirm"
     I_POIShape* m_pShape;               // +0x70  owned; C_PointShape (0x18) from the ctor args
-    uint8_t  _gap78[0x18];              // +0x78  NOT written by ctor sub_18094FD64 [UNVERIFIED]
+    uint8_t  _gap78[0x18];              // +0x78  ctor-skipped, dtor-untouched (POD); no writer/reader in 47 vtbl slots, serializer, deser or debug -- reserved [UNRESOLVED]
     uint16_t m_initialFlags;            // +0x90  Reset() template } ctor zeroes the pair, then
     uint16_t _pad92;                    // +0x92                   } copies it over the current pair
     uint32_t m_initialState;            // +0x94  I_POI [6]/[7]

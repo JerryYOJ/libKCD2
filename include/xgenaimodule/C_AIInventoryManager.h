@@ -24,7 +24,7 @@ public:
     void ImlVf1() override; void ImlVf2() override; void ImlVf3() override;
     void ImlVf4() override; void ImlVf5() override; void ImlVf6() override;   // [1..6] impls [U roles]
 
-    void*   m_subsystem;       // +0x08  inventory subsystem (registration target)
+    entitymodule::C_InventoryManager* m_subsystem;  // +0x08  = *(C_EntityModule+0xE8) singleton; self-appends into its m_listeners (+0x100258/+0x100260)
     uint8_t m_byte10;          // +0x10  ctor: 0 [U role]
     uint8_t _pad11[3];         // +0x11
     float   m_scale14;         // +0x14  ctor: 1.0f [U role]

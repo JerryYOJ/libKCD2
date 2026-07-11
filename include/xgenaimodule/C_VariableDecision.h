@@ -24,7 +24,7 @@ public:
     void _vf6() override;   // [6] [U role]
     void _vf7() override;   // [7] [U role]
 
-    void* m_payload;   // +0x08  decision payload ptr/WUID (0 or seeded by sub_18039FDA8) [U type]
+    void* m_payload;   // +0x08  owned polymorphic obj = source->vtbl[3](source); deleting-dtor released on replace (seeder sub_18039FDA8); 0 for empty decisions [U class]
 };
 static_assert(sizeof(C_VariableDecision) == 0x10, "C_VariableDecision must be 0x10 (operator new(16))");
 

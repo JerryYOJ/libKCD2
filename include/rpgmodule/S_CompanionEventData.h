@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include "E_CompanionEvent.h"
 
 // -----------------------------------------------
 // wh::rpgmodule::S_CompanionEventData -- payload of C_CompanionEventCause (KCD2 WHGame.dll
@@ -11,7 +12,7 @@
 namespace wh::rpgmodule {
 
 struct S_CompanionEventData {
-    uint32_t m_eventType;   // +0x00  companion-event type (= create-site arg a2) [proposed]
+    E_CompanionEvent m_eventType;   // +0x00  (RTTR reg sub_1801BD9B0; create sub_182D28FCC passes a2)
     uint8_t  _pad04[4];     // +0x04
     uint64_t m_a;           // +0x08  handle [proposed]
     uint64_t m_b;           // +0x10  handle (= *functor result) [proposed]

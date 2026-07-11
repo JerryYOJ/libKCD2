@@ -37,8 +37,8 @@ class C_ScriptBindInventory : public ::CScriptableBase   // +0x00  (0x60)
 {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_ScriptBindInventory;
-    void* m_pSystem;     // +0x60  entity/game system ptr (factory-written)
-    void* m_pGlobal68;   // +0x68  = qword_18492D8A0 (runtime-init global; pointee unresolved)
+    void* m_pSystem;     // +0x60  = ctx (factory 0x180E30439 stores r14 = same framework obj as base Init a3; (S_GameContext+8)->vf[19]())
+    void* m_pGlobal68;   // +0x68  = qword_18492D8A0 (runtime-init global, 0 in image; same global as rpgmodule C_ScriptBindSoul m_pGlobalSys); type UNRESOLVED
 };
 static_assert(sizeof(C_ScriptBindInventory) == 0x70, "C_ScriptBindInventory must be 0x70");
 

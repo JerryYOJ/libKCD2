@@ -35,7 +35,7 @@ struct C_SoulRPGStats {
     S_SoulStatAccumulator m_accumulator;  // +0x330  (0x78)
     S_SoulStatBlock m_baseBlock;          // +0x3A8  = C_Soul+0x840  (base/snapshot sheet; role UNRESOLVED)
     uint64_t m_subobj610[9];              // +0x610  (0x48, ctor sub_181190860; interior UNRESOLVED)
-    uint64_t m_unk658;                    // +0x658  trailing 8 bytes, unresolved
+    C_Soul*  m_pOwnerSoul;                // +0x658  owner-soul backref (ctor 0x18070F376 stores a2; non-owning -- not freed in dtor sub_180966B10)
 };
 static_assert(sizeof(C_SoulRPGStats) == 0x660, "C_SoulRPGStats must be 0x660");
 static_assert(offsetof(C_SoulRPGStats, m_liveBlock) == 0xC8, "live block at +0xC8 (C_Soul+0x560)");

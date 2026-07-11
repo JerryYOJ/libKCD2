@@ -1,6 +1,8 @@
 #pragma once
 #include <cstdint>
 #include "C_CombatAutomationAction.h"
+#include "E_CombatZoneId.h"
+#include "E_CombatInputClass.h"
 #include "../CryEngine/CryCommon/smartptr.h"
 
 // -----------------------------------------------
@@ -26,7 +28,7 @@ class C_CombatAutomationAttack : public C_CombatAutomationAction {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_CombatAutomationAttack;
     const char* GetName() const override { return "AutomationAttack"; }   // [3] 0x181A7E170
-    int GetActionKind() const override { return 10; }                     // [10] 0x181A74D20
+    E_CombatAutomationActionKind GetActionKind() const override { return E_CombatAutomationActionKind::Attack; }                     // [10] 0x181A74D20
 
     CTimeValue m_retryTimer;          // +0x30  init -100000 (timer helpers sub_180731070/sub_1809D6A34)
     S_AttackOverride* m_pOverride;    // +0x38  owned raw ptr (dtor frees 20B); null = none
@@ -34,9 +36,9 @@ public:
     CTimeValue m_timer48;             // +0x48  init -100000 (role unresolved)
     CTimeValue m_timer50;             // +0x50  init -100000 (role unresolved)
     uint64_t   m_zoneSelectRng;       // +0x58  LCG state; picks the zone index
-    int32_t    m_selectedZone;        // +0x60  "Selected zone %d"
-    int32_t    m_inputClass;          // +0x64  "input %d"
-    int32_t    m_zoneType;            // +0x68  init -1 (part of the 16B zone entry; medium confidence)
+    E_CombatZoneId m_selectedZone;    // +0x60  "Selected zone %d"; (zone,inputClass) key of the attack-type lookup sub_1811E6D20 [domain medium: writers untraced]
+    E_CombatInputClass m_inputClass;  // +0x64  "input %d"; pair key of sub_1811E6D20 [domain medium: writers untraced]
+    int32_t    m_zoneType;            // +0x68  init -1; NOTE the dump's "type %d" is DERIVED via sub_1811E6D20, not this field — role UNRESOLVED
     float      m_weight;              // +0x6C  init 1.0; "weight %.2f"
     uint64_t   m_atkGenRng;           // +0x70  LCG state; re-rolled in sub_18072E784
     float      m_atkGenRoll;          // +0x78  [0,1) roll; "AtkGen: %.2f"
@@ -45,13 +47,13 @@ public:
     uint8_t    _pad7E[2];             // +0x7E
     CTimeValue m_aktWindow;           // +0x80  "Akt %.2f"
     CTimeValue m_huntTimer;           // +0x88  "Hunt %.2f"
-    void*      m_pOwnedA;             // +0x90  OWNED (_smart_ptr semantics: dtor releases via vfunc+0x10); pointee class unresolved
-    void*      m_pThreatTarget;       // +0x98  weak polymorphic ptr (GetName via vfunc+56); "Threat %s"
+    void*      m_pOwnedA;             // +0x90  OWNED ref-counted ptr; Released (slot2 / vf+0x10) in dtor at 0x18194C256; only zero-init in ctor, setter is external (director) -- pointee class unresolved
+    void*      m_pThreatTarget;       // +0x98  weak polymorphic ptr; dump 0x182767EB9 reads GetName via vf[7] (+0x38) -> sub_18041B838 -> "Threat %s"; setter external -- pointee class unresolved
     bool       m_confirmed;           // +0xA0  "Confirmed: %s"
     bool       m_retryFlag;           // +0xA1  read/cleared by sub_18072E784
     uint8_t    _padA2[2];             // +0xA2
     int32_t    m_stateCounter;        // +0xA4  guard in sub_18072E784
-    void*      m_pOwnedB;             // +0xA8  OWNED (released via vfunc+0x10); pointee class unresolved
+    void*      m_pOwnedB;             // +0xA8  OWNED ref-counted ptr; Released (slot2 / vf+0x10) in dtor at 0x18194C244; setter external -- pointee class unresolved
 };
 static_assert(sizeof(C_CombatAutomationAttack) == 0xB0, "C_CombatAutomationAttack must be 0xB0");
 

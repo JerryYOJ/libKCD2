@@ -28,7 +28,7 @@ public:
         uint16_t keyHash;   // +0x00  sort key (sub_1805B8998 name hash)
         uint8_t  flags;     // +0x02  read by sub_1809FDC74 [U role]
         uint8_t  _pad[5];   // +0x03  [U possibly secondary key]
-        void*    variable;  // +0x08  C_Variable* / handle
+        C_Variable* variable;  // +0x08  factory sub_1805B34A8 result (C_SingleVariable/IndexedArray/...); binsearched by [1] sub_1805C6DFC
     };
 
     void* GetVarByKeyHash(uint16_t hash, bool recurseToParent) override;  // [1]  sub_1805C6DFC

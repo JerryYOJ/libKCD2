@@ -26,8 +26,9 @@ public:
     uint8_t  m_fieldD9;      // +0xD9  (=0; copied individually by clone fn; role unresolved)
     uint8_t  _padDA[6];      // +0xDA
     wh::framework::WUID m_loadedAmmo;  // +0xE0  chambered-ammo handle; 0 = not loaded  VERIFIED semantics
-    uint64_t m_unkE8[2];     // +0xE8  16B ctor-unwritten, clone-copied as one xmmword (INFERRED
-                             //        CryGUID or position pair; internal split unresolved)
+    CryGUID  m_pendingAmmoGuid;  // +0xE8  pending-ammo GUID key; sub_180C5E72C passes &field by-addr to registry find
+                                 //        (sub_180465F60 -> sub_181EC83C0 two-half FNV-1a, canonical CryGUID hash); resolved
+                                 //        object's WUID -> m_loadedAmmo, then field cleared to 0. ctor-unwritten.
 };
 static_assert(sizeof(C_MissileWeaponRuntimeData) == 0xF8, "C_MissileWeaponRuntimeData must be 0xF8");
 static_assert(offsetof(C_MissileWeaponRuntimeData, m_loadedAmmo) == 0xE0, "loaded ammo at 0xE0");

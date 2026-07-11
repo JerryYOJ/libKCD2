@@ -61,8 +61,8 @@ public:
     void _vf4() override;   // [4] 0x180838AE0
 
     wh::shared::C_Signal<> m_signal20;     // +0x20  delegate table &unk_185667208 [signature UNVERIFIED]
-    uint8_t  m_unk30[0x10];                // +0x30  sub_180C48214(this+0x30) sub-object [identity UNVERIFIED]
-    uint8_t  m_unk40[0x10];                // +0x40  sub_180C48214(this+0x40) sub-object [identity UNVERIFIED]
+    wh::shared::C_Signal<> m_signal30;     // +0x30  delegate table &unk_185667108 (sub_180C48214) [signature UNVERIFIED]
+    wh::shared::C_Signal<> m_signal40;     // +0x40  delegate table &unk_185667108 (sub_180C48214) [signature UNVERIFIED]
     wh::shared::C_Signal<> m_signal50;     // +0x50  delegate table &unk_185665430 [signature UNVERIFIED]
     C_UITreeList     m_list;               // +0x60   (0x1E0) ctor arg listName ("ApseInventoryList")
     C_UIExtendedInfo m_info;               // +0x240  (0xD8) ctor arg infoName ("ApseInventoryInfo")

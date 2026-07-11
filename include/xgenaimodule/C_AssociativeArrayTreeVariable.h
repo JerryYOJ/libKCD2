@@ -42,8 +42,9 @@ public:
     void  _vf32() override;                                     // [32]
 
     uint8_t            m_assocHeader[0x70];   // +0x40..+0xB0  embedded structure (sub_180B29A98 / dtor sub_180B29E54) [U interior]
-    void*              m_assocObj;            // +0xB0  allocated assoc/hash object (sub_180452BA4) [U pointee]
-    void*              m_assocAux;            // +0xB8  aux/hashmap slot (0) [U role]
+    // +0xB0..+0xC0  std::map/std::set (MSVC std::_Tree): {_Myhead sentinel node, _Mysize}
+    void*              m_assocTreeHead;       // +0xB0  _Myhead: sentinel node from sub_180452BA4; freed by dtor via sub_181AB5160
+    size_t             m_assocTreeSize;       // +0xB8  _Mysize (ctor 0)
     std::vector<void*> m_children;            // +0xC0  8-byte elems (dtor stride 8) [U pointee type]
     uint64_t           m_index[3];            // +0xD8  unordered_map-like container (dtor sub_180A608D4) [U exact type]
 };

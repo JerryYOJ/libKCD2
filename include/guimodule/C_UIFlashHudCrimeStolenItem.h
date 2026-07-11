@@ -17,7 +17,7 @@ public:
     void FillUIArgs(void* pArgs) const override;   // [1] 0x182B6320C
 
     CryStringT<char> m_name;     // +0x18
-    uint8_t          _unk20[4];  // +0x20  ctor-only [UNVERIFIED]
+    int32_t          _unk20;     // +0x20  ctor copy 0x182B62102 (src+0); flash int arg, same builder as m_count
     int32_t          m_count;    // +0x24  inline tag-0 builder sub_18157F350
 };
 static_assert(sizeof(C_UIFlashHudCrimeStolenItem) == 0x28, "C_UIFlashHudCrimeStolenItem must be 0x28 (creator sub_182B5F72C)");

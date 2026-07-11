@@ -15,17 +15,31 @@
 
 namespace wh::dialogmodule {
 
+class C_DialogInstance;
+
 class C_DialogueShieldPaintingExtension : public I_DialogueExtension {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_DialogueShieldPaintingExtension;
     bool    m_active;        // +0x08  [per-extension convention; UNVERIFIED]
     uint8_t _pad09[7];       // +0x09
-    void*   m_pOwner;        // +0x10  owning C_DialogInstance [UNVERIFIED]
-    uint8_t _unk18[0x90];    // +0x18..+0xA7  worker (112B @+0x18, sub_181E6EA10) +
-                             //   intrusive-list node (@+0x68) -- observations conflict,
-                             //   region opaque [UNVERIFIED]
+    C_DialogInstance* m_pOwner;  // +0x10  owning C_DialogInstance (ctor a2 arg; owner+640/+668 read)
+    void*    m_pWorker;      // +0x18  owning ptr to heap 112B worker (alloc sub_1804F75C0(112), ctor sub_181E6EA10, dtor sub_181E6B960=dtor+free) [pointee UNVERIFIED]
+    uint8_t  m_b20;          // +0x20  byte flag, ctor 0 (bool candidate; single memset-0)
+    uint8_t  _pad21[7];      // +0x21
+    void*    m_pItem;        // +0x28  owning wh::entitymodule::C_ItemWrapper (sub_1808D3DC4 allocs 24B + sets its vftable); released in dtor & Reset
+    void*    m_field30;      // +0x30  cached global qword_185322558 (static value 0; runtime-init singleton/handle) [role UNVERIFIED]
+    std::vector<void*>      m_vec38;   // +0x38  {first,last,end}; 8B elems (dtor sub_181DE9FA0; OnUpdate (last-first)>>3) [elem UNVERIFIED]
+    std::vector<void*>      m_vec50;   // +0x50  {first,last,end}; 8B elems (dtor sub_181DE9FA0) [elem UNVERIFIED]
+    std::map<CryStringT<char>, std::vector<void*>> m_map68;  // +0x68  {_Myhead,_Mysize}; node 64B=32hdr+8key+24val (dtor sub_181E6B8C0; OnUpdate CryStringT-keyed lookup returns vector at node+40)
+    std::vector<void*>      m_vec78;   // +0x78  {first,last,end}; 8B ptr elems, polymorphic (dtor sub_181DE9FA0; OnUpdate calls vtbl[2] on each element) [pointee UNVERIFIED]
+    int      m_cursor90;     // +0x90  ring index into m_vec38 (OnUpdate)
+    int      m_cursor94;     // +0x94  ring index into m_map68 value vector (OnUpdate)
+    int      m_cursor98;     // +0x98  ring index into m_vec78 (OnUpdate)
+    int      m_field9C;      // +0x9C  int, ctor 0 [role UNVERIFIED]
+    int      m_fieldA0;      // +0xA0  int (DWORD), ctor 0 [role UNVERIFIED]
+    uint8_t  _padA4[4];      // +0xA4  tail pad to sizeof 0xA8
 };
-static_assert(offsetof(C_DialogueShieldPaintingExtension, _unk18) == 0x18);
+static_assert(offsetof(C_DialogueShieldPaintingExtension, m_pWorker) == 0x18);
 // sizeof == 0xA8 by construction; total size ~0xA8 UNVERIFIED (see header note).
 
 }  // namespace wh::dialogmodule

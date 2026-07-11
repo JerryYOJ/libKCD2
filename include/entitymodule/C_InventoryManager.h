@@ -43,8 +43,8 @@ public:
     wh::shared::C_Signal<const CryGUID&, C_Inventory*> m_onInventoryCreated;   // +0x08  emitted on create
     wh::shared::C_Signal<const CryGUID&, C_Inventory*> m_onInventoryRemoved;   // +0x18  emitted on remove
     // --- bespoke C_Inventory object pool (+0x28..+0x50) ---
-    void*    m_poolCurBlock;                            // +0x28  current block cursor
-    void*    m_poolFreeHint;                            // +0x30  free-slot hint
+    S_InventoryPoolBlock* m_poolCurBlock;               // +0x28  current block cursor (alloc sub_181EE0240 reads curBlock->used @+0xC)
+    S_InventoryPoolBlock* m_poolFreeHint;               // +0x30  free-slot hint; compared against block pointers and cleared to 0 in sub_181EE0240
     std::vector<S_InventoryPoolBlock> m_poolBlocks;     // +0x38
     // --- inline WUID slot registry (occupied slots hold the C_Inventory*; free slots thread a list
     //     through the slot's [2..6] words). Index 0 and 0xFFFF are reserved control slots. ---

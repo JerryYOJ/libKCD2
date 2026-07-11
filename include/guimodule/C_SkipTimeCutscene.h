@@ -20,10 +20,11 @@ public:
     void Update() override;          // [3] 0x182B37E5C
     void Reset() override;           // [4] 0x181A8CA70
     void _vf5() override;            // [5] 0x180838AE0
-    int  GetType() const override;   // [6] 0x181A78EA0
+    E_CutsceneType::Type GetType() const override;   // [6] 0x181A78EA0  SkipTime(4)
     bool IsActive() const override;  // [7] 0x182B377E4
 
-    uint64_t m_unk60;   // +0x60  tail [role UNVERIFIED]
+    int32_t  m_skipTimeParam60;  // +0x60  Reset 0x181A8CA70 sets -1 (idle sentinel); Play 0x182B385D0 passes as int arg to skip-time query sub_182ECFC6C
+    uint32_t m_skipTimeParam64;  // +0x64  Reset sets 0; Play passes as 2nd arg to sub_182ECFC6C
 };
 static_assert(sizeof(C_SkipTimeCutscene) == 0x68, "C_SkipTimeCutscene must be 0x68 (creator sub_1811CF5D8)");
 

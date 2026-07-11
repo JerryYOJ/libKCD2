@@ -18,8 +18,8 @@ public:
     int32_t  m_param10;        // +0x10  ctor -1 [role UNVERIFIED -- port index candidate]
     uint8_t  m_flag14;         // +0x14  ctor 0 [role UNVERIFIED]
     uint8_t  _pad15[3];        // +0x15
-    uint64_t m_unk18;          // +0x18  ctor 0 [role UNVERIFIED -- owner node candidate]
-    uint64_t m_unk20;          // +0x20  ctor 0 [role UNVERIFIED -- linked port candidate]
+    uint64_t m_unk18;          // +0x18  ctor 0; NOT touched by dtor sub_1806B28B8 -> non-owning field (raw back-ptr or scalar); type unresolved
+    void*    m_unk20;          // +0x20  OWNED _smart_ptr<T> (intrusive refcount); dtor sub_1806B28B8 releases via sub_1804F6588 (vtbl[0]=destroy, strong@+8 / weak@+0xC) when non-null; pointee T unresolved
     CryStringT<char> m_name;   // +0x28
 };
 static_assert(sizeof(I_Port) == 0x30, "I_Port must be 0x30 (C_PortRef member at +0x30)");

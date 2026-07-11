@@ -43,7 +43,7 @@ public:
     uint64_t    m_70;             // +0x70  ctor: 0 [U role]
     uint64_t    m_78;             // +0x78  ctor: 0 [U role]
     uint8_t     m_members80[0x48]; // +0x80..+0xC8  sub-area container (sub_180A2CBE4) [U type]
-    void*       m_areaBackPtr;    // +0xC8  = this + 0x60 (back-ref to the I_Area subobject)
+    I_Area*     m_areaBackPtr;    // +0xC8  = &this->I_Area subobject (this+0x60); ctor stores a1+96
     uint16_t    m_D0;             // +0xD0  ctor: 0 [U role]
     uint8_t     _padD2[6];        // +0xD2
     C_Ownership m_ownership;      // +0xD8  embedded (0x30)

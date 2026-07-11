@@ -64,7 +64,7 @@ public:
     // C_UIFlashObject: id/str + type + screen floats + in-area bytes -> SUIArguments.
     void FillUIArgs(void* pArgs) const override;   // 0x1805551D8
 
-    uint64_t m_unk38;          // +0x38  ctor 0; AddCompassMarker (sub_180C4D2E8) stashes its dispatch arg here
+    C_UICompass* m_pOwnerCompass;  // +0x38  owning compass (AddMark 0x180C4D20F stores the C_UICompass* here); reused as the fc_addCompassMarker flash-dispatch target
     wh::xgenaimodule::C_LinkableObject* m_pTrackedObject;  // +0x40  ctor arg; nulled on object removal
     bool     m_flag48;         // +0x48  ctor 0 [role UNVERIFIED]
     bool     m_flag49;         // +0x49  ctor: 1 if tracked-object kind (obj+0x0F) is 7 or 15
@@ -80,7 +80,7 @@ public:
     uint8_t  _pad71;           // +0x71
     bool     m_isInsideArea2D; // +0x72  ctor 0; fc_addCompassMarker `isInsideArea2D` (+ FillUIArgs `isLocked` slot)
     uint8_t  _pad73;           // +0x73
-    int32_t  m_state;          // +0x74  ctor arg `param`; fc_addCompassMarker `state` (2 from the map/quest/checkpoint paths)
+    int32_t  m_state;          // +0x74  ctor arg `param`; fc_addCompassMarker `state` (2 from map/quest/checkpoint paths); same domain as S_EntityMapMark::m_param and C_UIFlashMapPoiMarker+0x20 (candidate E_LocationMarkStates, not hard-typed)
 };
 static_assert(sizeof(C_CompassMark) == 0x78, "C_CompassMark must be 0x78");
 static_assert(offsetof(C_CompassMark, m_pTrackedObject) == 0x40, "tracked object at 0x40");

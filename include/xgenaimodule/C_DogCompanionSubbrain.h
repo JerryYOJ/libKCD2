@@ -18,6 +18,8 @@
 
 namespace wh::xgenaimodule {
 
+namespace activitysystem { class C_DogCompanion; }   // RTTI .?AVC_DogCompanion@activitysystem@xgenaimodule@wh@@
+
 class C_DogCompanionSubbrain : public C_BehaviorTreeSUBB {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_DogCompanionSubbrain;
@@ -29,10 +31,10 @@ public:
     bool  _vf38() override;                   // [38] sub_18066CD10 (return 0)
     void  _vf39() override;                   // [39] sub_1819B57C8 -- companion event
 
-    void*    m_companionTarget;   // +0x120  forward target of [39] (0) [U pointee]
+    activitysystem::C_DogCompanion* m_companionTarget;  // +0x120  Init (sub_180BC9B00) allocs a C_DogCompanion (0x1E30) via sub_180BC9BC4 and stores it here; slot [39] forwards state to it
     uint8_t  m_128;               // +0x128  0 (ctor word-write covers 0x128/0x129; dossier's
                                   //         "u16@0x128 + u8@0x129" overlaps -> split as 2 bytes [U])
-    uint8_t  m_companionState;    // +0x129  set by [39] [U meaning]
+    bool     m_companionState;    // +0x129  slot [39] sub_1819B57C8 writes only 0/1
     uint8_t  _pad12A[6];          // +0x12A
 };
 static_assert(sizeof(C_DogCompanionSubbrain) == 0x130, "C_DogCompanionSubbrain must be 0x130 (operator new(304))");

@@ -27,16 +27,12 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_BuffEffect;
     conceptmodule::C_TypedArrayPortRef<std::vector<I_Soul*>> m_soulsPort;   // +0x88
     conceptmodule::C_TypedPortRef<S_BuffDefinitionId> m_buffIdPort;         // +0xC8
-    float    m_param108;      // +0x108  ctor 1.0f [role UNVERIFIED -- strength/duration factor candidate]
-    uint32_t _pad10C;         // +0x10C
-    // unordered_map-shaped hash (MSVC _Hash): [key/value types UNVERIFIED]
-    void*    m_mapListHead;   // +0x110  -> 32-byte self-linked sentinel node
-    uint64_t m_mapSize;       // +0x118
-    void*    m_mapVecBegin;   // +0x120  bucket vector (16 entries filled with the sentinel)
-    void*    m_mapVecEnd;     // +0x128
-    void*    m_mapVecCap;     // +0x130
-    uint64_t m_mapMask;       // +0x138  ctor 7
-    uint64_t m_mapMaxidx;     // +0x140  ctor 8
+    // +0x108  std::unordered_map (MSVC _Hash, sizeof 0x40) -- SUBSUMES the former m_param108
+    //         (which is the hash's max_load_factor 1.0f, not a gameplay float). Layout: list
+    //         sentinel @+0x110, size @+0x118, bucket vector @+0x120..0x130, mask 7 @+0x138,
+    //         maxidx 8 @+0x140.  Node: value @node+0x18 = polymorphic pointer (its dtor calls
+    //         virtuals), key @node+0x10 = 8-byte trivially-destructible [K,V exact types UNVERIFIED].
+    std::unordered_map<uint64_t, void*> m_map;   // +0x108  (name inferred)
 };
 static_assert(sizeof(C_BuffEffect) == 0x148, "C_BuffEffect must be 0x148 (operator new(328))");
 

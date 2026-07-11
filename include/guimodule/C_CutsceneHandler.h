@@ -42,7 +42,7 @@ public:
     int32_t  m_int2C8;              // +0x2C8  ctor 0 [role UNVERIFIED]
     uint8_t  m_byte2CC;             // +0x2CC  ctor 0 [role UNVERIFIED]
     uint8_t  _pad2CD[3];            // +0x2CD
-    uint64_t m_unk2D0;              // +0x2D0  ctor 0
+    I_Cutscene* m_pTrackedCutscene; // +0x2D0  currently-tracked cutscene; OnCutsceneChanged 0x182B1203F returns early unless (this == changed cutscene); +0x2D8 = its _smart_ptr control
     volatile int32_t* m_pRefCount;  // +0x2D8  smart-ptr control [ctor 0]
 };
 static_assert(sizeof(C_CutsceneHandler) == 0x2E0, "C_CutsceneHandler must be 0x2E0 (creator sub_181152200)");

@@ -114,7 +114,7 @@ public:
     C_CutscenePlayer*         m_pCutscenePlayer;       // +0x68  (Init)
     C_InteractiveSceneManager* m_pInteractiveSceneMgr; // +0x70  (Init, takes the fader)
     C_UIFullUIModeHelper*     m_pFullUIModeHelper;     // +0x78  (Init)
-    void*                     m_pScratch80;            // +0x80  0x48 zero-init POD, no vtable (sub_181789674); identity UNVERIFIED, reset by message-0 helper sub_181352700
+    void*                     m_pScratch80;            // +0x80  -> 0x48 heap map {byte UI-action-slot 0..18 -> int resolved input-action id}; msg-0 helper sub_181352700 fills it from action names (ui_modal_open/confirm/cancel, ui_apse_*, ui_inv_*, ui_menu_open) via operator[] sub_181352AA8 + id-resolver sub_181352C48; exact container class UNVERIFIED
     C_UIQAMSelectionHandler*  m_pQAMSelectionHandler;  // +0x88  quick-action-menu selection (ctor)
     void*                     m_pGame;                 // +0x90  live game object between module msgs 40/41: msg-40 handler sub_180EC8400 stores *(ctx+8)->vf[+0x200]() here + broadcasts elem->OnGameStart (vf[5]); msg-41 sub_180EC7B34 broadcasts OnGameEnd (vf[6]) then clears [resolved G3b]
     C_ScriptBindUI            m_scriptBindUI;          // +0x98  EMBEDDED Lua "UI" bind (ctor-inline init)

@@ -38,7 +38,7 @@ public:
 
     std::function<void()> m_onConfirm;   // +0x58  invoked on confirm (after Close) by sub_1819DC4B4
     std::function<void()> m_onCancel;    // +0x98  invoked on cancel  (after Close) by sub_1819DD750
-    void*                 m_pDelegate;   // +0xD8  Open arg3; released by Close (delegate role UNVERIFIED)
+    void*                 m_pDelegate;   // +0xD8  dim-delegate = an interface subobject of the owner screen (C_UIMap passes m_pApse+0x20, sub_182B00C15): Open sub_1811A0D58 stores it + vf[0](0) (dim), Close sub_1808C1840 calls vf[1](0) (undim) then zeroes; iface class UNRESOLVED
     bool                  m_isOpen;      // +0xE0  dialog-open flag: set by Open, cleared by Close; gates both forwarders
     uint8_t               _padE1[7];     // +0xE1
 };

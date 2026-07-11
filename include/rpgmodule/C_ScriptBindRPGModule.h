@@ -39,7 +39,7 @@ class C_ScriptBindRPGModule : public ::CScriptableBase   // +0x00  (0x60)
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_ScriptBindRPGModule;
     Offsets::IScriptSystem* m_pSS2;      // +0x60  raw ctor pSS (a2)
-    void*                   m_pOwner;    // +0x68  ctor a4 (INFERRED owning module/context)
+    C_RPGModule*            m_pOwner;    // +0x68  owning module (ctor a4 = the C_RPGModule that creates the bind, stored back at module+0xF0)
     C_FactionScriptBind     m_faction;   // +0x70  (0x60) faction-userdata metatable methods
     C_LocationScriptBind    m_location;  // +0xD0  (0x60) location-userdata metatable methods
 };

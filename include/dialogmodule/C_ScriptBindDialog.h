@@ -30,8 +30,8 @@ class C_ScriptBindDialog : public ::CScriptableBase   // +0x00  (0x60; own +0x08
 {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_ScriptBindDialog;
-    void*            m_pScriptSvc;   // +0x60  script-system service obj (ctx->(+8)->vf[19]())
-    void*            m_pLuaState;    // +0x68  Lua-state/methods obj (svc->vf[79]())
+    Offsets::ISystem*       m_pScriptSvc;   // +0x60  ISystem (gameCtx->(+8)->vf[19](); passed to CScriptableBase::Init as pSystem)
+    Offsets::IScriptSystem* m_pLuaState;    // +0x68  IScriptSystem = ISystem->vf[79] (GetIScriptSystem); same value stored at base m_pSS (+0x50)
     C_DialogManager* m_pOwner;       // +0x70  owning C_DialogManager (ctor arg2)
 };
 static_assert(sizeof(C_ScriptBindDialog) == 0x78, "C_ScriptBindDialog must be 0x78 (alloc 120)");

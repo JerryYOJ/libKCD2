@@ -25,8 +25,8 @@ class C_ScriptBindHorse : public ::CScriptableBase   // +0x00  (0x60)
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_ScriptBindHorse;
     ::CScriptTable* m_pParamTable;   // +0x60  obj created via sub_180AED4A8, released via sub_1804FB980 (INFERRED SmartScriptTable)
-    void*           m_pContext;      // +0x68  ctor ctx arg (env; pointee unresolved)
-    void*           m_pManager;      // +0x70  = ctxProxy->vf89()->vf16() (manager ptr; pointee unresolved)
+    Offsets::ISystem* m_pContext;    // +0x68  ctor a2 = ISystem*; a2->vf[0x278] returns gEnv->pScriptSystem, fed to CScriptableBase::Init
+    void*           m_pManager;      // +0x70  = ISystem::vf[0x2C8](slot89 -> gEnv->pGame/IGame*)->IGame::vf16() = *(whGlobal sub_1809155C8()+8); same engine-root obj as C_ScriptBindActor::m_pSubsystem
 };
 static_assert(sizeof(C_ScriptBindHorse) == 0x78, "C_ScriptBindHorse must be 0x78");
 

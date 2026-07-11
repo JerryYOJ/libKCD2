@@ -22,7 +22,8 @@ public:
     void _vf7() override;  void _vf8() override;  void _vf9() override;
     void _vf10() override; void _vf11() override;   // [1..11] impls [U roles]
 
-    uint8_t _unk10[8];   // +0x10  [U -- alloc suggests 0x18 total but mapping unverified]
+    float   m_maxDistance;   // +0x10  max distance-to-player; setter 0x1832D7B98 atof->float, eval 0x1832D772C ((max^2)>=dist^2), dbg "DistanceToPlayer Max:%f"
+    uint8_t _pad14[4];       // +0x14  tail padding (alloc 0x18; only the +0x10 float is live)
 };
 // size UNVERIFIED (enum->class mapping by proximity) -- no static_assert.
 

@@ -45,14 +45,12 @@ public:
 
     void OnHardwareMouseEvent(int iX, int iY, EHARDWAREMOUSEEVENT event, int wheelDelta) override;   // hw-mouse 0x183EDE850[1]
 
-    uint8_t  _unk70[0x38];               // +0x70   ctor-untouched [UNVERIFIED]
-    void*    m_unkA8;                    // +0xA8   ctor 0 [role UNVERIFIED]
-    uint8_t  _unkB0[0x38];               // +0xB0   ctor-untouched [UNVERIFIED]
-    void*    m_unkE8;                    // +0xE8   ctor 0 [role UNVERIFIED]
-    uint8_t  m_unkF0[0x40];              // +0xF0   sub_1805618EC sub-object [identity UNVERIFIED]
-    uint8_t  m_unk130[0x90];             // +0x130  sub_180C48410 sub-object [identity UNVERIFIED]
+    uint8_t  m_fn70[0x40];               // +0x70   std::function<Sig?> (MSVC 0x40; _Impl@+0xA8 nulled in ctor; dtor _Tidy 0x1803E23C0 via thunk 0x180629280) [signature UNVERIFIED]
+    uint8_t  m_fnB0[0x40];               // +0xB0   std::function<Sig?> (MSVC 0x40; _Impl@+0xE8 nulled in ctor; dtor _Tidy 0x1803E23C0 via thunk 0x1821386D0) [signature UNVERIFIED]
+    uint8_t  m_fnF0[0x40];               // +0xF0   std::function<Sig?> (ctor sub_1805618EC nulls _Impl @this+0x128; dtor _Tidy 0x1803E23C0 via thunk 0x1821386D0) [signature UNVERIFIED]
+    uint8_t  m_itemIndexer130[0x90];     // +0x130  wh::entitymodule::C_ItemIndexer (ctor 0x180C48410 stores C_ItemIndexer vtable; no RE header yet -> keep bytes)
     uint64_t m_unk1C0[6];                // +0x1C0..+0x1F0  ctor 0
-    uint8_t  m_unk1F0[0x90];             // +0x1F0  sub_180C48410 sub-object #2 [identity UNVERIFIED]
+    uint8_t  m_itemIndexer1F0[0x90];     // +0x1F0  wh::entitymodule::C_ItemIndexer #2 (ctor 0x180C48410 stores C_ItemIndexer vtable; no RE header yet -> keep bytes)
     C_UISelectedItemsReporter m_reporter; // +0x280 (0x18; boundary with the next two qwords UNVERIFIED)
     bool     m_flag298;                  // +0x298  ctor 0 [role UNVERIFIED]
     uint8_t  _pad299[7];                 // +0x299

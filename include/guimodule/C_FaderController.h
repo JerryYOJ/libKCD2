@@ -42,22 +42,28 @@ public:
     void OnMovieEvent(int movieEvent, void* pAnimSequence) override;   // [1] 0x1807EE344
 
     wh::shared::C_Signal<> m_signal20;   // +0x20  delegate table unk_1856679D8 [signature UNVERIFIED]
-    void*    m_pOwner;                   // +0x30  ctor a2 (owning module object)
+    C_GUIModule* m_pOwner;               // +0x30  owning module (creator sub_1818ACD14 a2 = C_GUIModule 'this'; module stores the shared_ptr at C_GUIModule+0x58)
     uint8_t  m_flags38[0x10];            // +0x38  word/byte/dword flag block [roles UNVERIFIED]
     uint8_t  m_map48[0x40];              // +0x48  sub_1806B5C70 map/obj [type UNVERIFIED]
     uint8_t  m_map88[0x40];              // +0x88  sub_1806B5C70 map/obj [type UNVERIFIED]
     uint8_t  m_pendingFades[0x40];       // +0xC8  sub_18043C878 -- fade map keyed by FNV-1a id [type UNVERIFIED]
     uint8_t  m_activeFades[0x40];        // +0x108 sub_18043C878 -- fade map keyed by FNV-1a id [type UNVERIFIED]
-    uint8_t  m_unk148[0x10];             // +0x148 sub_180D26214 obj [type UNVERIFIED]
-    uint8_t  _unk158[0x20];              // +0x158..+0x178 [UNVERIFIED]
+    void*    m_srwLock;                  // +0x148  SRWLOCK.Ptr -- recursive RW lock (InitializeSRWLock @sub_180D26214)
+    uint32_t m_lockRecursion;            // +0x150  recursion depth (sub_1803D902C)
+    uint32_t m_lockOwnerThreadId;        // +0x154  owning thread id (GetCurrentThreadId)
+    std::vector<std::function<void()>> m_callbacks158;  // +0x158  0x40-byte std::function elems (elem dtor sub_181501528) [functor signature UNVERIFIED]
+    int32_t  m_requestArg170;            // +0x170  RequestFade stores its 2nd arg here (0x180C09527)
+    uint8_t  _pad174[4];                 // +0x174
     int64_t  m_timerSentinels[3];        // +0x178  ctor -100000 x3
     uint8_t  m_cvarBlock190[0x40];       // +0x190..+0x1D0  ICVar*/bound floats (+0x19C..+0x1C8) + +0x1B4 default duration [layout UNVERIFIED]
     uint8_t  m_placeholderFader[0x30];   // +0x1D0  "Placeholder" fader obj (sub_1808DD5C0) [type UNVERIFIED]
     uint64_t _unk200;                    // +0x200
     CryStringT<char> m_name;             // +0x208  ctor "fader"
-    uint8_t  _unk210[0x10];              // +0x210..+0x220 [UNVERIFIED]
+    // +0x210: NOT a member. C_FaderController ends at +0x210 (last member m_name @+0x208).
+    // The 0x220 make_shared block = 0x10 _Ref_count_obj2 control-block prefix + 0x210 object
+    // (creator sub_1818ACD14: alloc 0x220, ctor sub_180D26844(v5+16), object @ alloc+0x10).
 };
-static_assert(sizeof(C_FaderController) == 0x220, "C_FaderController must be 0x220 (creator sub_1818ACD14)");
+static_assert(sizeof(C_FaderController) == 0x210, "C_FaderController object is 0x210; the 0x220 make_shared block = 0x10 _Ref_count_obj2 control prefix + 0x210 object (creator sub_1818ACD14, ctor at alloc+0x10)");
 static_assert(offsetof(C_FaderController, m_timerSentinels) == 0x178, "timer sentinels at 0x178");
 static_assert(offsetof(C_FaderController, m_name) == 0x208, "name at 0x208");
 

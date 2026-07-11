@@ -26,8 +26,8 @@ public:
     void*    m_pList2Next;       // +0x68  init = &m_sentinel58 (empty; init sub_18046FDE0)
     void*    m_pList2Prev;       // +0x70  init = &m_sentinel58
     std::vector<void*> m_vec78;  // +0x78  element cleanup sub_181036550 (element type unresolved)
-    void*    m_pModifierHolder;  // +0x90  = sub_180452BA4() polymorphic sub-object (own vtable;
-                                 //        INFERRED buff/modifier holder)
+    void*    m_pModifierHolder;  // +0x90  = sub_180452BA4(): heap 0x30-byte node {self@0,self@8,self@0x10,u16 0x0101@0x18},
+                                 //        NO vtable (1st qword = self) -- intrusive list/registry head, NOT polymorphic
     void*    m_p98;              // +0x98  (=0; role unresolved)
     int32_t  m_quality;          // +0xA0  default = owner->vf6() (item quality)  VERIFIED source
     float    m_condition;        // +0xA4  clamp [0,1], default 1.0 (durability fraction)  VERIFIED

@@ -22,13 +22,13 @@ namespace wh::databasemodule {
 template <typename TRow, typename TDBData>
 class C_ObjectTableDatabase : public C_ObjectDatabase<TRow> {
 public:
-    void*       m_pTableMeta;   // +0x48  88-byte table-metadata handle from I_DatabaseModule[12]:
+    void*       m_pTableMeta;   // +0x48  88-byte table-metadata handle from I_DatabaseModule[12]; set by Register slot[7]; Load 0x180EF3A4C reads +0x38 type dword vs m_type:
                                 //        {+0x00 raw row buffer, +0x08 row count (dword), +0x38 type
                                 //        dword (verified by Load), +0x50 flags (bit3 = needs load)}
                                 //        -- the KCD1 "loaded table view" reborn as a handle struct
     std::string m_tableName;    // +0x50  e.g. "reputation_change"
     std::string m_groupName;    // +0x70  e.g. "rpg"
-    int32_t     m_unk90;        // +0x90  ctor 0; written by concrete slot [21] (0x181A7E520)
+    int32_t     m_unk90;        // +0x90  ctor 0; setter slot[21] sub_181A7E520 stores its int arg (mov [this+0x90],esi) -> int32_t; semantic role unresolved
     bool        m_isLoaded;     // +0x94  set by Load; read by IsLoaded [6]
     uint8_t     _pad95[3];      // +0x95
 };

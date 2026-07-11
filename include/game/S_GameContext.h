@@ -22,6 +22,8 @@
 
 namespace wh::framework        { class C_ModulesManager; }
 namespace wh::entitymodule     { class C_EntityModule; class C_Actor; }
+namespace wh::animationmodule  { class C_AnimationModule; }
+namespace wh::xbehaviormodule  { class C_XBehaviorModule; }
 namespace wh::guimodule        { class C_GUIModule; }
 namespace wh::combatmodule     { class C_CombatModule; }
 namespace wh::soundmodule      { class C_SoundModule; }
@@ -34,6 +36,8 @@ namespace wh::rpgmodule        { class C_RPGModule; }
 namespace wh::environmentmodule{ class C_EnvironmentModule; }
 namespace wh::dialogmodule     { class C_DialogModule; }
 namespace wh::xgenaimodule     { class C_XGenAIModule; }
+namespace wh::utilsmodule      { class C_UtilsModule; }
+namespace wh::databasemodule   { class C_DatabaseModule; }
 
 namespace wh::game {
 
@@ -45,7 +49,7 @@ struct S_GameContext {
     uint8_t                                 _padC0[0x20];         // +0xC0
     entitymodule::C_EntityModule*           m_pEntityModule;      // +0xE0                                      VERIFIED
     guimodule::C_GUIModule*                 m_pGUIModule;         // +0xE8                                      VERIFIED
-    uint8_t                                 _padF0[0x08];         // +0xF0  module ptr (Database/Animation, unpinned)
+    animationmodule::C_AnimationModule*     m_pAnimationModule;   // +0xF0  registrar v2[30]=sub_180D24284  VERIFIED
     combatmodule::C_CombatModule*           m_pCombatModule;      // +0xF8                                      VERIFIED
     soundmodule::C_SoundModule*             m_pSoundModule;       // +0x100                                     VERIFIED
     musicmodule::C_MusicModule*             m_pMusicModule;       // +0x108  NEW in KCD2                        VERIFIED
@@ -55,9 +59,10 @@ struct S_GameContext {
     playermodule::C_PlayerModule*           m_pPlayerModule;      // +0x128  (was +0xE8)                        VERIFIED
     rpgmodule::C_RPGModule*                 m_pRPGModule;         // +0x130                                     VERIFIED
     environmentmodule::C_EnvironmentModule* m_pEnvironmentModule; // +0x138                                     VERIFIED
-    uint8_t                                 _pad140[0x10];        // +0x140 module ptrs (Utils/Database, unpinned)
+    utilsmodule::C_UtilsModule*             m_pUtilsModule;       // +0x140 registrar v2[40] vftable C_UtilsModule  VERIFIED
+    databasemodule::C_DatabaseModule*       m_pDatabaseModule;    // +0x148 registrar v2[41]=sub_18192BBB4()+0x10 subobj  VERIFIED
     dialogmodule::C_DialogModule*           m_pDialogModule;      // +0x150                                     VERIFIED
-    uint8_t                                 _pad158[0x08];        // +0x158 module ptr (XBehavior, unpinned)
+    xbehaviormodule::C_XBehaviorModule*     m_pXBehaviorModule;   // +0x158 registrar v2[43] vftable C_XBehaviorModule  VERIFIED
     xgenaimodule::C_XGenAIModule*           m_pXGenAIModule;      // +0x160                                     VERIFIED
     uint8_t                                 _pad168[0x18];        // +0x168
     Offsets::IActorSystem*                  m_pActorSystem;       // +0x180  CActorSystem (CryAction)           VERIFIED

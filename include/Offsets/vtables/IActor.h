@@ -25,6 +25,7 @@
 //                    0x180838ae0 = ret false, 0x18041a6a0 = ret true.
 
 struct IEntity;
+struct IComponentEventDistributer;   // RTTI .?AUIComponentEventDistributer@@ (global ns, IComponent.h)
 
 namespace Offsets {
 
@@ -38,7 +39,7 @@ struct IGameObject;
 // derived IActor's vptr occupies +0x00; sizeof 0x38 so IActor rounds to 0x40.
 struct IGameObjectExtension {
     uint64_t        m_weakPtr[2];              // +0x08  std::enable_shared_from_this<IComponent> weak_ptr
-    void*           m_pDistributer;            // +0x18  IComponentEventDistributer*
+    IComponentEventDistributer* m_pDistributer;  // +0x18  non-owning back-ptr to CEntitySystem's event-distributer singleton (IComponent::SetDistributer)
     uint32_t        m_componentEntityId;       // +0x20
     uint32_t        m_componentFlags;          // +0x24
     IGameObject*    m_pGameObject;             // +0x28

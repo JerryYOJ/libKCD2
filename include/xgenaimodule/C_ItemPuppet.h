@@ -46,7 +46,7 @@ public:
     void _vf20() override;
 
     C_AIItem* m_item;         // +0x08  host item [V]
-    uint8_t   m_unk10[0xC];   // +0x10  zeroed by ctor [U roles]
+    Vec3      m_cachedPos;    // +0x10  UpdateCachedTransform [5] caches host translation (host vf[46])
     uint8_t   _pad1C[4];      // +0x1C
 };
 static_assert(sizeof(C_ItemPuppet) == 0x20, "C_ItemPuppet must be 0x20");

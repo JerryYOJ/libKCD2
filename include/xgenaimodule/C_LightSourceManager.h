@@ -29,7 +29,11 @@ public:
     uint32_t m_nameIdSettlement;  // +0x0C  interned "settlement"
     uint32_t m_nameIdCity;        // +0x10  interned "city"
     float    m_cvarTorchDropDist; // +0x14  cvar wh_ai_TorchDropBeforeMoveEndDistance target
-    uint8_t  _unk18[0x10];        // +0x18..+0x28  word/dword zeros + float 1.0 (dump offsets conflict [U])
+    bool     m_active;            // +0x18  gate flag: set 1 @0x1820C3478, read as bool in sub_181025410/sub_18073765C/sub_18090427C
+    uint8_t  m_cachedState;       // +0x19  caches (uint8)sub_180653344() @0x1820C347C; compared @0x1820C3471 to re-run subscriber loop [U role]
+    uint8_t  _pad1A[6];           // +0x1A  align pad (never written)
+    float    m_hashMaxLoadFactor; // +0x20  std::unordered_set _Max_bucket_size (1.0f); the hash container REALLY begins here, not +0x28 (see note)
+    uint8_t  _pad24[4];           // +0x24  STL _Traitsobj align pad before list head @+0x28
     uint8_t  m_hashSet28[0x38];   // +0x28..+0x60  WH hash-set (mask 7 @+0x50, count 8 @+0x58) [U interior]
     uint8_t  m_sub60[0x40];       // +0x60..+0xA0  container (sub_18047937C) [U interior]
     uint8_t  m_subA0[0x40];       // +0xA0..+0xE0  container (sub_18047937C) [U interior]

@@ -28,7 +28,7 @@ public:
     wh::conceptmodule::C_TypedPortRef<wh::framework::E_UIApseView::Type> m_viewPort;     // +0xB0  (0x40)
     wh::conceptmodule::C_TypedPortRef<wh::conceptmodule::S_Trigger>      m_onEnterPort;  // +0xF0  out [name coined]
     wh::conceptmodule::C_TypedPortRef<wh::conceptmodule::S_Trigger>      m_onExitPort;   // +0x130 out [name coined]
-    uint8_t m_lastView;    // +0x170  cached E_UIApseView (trigger @0x182b1352c)
+    wh::framework::E_UIApseView::Type m_lastView;  // +0x170  cached view (trigger @0x182b1352c)
     uint8_t m_flag171;     // +0x171  ctor 0 [role UNVERIFIED]
     uint8_t _pad172[6];    // +0x172
 };

@@ -1,5 +1,7 @@
 #pragma once
 #include <cstdint>
+#include <utility>
+#include <vector>
 
 // -----------------------------------------------
 // wh::databasemodule::C_DynamicEnumManager -- registry of I_DynamicEnum providers
@@ -12,18 +14,22 @@
 
 namespace wh::databasemodule {
 
+class C_DatabaseModule;
+class C_DatabaseDynamicEnum;   // RTTI .?AVC_DatabaseDynamicEnum@databasemodule@wh@@
+
 class C_DynamicEnumManager {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_DynamicEnumManager;
     virtual ~C_DynamicEnumManager();   // slot layout not yet mapped
 
-    uint64_t m_unk08;    // +0x08  ctor 0 [role UNVERIFIED]
-    uint64_t m_unk10;    // +0x10  ctor 0
-    uint64_t m_unk18;    // +0x18  ctor 0
+    // +0x08  sorted flat-map: enum-name hash -> provider. dtor sub_182740A4C->sub_180D16750
+    // (0x10 stride, restores C_DatabaseDynamicEnum vftable & frees ptr@elem+8); insert
+    // sub_180D16D40 (16B elems, lower_bound on first int32). 19 built-ins registered by sub_180D16B54.
+    std::vector<std::pair<uint32_t, C_DatabaseDynamicEnum*>> m_enumsByType;  // +0x08 (first/last/end)
     uint64_t m_unk20;    // +0x20  ctor 0
     uint64_t m_unk28;    // +0x28  ctor 0
     uint64_t m_unk30;    // +0x30  ctor 0
-    uint64_t m_unk38;    // +0x38  ctor 0
+    C_DatabaseModule* m_owner;  // +0x38  owner back-ref; set by init sub_180D16B54 (a2), fed as owner+0x10 (I_DatabaseModule) to each provider
     uint8_t  m_flag40;   // +0x40  ctor 1 [role UNVERIFIED]
     uint8_t  _pad41[7];  // +0x41
 };

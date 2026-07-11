@@ -43,17 +43,17 @@ public:
     void _vf16() override;   // [16] sub_180BD59DC
     ~C_Situation() override; // [17] deleting dtor sub_180D9D3DC (body sub_180D9D564)
 
-    int32_t            m_state;             // +0x08  ctor: 0 (state/flags) [U meaning]
+    int32_t            m_state;             // +0x08  ordered FSM {0,1,2,3,4} (transitions sub_180B27FD0 0->1, sub_180BD7548 0->4/1->2/3->4, sub_180BD59DC ->4=finalize); enumerator names UNRECOVERED
     uint8_t            _pad0C[4];           // +0x0C
-    void*              m_holder;            // +0x10  ctor a3 (holder/context) [U pointee]
+    void*              m_holder;            // +0x10  ctor a3 = situation domain/definition; ctor reads a ptr-vector @+0x90/+0x98 whose elems have GetName vf@+24 and flag@+65 [U concrete type]
     std::vector<void*> m_domainVec;         // +0x18  copied from ctor a5 (sub_180E9B160) [U elem type]
     int32_t            m_30;                // +0x30  ctor a4
     uint8_t            _pad34[4];           // +0x34
     std::vector<void*> m_vec38;             // +0x38  elem size 16 (dtor free-mask 0xF0) [U elem type]
     uint64_t           m_participantCount;  // +0x50
     uint64_t           m_participantLimit;  // +0x58  ctor: same count (duplicate/limit) [U role]
-    void*              m_60;                // +0x60  ctor a2 [U pointee]
-    void*              m_node68;            // +0x68  32-byte node (qword_18549D378(32)); destroyed by sub_180A2C368 [U type]
+    void*              m_60;                // +0x60  ctor a2 = owning situation spawner (its method sub_180E9A5E4 builds situations; holds a live-situation registry @+0xE8, sub-holder @+0x08); back-ref [U concrete type]
+    void*              m_node68;            // +0x68  ptr to heap 32-byte flat array {T* data@0, size_t count@8, size_t cap@16, Allocator* @24 = qword_185338548}; elem T = 16B {CryStringT<char> @0, +8}; dtor sub_180A2C368 decrefs each (ptr-12) then frees [U elem 2nd half]
     framework::WUID    m_wuid;              // +0x70  (holder+168) | 0x09<<56
 };
 static_assert(sizeof(C_Situation) == 0x78, "C_Situation must be 0x78 (alloc 120 at sub_180E9AF04)");

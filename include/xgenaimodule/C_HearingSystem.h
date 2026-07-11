@@ -20,6 +20,8 @@
 // ingestion/sound grid; huge m_distanceAttenuationPower (+0x0C) or zero event
 // intensity collapses the propagation radius to ~0.
 
+namespace wh::rpgmodule { class C_RPGHearing; }
+
 namespace wh::xgenaimodule {
 
 class C_HearingSystem : public game::I_GameSideEffectCallback {
@@ -35,14 +37,11 @@ public:
     float    m_playerSurroundingsAttenuation;  // +0x18  cvar wh_ai_PlayerSurroundingsAttenuation
     uint8_t  _pad1C[4];                    // +0x1C
     std::vector<int32_t> m_soundCategoryIds;   // +0x20  28 sound-category ids [V]
-    uint8_t  _unk38[0x18];                 // +0x38..+0x4F [U roles]
-    void*    m_soundCategoryRegistry;      // +0x50  = off_18492EC80 (sound-category registry) [V]
+    uint8_t  _unk38[0x18];                 // +0x38..+0x4F  UNRESOLVED: 3 qwords, ctor-zeroed like the 4 sibling std::vectors; likely std::vector<T> but no writer found in reachable hearing members
+    wh::rpgmodule::C_RPGHearing* m_soundCategoryRegistry;  // +0x50  &C_RPGHearing global (0x18492EC80); vslot0 GetSoundCategory(idx)
     std::vector<C_SoundPropagationLayerBase*> m_layers;  // +0x58  the 8-layer propagation grid [V]
     uint8_t  _unk70[0x38];                 // +0x70..+0xA7 [U roles]
-    int32_t  m_intA8;                      // +0xA8  ctor: 2 [U role]
-    uint8_t  _unkAC[0x44];                 // +0xAC..+0xEF [U roles]
-    int32_t  m_intF0;                      // +0xF0  ctor: -1 [U role]
-    int32_t  m_intF4;                      // +0xF4  ctor: 0 [U role]
+    std::mutex m_eventQueueLock;           // +0xA8  (0x50; _Mtx_try@+0xA8=2, cs-storage +0xB0..+0xEF, owner-thread@+0xF0=-1, count@+0xF4=0) guards m_soundEventQueue
     uint8_t  m_blockF8[0x68];              // +0xF8..+0x15F  member block (init sub_18197ACF0) [U interior]
     uint8_t  m_tail160[0x08];              // +0x160  member block (init sub_18078BDEC) [U interior]
 };

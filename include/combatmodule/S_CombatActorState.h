@@ -163,11 +163,11 @@ struct S_CombatActorState {
     Prop<bool>                                       m_pBoolCB0;           // +0xCB0
     // -- raw tail --
     C_CombatActor*                                   m_pOwner;             // +0xCE0  = ctor arg
-    void*                                            m_blockCtxDelegate0;  // +0xCE8  cached block-context delegate (tentative)
-    void*                                            m_blockCtxDelegate1;  // +0xCF0
-    void*                                            m_field_CF8;          // +0xCF8
-    void*                                            m_triggerListHead;    // +0xD00  -> 32B self-linked intrusive-list sentinel (sub_180472128)
-    void*                                            m_field_D08;          // +0xD08
+    void*                                            m_blockCtxDelegate0;  // +0xCE8  owned polymorphic delegate; deleted via virtual dtor vtable[0](this,1) on reset sub_1810F1D80; set externally when owner vfunc@+0x2C8 true (exact class unrecovered)
+    void*                                            m_blockCtxDelegate1;  // +0xCF0  owned polymorphic delegate (paired with +0xCE8); deleted via virtual dtor vtable[0](this,1) on reset sub_1810F1D80 (exact class unrecovered)
+    void*                                            m_field_CF8;          // +0xCF8  non-owning ptr, cleared to 0 (NOT released) on the block-context reset path of sub_1810F1D80
+    void*                                            m_triggerListHead;    // +0xD00  std::set/std::map _Myhead: 32B _Tree sentinel from sub_180472128 (_Left=_Parent=_Right=self, _Color=1,_Isnil=1); reset by sub_180473D4C. Element type unrecovered
+    size_t                                           m_field_D08;          // +0xD08  std::set/std::map _Mysize (paired with +0xD00 _Myhead); reset to 0 by sub_180473D4C
 };
 static_assert(sizeof(S_CombatActorState) == 0xD10, "S_CombatActorState must be 0xD10");
 static_assert(offsetof(S_CombatActorState, m_pStateId) == 0x030, "m_pStateId offset");

@@ -15,7 +15,7 @@ class C_CombatAutomationBattlement : public C_CombatAutomationAction {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_CombatAutomationBattlement;
     const char* GetName() const override { return "AutomationBattlement"; }  // [3] 0x181A7E180
-    int GetActionKind() const override { return 16; }                        // [10] 0x181A72890
+    E_CombatAutomationActionKind GetActionKind() const override { return E_CombatAutomationActionKind::Battlement; }                        // [10] 0x181A72890
 
     CTimeValue m_lastTime2;   // +0x30  init -100000 ("never")
     bool       m_flag38;      // +0x38  (ctor 0; role unresolved)

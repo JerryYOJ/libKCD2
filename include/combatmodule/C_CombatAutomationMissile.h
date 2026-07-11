@@ -14,7 +14,7 @@ class C_CombatAutomationMissile : public C_CombatAutomationAction {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_CombatAutomationMissile;
     const char* GetName() const override { return "AutomationMissile"; }   // [3] 0x181A7E200
-    int GetActionKind() const override { return 15; }                      // [10] 0x181A7D840
+    E_CombatAutomationActionKind GetActionKind() const override { return E_CombatAutomationActionKind::Missile; }                      // [10] 0x181A7D840
 
     int32_t    m_stateFlag;     // +0x30  (ctor 0; role tentative)
     float      m_aimDuration;   // +0x34  init 1.0; "aimDuration %.2f"

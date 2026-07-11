@@ -18,7 +18,7 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_RegularGridObjectWrapperBase;
     virtual ~C_RegularGridObjectWrapperBase();   // [0] sub_180631668; further slots not enumerated
 
-    uint64_t m_unk08;                // +0x08  [not walked -- ctor not located]
+    void*    m_unk08;                // +0x08  ptr to lazily-alloc'd pooled object (sub_1805B1510); pointee class UNIDENTIFIED
     std::vector<void*> m_objects;    // +0x10  grid object list [element type UNVERIFIED]
 };
 static_assert(sizeof(C_RegularGridObjectWrapperBase) == 0x28, "modeled extent (dtor-visible fields; alloc UNPROVEN)");

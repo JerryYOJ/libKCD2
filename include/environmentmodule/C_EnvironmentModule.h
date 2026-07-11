@@ -36,7 +36,7 @@ public:
     C_VisualEffectManager*   m_pVisualEffectManager;  // +0x90  Init alloc 24
     C_WeatherSystem*         m_pWeatherSystem;        // +0x98  Init alloc 6448
     C_StreamingHelper*       m_pStreamingHelper;      // +0xA0  Init alloc 40
-    uint64_t                 m_unkA8;                 // +0xA8  not written by ctor/Init
+    uint64_t                 m_unkA8;                 // +0xA8  no writer in ctor 0x180BE889C / Init 0x180E3C398 / Deinit 0x182ADA658 or any module vtable method+callee (scanned); reserved or externally-set
 
     [[nodiscard]] static C_EnvironmentModule* GetInstance()
     {

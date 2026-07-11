@@ -24,7 +24,7 @@ public:
     void Update() override;          // [3] 0x182B37F18
     void Reset() override;           // [4] 0x182B380B4
     void _vf5() override;            // [5] 0x180838AE0
-    int  GetType() const override;   // [6] 0x181A78ED0  `return 5`
+    E_CutsceneType::Type GetType() const override;   // [6] 0x181A78ED0  TrackView(5)
     bool IsActive() const override;  // [7] 0x182B377FC
 
     wh::shared::C_Signal<> m_signalC0;   // +0xC0  delegate table unk_185665430 [signature UNVERIFIED]

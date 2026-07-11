@@ -13,6 +13,7 @@
 namespace wh::rpgmodule {
 
 class C_Soul;
+class C_CombatSoulModel;   // RTTI .?AVC_CombatSoulModel@rpgmodule@wh@@ (160B, factory sub_1803F2814)
 
 class C_CombatSoul {
 public:
@@ -27,8 +28,8 @@ public:
     wh::shared::C_Signal<> m_signal68;    // +0x68
     C_Soul*  m_pOwner;                    // +0x78  back-ptr
     uint64_t m_unk80[3];                  // +0x80..+0x98  unresolved
-    void*    m_pRef98;                    // +0x98  OWNED ref-counted ptr (_smart_ptr semantics; class unresolved)
-    void*    m_pRefA0;                    // +0xA0  OWNED ref-counted ptr (_smart_ptr semantics; class unresolved)
+    C_CombatSoulModel* m_pModel;          // +0x98  OWNED; factory sub_1803F2814 (160B alloc, sets C_CombatSoulModel vftable); dtor releases via vtbl[0](this,1)
+    void*    m_pTreeA0;                   // +0xA0  OWNED heap std::set/map (MSVC std::_Tree, 0x10 {node*,size}); factory sub_18117A950; element value_type ~0x58 bytes, type unresolved
 };
 static_assert(sizeof(C_CombatSoul) == 0xA8, "C_CombatSoul must be 0xA8");
 

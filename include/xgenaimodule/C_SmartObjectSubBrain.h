@@ -43,7 +43,7 @@ public:
 
     uint8_t             _unkD8[8];        // +0xD8  [U]
     uint8_t             m_idTriples[0x88]; // +0xE0..+0x168  (atom+3,atom+3,0) id-triples [U types]
-    void*               m_listNode;       // +0x168  self-linked list node (new(64)) [U element type]
+    void*               m_requestQueueHead; // +0x168  std::list<> _Myhead: self-linked 64-byte sentinel (operator new(64)); element @node+16; size @+0x170
     uint8_t             _unk170[0x40];    // +0x170..+0x1B0  [U]
     S_VariableReference m_varRefA;        // +0x1B0  embedded (0x60)
     S_VariableReference m_varRefB;        // +0x210  embedded (0x60)

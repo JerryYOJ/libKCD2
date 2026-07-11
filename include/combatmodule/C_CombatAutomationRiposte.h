@@ -15,7 +15,7 @@ class C_CombatAutomationRiposte : public C_CombatAutomationAction {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_CombatAutomationRiposte;
     const char* GetName() const override { return "AutomationRiposte"; }   // [3] 0x181A7E230
-    int GetActionKind() const override { return 11; }                      // [10] 0x181A74D10
+    E_CombatAutomationActionKind GetActionKind() const override { return E_CombatAutomationActionKind::Riposte; }                      // [10] 0x181A74D10
 
     uint64_t m_rngStateA;     // +0x30  LCG state (riposte-chance roll)
     uint64_t m_rngStateB;     // +0x38  LCG state, advanced per tick

@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include <memory>
 #include "guimodule/C_UIFlashBase.h"
 #include "framework/CryDeferrable.h"
 #include "Offsets/vtables/ISystem.h"   // Offsets::ISystemEventListener
@@ -30,6 +31,9 @@
 
 namespace wh::guimodule {
 
+class C_FaderController;
+template <typename T> class C_BasicFader;   // 0x30 fader worker (vftable + CryStringT@+0x10); no full RE yet
+
 class C_UILoadingScreen : public C_UIFlashBase,
                           public Offsets::ISystemEventListener,
                           public UnsafeOp::CryDeferrable<0> {
@@ -50,7 +54,7 @@ public:
     uint8_t _pad66[2];          // +0x66
     float   m_videoStartTime;   // +0x68  Update elapsed base (@0x181162c98) [writer not traced]
     uint8_t _pad6C[4];          // +0x6C
-    void*   m_pLoadingFader;    // +0x70  "LoadingScreen" fader (Init sub_1807CF820; used @0x181162ce5)
+    std::unique_ptr<C_BasicFader<C_FaderController>> m_pLoadingFader;   // +0x70  "LoadingScreen" fader op (sub_1808DD5C0 vtable); Init move-assign sub_1807CF820, deleting-dtor release sub_18194B6E0(p,1)
     int32_t m_78;               // +0x78  ctor 0 [role UNVERIFIED]
     bool    m_flag7C;           // +0x7C  ctor 0 [role UNVERIFIED]
     uint8_t _pad7D[3];          // +0x7D

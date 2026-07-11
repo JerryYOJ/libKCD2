@@ -22,10 +22,10 @@ public:
     framework::S_ResourceHandle m_ref18;   // +0x18  (&unk_1856691D8)
     framework::S_ResourceHandle m_ref28;   // +0x28  (&unk_1856691D8)
     framework::S_ResourceHandle m_ref38;   // +0x38  (&unk_1856691D8)
-    uint64_t m_unk48;                      // +0x48  ctor 0 [role UNVERIFIED]
-    uint64_t m_unk50;                      // +0x50  ctor 0 [role UNVERIFIED]
-    uint64_t m_unk58;                      // +0x58  ctor 0 [role UNVERIFIED]
-    uint64_t m_unk60[3];                   // +0x60..+0x77  memset-only [not walked]
+    std::vector<uint64_t> m_nodeEntries;   // +0x48  begin/last/end; push_back sub_181F42F20; 8-byte elem {uint32 nodeId@node+8; uint8 kind} [elem placeholder uint64_t]
+    ICVar* m_cvarDebugQuestMarkers;        // +0x60  wh_quest_DebugQuestMarkers (RegisterString, init slot9 sub_18182B950)
+    ICVar* m_cvarListQuests;               // +0x68  wh_quest_ListQuests (RegisterInt)
+    ICVar* m_cvarListQuestsPage;           // +0x70  wh_quest_ListQuestsPage (RegisterInt)
 };
 static_assert(sizeof(C_QuestManager) == 0x78, "C_QuestManager must be 0x78 (alloc 120)");
 

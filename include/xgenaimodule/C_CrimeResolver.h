@@ -49,7 +49,7 @@ public:
     void _vf9() override;          // [9]  sub_1832A24BC [U role]
     void _vf10() override;         // [10] sub_1832A26B8 [U role]
 
-    void*    m_inboxDescr;         // +0x08  = &unk_18566BEE0 -- message-inbox descriptor [U descriptor role]
+    void*    m_inboxDescr;         // +0x08  DynArray<T> head (WHDynStorage) of subscription entries; empty -> &unk_18566BEE0 sentinel; elem 0x10 = {u64,u64}. T [U]
     int16_t  m_inboxIdx10;         // +0x10  ctor: -1 (inbox handle index pair)
     int16_t  m_inboxIdx12;         // +0x12  ctor: -1
     uint8_t  _pad14[4];            // +0x14

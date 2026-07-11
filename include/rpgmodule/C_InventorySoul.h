@@ -17,11 +17,14 @@ class C_InventorySoul {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_InventorySoul;
     virtual ~C_InventorySoul() = default;   // +0x00  primary vptr
-    void*    m_secondaryVptr08;             // +0x08  secondary base vptr (base identity unresolved)
-    void*    m_secondaryVptr10;             // +0x10  secondary base vptr (base identity unresolved)
+    void*    m_secondaryVptr08;             // +0x08  vptr of base wh::entitymodule::I_InventoryListener (RTTI mdisp 8; dtor restores it) -- should be a base, not a member
+    void*    m_secondaryVptr10;             // +0x10  vptr of base wh::framework::I_ScheduleUpdatable (RTTI mdisp 0x10) -- should be a base, not a member
     C_Soul*  m_pOwner;                      // +0x18  back-ptr
     uint64_t m_unk20[36];                   // +0x20..+0x140  unresolved interior
-    uint8_t  m_unk140[6];                   // +0x140..+0x146 unresolved
+    uint16_t m_word140;                     // +0x140 ctor = word from sub_180649D30()+0xA10
+    uint16_t m_word142;                     // +0x142 ctor = same source word as m_word140
+    uint8_t  m_byte144;                     // +0x144 ctor = 0
+    uint8_t  m_flags145;                    // +0x145 ctor &= 0xE0 (low 5 bits = flags)
     uint8_t  m_flag146;                     // +0x146  (ctor writes byte @+326)
     uint8_t  _pad147;                       // +0x147
 };

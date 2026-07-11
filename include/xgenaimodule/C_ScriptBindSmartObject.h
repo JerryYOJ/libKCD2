@@ -25,8 +25,8 @@ class C_ScriptBindSmartObject : public ::CScriptableBase   // +0x00  (0x60)
 {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_ScriptBindSmartObject;
-    void* m_pScriptSvc;      // +0x60  script-system service obj copy (pSS)
-    void* m_pMethodsTable;   // +0x68  CreateTable() copy [pointee type unresolved]
+    Offsets::ISystem* m_pSystem;   // +0x60  ISystem* (gEnv->pSystem); ctor sub_18114CECC stores it; its vf[0x278]=GetIScriptSystem feeds +0x68
+    Offsets::IScriptSystem* m_pScriptSystem;   // +0x68  pSS (duplicate of base m_pSS @+0x50); Init sub_18144CE0C consumes it (CreateTable[13]+AddRef)
 };
 static_assert(sizeof(C_ScriptBindSmartObject) == 0x70, "C_ScriptBindSmartObject must be 0x70 (alloc 112)");
 

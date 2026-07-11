@@ -1,6 +1,8 @@
 #pragma once
 #include <cstdint>
+#include "../CryEngine/CryCommon/Cry_Math.h"    // platform.h chain (int64/ILINE) for TimeValue.h
 #include "../CryEngine/CryCommon/CryString.h"
+#include "../CryEngine/CryCommon/TimeValue.h"
 
 // -----------------------------------------------
 // wh::entitymodule::C_MissileWeaponPlayerController -- KCD2 WHGame.dll 1.5.6 (kd7u).  sizeof 0x40.
@@ -32,7 +34,7 @@ public:
     void OnActionMapEvent(void* event) override {}
     void OnSourceEvent(void* a2, bool bActive) override {}
 
-    int64_t  m_field10;          // +0x10  init -100000 (sentinel; meaning unresolved)
+    CTimeValue m_field10;        // +0x10  init -100000 = CTimeValue(-1.0s) "never" sentinel (ctor 0x180BC6D8E)
     C_Player* m_pOwner;          // +0x18
     uint32_t m_flags;            // +0x20  low byte read as active bool
     int16_t  m_field24;          // +0x24  (ctor 0)

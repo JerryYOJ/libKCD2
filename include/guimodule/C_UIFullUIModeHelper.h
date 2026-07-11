@@ -34,18 +34,18 @@ public:
     virtual ~C_UIFullUIModeHelper();                        // [1] deleting dtor 0x182B114BC (class-introduced)
 
     // Cached console variables (ctor, in store order):
-    void* m_pCVarFog;                    // +0x08  "e_Fog"
-    void* m_pCVarEyeAdaptationSpeed;     // +0x10  "r_HDREyeAdaptationSpeed"
-    void* m_pCVarEyeAdaptationEVMin;     // +0x18  "wh_e_HDREyeAdaptationEVMin"
-    void* m_pCVarAntialiasingMode;       // +0x20  "r_AntialiasingMode"
-    void* m_pCVarSvoTIApply;             // +0x28  "e_svoTI_Apply"
-    void* m_pCVarShadowsUpdateViewDistRatio; // +0x30  "e_ShadowsUpdateViewDistRatio"
-    void* m_pCVarColorGrading;           // +0x38  "r_ColorGrading"
-    void* m_pCVarSRReactiveMaskCutoff;   // +0x40  "r_SuperResolution_ReactiveMask_CutoffThreshold"
-    void* m_pCVarSRReactiveMaskBinary;   // +0x48  "r_SuperResolution_ReactiveMask_BinaryValue"
-    void* m_pCVarSRFSRTransparencyMask;  // +0x50  "r_SuperResolution_AMD_FSR_TransparencyAndCompositionMask"
-    void* m_pCVarRainIntensityOverride;  // +0x58  "wh_env_RainIntensityOverride"
-    void* m_pCVarViewDistRatio;          // +0x60  "e_ViewDistRatio"
+    ICVar* m_pCVarFog;                   // +0x08  "e_Fog"
+    ICVar* m_pCVarEyeAdaptationSpeed;    // +0x10  "r_HDREyeAdaptationSpeed"
+    ICVar* m_pCVarEyeAdaptationEVMin;    // +0x18  "wh_e_HDREyeAdaptationEVMin"
+    ICVar* m_pCVarAntialiasingMode;      // +0x20  "r_AntialiasingMode"
+    ICVar* m_pCVarSvoTIApply;            // +0x28  "e_svoTI_Apply"
+    ICVar* m_pCVarShadowsUpdateViewDistRatio; // +0x30  "e_ShadowsUpdateViewDistRatio"
+    ICVar* m_pCVarColorGrading;          // +0x38  "r_ColorGrading"
+    ICVar* m_pCVarSRReactiveMaskCutoff;  // +0x40  "r_SuperResolution_ReactiveMask_CutoffThreshold"
+    ICVar* m_pCVarSRReactiveMaskBinary;  // +0x48  "r_SuperResolution_ReactiveMask_BinaryValue"
+    ICVar* m_pCVarSRFSRTransparencyMask; // +0x50  "r_SuperResolution_AMD_FSR_TransparencyAndCompositionMask"
+    ICVar* m_pCVarRainIntensityOverride; // +0x58  "wh_env_RainIntensityOverride"
+    ICVar* m_pCVarViewDistRatio;         // +0x60  "e_ViewDistRatio"
     uint64_t m_saved68[6];               // +0x68  ctor-untouched; saved CVar values while active (roles UNVERIFIED)
     uint64_t m_saved98;                  // +0x98  ctor 0x8000000000000000 sentinel; gamectx+0x1A8 +0x50 snapshot
     uint64_t m_savedA0;                  // +0xA0  ctor 0x8000000000000000 sentinel; gamectx+0x1A8 +0x48 snapshot

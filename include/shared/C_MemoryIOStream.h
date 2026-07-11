@@ -23,7 +23,7 @@ public:
     uint64_t m_size;       // +0x18  [size/cap/pos split UNPINNED -- see header note]
     uint64_t m_capacity;   // +0x20  [ditto]
     uint64_t m_position;   // +0x28  [ditto]
-    uint64_t m_unk30;      // +0x30  ctor 0
+    uint64_t m_readPos;    // +0x30  read cursor (Read 0x180793170 via input thunk 0x182138710; GetRemaining 0x181A71B40 = size - m_readPos)
 };
 static_assert(sizeof(C_MemoryIOStream) == 0x38, "C_MemoryIOStream must be 0x38 (stack instance sub_1825BD378)");
 

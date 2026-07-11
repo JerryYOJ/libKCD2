@@ -19,9 +19,7 @@ namespace wh::rpgmodule {
 class C_PrepareItemEffect : public C_Effect {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_PrepareItemEffect;
-    uint64_t m_unk10;   // +0x10  ctor 0 [role UNVERIFIED]
-    uint64_t m_unk18;   // +0x18  ctor 0 [role UNVERIFIED]
-    uint64_t m_unk20;   // +0x20  ctor 0 [role UNVERIFIED]
+    std::vector<uint64_t> m_vec10;   // +0x10  ctor zeroes {begin,end,cap}; dtor sub_182CA86CC frees it via the same 8-byte vector-dtor sub_1803E6C3C used for m_items; element 8-byte, uint64_t INFERRED (mirrors m_items)
     std::vector<uint64_t> m_items;   // +0x28  8-byte elements [item WUIDs INFERRED]
 };
 static_assert(sizeof(C_PrepareItemEffect) == 0x40,

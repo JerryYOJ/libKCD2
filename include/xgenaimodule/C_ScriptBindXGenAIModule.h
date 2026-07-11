@@ -51,8 +51,8 @@ class C_ScriptBindXGenAIModule : public ::CScriptableBase   // +0x00  (0x60)
 {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_ScriptBindXGenAIModule;
-    void* m_pScriptSvc;      // +0x60  script-system service obj copy (pSS)
-    void* m_pMethodsTable;   // +0x68  CreateTable() copy [pointee type unresolved]
+    Offsets::ISystem* m_pSystem;   // +0x60  ISystem* (gEnv->pSystem); ctor sub_180E30A4C stores it; its vf[0x278]=GetIScriptSystem feeds +0x68
+    Offsets::IScriptSystem* m_pScriptSystem;   // +0x68  pSS (duplicate of base m_pSS @+0x50); passed to Init sub_18144CE0C (CreateTable[13]+AddRef)
     void* m_p70;             // +0x70  ctor 0 [role UNVERIFIED]
 };
 static_assert(sizeof(C_ScriptBindXGenAIModule) == 0x78, "C_ScriptBindXGenAIModule must be 0x78 (alloc 120)");

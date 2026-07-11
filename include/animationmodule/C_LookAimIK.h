@@ -30,7 +30,7 @@ public:
     CryStringT<char> runLeftArmAimPose;     // +0x018
     CryStringT<char> runRightArmAimPose;    // +0x020
     CryStringT<char> runBothArmsAimPose;    // +0x028
-    CryStringT<char> unk30;                 // +0x030  (bone/pose name; loader never writes it)
+    CryStringT<char> unk30;                 // +0x030  empty-init in ctor (sub_1804FD80C()+12); pose/name string, no located reader, loader never writes it
     CryStringT<char> lookAtSimpleHeadBone;  // +0x038  default "Bip01 Head"
     float   weight40;                       // +0x040  init 1.0 (loader-untouched; name inferred)
     float   weight44;                       // +0x044  init 1.0

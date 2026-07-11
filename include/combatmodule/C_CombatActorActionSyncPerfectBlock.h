@@ -27,6 +27,7 @@
 namespace wh::combatmodule {
 
 class C_CombatActionEarlyExitHelper;   // owned early-exit/sync helper (alloc 0x18, ctor sub_180914FA4; RTTI-named)
+class C_CombatActorActionSyncPerfectBlockHit;   // paired hit action (see C_CombatActorActionSyncPerfectBlockHit.h)
 
 class C_CombatActorActionSyncPerfectBlock
     : public C_CombatActorActionPerfectBlockBase<S_CombatActorActionSyncPerfectBlockParams, 1>
@@ -38,7 +39,7 @@ public:
     bool                     m_syncFlag;     // +0xE2  init 0
     uint8_t                  _padE3[5];      // +0xE3
     C_CombatActionEarlyExitHelper* m_pSyncHelper; // +0xE8  owned; alloc 0x18 in ctor; deleting-dtor'd
-    void*                    m_pSyncPartner; // +0xF0  init 0  (ref-counted; Released via vtable slot 2 in dtor -- UNVERIFIED type)
+    _smart_ptr<C_CombatActorActionSyncPerfectBlockHit> m_pSyncPartner; // +0xF0  owns the paired hit action; created by factory sub_1810F3148 and moved-in (sub_180521954) by sub_1810F3030, which also sets partner->+0xA0 = this; Released (slot2) in dtor 0x1814842F1
 };
 static_assert(sizeof(C_CombatActorActionSyncPerfectBlock) == 0xF8, "C_CombatActorActionSyncPerfectBlock must be 0xF8");
 

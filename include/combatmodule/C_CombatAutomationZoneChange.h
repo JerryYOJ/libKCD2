@@ -3,6 +3,9 @@
 #include <cstring>
 #include <unordered_set>
 #include "C_CombatAutomationAction.h"
+#include "E_CombatAutomationZoneRequestedChange.h"
+#include "E_CombatAutomationZoneState.h"
+#include "E_CombatZoneId.h"
 #include "../framework/InplaceVector.h"
 #include "../framework/HashPrimitives.h"
 
@@ -33,7 +36,7 @@ class C_CombatAutomationZoneChange : public C_CombatAutomationAction {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_CombatAutomationZoneChange;
     const char* GetName() const override { return "AutomationZoneChange"; }   // [3] 0x181A7E260
-    int GetActionKind() const override { return 3; }                          // [10] 0x181A72CF0
+    E_CombatAutomationActionKind GetActionKind() const override { return E_CombatAutomationActionKind::ZoneChange; }                          // [10] 0x181A72CF0
 
     bool       m_active;              // +0x030  "ZONES: Active"
     uint8_t    _pad31[7];             // +0x031
@@ -58,12 +61,12 @@ public:
     float      m_cfg1B4;              // +0x1B4  init 0.5
     float      m_cfg1B8;              // +0x1B8  init 0.0
     float      m_cfg1BC;              // +0x1BC  init 1.0
-    uint8_t    m_requestedChange;     // +0x1C0  enum {none=0, sequence, visual, restriction, adapting}; "ReqChange"
-    uint8_t    m_state;               // +0x1C1  enum {idle=0, sequence=1}; "State"
+    E_CombatAutomationZoneRequestedChange m_requestedChange;  // +0x1C0  "ReqChange" (ToString sub_181E3F1B0)
+    E_CombatAutomationZoneState m_state;  // +0x1C1  "State" (inline decode @0x182768D98)
     uint8_t    _pad1C2[2];            // +0x1C2
     int32_t    m_changeCount;         // +0x1C4  "Changes: %d"
-    int32_t    m_zoneId1C8;           // +0x1C8  init -1 (role unresolved)
-    int32_t    m_targetAtkZone;       // +0x1CC  init -1; "TargetAtkZone"
+    int32_t    m_zoneId1C8;           // +0x1C8  init -1; likely E_CombatZoneId slot but role UNVERIFIED (not in the debug dump)
+    E_CombatZoneId m_targetAtkZone;   // +0x1CC  init Undefined(-1); "TargetAtkZone" dump @0x182768E71 [domain medium: writers untraced]
     CTimeValue m_sequenceChangeTime;  // +0x1D0  "Sequence change"
     CTimeValue m_nextSequenceTime;    // +0x1D8  "Next sequence in"
     uint64_t   m_id3;                 // +0x1E0  (rand+4)

@@ -60,17 +60,17 @@ public:
     int32_t             m_level;        // +0x18  _levelN id; -1 = target-character mode
     uint32_t            _pad1C;         // +0x1C
     GFxCharacterHandle* m_pCharacter;   // +0x20  addref'd target handle (null for level loads)
-    uint8_t             _unk28;         // +0x28  presence byte, loader zeroes (role UNVERIFIED)
+    uint8_t             _unk28;         // +0x28  flag/presence byte; both producers write 0 (0x181CA3210, 0x181CA35A5/0x181CA34A8), no reader found -- role UNVERIFIED
     uint8_t             _pad29[7];      // +0x29
     uint8_t             m_opt30[0x20];  // +0x30  optional payload block (copy of loader arg 5)
     uint8_t             m_opt50[0x20];  // +0x50  optional payload block
     uint32_t            m_entryId;      // +0x70  loader inits -1; AddLoadQueueEntry stamps ++root.m_lastLoadQueueEntryCnt (0x181CA3B07)
     uint32_t            _pad74;         // +0x74
     uint8_t             m_opt78[0x20];  // +0x78  optional payload block
-    void*               _unk98;         // +0x98  refcounted obj, drain releases via 0x181C20770 (role UNVERIFIED)
+    GRefCountImplCore*  _unk98;         // +0x98  GFx refcounted obj; XML/vars handler calls derived vtable[1] setter (0x181CAF40D), drain releases via 0x181C20770 (0x181CAF070)
     uint8_t             m_optA0[0x20];  // +0xA0  optional payload block
-    void*               _unkC0;         // +0xC0  refcounted obj, drain releases via 0x181C20770 (role UNVERIFIED)
-    uint8_t             _unkC8;         // +0xC8  presence byte, loader zeroes (role UNVERIFIED)
+    GRefCountImplCore*  _unkC0;         // +0xC0  GFx refcounted obj; drain releases via 0x181C20770 (0x181CAF053)
+    uint8_t             _unkC8;         // +0xC8  flag/presence byte; both producers write 0 (0x181CA3214, 0x181CA35B5/0x181CA34B3), no reader found -- role UNVERIFIED
     uint8_t             _padC9[7];      // +0xC9
 };
 static_assert(sizeof(GFxLoadQueueEntry) == 0xD0, "GFxLoadQueueEntry must be 208 bytes (alloc size at 0x181CA314B)");

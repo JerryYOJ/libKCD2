@@ -25,6 +25,8 @@
 
 namespace wh::guimodule {
 
+class C_FaderSuspend;   // 0x60 fade-op guard (see C_FaderSuspend.h)
+
 class C_UIGameOver : public C_UIFlashBase, public wh::playermodule::I_UIGameOver {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_UIGameOver;
@@ -36,8 +38,8 @@ public:
     void Hide() override;                                                         // [G1] 0x182BB9A78
 
     uint8_t _payload60[0x38];   // +0x60  Show payload copy (sub_1808E71DC); layout UNVERIFIED, ctor-untouched
-    void*   m_98;               // +0x98  ctor 0 [role UNVERIFIED]
-    void*   m_pFaderHandle;     // +0xA0  fader-op handle from Show (@0x182bbb1e0); released via vf[+8](1)
+    void*   m_98;               // +0x98  active-payload ptr of the +0x60 small-buffer holder (sub_1808E71DC @0x1808e72d3; == &_payload60 when inline, else heap clone); read as guard in OnPictureShown 0x182BBA1F4; pointee type UNVERIFIED
+    C_FaderSuspend* m_pFaderHandle;   // +0xA0  owned fade-op = C_FaderSuspend (verifier REFUTED the earlier C_BasicFader<C_FaderController> claim: Show factory C_FaderController vt[0] sub_180C09080 -> sub_180C09154 allocs 0x60 + installs C_FaderSuspend vftable 0x183A85A28); Show moves in @0x182bbb1e0, Hide cancels vf[+0x10] @0x182bb9a82, release vf[+8](1)
 };
 static_assert(sizeof(C_UIGameOver) == 0xA8, "C_UIGameOver must be 0xA8");
 static_assert(offsetof(C_UIGameOver, m_pFaderHandle) == 0xA0, "fader handle at 0xA0");

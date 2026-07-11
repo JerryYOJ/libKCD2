@@ -40,9 +40,16 @@ public:
     void  ShVf4() override; void ShVf5() override; void ShVf6() override; void ShVf7() override;
     void  ShVf8() override;
 
-    uint8_t  _unkD8[0x48];        // +0xD8..+0x120  zeroed by ctor [U roles]
+    void*                m_D8;            // +0xD8   polymorphic obj ptr (null-init); Init->sub_1805B6348(p,this); Step: sub_182051080(p), p->vtbl[1], p+0x38/0x56 [inferred]
+    void*                m_controllerE0;  // +0xE0   polymorphic controller ptr (null-init); sub_18320C6E8 calls p->vtbl[3/12/13], stores/frees handle m_handle100 [inferred]
+    std::vector<void*>   m_vecE8;         // +0xE8   std::vector (ctor zeroes 3 ptrs; dtor sub_1804134B4 storage-free, trivial elems) [elem U]
+    int32_t              m_handle100;     // +0x100  registration id into m_controllerE0 (passed to its vtbl[12]/[13]; reset to -1 in sub_18320C6E8) [inferred]
+    uint8_t              _pad104[4];      // +0x104  align
+    std::vector<void*>   m_vec108;        // +0x108  std::vector (ctor zeroes 3 ptrs; dtor sub_1804134B4, elems destructed via sub_1832BB3A0; Step reverse-iterates) [elem U]
     int32_t  m_120;               // +0x120  ctor: -1 [U role]
-    uint8_t  _unk124[0x34];       // +0x124..+0x158  zeroed [U roles]
+    uint8_t              _pad124[4];      // +0x124  align (after int32 m_120; ctor does not write this)
+    std::vector<void*>   m_vec128;        // +0x128  std::vector (dtor sub_180BDA9DC releases each non-null elem via sub_18041AC7C, then frees storage) [elem U]
+    std::vector<void*>   m_vec140;        // +0x140  std::vector (dtor sub_180BDA9DC frees storage, trivial elems) [elem U]
     uint8_t  m_embedded158[0x70]; // +0x158..+0x1C8  embedded struct (sub_18320B05C) [U interior]
     uint64_t m_sentinel1C8;       // +0x1C8  0x8000000000000000 ("no value")
     uint64_t m_sentinel1D0;       // +0x1D0  0x8000000000000000

@@ -27,7 +27,7 @@ class C_DialogModule : public framework::C_BaseModule {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_DialogModule;
     C_DialogManager* m_pManager;   // +0x10  set by Init; deleted by Deinit; Update target
-    uint8_t          _pad18[8];    // +0x18  not ctor-inited (dtor helper sub_1827F2BDC ignores it)
+    uint8_t          _pad18[8];    // +0x18  storage for a data-free RAII console-command guard + tail padding; module dtor sub_1828034B4 does `add rcx,18h; call sub_1827F2BDC` (0x1828034C7), and sub_1827F2BDC ignores 'this' -- it RemoveCommand's wh_dlg_reloadFunctions/ReloadDB/SetAnimDurationScales via the global IConsole. No typed data member; never written by any code.
 
     [[nodiscard]] static C_DialogModule* GetInstance()
     {

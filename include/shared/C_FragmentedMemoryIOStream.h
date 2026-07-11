@@ -17,11 +17,11 @@ namespace wh::shared {
 class C_FragmentedMemoryIOStream : public I_MemoryOutputStream, public I_InputStream {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_FragmentedMemoryIOStream;
-    void*    m_pChunkVec;   // +0x10  heap {begin,end,cap} of chunk pointers (indirect vector)
+    std::vector<uint8_t*>* m_pChunkVec;  // +0x10  heap-alloc'd {first,last,end} vector of chunk byte-ptrs (ctor sub_180794E64 allocs 24B; dtor sub_180794EF0)
     uint64_t m_chunkSize;   // +0x18  ctor arg2
-    uint64_t m_unk20;       // +0x20  ctor 0 [position/state split UNPINNED]
-    uint64_t m_unk28;       // +0x28  ctor 0 [ditto]
-    uint64_t m_unk30;       // +0x30  ctor 0 [ditto]
+    uint64_t m_size;        // +0x20  readable byte count / high-water (Read limit 0x180F84B14; GetRemaining 0x181A71B40 = m_size - m_readPos)
+    uint64_t m_position;    // +0x28  write/seek cursor (SetPosition 0x181A71B50, GetPosition 0x18113CE50; advanced by Write 0x180B5890C)
+    uint64_t m_readPos;     // +0x30  read cursor (advanced by Read 0x180F84B14; GetRemaining 0x181A71B40 = m_size - m_readPos)
 };
 static_assert(sizeof(C_FragmentedMemoryIOStream) == 0x38, "C_FragmentedMemoryIOStream must be 0x38");
 

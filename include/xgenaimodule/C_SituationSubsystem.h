@@ -37,18 +37,13 @@ public:
     // I_InjectionExternalDataProvider impls [U roles]
     void IedpVf0() override; void IedpVf1() override; void IedpVf2() override;
 
-    void*    m_npc;          // +0x18  ctor a2 (owning C_NPC*) [U pointee type]
-    void*    m_20;           // +0x20  ctor: 0 [U role]
+    C_NPC*   m_npc;          // +0x18  owning NPC (ctor a2; create-site C_NPC ctor sub_180BDC5F8 @0x180bdc984)
+    I_Situation* m_situation;    // +0x20  situation this holder is a member of; set with m_28 by ShVf3 setter sub_180E9AD64(this, situation, memberId)
     int32_t  m_28;           // +0x28  ctor: -1 [U role]
     uint8_t  _pad2C[4];      // +0x2C
-    void*    m_30;           // +0x30  ctor: 0 [U role]
-    void*    m_handle38;     // +0x38  refcounted handle (dtor sub_1803FB78C) [U type]
-    void*    m_40;           // +0x40  dtor frees if +0x50 guard set [U role]
-    uint8_t  _unk48[8];      // +0x48  [U]
-    void*    m_guard50;      // +0x50  free-guard for +0x40 [U role]
-    void*    m_58;           // +0x58  dtor frees if +0x68 guard set [U role]
-    void*    m_60;           // +0x60  ctor: 0 [U role]
-    void*    m_guard68;      // +0x68  free-guard for +0x58 [U role]
+    std::weak_ptr<C_Situation> m_weakSituation;  // +0x30  {T*@+0x30, _Ref_count_base*@+0x38}; lock=sub_1806D6B2C, dtor _Decwref=sub_1803FB78C
+    boost::container::vector<void*> m_registrations;  // +0x40  {data, count@+0x48, cap@+0x50}; 8-byte ptr elems, each self-unregistered via sub_1809C5194 in ShVf7 sub_180760EF4
+    boost::container::vector<std::pair<void*, int64_t>> m_deadlines;  // +0x58  {data, count@+0x60, cap@+0x68}; sorted flat map<request*, deadline> (insert sub_180BD6898, query sub_180BD7680)
     uint64_t m_sentinel70;   // +0x70  0x8000000000000000 ("no value")
     uint64_t m_sentinel78;   // +0x78  0x8000000000000000
     int32_t  m_80;           // +0x80  ctor: 0x1000000 [U meaning]

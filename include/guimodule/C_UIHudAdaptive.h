@@ -48,7 +48,7 @@ public:
 
     int32_t  m_20;                        // +0x20  ctor 0 [role UNVERIFIED]
     uint8_t  _pad24[4];                   // +0x24
-    void*    m_pGame;                     // +0x28  set by OnGameStart, cleared by OnGameEnd
+    void*    m_pGame;                     // +0x28  OnGameStart writes a2 @0x181f79aa9, OnGameEnd clears; C_UIBase::OnGameStart param is void* [concrete type UNVERIFIED]
     C_UIHudAdaptiveGroup m_groupA;        // +0x30  fade group (role split vs m_groupB UNVERIFIED)
     C_UIHudAdaptiveGroup m_groupB;        // +0xE0
     bool     m_bAdaptiveHudEnabled;       // +0x190 wh_ui_EnableAdaptiveHud GetIVal()==1 (Init @0x181f78ee9)

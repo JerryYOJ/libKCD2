@@ -23,14 +23,16 @@
 
 namespace wh::dialogmodule {
 
+class C_DialogInstance;
+
 class C_DialogueHaggleExtension : public I_DialogueExtension {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_DialogueHaggleExtension;
     bool     m_active;        // +0x08  extension live
     uint8_t  _pad09[7];       // +0x09
-    void*    m_pOwner;        // +0x10  owning C_DialogInstance
+    C_DialogInstance* m_pOwner;  // +0x10  owning dialog (ctor sub_181E6B480 arg a2)
     uint64_t _q18;            // +0x18  [not walked]
-    void*    m_pContext;      // +0x20  item/trade context [role UNVERIFIED]
+    void*    m_pContext;      // +0x20  ctor zeroes; OnStart sub_181E6BC30 reads it as a qword (v27) into the shop-UI submit params; no writer located [type UNVERIFIED]
     uint32_t _d28;            // +0x28  [not walked]
     uint8_t  m_accepted;      // +0x2C  price-accepted result (GetResult) <-- CHEAT
     uint8_t  _pad2D[3];       // +0x2D

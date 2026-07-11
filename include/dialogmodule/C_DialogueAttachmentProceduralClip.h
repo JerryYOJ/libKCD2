@@ -19,6 +19,10 @@
 // b8/b9/d12 into the embedded copy, then calls vtable[12]); [11] sub_1808D2480
 // GetName/typename (returns ""); [12] sub_1803B6E80 nullsub (Update/Exit empty).
 
+struct ICharacterInstance;
+class IScope;
+class IAction;
+
 namespace wh::dialogmodule {
 
 class C_DialogueAttachmentProceduralClip {
@@ -38,10 +42,10 @@ public:
     virtual void _vf11();   // [11] GetName/typename (sub_1808D2480, returns "")
     virtual void _vf12();   // [12] nullsub (Update/Exit empty)
 
-    void* m_pEntity;        // +0x08  IProceduralClip::m_entity (Enter stores a1[1])
-    void* m_pCharInstance;  // +0x10  IProceduralClip::m_charInstance (Enter stores a1[2])
-    void* m_pScope;         // +0x18  IProceduralClip::m_scope (Enter stores a1[3])
-    void* m_pAction;        // +0x20  IProceduralClip::m_action (TProceduralClip base init)
+    IEntity*            m_pEntity;        // +0x08  IProceduralClip::m_entity (Enter sub_180947C48 stores a2)
+    ICharacterInstance* m_pCharInstance;  // +0x10  IProceduralClip::m_charInstance (Enter stores a3)
+    IScope*             m_pScope;         // +0x18  IProceduralClip::m_scope (Enter stores a4)
+    _smart_ptr<IAction> m_pAction;        // +0x20  IActionPtr; base init sub_1804B02B0 intrusive-AddRefs (refcnt @pointee+0x58) / releases old
     S_DialogueAttachmentProceduralParams m_params;   // +0x28  embedded params copy
 };
 static_assert(sizeof(C_DialogueAttachmentProceduralClip) == 0x38,

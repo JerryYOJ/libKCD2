@@ -17,7 +17,7 @@
 namespace wh::combatmodule {
 
 struct S_CombatActorActionSyncHitParams {
-    void*   m_field0;    // +0x00  (init 0; source/context ptr set by factory)
+    void*   m_field0;    // +0x00  factory sub_180D4A144 stores a3 = *(originating-action+0x60); source/context object ptr (pointee class unrecovered)
     bool    m_flag8;     // +0x08  (init 0; set by factory)
     uint8_t _pad9[7];    // +0x09
 };

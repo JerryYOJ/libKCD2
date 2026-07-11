@@ -18,6 +18,8 @@
 
 namespace wh::dialogmodule {
 
+class C_DialogCameraManager;
+
 class C_DialogCamera {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_DialogCamera;
@@ -39,7 +41,7 @@ public:
     virtual void _vf15();
     virtual void _vf16();
 
-    void*    m_pOwner;           // +0x08  C_DialogCameraManager* (ctor arg2)
+    C_DialogCameraManager* m_pOwner;  // +0x08  ctor sub_1816F3948 arg2 (non-owning back-ptr to owning manager)
     void*    _q10;               // +0x10  ctor 0
     int32_t  _d18;               // +0x18  ctor 0
     float    _f1C;               // +0x1C  ctor 1.0f

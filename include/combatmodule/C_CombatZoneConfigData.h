@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include "E_CombatZoneId.h"
 #include "S_CombatZoneConfigTableRow.h"
 
 // -----------------------------------------------
@@ -27,7 +28,7 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_CombatZoneConfigData;
     // NOTE: no virtual dtor in the binary vtable -- do not add one (it would shift the slots).
     virtual int32_t GetCombatZoneConfigId() const;  // [0] 0x181A72970
-    virtual int32_t GetCombatZoneId() const;        // [1] 0x181A76130
+    virtual E_CombatZoneId GetCombatZoneId() const; // [1] 0x181A76130  (combat_zone FK = E_CombatZoneId domain)
     virtual int32_t GetGuardStanceId() const;       // [2] 0x181A72C80
 
     int32_t combat_zone_config_id;     // +0x08

@@ -34,6 +34,13 @@ struct ISystem;
 struct ICrySizer;
 struct IEntityIt;
 struct SEntitySpawnParams;
+class CComponentEventDistributer;
+class CScriptBind_Entity;
+class CEntityClassRegistry;
+class CAreaManager;
+class CEntityPoolManager;
+class CBreakableManager;
+namespace wh { class C_EntityStreamingManager; }
 
 // ----------------------------------------------------------------------------
 // IEntitySystem — lean vtable base (binary order of CEntitySystem::`vftable').
@@ -174,20 +181,20 @@ public:
     uint8_t     m_vec6001E8[0x18];          // +0x6001E8  vector; dtor sub_1823C8BF0
 
     // --- managers / tail members (0x600200 .. 0x601BB0) ---
-    void*       m_pMgr200;                  // +0x600200  ctor sub_180C20DB0 (0x98); read by slots 5/24/97  /* tentative */
+    CComponentEventDistributer* m_pMgr200;  // +0x600200  ctor sub_180C20DB0 (0x98); RTTI .?AVCComponentEventDistributer@@; read by slots 5/24/97
     uint8_t     m_obj600208[0x10];          // +0x600208  ctor sub_180A5448C / dtor sub_183808F10
     uint8_t     m_vec600218[0x18];          // +0x600218  vector; dtor sub_1807D5ACC
     uint8_t     m_flag600230;               // +0x600230
     uint8_t     _pad600231[7];              // +0x600231
     int64_t     m_int600238;                // +0x600238  ctor init = -100000
-    void*       m_pMgr240;                  // +0x600240  heap sub-manager (freed in dtor)  /* tentative */
-    void*       m_pMgr248;                  // +0x600248  heap sub-manager; getter [slot 11]  /* tentative */
-    void*       m_pMgr250;                  // +0x600250  heap sub-manager (dtor sub_183809674)  /* tentative */
-    void*       m_pMgr258;                  // +0x600258  ctor sub_1810D4FF0 (0x180); getter [slots 50/59]  /* tentative */
-    void*       m_pMgr260;                  // +0x600260  ctor sub_181684A64 (0x158)  /* tentative */
-    void*       m_pDelegateMgr268;          // +0x600268  ctor sub_180D24984 (0x90); layer/area delegate for slots 35-44,48  /* tentative */
-    void*       m_pMgr270;                  // +0x600270  ctor sub_180D24D84 (0x70); getter [slot 51]  /* tentative */
-    void*       m_pMgr278;                  // +0x600278  ctor sub_1816C931C (0xA8); getter [slot 53]; used by RemoveEntity  /* tentative */
+    CScriptBind_Entity* m_pMgr240;          // +0x600240  lazy ctor sub_18144DCB4 (0x388); RTTI .?AVCScriptBind_Entity@@; virtual dtor
+    CEntityClassRegistry* m_pMgr248;        // +0x600248  lazy ctor sub_180D24580 (0x58); RTTI .?AVCEntityClassRegistry@@; getter [slot 11]
+    void*       m_pMgr250;                  // +0x600250  lazy 0x10 obj {CEntitySystem* owner, void* h}; ctor sub_180E1C8D0; non-polymorphic; dtor sub_183809674  /* type unnamed */
+    CAreaManager* m_pMgr258;                // +0x600258  ctor sub_1810D4FF0 (0x180); RTTI .?AVCAreaManager@@; getter [slots 50/59]
+    wh::C_EntityStreamingManager* m_pMgr260; // +0x600260  ctor sub_181684A64 (0x158); RTTI .?AVC_EntityStreamingManager@wh@@
+    void*       m_pDelegateMgr268;          // +0x600268  ctor sub_180D24984 (0x90); non-polymorphic POD (owner back-ptr @+0x60, 2x sub_1803F7FAC lock @+0x50/+0x80); delegate slots 35-44,48  /* type unnamed */
+    void*       m_pMgr270;                  // +0x600270  ctor sub_180D24D84 (0x70); non-polymorphic POD (owner back-ptr @+0x00); getter [slot 51]  /* type unnamed */
+    CEntityPoolManager* m_pMgr278;          // +0x600278  ctor sub_1816C931C (0xA8); RTTI .?AVCEntityPoolManager@@; getter [slot 53]; used by RemoveEntity
     uint8_t     m_eventListeners[0x400];    // +0x600280  64 event-listener buckets (0x10 each); ctor sub_18050B734(,16,64,)
     uint8_t     m_guidMap680[0x40];         // +0x600680  GUID->EntityId hash map (FindEntityByGuid); ctor sub_1806030C0
     uint8_t     m_obj6006C0[0x40];          // +0x6006C0  ctor sub_1806030C0 / dtor sub_1809B71D8
@@ -195,12 +202,12 @@ public:
     uint8_t     m_flag600758;               // +0x600758  slots 2/3 (get/set)
     uint8_t     _pad600759[7];              // +0x600759
     uint8_t     m_obj600760[0x1390];        // +0x600760  large embedded sub-object; ctor sub_180D24A14; used in SpawnEntity (reserved-id path)  /* tentative */
-    void*       m_pMgrAF0;                  // +0x601AF0  ctor sub_180D25E6C (0x48); getter [slot 52]  /* tentative */
-    void*       m_pMgrAF8;                  // +0x601AF8  ctor sub_180D24A6C (0x18); getter [slots 54/56]  /* tentative */
-    void*       m_pMgrB00;                  // +0x601B00  heap sub-manager (dtor sub_1838095E0)  /* tentative */
-    void*       m_pMgrB08;                  // +0x601B08  heap sub-manager (dtor sub_1838094BC)  /* tentative */
-    void*       m_pMgrB10;                  // +0x601B10  ctor sub_180D24154 (0x58); slot 26  /* tentative */
-    void*       m_pMgrB18;                  // +0x601B18  ctor sub_18193C984 (0x138)  /* tentative */
+    CBreakableManager* m_pMgrAF0;           // +0x601AF0  ctor sub_180D25E6C (0x48); RTTI .?AVCBreakableManager@@; getter [slot 52]
+    void*       m_pMgrAF8;                  // +0x601AF8  ctor sub_180D24A6C (0x18); {node* head, size, void* cmp=&unk_18566A0C8}; std::set/map-like _Tree; getter [slots 54/56]  /* elem type unnamed */
+    void*       m_pMgrB00;                  // +0x601B00  ptr to 0x18 3-ptr container (empty-init unknown_libname_15); dtor sub_1838095E0  /* elem type unnamed */
+    void*       m_pMgrB08;                  // +0x601B08  ptr to 0x18 3-ptr container (empty-init unknown_libname_15); dtor sub_1838094BC  /* elem type unnamed */
+    void*       m_pMgrB10;                  // +0x601B10  ctor sub_180D24154 (0x58); non-polymorphic (+0x00=1.0f load-factor, embeds sub_18091865C obj @+0x28); slot 26  /* type unnamed */
+    void*       m_pMgrB18;                  // +0x601B18  ctor sub_18193C984 (0x138); non-polymorphic manager (allocs 2x 0x20 buckets w/ 0x80000000 sentinel + 0x68 pool)  /* type unnamed */
     EntityId    m_idForced;                 // +0x601B20  SetNextSpawnId value (consumed by SpawnEntity)
     uint8_t     m_bSpawnLock;               // +0x601B24  LockSpawning() [slot 62]; checked by Spawn/RemoveEntity
     uint8_t     _pad601B25[3];              // +0x601B25

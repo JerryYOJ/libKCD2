@@ -1,5 +1,7 @@
 #pragma once
 #include <cstdint>
+#include <memory>
+#include <vector>
 #include "C_AnimationDatabaseGenerated.h"
 #include "I_QueryableDatabase.h"
 
@@ -28,15 +30,15 @@
 
 namespace wh::animationmodule {
 
+template <typename TQuery, typename TData> class I_DatabaseSelector;   // RTTI ?$I_DatabaseSelector@...@animationmodule@wh@@
+
 template <typename TData, typename TDBData, typename TQuery, typename TPreprocessor>
 class C_ActionDatabaseGenerated
     : public C_AnimationDatabaseGenerated<TData, TDBData, TPreprocessor>,
       public I_QueryableDatabase<TQuery, TData> {
 public:
     // +0xF0 registered query-selector small-vector (see note above)
-    void*    m_selectorsFirst;    // +0xF0
-    void*    m_selectorsLast;     // +0xF8
-    void*    m_selectorsCapEnd;   // +0x100
+    std::vector<std::unique_ptr<I_DatabaseSelector<TQuery, TData>>> m_selectors;  // +0xF0 {first,last,end}; ctor zeroes all 3 (empty); elements = owned polymorphic query selectors
     uint64_t m_selectorSbo[6];    // +0x108  inline small-buffer storage [capacity INFERRED]
 };
 

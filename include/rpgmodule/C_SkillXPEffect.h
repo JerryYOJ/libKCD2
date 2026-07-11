@@ -24,8 +24,8 @@ public:
     int32_t  m_oldSkillXP;      // +0x24  ctor 0 [role INFERRED]
     int32_t  m_skillLevelDelta; // +0x28  ctor 0 [role INFERRED]
     int32_t  m_linkedId2C;      // +0x2C  ctor 35 (sentinel; role UNVERIFIED)
-    int32_t  m_unk30;           // +0x30  ctor 0
-    int32_t  m_unk34;           // +0x34  ctor 0
+    int32_t  m_oldLinkedStatXP;  // +0x30  linked stat's XP before apply (soul XP block, only if m_linkedId2C != 35)
+    int32_t  m_linkedStatXPDelta;// +0x34  linked stat's XP gained = newXP - m_oldLinkedStatXP
     uint8_t  m_bAdvanceToLevel; // +0x38  0 = AddSkillXP, 1 = AdvanceToSkillLevel
     uint8_t  _pad39[3];         // +0x39
     int32_t  m_contextParam;    // +0x3C  [role INFERRED]

@@ -61,10 +61,16 @@ public:
                                        //        erase from the global registry; ctor inits from the
                                        //        global default/sentinel qword_185326B58
     void*    m_pBuffData;              // +0x10  buff definition (C_BuffData* by KCD1 analogy -- concrete
-                                       //        class not RE'd; leaf Init reads float duration @def+0x30);
-                                       //        ctor default = &qword_18532CCA0
-    uint64_t m_unk18;                  // +0x18  (ctor 0; unresolved)
-    uint64_t m_unk20;                  // +0x20  (ctor 0; unresolved)
+                                       //        class not RE'd; leaf Init sub_18063A8F0 stores it, reads float
+                                       //        duration @def+0x30; ctor default = &qword_18532CCA0. RTTR
+                                       //        factory sub_18063AE40 builds "wh.rpgmodule.buff.<Type>" from it
+    void*    m_unk18;                  // +0x18  alternate/override buff definition (same type as m_pBuffData;
+                                       //        == m_pBuffData semantics when null). Clone slot4 sub_1805181C8
+                                       //        uses (this+0x18 ? this+0x18 : this+0x10) as factory type source;
+                                       //        factory sub_18063ACE4 copies src+0x18 into new+0x18 when distinct
+    void*    m_unk20;                  // +0x20  owner/source object* (vtable-bearing) resolved by WUID lookup;
+                                       //        factory sub_18063ACE4 sets it = sub_1804686E8(ctx+0x758, initWUID)
+                                       //        when the init WUID != default (xmmword_183A43B48)
     uint64_t m_unk28;                  // +0x28  head of the sub-struct passed to teardown sub_18063A740
     uint64_t m_unk30;                  // +0x30  (ctor 0; unresolved)
     std::vector<S_BuffRecord16> m_records;             // +0x38  16B elems; dtor frees each elem[0] then the buffer

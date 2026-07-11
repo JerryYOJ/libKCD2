@@ -25,8 +25,9 @@ class C_UIModalDialogInfo : public C_UIFlashBase {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_UIModalDialogInfo;
     std::function<void()> m_onConfirm;   // +0x58  (0x40) invoked by "OnInfoDialogConfirmClicked" (role from dispatcher name)
-    uint64_t              m_unk98;       // +0x98  ctor 0 [role UNVERIFIED]
-    uint64_t              m_unkA0;       // +0xA0  ctor 0 [flag byte + pad? exact tail UNVERIFIED]
+    void*                 m_pDelegate;   // +0x98  dim-delegate (owner iface subobject): show sub_182B14C6C stores the arg here + calls vf[0](0) to dim; single-callback layout shifts it up from Question's +0xD8; iface class UNRESOLVED
+    bool                  m_isOpen;      // +0xA0  dialog-open flag: show sub_182B14C6C sets =1 (== Question::m_isOpen); gates the inbound forwarders
+    uint8_t               _padA1[7];     // +0xA1
 };
 static_assert(sizeof(C_UIModalDialogInfo) == 0xA8, "C_UIModalDialogInfo must be 0xA8");
 static_assert(offsetof(C_UIModalDialogInfo, m_onConfirm) == 0x58, "confirm callback at 0x58");

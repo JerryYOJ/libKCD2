@@ -30,7 +30,7 @@ public:
     std::vector<uint32_t> m_vec1;            // +0x10  trivially-destructible elems (reset = clear); element type UNRESOLVED
     std::vector<void*>    m_vec2;            // +0x18? -> actually +0x28; see note. elems destroyed via sub_18046C388; type UNRESOLVED
     std::vector<I_PerkEffect*> m_effects;    // +0x40  OWNED polymorphic perk effects (vfunc dispatch; free sub_181AB5490)
-    void*    m_handle58;                     // +0x58  handle/ptr (reset calls sub_1811240E8 when nonzero)
+    void*    m_handle58;                     // +0x58  OWNED ptr to a lazily-alloc'd 0x70-byte stat-accum cache (alloc sub_180C3F09C: pointee+0=byte flag, pointee+8=back-ptr to this C_PerkList, 35-entry WORD accumulator @+0x24; reset sub_1811240E8; freed sub_181AB5160 in dtor sub_180966C0C) -- struct unnamed (no RTTI)
     uint8_t  m_flags60;                      // +0x60  flags (ctor &=0xF8; checked &2)
     uint8_t  _pad61[3];                      // +0x61
     int32_t  m_counter68;                    // +0x68  (ctor 0)

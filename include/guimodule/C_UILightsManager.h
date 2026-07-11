@@ -20,10 +20,8 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_UILightsManager;
     virtual ~C_UILightsManager();      // [0] deleting dtor 0x182B11524 (sole slot)
 
-    void*             m_08;            // +0x08  ctor 0 (UNVERIFIED)
-    void*             m_10;            // +0x10  ctor 0 (UNVERIFIED)
-    void*             m_18;            // +0x18  ctor 0 (UNVERIFIED)
-    void*             m_20;            // +0x20  ctor 0 (UNVERIFIED)
+    std::vector<void*> m_lights;      // +0x08  {first,last,end}; dtor sub_182B10B58 deletes each *elem via vtable[0](e,1) then deallocates -- owned polymorphic light objects (pointee type UNVERIFIED)
+    void*             m_20;            // +0x20  ctor 0; NOT freed by dtor sub_182B10B58 (non-owning) [role UNVERIFIED]
     bool              m_28;            // +0x28  ctor 0 (UNVERIFIED)
     uint8_t           _pad29[7];       // +0x29
     CryStringT<char>  m_name;          // +0x30  ctor empty (CryString empty-header idiom sub_1804FD80C()+12)

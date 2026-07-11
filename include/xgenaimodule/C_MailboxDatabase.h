@@ -25,9 +25,9 @@ public:
     virtual void MdbVf1();          // [1] sub_1832099A0 (table-reload hook) [U role]
     virtual void MdbVf2();          // [2] sub_180C753F8 (table-reload hook) [U role]
 
-    void*              m_tblMailbox;        // +0x08  registry table handle "mailbox"
-    void*              m_tblMailboxFilter;  // +0x10  registry table handle "mailbox_filter"
-    void*              m_tblThird;          // +0x18  third table handle (sub_180C74334) [U table]
+    void*              m_tblMailbox;        // +0x08  ctor 0x1811251DD: sub_1811257F4(reflectDB, CCryName("mailbox")) -> reflection-registry table handle (also pushed into m_tables)
+    void*              m_tblMailboxFilter;  // +0x10  ctor 0x1811251F9: sub_1811257B8(reflectDB, CCryName("mailbox_filter")) -> reflection-registry table handle (also pushed into m_tables)
+    void*              m_tblThird;          // +0x18  ctor 0x181125200: sub_180C74334(reflectDB, &m_tblThird) -> reflection-registry table handle (also pushed into m_tables) [table name U]
     std::vector<void*> m_tables;            // +0x20  the 3 table handles
     std::unordered_map<uint64_t, uint64_t> m_index;   // +0x38  (0x40) key/value types [U]
 };

@@ -37,12 +37,10 @@ public:
     void OnItemEquipped(void* a2, uint64_t itemWuid) override;    // [1] 0x181889DA0
     void OnItemUnequipped(void* a2, uint64_t itemWuid) override;  // [2] 0x181889DA0
 
-    void*   m_unk50;     // +0x50  ctor 0 [role UNVERIFIED]
+    void*   m_unk50;     // +0x50  non-owning context ptr (mirror of C_UICharacterSlots::m_unk30); slot[13] 0x1805682AC: if (m_unk50 && m_flag58) commit via sub_1808F51C8(this,0) then clear m_flag58
     bool    m_flag58;    // +0x58  ctor 0 [role UNVERIFIED]
     uint8_t _pad59[7];   // +0x59
-    void*   m_unk60;     // +0x60  ctor 0
-    void*   m_unk68;     // +0x68  ctor 0
-    void*   m_unk70;     // +0x70  ctor 0
+    std::vector<void*> m_subscribed60;  // +0x60  (0x18 = begin/end/cap) objects this panel subscribed to; slot[10] 0x180C41F40 unsubscribes this+0x48 from each via sub_1823CF140 then clears (last=first); element type UNVERIFIED
 };
 static_assert(sizeof(C_UIApseCharacterSlots) == 0x78, "C_UIApseCharacterSlots must be 0x78 (alloc sub_18146D050)");
 

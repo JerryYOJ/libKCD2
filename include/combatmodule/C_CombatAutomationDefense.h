@@ -20,7 +20,7 @@ class C_CombatAutomationDefense : public C_CombatAutomationAction {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_CombatAutomationDefense;
     const char* GetName() const override { return "AutomationDefense"; }   // [3] 0x181A7E1B0
-    int GetActionKind() const override { return 4; }                       // [10] 0x181A72500
+    E_CombatAutomationActionKind GetActionKind() const override { return E_CombatAutomationActionKind::Defense; }                       // [10] 0x181A72500
 
     // Install a reaction-weight override (the 5 floats are value-copied into an owned 20-byte
     // heap block; any prior block is freed first). Slots < 0 keep the RPG-computed weight;

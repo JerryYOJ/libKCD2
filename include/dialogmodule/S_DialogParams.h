@@ -27,8 +27,7 @@ struct S_DialogParams {
     uint8_t  m_flag8;                       // +0x08  ctor 1
     uint8_t  _pad09[7];                     // +0x09
     CryStringT<char> m_str10;               // +0x10  from empty singleton qword_185578FC0
-    uint8_t  _unk18[0x38];                  // +0x18..+0x4F  not touched by default ctor
-    uint64_t m_q50;                         // +0x50  ctor 0
+    std::function<void()> m_callback18;     // +0x18  (0x40) MSVC std::function; SSO buf +0x18..+0x4F, impl ptr @+0x50 (empty-init 0 in ctor). Destroyed via sub_1803E23C0. [signature UNVERIFIED]
     std::vector<void*> m_listA;             // +0x58  8-byte elems (param ctor fills from arg2)
     uint64_t m_q70[3];                      // +0x70  ctor 0 (gap / small aggregate)
     std::vector<S_Rec24> m_listB;           // +0x88  24-byte elems (param ctor fills from arg3)

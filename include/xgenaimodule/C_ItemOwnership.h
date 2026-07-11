@@ -36,7 +36,7 @@ public:
     bool SaveOverride(void* writer) override;
     bool LoadOverride(void* reader) override;
 
-    void* m_itemDataRow;   // +0x08  item-data row from the module +0x168 map (sub_181E3E090) [V init, U row type]
+    void* m_itemDataRow;   // +0x08  ctor 0x18047BB52: sub_181E3E090(module +0x168 handle-table, itemWUID) -> registry row (slot|gen lookup; row+0x30 == the item WUID, tag 0x02); row struct not RE'd [U pointee]
     void* m_unk10;         // +0x10  ctor: 0 [U role]
 };
 static_assert(sizeof(C_ItemOwnership) == 0x18, "C_ItemOwnership must be 0x18");

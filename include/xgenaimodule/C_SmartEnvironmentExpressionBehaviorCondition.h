@@ -24,7 +24,7 @@ public:
 
     framework::WUID m_exprWuid;   // +0x10  (expression id) [U role]
     uint64_t        m_18;         // +0x18  ctor: 0 [U role]
-    void*           m_20;         // +0x20  ctor ptr [U pointee]
+    void*           m_20;         // +0x20  ctor a2 = descriptor field +0x20; stored raw (no refcount/copy helper, unlike m_exprWuid which uses sub_1804FD208) -> plain context ptr [U pointee]
 };
 static_assert(sizeof(C_SmartEnvironmentExpressionBehaviorCondition) == 0x28, "must be 0x28 (factory new 40)");
 

@@ -1,5 +1,7 @@
 #pragma once
 #include <cstdint>
+#include <memory>
+#include <vector>
 #include "guimodule/C_UIFlashObject.h"
 
 // -----------------------------------------------
@@ -11,6 +13,8 @@
 
 namespace wh::guimodule {
 
+class C_UIFlashListMapLegendUniqueItem;   // RTTI .?AVC_UIFlashListMapLegendUniqueItem@guimodule@wh@@
+
 class C_UIFlashListMapLegendItem : public C_UIFlashObject {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_UIFlashListMapLegendItem;
@@ -19,7 +23,8 @@ public:
     int32_t m_type;         // +0x18
     int32_t m_int1C;        // +0x1C
     bool    m_bool20;       // +0x20
-    uint8_t _unk21[0x1F];   // +0x21..+0x40  ctor tail [UNVERIFIED]
+    uint8_t _pad21[7];      // +0x21  alignment padding (ctor never writes +0x21..+0x27)
+    std::vector<std::shared_ptr<C_UIFlashListMapLegendUniqueItem>> m_items;   // +0x28  (0x18) unique legend entries; shared_ptr built per POI by sub_1818994CC, emplaced when mark type==48
 };
 static_assert(sizeof(C_UIFlashListMapLegendItem) == 0x40, "C_UIFlashListMapLegendItem must be 0x40 (creator sub_1815B9A60)");
 

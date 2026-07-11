@@ -34,14 +34,15 @@ public:
     virtual void _vf17() {}                 // [17] (base nullsub)
 
     // ---- own data (+0x18..+0x48) ----
-    uint16_t m_slotState;      // +0x18  (init 0)   [KCD1-correlated]
+    bool     m_setupFlag;      // +0x18  set 0/1 by sub_180909E68 (via _vf12 sub_1819DE250)
+    bool     m_activeFlag;     // +0x19  set 0/1 individually (packed pair, not an enum)
     uint8_t  _pad1A;           // +0x1A
     bool     m_isActive;       // +0x1B  slot-open flag (init 0)   [KCD1-correlated]
     float    m_duration;       // +0x1C  timing-window duration (init 0)   [KCD1-correlated]
     float    m_scaleFactor;    // +0x20  blend/scale factor (init 1.0f)   [KCD1-correlated]
     uint32_t _pad24;           // +0x24
     int64_t  m_timerData[3];   // +0x28  timers (init {-100000, -100000, 0}; i64 sentinels)
-    void*    m_pRefCounted;    // +0x40  ref-counted object (init 0; Released in dtor via sub_181AB5160)
+    void*    m_pOwnedObject;   // +0x40  owned heap object (init 0); dtor 0x18091450D frees it via sub_181AB5160 -> accounted free through global deallocator qword_18549D358 (NOT a refcount release) [pointee type UNVERIFIED]
 };
 static_assert(sizeof(C_CombatSlotTrigger) == 0x48, "ctor sub_180914514 lays out 0x48");
 

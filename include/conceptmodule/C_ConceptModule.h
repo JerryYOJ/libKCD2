@@ -36,11 +36,11 @@ public:
 
     C_ResourceRegistry*    m_pResourceRegistry;   // +0x10
     C_ConceptManager*      m_pConceptManager;     // +0x18
-    void*                  m_pByte20;             // +0x20  heap 1-byte raw alloc (tag/flag cell; role unresolved)
-    void*                  m_pBlock28;            // +0x28  heap 0x40 zero-filled block (no vtable; role unresolved)
+    void*                  m_pByte20;             // +0x20  heap 1-byte POD cell (ctor sub_180BE894C: new(1); dtor sub_182626CB4 frees a1[4] via plain operator delete sub_181AB5160 -- no ctor/dtor, no vtable; role/type unresolved)
+    void*                  m_pBlock28;            // +0x28  heap 0x40 zeroed POD block (ctor sub_180BE95DC: new(0x40)+memset0; dtor frees a1[5] via plain operator delete sub_181AB5160 -- no ctor/dtor/vtable; role/type unresolved)
     int32_t                m_int30;               // +0x30  ctor 0 (role unresolved)
     uint32_t               _pad34;                // +0x34
-    void*                  m_pByte38;             // +0x38  heap 1-byte raw alloc (role unresolved)
+    void*                  m_pByte38;             // +0x38  heap 1-byte POD cell (same helper sub_180BE894C as +0x20: new(1); dtor frees a1[7] via plain operator delete sub_181AB5160; role/type unresolved)
     C_CallbackScenePlayer* m_pScenePlayer;        // +0x40
 };
 static_assert(sizeof(C_ConceptModule) == 0x48, "C_ConceptModule must be 0x48");

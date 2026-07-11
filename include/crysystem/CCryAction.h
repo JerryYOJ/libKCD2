@@ -32,6 +32,17 @@
 // with _padXX where the ctor left a gap. Offsets are absolute within CCryAction.
 // -----------------------------------------------------------------------------
 
+// CryEngine SDK subsystem interfaces (SDK declares these as struct; pointees live
+// behind their Get* accessors — full vtable replicas not yet RE'd).
+struct ILevelSystem;
+struct IActorSystem;
+struct IActionMapManager;
+struct IViewSystem;
+struct IGameObjectSystem;
+struct IUIDraw;
+struct IGameStatistics;
+struct IGameSessionHandler;
+
 // Concrete CryAction singleton. Single inheritance: the only base is IGameFramework,
 // so the whole object is [vtable][members]. Offsets::IGameFramework supplies the 143-slot
 // vtable base; the members here start at +0x08 (right after the vtable pointer).
@@ -44,7 +55,7 @@ public:
     // ---- Save/load + engine handle ----
     bool        m_bLoadingSaveGame;              // +0x44  IsLoadingSaveGame / SetLoadingSaveGame   VERIFIED
     uint8_t     _pad45[3];                        // +0x45
-    void*       m_pSystem;                        // +0x48  ISystem*  (GetISystem)                   VERIFIED
+    ISystem*    m_pSystem;                        // +0x48  (GetISystem 0x180856CF0 = return *(this+0x48))  VERIFIED
     void*       m_unk50;                          // +0x50
     void*       m_unk58;                          // +0x58
     void*       m_unk60;                          // +0x60
@@ -65,17 +76,17 @@ public:
     // ===================================================================
     // Subsystem pointer block (+0x510 .. +0x638). Filled during Init().
     // ===================================================================
-    void*       m_pLevelSystem;                   // +0x510 CLevelSystem        (GetILevelSystem)    VERIFIED
-    void*       m_pActorSystem;                   // +0x518 CActorSystem        (GetIActorSystem)    VERIFIED
+    ILevelSystem* m_pLevelSystem;                // +0x510 CLevelSystem (GetILevelSystem 0x180B8F740 = return *(this+0x510)) VERIFIED
+    IActorSystem* m_pActorSystem;                // +0x518 CActorSystem (GetIActorSystem 0x180641150 = return *(this+0x518)) VERIFIED
     void*       m_pItemSystem;                    // +0x520 CItemSystem         (GetIItemSystem)     VERIFIED
     void*       m_unk528;                         // +0x528 subsystem ptr (accessor slot [48])
-    void*       m_pActionMapManager;              // +0x530 CActionMapManager   (GetIActionMapManager) VERIFIED
-    void*       m_pViewSystem;                    // +0x538 CViewSystem         (GetIViewSystem)     VERIFIED
+    IActionMapManager* m_pActionMapManager;      // +0x530 CActionMapManager (GetIActionMapManager slot[28] = return *(this+0x530)) VERIFIED
+    IViewSystem* m_pViewSystem;                  // +0x538 CViewSystem (GetIViewSystem slot[29] = return *(this+0x538)) VERIFIED
     void*       m_unk540;                         // +0x540 subsystem ptr (accessor slot [30])
     void*       m_pVehicleSystem;                 // +0x548 (accessor slot [31])                     /* tentative */
     void*       m_pGameRulesSystem;               // +0x550 (accessor slot [32])                     /* tentative */
-    void*       m_pGameObjectSystem;              // +0x558 CGameObjectSystem   (GetIGameObjectSystem) VERIFIED
-    void*       m_pUIDraw;                        // +0x560 CUIDraw             (GetIUIDraw)         VERIFIED
+    IGameObjectSystem* m_pGameObjectSystem;      // +0x558 CGameObjectSystem (GetIGameObjectSystem slot[23] = return *(this+0x558)) VERIFIED
+    IUIDraw*    m_pUIDraw;                        // +0x560 CUIDraw (GetIUIDraw slot[21] = return *(this+0x560))         VERIFIED
     void*       m_unk568;                         // +0x568
     void*       m_unk570;                         // +0x570
     void*       m_pMannequin;                     // +0x578 CMannequinInterface (GetIMannequin)      VERIFIED
@@ -94,10 +105,10 @@ public:
     void*       m_unk5E0;                         // +0x5E0 subsystem ptr (accessor slot [20])
     void*       m_unk5E8;                         // +0x5E8 subsystem ptr (accessor slot [45])
     void*       m_unk5F0;                         // +0x5F0 subsystem ptr (accessor slot [46])
-    void*       m_pGameStatistics;                // +0x5F8 CGameStatistics     (GetIGameStatistics) VERIFIED
+    IGameStatistics* m_pGameStatistics;          // +0x5F8 CGameStatistics (GetIGameStatistics slot[142] = return *(this+0x5F8)) VERIFIED
     void*       m_unk600;                         // +0x600 subsystem ptr (accessor slot [40])
     void*       m_unk608;                         // +0x608 subsystem ptr (accessor slot [42])
-    void*       m_pGameSessionHandler;            // +0x610 IGameSessionHandler (SetGameSessionHandler) VERIFIED
+    IGameSessionHandler* m_pGameSessionHandler;  // +0x610 (SetGameSessionHandler slot[55] = *(this+0x610)=arg) VERIFIED
     void*       m_unk618;                         // +0x618
     void*       m_unk620;                         // +0x620 (accessor slot [132])
     void*       m_unk628;                         // +0x628
@@ -122,9 +133,7 @@ public:
     void*       m_unk750;                         // +0x750 (read by slot [82])
     void*       m_unk758;                         // +0x758 (used by slot [101])
     void*       m_unk760;                         // +0x760 (set/clear by slots [98]/[99])
-    void*       m_unk768;                         // +0x768 embedded obj (destroyed via sub_180A608D4)
-    void*       m_unk770;                         // +0x770
-    void*       m_unk778;                         // +0x778
+    std::vector<uint32_t> m_vecUnk768;            // +0x768 std::vector<T4> {first,last,end}; dtor sub_180A608D4 frees, elem size 4 (&~3 mask). T4 4-byte (uint32/EntityId/int/float) unconfirmed
     void*       m_unk780;                         // +0x780
     uint32_t    m_unk788;                         // +0x788 (set slot [108] / tested slot [112])
     bool        m_bAllowSave;                     // +0x78C AllowSave  (ctor = true)                 VERIFIED

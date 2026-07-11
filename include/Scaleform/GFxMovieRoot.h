@@ -46,22 +46,23 @@ class  GMemoryHeap;   // opaque GFx heap; vf+0x50 = Alloc(size, align), vf+0x60 
 
 class GFxMovieRoot : public GFxMovieView, public GFxStateBag {
 public:
-    uint8_t             _unk18[0x10];               // +0x18
+    uint8_t             _unk18[8];                  // +0x18  GFxStateBag delegate/state storage (not written by ctor/dtor; unmapped)
+    void*               _unk20;                     // +0x20  owned 8-byte heap cell holding a GFxMovieRoot* back-ref (ctor 0x181CA0840 Alloc(8) + *cell=this; dtor 0x181CA13B0 frees the cell)
     GFxMovieDef*        m_pMovieDef;                // +0x28  VERIFIED (ctor 0x181CA0897)
-    void*               _unk30;                     // +0x30
+    void*               _unk30;                     // +0x30  ctor 0x181CA0840 inits 0; no writer/reader in ctor/dtor/ProcessLoadQueue (role UNVERIFIED)
     GMemoryHeap*        m_pHeap;                    // +0x38  VERIFIED (loader allocs entries from it, 0x181CA314B)
     uint8_t             _unk40[0x18];               // +0x40
-    void*               _unk58;                     // +0x58  ProcessLoadQueue gates a load-states refresh on it (role UNVERIFIED)
-    void*               m_pLoadStates;              // +0x60  per-movie load-state provider (drain: vf+0x60 call, +0x28 read; name SDK-correlated)
-    uint8_t             _unk68[0xD8];               // +0x68
-    void*               _unk140;                    // +0x140 drain hands (_unk140 + 0x10) to the movie-load task ctor 0x181C685E0
-    uint8_t             _unk148[0x2BD0 - 0x148];    // +0x148 timeline / heaps / listeners -- NOT MAPPED
+    void*               _unk58;                     // +0x58  non-owning polymorphic handle; drain 0x181CAEF50 & dtor 0x181CA13B0 test it, then call m_pLoadStates vf[12](+0x60) and this handle's vf @+0x150 (not released -> non-owning; role UNVERIFIED)
+    void*               m_pLoadStates;              // +0x60  owning polymorphic load-state provider (dtor 0x181CA13B0 releases via sub_181C270D0; drain 0x181CAEF50 reads +0x28 & calls vf[12]/+0x60; name SDK-correlated)
+    uint8_t             _unk68[0xD8];               // +0x68  intrusive dlist head @+0x68/+0x70 (self-ref next/prev), embedded obj ctor sub_181C20BF0 @+0xE8, 1.0f cxform floats @+0xA0..+0xAC, FLT_MAX rect @+0x110..+0x11C -- NOT FULLY MAPPED
+    void*               _unk140;                    // +0x140 owning GPtr to a 96-byte GRefCount obj (vtables off_183D979B8/off_183D979C0/off_183D979E8 @+0/+0x10/+0x20, refcnt@+0x8, refptr@+0x28, CRITICAL_SECTION@+0x38); ctor 0x181CA0840 Alloc(96)+link, dtor releases via sub_181C20770; drain 0x181CAEF50 hands (_unk140+0x10) to movie-load task ctor 0x181C685E0
+    uint8_t             _unk148[0x2BD0 - 0x148];    // +0x148 timeline / heaps / listeners; incl. 4x sub_181D6C900 objs @+0xA88/+0x1110/+0x1798/+0x1E20, a GRefCount obj @+0x178 (off_183DA0AF8), LoadLibrary HMODULE @+0x2BC0 (dtor FreeLibrary) -- NOT FULLY MAPPED
     GFxLoadQueueEntry*  m_pLoadQueueHead;           // +0x2BD0 pending FIFO head (a1[1402] in the drain)
     uint32_t            m_lastLoadQueueEntryCnt;    // +0x2BD8 entry-id stamp counter (0x181CA3B07)
     uint32_t            _pad2BDC;                   // +0x2BDC
-    void*               m_pLoadProgressHead;        // +0x2BE0 dlist of in-flight load tasks; drain culls finished ones via their vf[1]/vf[2]
-    void*               _unk2BE8;                   // +0x2BE8 CreateInstance notifies it via 0x181D370D0 when set (role UNVERIFIED)
-    void*               _unk2BF0;                   // +0x2BF0
+    void*               m_pLoadProgressHead;        // +0x2BE0 head of intrusive dlist {vtable@+0, next@+0x8, prev@+0x10} of polymorphic load-progress nodes (node+0x20 -> obj whose +0xC8 byte = cancel); drain 0x181CAEF50 polls vf[2], culls via vf[1], destroys via vf[0](this,1)
+    void*               _unk2BE8;                   // +0x2BE8 owning GPtr to a polymorphic provider (dtor 0x181CA13B0 releases via sub_181C20770); when set, 0x181D370D0 samples its vf @+0x20/+0x30/+0x38/+0x48/+0x40 -> int/float/float/float/int (role UNVERIFIED)
+    void*               _unk2BF0;                   // +0x2BF0 owning GPtr to a GFx obj (ctor 0x181CA0840 inits 0; dtor 0x181CA13B0 releases via sub_181C20770); role UNVERIFIED
     // ---- wired (forwarders in RE/src/Scaleform/GFxMovieRoot.cpp) ----
     // Pops and services every pending m_pLoadQueueHead entry NOW (the exact
     // call Advance makes), then culls finished m_pLoadProgressHead tasks.

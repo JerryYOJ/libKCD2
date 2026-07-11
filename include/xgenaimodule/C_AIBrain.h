@@ -59,7 +59,7 @@ public:
     virtual void _vf33();       // [33] sub_181180180 [U role]
     virtual void _vf34();       // [34] nullsub_1 (no-op)
 
-    void*            m_pOwner;               // +0x08  ctor a2; a2->vtbl[8] called [U pointee/name]
+    C_NPC*           m_pOwner;               // +0x08  owning NPC (ctor a2); a2->vf[8]() supplies the C_VariableIndex root passed to sub_1805B66DC(this+0xC8,...)
     CryStringT<char> m_name;                 // +0x10  = emptyHdr+12; released via sub_1804FC624 [U name]
     bool             m_flag18;               // +0x18  ctor: 1 [U name/meaning]
     uint8_t          _pad19[7];              // +0x19

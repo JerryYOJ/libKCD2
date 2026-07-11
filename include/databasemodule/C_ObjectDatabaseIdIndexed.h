@@ -19,7 +19,7 @@ template <typename TBase>
 class C_ObjectDatabaseIdIndexed : public TBase {
 public:
     std::vector<void*> m_idIndex;   // +0x98  ctor zeroes; element type UNRESOLVED
-    uint64_t m_unkB0;               // +0xB0  NOT initialized by the ctor chain [UNVERIFIED]
+    uint64_t m_unkB0;               // +0xB0  VERIFIED uninit: concrete ctor sub_1815A1290 zeroes m_idIndex vec +0x98/+0xA0/+0xA8 then writes DynamicEnum vfptr +0xB8, skipping +0xB0; type/role unresolved
 };
 
 }  // namespace wh::databasemodule

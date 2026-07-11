@@ -17,7 +17,7 @@
 namespace wh::combatmodule {
 
 struct S_CombatActorActionFailedAttackParams {
-    void* m_field0;   // +0x00  (init 0; likely the failed attack-data candidate; UNVERIFIED)
+    void* m_field0;   // +0x00  writer sub_180D53B74@0x180D53BF9 stores action+0x50 = *v9 (first elem of the failed-attack candidate query sub_180D53C40); a candidate pointer (qword). Exact pointee class UNVERIFIED.
 };
 static_assert(sizeof(S_CombatActorActionFailedAttackParams) == 0x08);
 

@@ -12,7 +12,9 @@ namespace wh::rpgmodule {
 
 struct S_LockpickingResultData {
     uint64_t m_lock;     // +0x00  lock handle [U]
-    uint64_t m_result;   // +0x08  result (qword or 2x dword) [U]
+    float    m_result;    // +0x08  lockpicking result value (caller sub_18089832C builds {lock, float a4, byte a5})
+    bool     m_success;   // +0x0C  gates the success/XP path
+    uint8_t  _pad0D[3];   // +0x0D
 };
 static_assert(sizeof(S_LockpickingResultData) == 0x10, "S_LockpickingResultData must be 0x10");
 

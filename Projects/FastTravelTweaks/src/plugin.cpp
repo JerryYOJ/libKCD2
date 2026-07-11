@@ -18,6 +18,8 @@ using wh::playermodule::C_FastTravel;
 using wh::guimodule::C_UIMap;
 using wh::framework::E_UIApseView;
 
+#define FTT_LOG(fmt, ...) SSystemGlobalEnvironment::GetInstance()->pLog->LogAlways("[FastTravelTweaks] " fmt, ##__VA_ARGS__)
+
 static constexpr float kNearMarkSq = 10.0f * 10.0f;   // world^2 (KCD2's cursor getter is world-space)
 
 static C_FastTravel* GetFastTravel()
@@ -40,7 +42,10 @@ static void TryCancelFastTravel()
 {
     auto* ft = GetFastTravel();
     if (ft && ft->IsFastTraveling() && !RandomEventPromptOpen())
+    {
+        FTT_LOG("CancelFastTravel()");
         ft->CancelFastTravel();
+    }
 }
 
 // KCD1's MapMarker: cursor near the checkpoint mark on the open map.  KCD2's cursor getter
@@ -89,7 +94,8 @@ static void HideFastTravelLine(C_UIMap* map)
     {
         SUIArguments args;
         args.AddArgument(false);
-        el->CallFunction("HideFastTravelPath", args, nullptr, nullptr);
+        bool ok = el->CallFunction("HideFastTravelPath", args, nullptr, nullptr);
+        FTT_LOG("HideFastTravelPath -> %d", (int)ok);
     }
 }
 
@@ -104,6 +110,7 @@ class FastTravelTweaks : public Offsets::IInputEventListener {
             auto* ft = GetFastTravel();
             if (ft && ft->IsFastTraveling() && !RandomEventPromptOpen())
             {
+                FTT_LOG("cancel requested (key %d)", (int)e.keyId);
                 KCSE::GetTaskInterface()->AddTask(TryCancelFastTravel);
                 return true;
             }
@@ -120,10 +127,12 @@ class FastTravelTweaks : public Offsets::IInputEventListener {
             {
                 map->SetDestination(dest, false, false);
                 map->m_ftPathPending = false;        // we draw it now; kill the deferred redraw
+                FTT_LOG("arm: dest=(%.1f %.1f %.1f) nodes=%zu", dest.x, dest.y, dest.z, map->m_ftPathNodes.size());
                 map->DrawFastTravelRoute(map->m_ftPathNodes);
                 return true;
             }
 
+            FTT_LOG("confirm: opening dialog");
             map->RemoveCheckpointMark();             // 2nd press: confirm + travel
             map->m_modalDialog.Open(
                 CryStringT<char>("@ui_dlg_fasttravel_confirm"),
@@ -133,6 +142,7 @@ class FastTravelTweaks : public Offsets::IInputEventListener {
                     auto* m = C_UIMap::GetInstance();
                     if (!f || !m)
                         return;
+                    FTT_LOG("confirm: yes -> StartTravel");
                     m->SetDestination(dest, false, false);
                     f->StartTravel();
                     m->m_ftPathPending = false;
@@ -140,7 +150,10 @@ class FastTravelTweaks : public Offsets::IInputEventListener {
                     if (auto* apse = m->m_pApse)
                         apse->SetApseView(E_UIApseView::Map, 1, 0);
                 },
-                [] { if (auto* m = C_UIMap::GetInstance()) HideFastTravelLine(m); },
+                [] {
+                    FTT_LOG("confirm: no");
+                    if (auto* m = C_UIMap::GetInstance()) HideFastTravelLine(m);
+                },
                 CryStringT<char>("ui_Yes"),
                 CryStringT<char>("ui_No"));
             return true;
@@ -156,8 +169,10 @@ KCSE_PLUGIN_INFO("Fast Travel Tweaks", "JerryYOJ", 1);
 KCSE_PLUGIN_LOAD(kcse)
 {
     kcse->GetMessagingInterface()->RegisterListener([](KCSE::Message* msg) {
-        if (msg->type == KCSE::IMessagingInterface::kMessage_DataLoaded)
+        if (msg->type == KCSE::IMessagingInterface::kMessage_DataLoaded) {
             SSystemGlobalEnvironment::GetInstance()->pInput->AddEventListener(&g_Listener);
+            SSystemGlobalEnvironment::GetInstance()->pLog->LogAlways("[FastTravelTweaks] InputListener Registered");
+        }
     });
     return true;
 }

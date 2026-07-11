@@ -44,6 +44,8 @@
 
 namespace wh::playermodule {
 
+class I_UIFastTravel;   // RTTI .?AVI_UIFastTravel@playermodule@wh@@ (C_UIMap+0x18 base)
+
 class C_FastTravel : public wh::I_ReadinessDebuggable   // +0x00  (0x8; RTTI-literal only base)
 {
 public:
@@ -59,12 +61,12 @@ public:
     wh::shared::C_Signal<> m_sig18;   // +0x18  (0x10) delegate table &unk_185665430; signature unresolved
     wh::shared::C_Signal<> m_sig28;   // +0x28  (0x10) FastTravelStarted/Ended broadcast
                                       //        (distinct delegate table &unk_185669B60)
-    void*    m_pTravelExecutor;       // +0x38  = the map UI's I_UIFastTravel base (C_UIMap+0x18)!
-                                      //        Registered by C_UIMap::Init via sub_180ED10A8
-                                      //        (writes a1+0x38 = listener); C_FastTravel reaches
-                                      //        I_UIFastTravel::SetDestination (slot 0) through it.
-                                      //        Typed void* to avoid a guimodule dependency; cast to
-                                      //        wh::playermodule::I_UIFastTravel*.
+    I_UIFastTravel* m_pTravelExecutor; // +0x38  the map UI's I_UIFastTravel base (C_UIMap+0x18),
+                                      //        registered by C_UIMap::Init via sub_180ED10A8
+                                      //        (0x180ED10AE: [this+0x38]=listener). C_FastTravel drives it:
+                                      //        sub_182DE0DE8 @0x182DE0E7D calls vtable[1]
+                                      //        OnFastTravelStarted(bool); arm goes through vtable[0]
+                                      //        SetDestination. Sibling playermodule header, no guimodule dep.
     uint64_t m_qw40;                  // +0x40  (ctor 0; role unresolved)
     bool     m_isFastTraveling;       // +0x48  half of IsFastTraveling(); cleared by EndFastTravel
     uint8_t  m_flags49;               // +0x49  low 3 bits used (ctor &= 0xF8); bit 0x4 cleared by reset

@@ -40,7 +40,7 @@ struct S_CombatAutomationModels {
     wh::shared::C_Signal<> m_modelAChanged;    // +0x000  (sentinel unk_185665AC0)
     uint8_t  m_modelAPendingNotify;            // +0x010  if set, reset clears + broadcasts
     uint8_t  _pad11[7];                        // +0x011
-    void*    m_modelASlots[4];                 // +0x018  raw handles (cleared by bare stores -- NOT smart ptrs)
+    void*    m_modelASlots[4];                 // +0x018  inline array of 4x raw 8B handles; builder sub_1810EEA54 default-constructs the 4 elems via sub_18050B734(base,8,4,sub_1803F1EB0=*p=0); reset sub_1810EDFB0 clears each with a bare store (NOT smart ptrs)
     uint64_t m_modelA_h38;                     // +0x038  cleared by reset
     uint64_t m_modelA_h40;                     // +0x040  PERSISTENT (survives reset)
     uint64_t m_modelA_h48;                     // +0x048  cleared by reset
@@ -67,7 +67,7 @@ struct S_CombatAutomationModels {
     uint8_t  m_cfgD;                           // +0x0CC  default 4
     uint8_t  _padCD[3];                        // +0x0CD
     wh::shared::C_Signal<> m_cfgModelChanged;  // +0x0D0  (sentinel unk_1855D4D40)
-    uint8_t  m_cfgModelState;                  // +0x0E0  default 4; broadcasts on change
+    uint8_t  m_cfgModelState;                  // +0x0E0  default 4; broadcasts m_cfgModelChanged on change (real state, value set UNRECOVERED)
     uint8_t  _padE1[3];                        // +0x0E1
     int32_t  m_cfgE;                           // +0x0E4  default -1
     int32_t  m_cfgF;                           // +0x0E8  default -1

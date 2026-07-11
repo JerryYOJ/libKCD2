@@ -19,7 +19,7 @@ public:
     bool _vf7() override;                          // [7] 0x18041A6A0
     virtual void _vf8();                           // [8] 0x18055F540  role UNVERIFIED
 
-    uint8_t          _unk78[4];   // +0x78  ctor-only gap [UNVERIFIED]
+    float            m_f78;       // +0x78  ctor 0x182B62788 = S_MissileWeaponItemClass+0x138 (float def 1.0f); FillUIArgs tag-1 numeric variant
     float            m_f7C;       // +0x7C  inline tag-1 builder
     CryStringT<char> m_str80;     // +0x80
 };

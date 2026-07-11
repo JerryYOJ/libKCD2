@@ -56,14 +56,14 @@ public:
     void ArVf13() override; void ArVf14() override; void ArVf15() override;
     void ArVf16() override;
 
-    uint8_t     _unk190[0x18];   // +0x190..+0x1A8  ctor: 0 [U roles]
+    std::vector<Vec3> m_shapePoints; // +0x190  polygon boundary vertices (assign sub_18062E708 frees/memmoves 12*N)
     float       m_1A8;           // +0x1A8  ctor: -1.0f [U role]
     Vec3        m_boundsMin;     // +0x1AC  empty AABB min (~+1e15 each)
     Vec3        m_boundsMax;     // +0x1B8  empty AABB max (~-1e15 each)
     uint8_t     _pad1C4[4];      // +0x1C4
     uint8_t     m_containers1C8[0x60]; // +0x1C8..+0x228  zeroed containers [U types]
-    uint8_t     _unk228[8];      // +0x228  [U]
-    void*       m_areaBackPtr;   // +0x230  = this + 0x188 (back-ref to the I_Area subobject)
+    uint8_t     _unk228[8];      // +0x228  [U] 8-byte, ctor-zeroed; no writer found in ctor/init/shape/registration/dtor
+    I_Area*     m_areaBackPtr;   // +0x230  = this+0x188 (cached self-ptr to own I_Area subobject; ctor 0x180d9b9e1)
     uint16_t    m_238;           // +0x238  ctor: 1 [U role]
     uint8_t     _pad23A[6];      // +0x23A
     C_Ownership m_ownership;     // +0x240  embedded (0x30)

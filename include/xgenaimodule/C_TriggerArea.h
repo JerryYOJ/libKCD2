@@ -45,12 +45,12 @@ public:
     uint64_t    m_68;             // +0x68  ctor: 0 (I_Area-adjacent data) [U role]
     uint64_t    m_70;             // +0x70  ctor: 0 [U role]
     uint64_t    m_78;             // +0x78  ctor: 0 [U role]
-    uint8_t     _unk80[4];        // +0x80  [U]
+    float       m_centerZOffset;  // +0x80  Z offset added to the polygon centroid by I_Area GetCenter slot[7] sub_1832EE814
     Vec3        m_boundsMin;      // +0x84  empty AABB min (~+1e15 each) [V via Overlaps]
     Vec3        m_boundsMax;      // +0x90  empty AABB max (~-1e15 each) [V]
     uint8_t     _pad9C[4];        // +0x9C
     uint8_t     m_shapeA0[0x48];  // +0xA0..+0xE8  shape/points container (sub_180A2CBE4) [U type]
-    void*       m_areaBackPtr;    // +0xE8  = this + 0x60 (back-ref to the I_Area subobject)
+    I_Area*     m_areaBackPtr;    // +0xE8  = this + 0x60 (self back-ref to the I_Area subobject; ctor 0x180A2C845, non-owning)
     uint16_t    m_F0;             // +0xF0  ctor: 0 [U role]
     bool        m_bTrackAlways;   // +0xF2  entity property "bTrackAlways"
     uint8_t     _padF3[5];        // +0xF3

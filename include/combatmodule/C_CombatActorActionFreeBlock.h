@@ -24,6 +24,8 @@
 
 namespace wh::combatmodule {
 
+class C_CombatActorActionGuardMovement;   // RTTI .?AVC_CombatActorActionGuardMovement@combatmodule@wh@@
+
 class C_CombatActorActionFreeBlock
     : public C_CombatActorParamAction<S_CombatActorActionFreeBlockParams, I_CombatActorActionPrivate>
 {
@@ -31,7 +33,7 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_CombatActorActionFreeBlock;
     // ---- own members (leaf data begins at +0x70; the +0x68/+0x6C pair belongs to the
     //      C_CombatActorAction<> wrapper -- see C_CombatActorAction.h) ----
-    void*    m_pRefCountedObj;  // +0x70  init 0  (ref-counted object; KCD1: _i_reference_target<int>*, released in dtor -- UNVERIFIED)
+    _smart_ptr<C_CombatActorActionGuardMovement> m_pGuardMovement; // +0x70  owned; OnStart sub_182755718 @0x182755775 move-assigns (sub_180521954) the guard-movement action built by sub_18090CA88 (alloc 0x78); reset via sub_180C5385C (null+slot2 Release) @0x1827557CE
     int64_t  m_blockTime;       // +0x78  init int64 -100000 (time/frame sentinel; UNVERIFIED name)
 };
 static_assert(sizeof(C_CombatActorActionFreeBlock) == 0x80, "C_CombatActorActionFreeBlock must be 0x80");

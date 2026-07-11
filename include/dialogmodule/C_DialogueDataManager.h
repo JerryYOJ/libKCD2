@@ -25,7 +25,7 @@ class C_DialogueNode;
 class C_DialogueDataManager : public conceptmodule::C_NodeManager {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_DialogueDataManager;
-    void*    m_pStaticReg;   // +0x08  &unk_185666F60 (static registration record)
+    CryStringT<char> m_str08;   // +0x08  empty string (ctor stores &unk_185666F60 = shared empty-string static)
     uint16_t m_u10;          // +0x10  ctor -1
     uint16_t m_u12;          // +0x12  ctor -1
     uint8_t  _pad14[4];      // +0x14

@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include <vector>
 #include "E_QuestProgress.h"
 #include "../conceptmodule/C_ModuleBase.h"
 #include "../conceptmodule/C_TypedPortRef.h"
@@ -29,8 +30,8 @@ public:
     uint32_t m_param118;                                             // +0x118 ctor 1 [role UNVERIFIED]
     uint8_t  m_flag11C;                                              // +0x11C ctor 0 [role UNVERIFIED]
     uint8_t  _pad11D[3];                                             // +0x11D
-    uint64_t m_unk120[6];                                            // +0x120..+0x148 ctor 0
-                                                                     //        [objective/link slots, not walked]
+    std::vector<uint64_t> m_vec120;                                  // +0x120  std::vector, 8-byte elems (dtor sub_1804134B4 frees (end-first)&~7); elem type UNVERIFIED
+    std::vector<uint32_t> m_vec138;                                  // +0x138  std::vector, 4-byte elems (dtor sub_180A608D4 frees (end-first)&~3); elem type UNVERIFIED
 };
 static_assert(sizeof(C_Quest) == 0x150, "C_Quest must be 0x150 (alloc 336)");
 static_assert(offsetof(C_Quest, m_progressPort) == 0xB0, "progress port at +0xB0");

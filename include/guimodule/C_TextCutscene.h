@@ -20,7 +20,7 @@ public:
     void Update() override;          // [3] 0x182B37C9C
     void Reset() override;           // [4] nullsub
     void _vf5() override;            // [5] 0x180838AE0
-    int  GetType() const override;   // [6] 0x181A78EC0
+    E_CutsceneType::Type GetType() const override;   // [6] 0x181A78EC0  Text(6)
     bool IsActive() const override;  // [7] 0x180A2A858
 
     CryStringT<char> m_text;     // +0x60  [name coined]

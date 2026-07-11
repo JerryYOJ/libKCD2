@@ -27,7 +27,7 @@ class C_ScriptBindItemManager : public ::CScriptableBase   // +0x00  (0x60)
 {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_ScriptBindItemManager;
-    void* m_pSystem;   // +0x60  entity/game system ptr (factory-written)
+    void* m_pSystem;   // +0x60  = *(scriptbind-collection + 0xC8) (factory 0x180E3055A reads [rsi+0xC8], 0x180E30577 stores [r15+60h]); NOT ctx; pointee UNRESOLVED
 };
 static_assert(sizeof(C_ScriptBindItemManager) == 0x68, "C_ScriptBindItemManager must be 0x68");
 

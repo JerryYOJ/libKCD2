@@ -25,7 +25,7 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_CombatActionTrigger;
     // ---- own data (+0x18..+0x30; set by ctor sub_180FC14C4) ----
     int64_t  m_time18;     // +0x18  init -100000 (i64 timestamp/"never" sentinel; semantics UNVERIFIED)
-    void*    m_ptr20;      // +0x20  init 0 (pointer; likely action/target back-ref; UNVERIFIED)
+    void*    m_pMatchedRule; // +0x20  non-owning ptr to matched 20-byte rule record inside a global vector (begin/end @ xmmword_185320320); set in update sub_181418588 @0x182360515 = sub_1814185EC(this,actor); rule.float@+0xC arms m_time18, rule.dword@+0x8 builds a spawn request, reset to 0 (NOT released) @0x18236059B
     bool     m_flag28;     // +0x28  init 0
     uint8_t  _pad29[7];    // +0x29
     // int _vf11() const override;  // [11] sub_181A74D00 (implements C_CombatTrigger's pure slot)

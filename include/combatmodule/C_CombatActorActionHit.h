@@ -37,8 +37,10 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_CombatActorActionHit;
     // +0x90  embedded wh::combatmodule::C_CombatActionHelperHit (by value, 0x30); raw storage.
     alignas(8) uint8_t      m_hitHelper[0x30];  // +0x90
-    uint64_t                m_unknown_C0;       // +0xC0  (init 0)
-    uint16_t                m_unknown_C8;       // +0xC8  (init 0)
+    uint32_t                m_deferPendingC0;   // +0xC0  OnStart sub_18155EF10 @0x18155F204 sets 1 (a deferred hit is queued); OnTick sub_180D4BAD0 @0x180D4BB0A clears to 0 once the queued object's virtual[+0xE0] confirms consumption
+    uint32_t                _padC4;             // +0xC4
+    bool                    m_flagC8;           // +0xC8  OnStart sub_18155EF10 @0x18155F1DF = sub_1809D1614(actor+0x504 subsystem) query bool
+    uint8_t                 _padC9;             // +0xC9
     uint8_t                 _padCA[6];          // +0xCA
     int64_t                 m_scoreSentinel;    // +0xD0  (init -100000; best/min-score sentinel)
 };

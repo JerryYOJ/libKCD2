@@ -46,7 +46,7 @@ public:
     wh::conceptmodule::C_TypedArrayPortRef<wh::framework::C_LocalizedString>     m_altTextsPort;        // +0x1B8
     wh::conceptmodule::C_TypedArrayPortRef<int>                                  m_intsPort;            // +0x1F8
     wh::conceptmodule::C_TypedPortRef<wh::conceptmodule::S_Trigger>              m_triggerPort;         // +0x238
-    int32_t m_interactionType;   // +0x278  cached from m_interactionTypePort (trigger @0x180dc0351, converter sub_1817C6664)
+    wh::entitymodule::E_InteractionType m_interactionType;  // +0x278  cached from m_interactionTypePort (trigger @0x180dc0351, converter sub_1817C6664)
     uint8_t _pad27C[4];          // +0x27C
     // Trigger-time working state (+0x280 sub_180ABB35C obj; ints @+0x290/+0x298/+0x2AC;
     // strings via sub_1804F3344 around +0x2A0/+0x2C8; bytes @+0x2A4/+0x2C0) -- the

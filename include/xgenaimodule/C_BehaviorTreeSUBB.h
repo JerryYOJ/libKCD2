@@ -16,6 +16,8 @@
 
 namespace wh::xgenaimodule {
 
+namespace BehaviorTree { class C_BehaviorTree; }   // RTTI .?AVC_BehaviorTree@BehaviorTree@xgenaimodule@wh@@ (Warhorse BT, not CryCommon ::BehaviorTree)
+
 class C_BehaviorTreeSUBB : public C_SUBBBase {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_BehaviorTreeSUBB;
@@ -30,13 +32,13 @@ public:
     virtual bool  _vf38();                    // [38] NEW sub_181A72470 (return 1) [U role]
     virtual void  _vf39();                    // [39] NEW nullsub_1 [U role]
 
-    void*    m_btName1;        // +0xC8  interned-name handle (atom+3) [U role]
-    void*    m_btName2;        // +0xD0  interned-name handle (atom+3) [U role]
-    void*    m_behaviorTree;   // +0xD8  the BT instance (slots [22]/[23]/[24]) [U pointee type]
+    CryStringT<char> m_btName1;   // +0xC8  refcounted string (ctor = shared empty static; Configure copies from desc+0x48)
+    CryStringT<char> m_btName2;   // +0xD0  refcounted string (ctor = shared empty static; Configure copies from desc+0x50)
+    BehaviorTree::C_BehaviorTree* m_behaviorTree;  // +0xD8  BT instance (setter sub_180412884; created via sub_1804176D8)
     uint32_t m_e0;             // +0xE0  init 2 [U role -- also read by [37]]
     uint8_t  _padE4[4];        // +0xE4
     void*    m_btRuntime[5];   // +0xE8..+0x110  runtime/exec ptrs (0) [U roles]
-    void*    m_unk110;         // +0x110  gap between ctor-written fields [U -- not written by ctor]
+    void*    m_unk110;         // +0x110  runtime slot; ctor 0x180413CC4 writes 0 [U role]
     uint8_t  m_btFlags;        // +0x118  (a2&0xFD)|..; bit1 = ctor arg (Dialog=1)
     uint8_t  _pad119[7];       // +0x119
 };

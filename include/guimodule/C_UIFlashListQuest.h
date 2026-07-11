@@ -26,7 +26,7 @@ public:
     bool             m_bool38;   // +0x38
     uint8_t          _pad39[7];  // +0x39
     CryStringT<char> m_str40;    // +0x40
-    uint8_t          _unk48[0x18];  // +0x48..+0x60  ctor tail [UNVERIFIED]
+    std::vector<std::shared_ptr<C_UIFlashObject>> m_children;  // +0x48  std::vector<shared_ptr<T>> (empty in ctor; T inferred C_UIFlashObject, see notes)
 };
 static_assert(sizeof(C_UIFlashListQuest) == 0x60, "C_UIFlashListQuest must be 0x60 (creator sub_180DC8A6C)");
 

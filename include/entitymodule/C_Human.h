@@ -26,6 +26,7 @@
 // identity UNRESOLVED -- the global is null in static data).
 
 struct IMannequinUserParams;   // CryEngine; +0xA50 points at the global wh SMannequinHumanParams instance (IS-A)
+class IAction;                 // ICryMannequin action (class per SDK)
 
 namespace wh::entitymodule {
 
@@ -70,7 +71,7 @@ public:
     C_Human* m_pMannequinOwner;                        // +0xA20  = this  VERIFIED (driver reads owner+0x38 / owner+0x668)
     uint8_t  m_mannequinMode;                          // +0xA28  init 2 (mode/priority, tentative)
     uint8_t  _padA29[7];                               // +0xA29
-    void*    m_pMannequinAction;                       // +0xA30  OWNING IAction* (created qword_18492D830->vtbl[136],
+    IAction* m_pMannequinAction;                       // +0xA30  OWNING mannequin action (created qword_18492D830->vtbl[136],
                                                        //         released ->vtbl[152] in dtor)
     uint16_t m_mannequinFlags;                         // +0xA38  (reset sub_1809E5178 zeroes as WORD)
     uint8_t  m_mannequinFlagA3A;                       // +0xA3A  init 1 (tentative)

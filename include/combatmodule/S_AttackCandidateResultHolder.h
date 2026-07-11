@@ -29,7 +29,7 @@ struct S_CombatActionAttackData;   // candidate payload (moveset selector result
 struct S_AttackCandidateRecord {
     S_CombatActionAttackData* m_pAttackData;  // +0x00  the candidate
     uint8_t  m_feasibilityFlag;               // +0x08  filled for the selected record (KCD1 parity; tentative)
-    uint8_t  m_zoneReachableFlag;             // +0x09  (KCD1 parity; tentative)
+    bool     m_zoneReachableFlag;             // +0x09  per-candidate flag (enumerator sub_180687F3C; KCD1 parity)
     uint8_t  _pad0A[6];                       // +0x0A  (stride is 0x10)
 };
 static_assert(sizeof(S_AttackCandidateRecord) == 0x10, "S_AttackCandidateRecord must be 0x10");
@@ -37,7 +37,7 @@ static_assert(sizeof(S_AttackCandidateRecord) == 0x10, "S_AttackCandidateRecord 
 struct S_AttackCandidateResultHolder {
     uint8_t  m_arena[0x100];        // +0x000  inline arena (15 records) served to the vector below
     // MSVC std::vector<S_AttackCandidateRecord, pool-allocator>: {alloc-state, first, last, capEnd}.
-    void*                    m_allocState; // +0x100  allocator state (-> &m_arena)
+    void*                    m_allocState; // +0x100  stateful inline-pool allocator member of the 0x20 vector {alloc,first,last,capEnd}@+0x100..+0x11F (self-points to m_arena)
     S_AttackCandidateRecord* m_first;      // +0x108  begin
     S_AttackCandidateRecord* m_last;       // +0x110  end
     S_AttackCandidateRecord* m_capEnd;     // +0x118  capacity end

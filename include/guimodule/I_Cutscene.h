@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include "E_CutsceneType.h"
 
 // -----------------------------------------------
 // wh::guimodule::I_Cutscene -- KCD2 WHGame.dll 1.5.6 (kd7u).  sizeof 0x60 -- DATA-BEARING base.
@@ -34,7 +35,7 @@ public:
     virtual void Update() = 0;                               // [3] name coined (per-frame tick; dt arg UNVERIFIED)
     virtual void Reset() = 0;                                // [4] name coined (drop sequence / on-finished)
     virtual void _vf5() = 0;                                 // [5] getter; often shared `return 0` 0x180838AE0 [role UNVERIFIED]
-    virtual int  GetType() const = 0;                        // [6] name coined (distinct small int per leaf)
+    virtual E_CutsceneType::Type GetType() const = 0;        // [6] name coined; per-leaf constant (E_CutsceneType)
     virtual bool IsActive() const = 0;                       // [7] name coined (`return m_pSequence != 0`)
     virtual void _vf8();                                     // [8] defaulted nullsub; role UNVERIFIED (Skip/CanSkip?)
     // RTTR_ENABLE() expansion.

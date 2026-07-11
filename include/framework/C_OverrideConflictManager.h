@@ -24,8 +24,7 @@ public:
     virtual void OcmVf1();                  // [1] apply-override hook? [U role]
     virtual void OcmVf2();                  // [2] revert-override hook? [U role]
 
-    void*    m_pEntries;   // +0x08  head of 104-byte intrusive tree/list (sentinel self-linked)
-    uint64_t m_count;      // +0x10  entry count (ctor: 0)
+    std::map<K, V> m_entries;  // +0x08  MSVC red-black tree (0x10 == {head*, size}); ctor allocs 104B sentinel node {self,self,self, color=1,isnil=1} via sub_181AB55C0(104) [map vs set-of-pair inferred]
 };
 static_assert(sizeof(C_OverrideConflictManager<int, int>) == 0x18,
               "C_OverrideConflictManager instantiations must be 0x18");

@@ -20,7 +20,7 @@ public:
     void Update() override;          // [3] 0x182B37C9C
     void Reset() override;           // [4] nullsub
     void _vf5() override;            // [5] 0x180838AE0
-    int  GetType() const override;   // [6] 0x180838AE0
+    E_CutsceneType::Type GetType() const override;   // [6] 0x180838AE0  Fader(0)
     bool IsActive() const override;  // [7] 0x18041A6A0
 };
 static_assert(sizeof(C_FaderCutscene) == 0x60, "C_FaderCutscene must be 0x60 (creator sub_1811CFC58; == I_Cutscene)");

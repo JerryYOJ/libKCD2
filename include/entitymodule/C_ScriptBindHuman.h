@@ -62,8 +62,8 @@ class C_ScriptBindHuman : public ::CScriptableBase   // +0x00  (0x60)
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_ScriptBindHuman;
     ::CScriptTable* m_pParamTable;   // +0x60  obj created via sub_180AED4A8, released via sub_1804FB980 (INFERRED SmartScriptTable)
-    void*           m_pContext;      // +0x68  ctor ctx arg (env; pointee unresolved)
-    void*           m_pManager;      // +0x70  = ctxProxy->vf89()->vf16() (manager ptr; pointee unresolved)
+    void*           m_pContext;      // +0x68  = ctor a2 = ctx = (S_GameContext+8)->vf[19](); framework/service obj (ctx->vf[+0x278]=IScriptSystem=base m_pSS); class UNCONFIRMED
+    void*           m_pManager;      // +0x70  = ctx->vf[+0x2C8]()->vf[+0x80]() (ctor sub_18128B9DC); manager obj, pointee UNRESOLVED
 };
 static_assert(sizeof(C_ScriptBindHuman) == 0x78, "C_ScriptBindHuman must be 0x78");
 

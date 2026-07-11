@@ -37,7 +37,10 @@ public:
     float   m_target18D8;           // +0x18D8  ctor -1.0f
     uint8_t _pad18DC[4];            // +0x18DC
     float   m_target18E0;           // +0x18E0  ctor -1.0f
-    uint8_t _pad18E4[0x0C];         // +0x18E4
+    float   m_smoothValue18E4;      // +0x18E4  SmoothDamp current value (writer 0x180552705 movss; ctor 0)
+    float   m_smoothVelocity18E8;   // +0x18E8  SmoothDamp velocity state (writer 0x1805526FD movss; ctor 0)
+    bool    m_flag18EC;             // +0x18EC  bool: set 1 @0x180E3AA26, cleared 0 @0x180E3B90D, tested @0x180552C66
+    uint8_t _pad18ED[3];            // +0x18ED  align to +0x18F0
     uint8_t m_spatialModifiers[0x40];   // +0x18F0  spatial weather-modifier container
                                         //          (sub_180BBB344; slot [18] insert target)
 };

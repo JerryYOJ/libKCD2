@@ -31,20 +31,17 @@ public:
     ~C_SituationManager() override;                // primary [1] sub_1832B760C / secondary [0] thunk sub_1815FFE3C
     void OnEntitySideEffect(void* sideEffect) override; // secondary [1] sub_1815FFE30
 
-    void*    m_10;                    // +0x10  ctor: 0 [U role]
-    void*    m_18;                    // +0x18  ctor: 0 [U role]
-    void*    m_20;                    // +0x20  ctor: 0 [U role]
-    uint8_t  _unk28[8];               // +0x28  [U]
+    std::vector<std::array<uint8_t, 40>> m_ctrlEntries10; // +0x10..+0x28  first/last/cap; 40B elems {u64 key; _8; std::vector<T*>@+0x10}; per-elem dtor sub_1811921D0
+    uint8_t  _unk28[8];               // +0x28  [U] NOT written by ctor (disasm-verified); no writer in ctor/dtor/add(sub_180D9BC5C)/remove(sub_180D9AEC8)
     int32_t  m_30;                    // +0x30  ctor: 0 [U role]
     uint8_t  _pad34[4];               // +0x34
     C_SEConditionDatabase m_seConditionDb; // +0x38..+0xA0  embedded situation-condition DB
                                       //   (ctor sub_1806010EC calls sub_1805FFC9C(this+0x38); G6I)
-    uint8_t  m_zeroA0[0x20];          // +0xA0..+0xC0  zeroed ptrs [U roles]
-    uint8_t  _unkC0[8];               // +0xC0  [U]
-    void*    m_listSentinelC8;        // +0xC8  24-byte intrusive-list sentinel (self-linked; +24 WORD=257)
-    uint8_t  _unkD0[8];               // +0xD0  [U]
+    uint8_t  m_zeroA0[0x10];          // +0xA0..+0xB0  [U] (+0xA0 = lazy hash-map ptr, alloc'd in BcmVf0 sub_1832B98D8; +0xA8 [U])
+    std::vector<std::pair<uint64_t, void*>> m_sortedByKeyB0; // +0xB0..+0xC8  first/last/cap; sorted flat-map {u64 key, T* val} (16B elems); bin-search insert sub_180D9BC5C / erase sub_180D9AEC8
+    std::map<uint64_t, void*> m_treeByKeyC8; // +0xC8..+0xD8  std::_Tree: head node@+0xC8, size@+0xD0; 48B nodes (K/V sizes 8/8 inferred; map-vs-set unconfirmed)
     uint8_t  m_zeroD8[0x20];          // +0xD8..+0xF8  zeroed ptrs [U roles]
-    uint8_t  _unkF8[8];               // +0xF8  [U]
+    uint64_t m_hashCountF8;           // +0xF8  element count of custom hash container at +0xD8 (iter end = *(+0xF0)+this; sub_180D9CA04 / insert sub_182089950)
     int32_t  m_100;                   // +0x100 [U role]
     int16_t  m_104;                   // +0x104 [U role]
     uint8_t  _pad106[2];              // +0x106

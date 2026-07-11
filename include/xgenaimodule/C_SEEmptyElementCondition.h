@@ -21,7 +21,7 @@ public:
     void _vf7() override;  void _vf8() override;  void _vf9() override;
     void _vf10() override; void _vf11() override;   // [1..11] impls [U roles]
 
-    uint8_t m_kind;      // +0x10  ctor: 6 [U meaning]
+    uint8_t m_kind;      // +0x10  constant 6 (factory-set; parse sub_181151A90 only reads !=6) — a fixed tag, not a live enum field
     uint8_t _pad11[7];   // +0x11
 };
 static_assert(sizeof(C_SEEmptyElementCondition) == 0x18, "must be 0x18 (factory new 24, enum 12)");

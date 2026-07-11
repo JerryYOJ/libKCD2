@@ -43,7 +43,11 @@ class C_CombatActorActionAttack
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_CombatActorActionAttack;
     // ---- own data (offsets are absolute in the leaf object) ----
-    uint64_t                m_unknown_90;      // +0x90  (init 0)
+    uint32_t                m_attackVariant90; // +0x90  OnStart sub_180B27308 stores 2 (@0x180B274C9, long-reach path) or 3 (@0x180B274D5); enum candidate {2,3}
+    uint8_t                 _pad94;            // +0x94
+    bool                    m_flag95;          // +0x95  OnStart @0x180B27373 = sub_1809CB40C(&qword_185320478, key, qword_185320578) set-membership
+    bool                    m_flag96;          // +0x96  OnStart @0x180B27395 = sub_1809CB40C(&qword_185320478, key, dword_185320494) set-membership
+    uint8_t                 _pad97;            // +0x97
     uint16_t                m_flag_98;         // +0x98  (init 0)
     uint8_t                 _pad9A[6];         // +0x9A
     C_CombatActionHelperAttack* m_pAttackHelper;  // +0xA0  (alloc 0x50; owner = this HelperAttackOwner subobject @+0x88)

@@ -17,7 +17,7 @@ class C_Actor;
 
 // Generic named owner-bound handle (0x20; real class name unknown -- descriptive).
 struct S_PhysicsIgnoreList {
-    void*            m_pOwner;     // +0x00  back-ptr (C_Actor* here)
+    C_Actor*         m_pOwner;     // +0x00  back-ptr; element ctor sub_1811FFA0C stores the owner C_Actor (list embedded at C_Actor+0x1D0)
     void*            m_pResolved;  // +0x08  lazy NON-OWNING handle (ctor 0; pointee type unresolved)
     int32_t          m_index;      // +0x10  slot index (0 / 1)
     uint8_t          _pad14[4];    // +0x14

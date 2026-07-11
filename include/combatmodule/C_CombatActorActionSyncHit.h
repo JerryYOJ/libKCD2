@@ -34,12 +34,12 @@ class C_CombatActorActionSyncHit
 {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_CombatActorActionSyncHit;
-    uint32_t                m_unknown_80;       // +0x80  (init 2)
+    uint32_t                m_unknown_80;       // +0x80  (init 2)  uint32 state/query-id: OnTick 0x180D4CC9C caches HIDWORD of a subsystem vf[0x118] result, nonzero gates a predicate re-check then resets to 0
     uint32_t                m_flags_84;         // +0x84  (init 0x100)
     // +0x88  embedded wh::combatmodule::C_CombatActionHelperHit (by value, 0x30); raw storage.
     alignas(8) uint8_t      m_hitHelper[0x30];  // +0x88
     C_CombatActionEarlyExitHelper* m_pSyncHelper;    // +0xB8  (alloc 0x18)
-    uint64_t                m_unknown_C0;       // +0xC0  (init 0)
+    void*                   m_pSyncPartner;     // +0xC0  weak ptr to a paired sync object; OnStop 0x180D4B2C8 does sub_180C5385C(partner+0xA0) (releases a _smart_ptr back-ref, slot2) then nulls this. Pointee class unresolved
 };
 static_assert(sizeof(C_CombatActorActionSyncHit) == 0xC8);
 

@@ -17,7 +17,7 @@
 namespace wh::framework {
 
 struct S_ResourceHandle {
-    const void* m_pDefault;     // +0x00  per-site static sentinel blob (&unk_...)
+    DynArray<std::array<uint8_t, 16>> m_data;  // +0x00  WHDynStorage array (8B single ptr); empty=&unk_ game sentinel; elem stride 0x10, element type UNRESOLVED
     uint16_t    m_index;        // +0x08  ctor -1
     uint16_t    m_generation;   // +0x0A  ctor -1
     uint32_t    _pad0C;         // +0x0C  not written

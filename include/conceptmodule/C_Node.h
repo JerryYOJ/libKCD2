@@ -22,9 +22,7 @@ public:
     int32_t  m_param1C;        // +0x1C  ctor -1 [role UNVERIFIED]
     uint8_t  m_flag20;         // +0x20  ctor 0 [role UNVERIFIED]
     uint8_t  _pad21[7];        // +0x21
-    uint64_t m_unk28;          // +0x28  ctor 0 [role UNVERIFIED]
-    uint64_t m_unk30;          // +0x30  ctor 0 [role UNVERIFIED]
-    uint64_t m_unk38;          // +0x38  ctor 0 [role UNVERIFIED]
+    std::vector<_smart_ptr<C_SharedResource>> m_ownedResources;  // +0x28  {first,last,end}=0x18; ctor zeroes all 3; dtor sub_1806B43A4 destroys [first,last), frees (end-first), zeroes; each element Released via C_SharedResource::Release (sub_181E39320)
 };
 static_assert(sizeof(C_Node) == 0x40, "C_Node must be 0x40 (derived members start at +0x40)");
 

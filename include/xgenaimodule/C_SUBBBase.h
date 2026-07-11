@@ -60,30 +60,30 @@ public:
     virtual void  RequestOwnerTick() = 0;   // [35] PURE -- common impl sub_18075EDB8: m_pendingOwnerNotify=1; owner.vtbl[248]
     virtual void  CancelOwnerTick() = 0;    // [36] PURE -- common impl sub_1807F8434: clear flag; owner.vtbl[256]
 
-    void*                m_name;            // +0x08  interned-name handle (= sub_1804FD80C()+3 empty atom;
-                                            //        freed as ptr-12) -- ref-counted atom, exact WH type [U]
-    uint32_t             m_field10;         // +0x10  0 [U role]
+    CryStringT<char>     m_name;            // +0x08  subbrain name; empty = shared _emptyHeader atom
+                                            //        (ctor sub_1804FD80C()+3); Configure assigns desc+0x18; dtor sub_1804FD898 decrefs ptr-12
+    uint32_t             m_field10;         // +0x10  init 0; no writer/reader found; not serialized [U role]
     uint32_t             m_state;           // +0x14  state bitmask (init 8); SetState target
     void*                m_owner;           // +0x18  owning brain/host back-ptr (slot [5]/[6])
     std::vector<void*>   m_names;           // +0x20  name-handle elems (dtor sub_1803F70D8 frees each-12)
     uint8_t              m_flagsA;          // +0x38  |=1 (bits 1,2,4,8) [U bit meanings]
     uint8_t              _pad39[7];         // +0x39
-    uint64_t             m_field40;         // +0x40  0; Configure writes desc+0x28 here [U role]
-    uint64_t             m_field48;         // +0x48  0; cleared by [19] [U role]
-    uint8_t              m_field50;         // +0x50  1 [U role]
+    uint64_t             m_field40;         // +0x40  low32 = Configure copies (uint32)desc+0x28; serialized as int32 (tag 4700/sub-tag 1, field 0) [U role]
+    uint64_t             m_field48;         // +0x48  serialized as int32 (tag 4700/sub-tag 1, field 1); only ever written 0 (ctor & slot [19]); no non-zero writer found [U role]
+    uint8_t              m_field50;         // +0x50  init 1; serialized as 1 byte (tag 4700/sub-tag 1, field 2) [U role]
     uint8_t              _pad51[7];         // +0x51
-    void*                m_current;         // +0x58  active task/goal; cleared on state change
+    void*                m_current;         // +0x58  active task/goal ptr; GetCurrent [11] returns it; SetState clears it; Serialize maps it to a 16B persistent handle via owner->vtbl[29] [U pointee]
     std::vector<uint64_t> m_goals;          // +0x60  serialize iterates (>>3)
     uint32_t             m_countCache;      // +0x78  = m_goals count
-    uint32_t             m_status;          // +0x7C  init 3 [U meaning]
+    uint32_t             m_status;          // +0x7C  constant 3 in all observed writers (not a live FSM)
 
     // 32-byte state-listener record appended via sub_18206DB30 (2x OWORD);
     // SetState fires (*(rec+0x18))(rec, this, oldState, newState).  Fields [U].
     struct S_StateListener {
-        void* _unk0;      // +0x00 [U]
-        void* _unk8;      // +0x08 [U]
-        void* m_context;  // +0x10 [U -- DogCompanion passes this]
-        void* m_callback; // +0x18  fired by SetState
+        void* m_dispatch; // +0x00  fn ptr (SmartObject sub_180BDBE88 / DogCompanion sub_18171D9D0)
+        void* _unk8;      // +0x08  flag/unused (int 0 in SmartObject ctor; unset in Dog ctor) [U]
+        void* m_context;  // +0x10  callback context = owning subbrain 'this'
+        void* m_callback; // +0x18  fn ptr; SetState calls (rec, this, oldState, newState)
     };
     std::vector<S_StateListener> m_listeners;   // +0x80
 

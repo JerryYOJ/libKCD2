@@ -43,21 +43,20 @@ public:
     void _vf36() override;   // [36]
     void _vf37() override;   // [37]
 
-    int32_t  m_unk3F8;           // +0x3F8  ctor 0 [role UNVERIFIED]
+    float    m_pitchAngle3F8;    // +0x3F8  camera/model pitch angle; slot31 0x182B00E68 accumulates a2*200 then fminf(fmaxf(x,-20),70)
     uint8_t  _pad3FC[4];         // +0x3FC
-    uint64_t m_unk400;           // +0x400  ctor 0
-    uint64_t m_unk408;           // +0x408  ctor 0
-    uint64_t m_unk410;           // +0x410  ctor 0
-    void*    m_listSentinel418;  // +0x418  self-ref sentinel (64-byte alloc = std::list/map head; container type UNVERIFIED)
-    uint64_t m_unk420;           // +0x420  ctor 0
+    wh::entitymodule::C_Actor* m_pActor400;  // +0x400  displayed actor; slot31 reads it, slot24/25 deref *(+0x668)=IAnimatedCharacter & *(+0x190)=RagdollMgr; reset slot28
+    wh::entitymodule::C_Actor* m_pActor408;  // +0x408  displayed actor #2; slot24 truthiness-check, slot25 0x1808EFA98 derefs *(+0x668); reset slot28
+    wh::entitymodule::C_Actor* m_pActor410;  // +0x410  displayed actor #3; slot29 0x181047178 returns it as the active render actor; slot24 check; reset slot28
+    std::map<wh::entitymodule::C_Actor*, std::vector<void*>> m_actorSlots418;  // +0x418 {_Myhead@0x418,_Mysize@0x420}; 0x40 node: key(C_Actor*)@+0x20, vector@+0x28; insert slot27 0x1808F052C, iterate slot19/26, dtor sub_180BBEF20
     bool     m_flag428;          // +0x428  ctor 1 [role UNVERIFIED]
     uint8_t  _pad429[7];         // +0x429
     C_UIApse* m_pApse;           // +0x430  owner hub (ctor a2)
-    uint64_t m_unk438;           // +0x438  ctor 0
-    uint64_t m_unk440;           // +0x440  ctor 0
-    uint64_t m_unk448;           // +0x448  ctor 0
-    uint64_t m_unk450;           // +0x450  ctor 0
-    uint64_t m_unk458;           // +0x458  ctor = qword_185326308 (invalid-pos sentinel)
+    wh::entitymodule::C_Actor* m_pActiveActor438;  // +0x438  selected actor = m_actorSlots418 key; slot34 0x181817698 looks it up, getter slot35 0x1808F0490, cleared slot33 0x180C41EE0
+    uint64_t m_unk440;           // +0x440  parallel triple w/ +0x448/+0x450, cleared alongside the +0x400/+0x408/+0x410 actor triple @slot28 sub_180C41EF0 [pointee/role UNVERIFIED]
+    uint64_t m_unk448;           // +0x448  see m_unk440
+    uint64_t m_unk450;           // +0x450  see m_unk440
+    uint64_t m_unk458;           // +0x458  8-byte handle/id; ctor & Clear (slot20 sub_180C4A4DC) set it to qword_185326308, a runtime-initialized 'invalid' sentinel global [WUID/id candidate, type UNVERIFIED]
     bool     m_flag460;          // +0x460  ctor 0 [role UNVERIFIED]
     uint8_t  _pad461[7];         // +0x461
 };

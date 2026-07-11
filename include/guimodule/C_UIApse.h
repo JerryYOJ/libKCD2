@@ -77,8 +77,8 @@ public:
 
     uint8_t  m_viewProp[0x28];       // +0x28  C_ModelProperty<E_UIApseView> (vfptr 0x18146c8f9; value byte @+0x30; C_Signal {&unk_185669208} @+0x38) [see header note]
     uint8_t  m_viewProp2[0x28];      // +0x50  C_ModelProperty<E_UIApseView> (vfptr 0x18146c91f; signal @+0x60)
-    uint8_t  m_stateProp[0x28];      // +0x78  C_ModelProperty<E_UIApseState> (vfptr 0x18146c936; signal {&unk_1856691F8} @+0x88) -- the "apse view signal @+0x78" anchor
-    uint8_t  m_charStateProp[0x28];  // +0xA0  C_ModelProperty<E_UICharacterState> (vfptr 0x18146c95c; signal {&unk_1855A77F0} @+0xB0)
+    uint8_t  m_stateProp[0x28];      // +0x78  C_ModelProperty<E_UIApseState::Type> (see E_UIApseState.h; vfptr 0x18146c936; value byte @+0x80; signal {&unk_1856691F8} @+0x88) -- the "apse view signal @+0x78" anchor
+    uint8_t  m_charStateProp[0x28];  // +0xA0  C_ModelProperty<E_UICharacterState::Type> (see E_UICharacterState.h; vfptr 0x18146c95c; signal {&unk_1855A77F0} @+0xB0)
     ICVar*   m_pCVarDebugApse;       // +0xC8  "wh_ui_DebugApse" (registered sub_180B9512C @0x18146ca58)
     int32_t  m_unkD0;                // +0xD0  ctor 0 [role UNVERIFIED]
     uint8_t  _padD4[4];              // +0xD4
@@ -90,14 +90,13 @@ public:
     C_UIApseCrafting  m_crafting;    // +0x1E80  (0x2D8) ctor sub_18146CB5C
     C_UIApseCharacter m_character;   // +0x2158  (0x468) ctor sub_18146CDF8
     C_UIApseCamera    m_camera;      // +0x25C0  (0x1A8) ctor sub_18146D1E0
-    int32_t  m_unk2768;              // +0x2768  ctor 0 [role UNVERIFIED]
+    int32_t  m_unk2768;              // +0x2768  ctor 0; read as boolean gate by sub_181E26910 (return *this && sub_181E26A40()!=0), called from OnModuleMessage sub_18085E010 on msg id 52 -> m_flag2818 [enable flag, role inferred; type unchanged, no 0/1 writer proven]
     uint8_t  _pad276C[4];            // +0x276C
     C_UIModalDialogInfo m_modalInfo; // +0x2770  (0xA8) ctor sub_180BC842C ("ApseModalDialog")
     bool     m_flag2818;             // +0x2818  ctor 0 [role UNVERIFIED]
     uint8_t  _pad2819[7];            // +0x2819
-    uint64_t m_unk2820;              // +0x2820  ctor = qword_185326308 (invalid-pos sentinel)
-    uint8_t  _unk2828[0x38];         // +0x2828..+0x2860  ctor-untouched [UNVERIFIED]
-    uint64_t m_unk2860;              // +0x2860  ctor 0 [tail]
+    uint64_t m_unk2820;              // +0x2820  pending focus-item position token; ctor = shared invalid sentinel qword_185326308 (=qword_185326300, sub_18016EF50); sub_1808EE0C4 (0x1808ee197) tests it !=sentinel via sub_1803A45B0 -> dispatches "FocusItem" flash call -> resets to sentinel (0x1808ee1f4)
+    std::function<void()> m_callback;  // +0x2828  (0x40) MSVC std::function; _Ptr @+0x2860 (ctor 0 = empty, +0x2828..+0x2860 = SSO buffer); move-ctor sub_18042DC90 (SSO _Move vslot1 / steal), dtor sub_1803E23C0 (_Delete_this(_Ptr!=this) vslot4) [signature void() inferred]
 };
 static_assert(sizeof(C_UIApse) == 0x2868, "C_UIApse must be 0x2868 (alloc sub_18146C7B8)");
 static_assert(offsetof(C_UIApse, m_inventory) == 0xD8, "inventory tab at 0xD8");

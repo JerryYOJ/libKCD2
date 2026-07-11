@@ -30,7 +30,7 @@ public:
     void _vf1() override;    // [1] sub_1819EDDE8 [U role]
     void _vf2() override;    // [2] sub_181036584 -- radial propagation (see banner) [U exact signature]
 
-    uint64_t        m_unk08;          // +0x08 [U role]
+    void*           m_unk08;          // +0x08  sound-grid target the query writes cells into (read at 0x181036639, passed as the base handle to sub_1805CF744); set post-construction, not by the alloc site [U grid class]
     C_HearingSystem* m_hearingSystem; // +0x10  back-ptr to the owning system (ctor arg) [V]
 };
 static_assert(sizeof(C_SoundPropagationCircularQuery) == 0x18, "alloc 24");

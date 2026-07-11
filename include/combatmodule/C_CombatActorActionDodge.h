@@ -45,8 +45,8 @@ public:
     uint64_t       m_fieldD8;       // +0xD8  init 0
     uint64_t       m_fieldE0;       // +0xE0  init 0
     uint64_t       m_fieldE8;       // +0xE8  init 0
-    uint16_t       m_fieldF0;       // +0xF0  init 0
-    uint8_t        _padF2[6];       // +0xF2
+    bool           m_fieldF0;       // +0xF0  OnEnter sub_181648A28 @0x181648BC8 stores (cfg dword>0) -> bool
+    uint8_t        _padF1[7];       // +0xF1
 };
 static_assert(sizeof(C_CombatActorActionDodge) == 0xF8, "C_CombatActorActionDodge must be 0xF8");
 

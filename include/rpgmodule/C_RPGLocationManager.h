@@ -44,7 +44,7 @@ namespace wh::rpgmodule {
 // POI spatial acceleration tree (+0x60; insert sub_18094F350 / sub_18094F894, queries
 // sub_182C9CCB0 / sub_18094F0F0 / sub_18094F230 / sub_182C9CB94).
 struct S_LocationSpatialIndex {
-    void*    m_root;             // +0x00  lazily-allocated root (ctor 0)
+    void*    m_root;             // +0x00  spatial-tree root node* (ctor 0, lazy-alloc sub_18094F894 = 0x48-byte node {AABB bounds, vector<_smart_ptr<C_POI>>, vector<node*> children}; recursive insert sub_1805D47B8)
     uint32_t m_count;            // +0x08  inserted count (ctor 0)
     uint32_t m_maxItemsPerNode;  // +0x0C  ctor 16 [INFERRED config]
     uint32_t m_splitParam;       // +0x10  ctor 4  [INFERRED config]
@@ -54,7 +54,7 @@ static_assert(sizeof(S_LocationSpatialIndex) == 0x18, "spatial index descriptor 
 
 // Location spatial index (+0x218; query sub_180B58C48) -- same family, no count field.
 struct S_LocationSpatialIndexLite {
-    void*    m_root;             // +0x00  ctor 0
+    void*    m_root;             // +0x00  spatial-tree root node* (ctor 0, lazy; query sub_180B58C48 walks node = {bounds @+0, vector<_smart_ptr<C_RPGLocation>> items @+0x10, vector<node*> children @+0x28})
     uint32_t m_maxItemsPerNode;  // +0x08  ctor 16 [INFERRED config]
     uint32_t m_splitParam;       // +0x0C  ctor 8  [INFERRED config]
 };
@@ -95,7 +95,13 @@ public:
     uint64_t m_poiTypeTracking[8];                                                 // +0xB8
     int32_t  m_mapNotifySuppress;    // +0xF8  > 0 suppresses [49]'s type update and I_POI [35]
     uint32_t _padFC;                 // +0xFC
-    // Family-A 0x40 block; NO reader among the 50 vtable slots -- role UNKNOWN.
+    // std::_Hash (unordered_set/map), 0x40: ctor init sub_1806030E4 writes the stock fingerprint
+    // (load-factor 1.0f @+0, self-ref list head @+8 [sub_1804F75C0(32) sentinel -> 16-byte value_type],
+    // size @+0x10, bucket vec @+0x18, mask 7 @+0x30, maxidx 8 @+0x38) -- same shape as the family-B
+    // std::unordered_map helper sub_1806E4638. Family-A sibling +0xB8 is a PROVEN
+    // std::unordered_set<S_LocationId> (S_DefaultHash FNV-1a over 16B key, membership op sub_180C4CAC8).
+    // m_unkMap100 value_type identity UNPROVEN (no reader/writer among the 50 slots); candidate
+    // std::unordered_set<S_LocationId>. role UNKNOWN.
     uint64_t m_unkMap100[8];                                                       // +0x100
     // Second POI list, also reset by Reset(); population site not located [role UNRESOLVED].
     std::vector<C_POI*> m_poisAux140;                                              // +0x140

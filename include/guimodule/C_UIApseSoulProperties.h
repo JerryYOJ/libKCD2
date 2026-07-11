@@ -22,13 +22,11 @@ class C_UIExtendedInfo;
 class C_UIApseSoulProperties : public C_UIBase {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_UIApseSoulProperties;
-    uint64_t          m_unk10;   // +0x10  ctor 0 [role UNVERIFIED]
-    uint64_t          m_unk18;   // +0x18  ctor 0 [role UNVERIFIED]
-    uint64_t          m_unk20;   // +0x20  ctor 0 [role UNVERIFIED]
+    std::vector<void*> m_entries;  // +0x10  {first,last,end}; elem -> heap 16B {owner,observable} record (ctor sub_1808EE69C, dtor sub_1816A2B80)
     C_UITreeList*     m_pList;   // +0x28  -> C_UIApsePlayer::m_list ("ApsePlayerList")
     C_UIExtendedInfo* m_pInfo;   // +0x30  -> C_UIApsePlayer::m_info ("ApsePlayerInfo")
-    uint64_t          m_unk38;   // +0x38  [ctor reg-init v6; role UNVERIFIED]
-    uint64_t          m_unk40;   // +0x40  [ctor reg-init v7; role UNVERIFIED]
+    C_UIModalDialogInfo*     m_pModalInfo;     // +0x38  -> C_UIApsePlayer+0x2D0 ("ApseModalDialog", ctor sub_180BC842C)
+    C_UIModalDialogQuestion* m_pModalQuestion; // +0x40  -> C_UIApsePlayer+0x378 (ctor sub_180BC83D0)
     C_UIApse*         m_pApse;   // +0x48  owner hub
 };
 static_assert(sizeof(C_UIApseSoulProperties) == 0x50, "C_UIApseSoulProperties must be 0x50");

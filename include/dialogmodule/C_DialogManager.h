@@ -37,7 +37,7 @@ public:
     // (+0x08..+0x47), 2x desc &unk_185666F50 (+0x48..+0x67). Registered via
     // sub_1803B9FA4/sub_180BC5BD4, unsubscribed in the dtor [element type UNVERIFIED].
     struct S_MsgSubscription {
-        const void* m_pDesc;    // subscription descriptor
+        const void* m_pDesc;    // +0x00  wh/Cry DynArray head (COW SmallDynStorage: {int count@-8, int cap@-4}; empty=shared static &unk_185666CF8 / &unk_185666F50; CF8-group elems 0x10-stride, grow sub_180396724)
         int16_t     m_a;        // ctor -1
         int16_t     m_b;        // ctor -1
         uint8_t     _pad[4];
@@ -46,17 +46,21 @@ public:
     S_MsgSubscription m_subscriptions[6];   // +0x08..+0x67
     data::C_DialogueDataManager* m_pDataManager;   // +0x68  owned 0x158 obj (factory
                                             //         sub_180E2FDE4; shared_ptr claim UNVERIFIED)
-    void*    m_pObj70;                      // +0x70  owned 24-byte object (sub_180E2FD44)
+    void*    m_pObj70;                      // +0x70  owned 0x18 struct {ICVar* wh_dlg_VoiceRoot @+8; ICVar* wh_dlg_DBARoot @+16} (ctor sub_180E2FD44 REGISTER_STRING; dtor sub_18284E774 unregisters, then frees)
     int32_t  m_enable;                      // +0x78  ctor 1  (CVar wh_dlg_Enable)      <-- CHEAT
     int32_t  m_testMode;                    // +0x7C  ctor 0  (CVar wh_dlg_TestMode)    <-- CHEAT
-    void*    m_pSys80;                      // +0x80  sub_1803F7FAC() subsystem singleton
-    void*    _q88;                          // +0x88  ctor 0
-    uint64_t _unk90[6];                     // +0x90..+0xBF  zero-init runtime state [roles UNVERIFIED]
+    void*    m_treeHead80;                  // +0x80  MSVC std::_Tree head sentinel (map/set); sub_1803F7FAC allocs 40B node {_Left/_Parent/_Right=self, _Color=1,_Isnil=1 => word 0x0101}; 8B value_type UNRESOLVED
+    size_t   m_treeSize88;                  // +0x88  std::_Tree node count (ctor 0; dtor sub_1803E6A3C recursively erases: _Isnil@byte+25, _Left=*i, _Right=i[2], frees 40B nodes)
+    void*    m_pActiveSession;              // +0x90  borrowed ptr to the active dialog/scene session (slot[5] 0x1828043EC validates via sub_18134FA2C & reads +0xE8; sub_18134F8E0 sets flag@+933) -- NOT owned (no dtor release)
+    void*    m_ref98;                       // +0x98  OWNED refcounted obj (_smart_ptr semantics: dtor 0x18280330F Releases via strong@+8/weak@+12, vtbl[0] destroy + vtbl[1] free); pointee class UNRESOLVED
+    uint64_t _qA0;                          // +0xA0  zero-init [role UNVERIFIED]
+    void*    m_refA8;                       // +0xA8  OWNED refcounted obj (_smart_ptr semantics: dtor 0x1828032CB Releases via strong@+8/weak@+12); pointee class UNRESOLVED
+    uint64_t _qB0;                          // +0xB0  zero-init [role UNVERIFIED]
+    uint64_t _qB8;                          // +0xB8  zero-init [role UNVERIFIED]
     std::vector<void*> m_activeA;           // +0xC0  broadcast target (sub_181141BF0;
                                             //         elements are 0x10 records [type UNVERIFIED])
     std::vector<void*> m_activeB;           // +0xD8  2nd broadcast target (0x10 records)
-    void*    m_pRequestQueue;               // +0xF0  intrusive list/map head (16B self-ref
-                                            //         node via sub_182432D14) [type UNVERIFIED]
+    void*    m_pRequestQueue;               // +0xF0  WH intrusive-list sentinel head (16B node via sub_182432D14, node[0]=&this+0xF0 self-ref, node[1]=0); dtor sub_182803080 frees the 16B node -- a list head, NOT a map (same pattern as C_PositioningManager m_listHead48)
     uint64_t m_ringF8[4];                   // +0xF8..+0x117  request ring-buffer bookkeeping
                                             //         (buffer ptr / mask / head / count) used by slot [1]
     uint64_t _q118;                         // +0x118  ctor 0

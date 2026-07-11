@@ -22,14 +22,15 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_UIApseQAMInteraction;
     wh::shared::C_Signal<> m_signal10;   // +0x10  delegate table &unk_185669248 [signature UNVERIFIED]
     wh::shared::C_Signal<> m_signal20;   // +0x20  delegate table &unk_185669238 [signature UNVERIFIED]
-    uint8_t                m_unk30[0x10]; // +0x30  sub_181F47880(this+0x30, owner, this) sub-object [identity UNVERIFIED]
+    wh::shared::C_Signal<> m_signal30;   // +0x30  ctor sub_181F47880: {m_connections=&unk_1855A7800 empty sentinel, emit cursor -1}; dtor sub_181F47B80
     wh::shared::C_Signal<> m_signal40;   // +0x40  delegate table &unk_185665430 [signature UNVERIFIED]
-    uint64_t               m_unk50;      // +0x50  ctor 0 [role UNVERIFIED]
+    C_UIApse*              m_pOwnerApse; // +0x50  ctor stores a2 = owning C_UIApse (NOT 0); Init/Deinit (un)subscribe on owner+0x88 ModelProperty<E_UIApseState> signal
     bool                   m_flag58;     // +0x58  ctor 0 [role UNVERIFIED]
     uint8_t                _pad59[7];    // +0x59
     uint64_t               m_unk60;      // +0x60  ctor 0
     uint64_t               m_unk68;      // +0x68  ctor 0
-    uint64_t               m_unk70;      // +0x70  ctor 0
+    int32_t                m_int70;      // +0x70  writer sub_1811A27A8 (= v6 + 2*v7); used as item index arg to vslot+24 in sub_1811A22F4/sub_1811A1A70
+    int32_t                m_int74;      // +0x74  writer sub_1811A27A8 (= *(owner ModelProperty+0x34)); used as item index arg to vslot+32
     int32_t                m_int78;      // +0x78  ctor 0
     uint8_t                _unk7C[0x1C]; // +0x7C..+0x98  ctor-untouched / lost to decompile truncation [UNVERIFIED]
 };

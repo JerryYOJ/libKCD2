@@ -62,8 +62,8 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_ScriptBindPlayer;
     ::CScriptTable* m_pParamTable;   // +0x60  ref-counted SmartScriptTable (CreateTable via sub_180AED4A8,
                                      //        released via sub_1804FB980 in dtor; purpose name INFERRED)
-    void*           m_pSystemArg;    // +0x68  ctor a2
-    void*           m_pSubsystem;    // +0x70  = a2->vf712()->vf128() (pointee unresolved)
+    void*           m_pSystemArg;    // +0x68  = ctor a2 = ctx = (S_GameContext+8)->vf[19](); framework/service obj (ctx->vf[+0x278]=IScriptSystem=base m_pSS); class UNCONFIRMED
+    void*           m_pSubsystem;    // +0x70  = ctx->vf[+0x2C8]()->vf[+0x80]() (ctor 0x18128CA29/0x18128CA3E); same expr as Human m_pManager; pointee UNRESOLVED
 };
 static_assert(sizeof(C_ScriptBindPlayer) == 0x78, "C_ScriptBindPlayer must be 0x78");
 static_assert(offsetof(C_ScriptBindPlayer, m_pParamTable) == 0x60, "param table at 0x60");

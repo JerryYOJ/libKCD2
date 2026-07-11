@@ -32,8 +32,8 @@ public:
     conceptmodule::C_TypedArrayPortRef<std::vector<I_Area*>>       m_areasPort;     // +0x88
     conceptmodule::C_TypedPortRef<std::vector<CryStringT<char>>>   m_labelsPort;    // +0xC8
     conceptmodule::C_TypedPortRef<E_AddRemove::Type>               m_addRemovePort; // +0x108
-    uint64_t m_state148[5];   // +0x148..+0x170  zeroed own state [U roles]
-    uint8_t  _unk170[8];      // +0x170  [U]
+    std::vector<I_Area*>          m_appliedAreas;   // +0x148  {first,last,end}; writer sub_180CC2378 <- m_areasPort resolve
+    std::vector<CryStringT<char>> m_appliedLabels;  // +0x160  {first,last,end@+0x170}; writer sub_180CC2378 <- m_labelsPort
     bool     m_flag178;       // +0x178  ctor: 0 [U role]
     uint8_t  _pad179[7];      // +0x179
 };

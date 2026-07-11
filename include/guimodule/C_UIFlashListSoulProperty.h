@@ -25,7 +25,8 @@ public:
     int32_t          m_int38;       // +0x38
     float            m_val3C;       // +0x3C
     int32_t          m_int40;       // +0x40
-    uint8_t          _unk44[0x1C];  // +0x44..+0x60  ctor tail [UNVERIFIED]
+    uint8_t          _pad44[4];     // +0x44  alignment padding (ctor never writes; 8-aligns the vector)
+    std::vector<std::shared_ptr<C_UIFlashObject>> m_children;  // +0x48  dtor 0x1814BD15C {first,last,end}; pointee INFERRED
 };
 static_assert(sizeof(C_UIFlashListSoulProperty) == 0x60, "C_UIFlashListSoulProperty must be 0x60 (creator sub_18055A268)");
 

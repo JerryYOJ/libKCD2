@@ -27,7 +27,7 @@ public:
     uint16_t m_flags34;   // +0x34  (ctor 0)
     uint8_t  m_flag36;    // +0x36
     uint8_t  _pad37;      // +0x37
-    int32_t m_field38;    // +0x38
+    uint32_t m_field38;   // +0x38  registration handle (u16 slot index + u16 generation); dtor sub_1815BB2CC de-registers via sub_1803ECF9C when != 0
 };
 static_assert(sizeof(C_ActorBounds) == 0x3C, "C_ActorBounds must be 0x3C");
 

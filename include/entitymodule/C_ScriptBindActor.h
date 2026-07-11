@@ -139,9 +139,9 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_ScriptBindActor;
     ::CScriptTable* m_pParamTable;   // +0x60  ref-counted SmartScriptTable (released via sub_1804FB980
                                      //        in dtor sub_182AB71D0; purpose name INFERRED)
-    void*           m_pSystemArg;    // +0x68  ctor a2
-    void*           m_pSubsystem;    // +0x70  = a2->vf712()->vf128() (pointee unresolved)
-    void*           m_pArg3;         // +0x78  ctor a3 (actor-specific; pointee unresolved)
+    Offsets::ISystem* m_pSystemArg;  // +0x68  ctor a2 = ISystem*; a2->vf[0x278] returns gEnv->pScriptSystem, fed to CScriptableBase::Init
+    void*           m_pSubsystem;    // +0x70  = ISystem::vf[0x2C8](slot89 -> gEnv->pGame/IGame*)->IGame::vf16() (sub_180645968) = *(whGlobal sub_1809155C8()+8); engine-root obj, no static RTTI
+    void*           m_pArg3;         // +0x78  ctor a3 = script-bindings container (factory sub_180E30204 arg a1; stores binds at container+0x10/+0x18/+0x20); non-owning back-ptr
     int32_t         m_field80;       // +0x80  (=0; role unresolved)
     uint32_t        _pad84;          // +0x84
 };

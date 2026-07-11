@@ -17,7 +17,7 @@ public:
     void FillUIArgs(void* pArgs) const override;   // [1] 0x180556CCC
 
     CryStringT<char> m_name;     // +0x18
-    uint8_t          _unk20[4];  // +0x20  ctor-only, not serialized [UNVERIFIED]
+    int32_t          m_int20;    // +0x20  ctor a4 (byte, 0/1) widened to DWORD; FillUIArgs emits as int arg (tag 2)
     int32_t          m_int24;    // +0x24  tag-2 via sub_1803C1F4C
 };
 static_assert(sizeof(C_UIFlashListPerk) == 0x28, "C_UIFlashListPerk must be 0x28 (creator sub_1807EA910)");

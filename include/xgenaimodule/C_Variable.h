@@ -64,7 +64,7 @@ public:
     virtual void*        GetInfo(void* out);                // [33] sub_183460A98 -- fills (ownerName, [1](), flag bit1)
 
     uint8_t           m_flags;   // +0x18  bit0 set by ctor; bits1/2 copied by copy-ctor [U bit meanings]
-    void*             m_owner;   // +0x20  owning object (ctor a2) [U pointee type]
+    void*             m_owner;   // +0x20  owning named registry obj (CryStringT name @+0x08); factory interns via sub_1823CB42C(qword_1854965D8,name); read only for its name by GetInfo sub_183460A98 [U pointee class]
     CryStringT<char>  m_name;    // +0x28  variable name (sub_1804FD208)
     BehaviorTree::Expressions::C_ExpressionRef m_expr;   // +0x30  embedded expression ref
 };

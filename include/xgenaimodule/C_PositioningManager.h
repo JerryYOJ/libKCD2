@@ -32,9 +32,12 @@ public:
 
     std::vector<void*> m_vec10;        // +0x10  zeroed vector [U elem type]
     uint64_t           m_28;           // +0x28  ctor: 0 [U role]
-    uint8_t            _unk30[0x18];   // +0x30..+0x48  zeroed fields [U roles]
-    void*              m_listHead48;   // +0x48  WH intrusive list sentinel (16-byte node, sub_182432D14)
-    uint8_t            _unk50[0x20];   // +0x50..+0x70  [U]
+    std::vector<void*> m_areas30;      // +0x30  vector<Area*>; elem = {CryStringT<char> name; std::vector<16B>}; dtor frees (last-first)&~7
+    void*              m_listHead48;   // +0x48  head of WH intrusive circular list (16B node {_Next=&head,_Prev=0}); insert sub_18093DE20, dtor sub_1832B69B4
+    void**             m_shapeIdxBuckets50; // +0x50  WH open-addr hash index of S_RequestedShapeInfo* (bucket = buckets[i & (cap-1)])
+    uint64_t           m_shapeIdxCap58;     // +0x58  bucket count, power-of-2 (mask = cap-1)
+    uint64_t           m_shapeIdxHead60;    // +0x60  first slot index (iteration base)
+    uint64_t           m_shapeIdxCount68;   // +0x68  live entry count (end = head + count)
     uint8_t            m_sub70[0x78];  // +0x70..+0xE8  sub-object (sub_1805FF8C0) [U interior]
     uint8_t            m_subE8[0x70];  // +0xE8..+0x158  sub-object (sub_1805FFA10) [U interior]
     int32_t            m_158;          // +0x158  ctor: 0 [U role]

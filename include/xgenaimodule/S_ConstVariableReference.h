@@ -30,20 +30,20 @@ public:
     virtual void _vf8();                   // [8] [U role]
     virtual void _vf9();                   // [9] [U role]
 
-    uint16_t         m_kind;        // +0x08  kind/flags (0) [U meaning]
+    uint16_t         m_kind;        // +0x08  only 0 observed (readers test !m_kind, sub_1805C68EC); the real flag bits live in the +0x0A byte
     uint8_t          m_flag;        // +0x0A  (0) [U meaning]
     uint8_t          _pad0B[5];     // +0x0B
     CryStringT<char> m_nameA;       // +0x10  (empty default via sub_1804FD80C()+3) [U role]
     CryStringT<char> m_nameB;       // +0x18  (empty default) [U role]
-    void*            m_owner;       // +0x20  ctor a2 [U pointee]
-    void*            m_aux28;       // +0x28  (0) [U role]
-    void*            m_pathA;       // +0x30  begin = &xmmword_18533C060 sentinel (NOT a std::vector)
-    void*            m_pathAEnd;    // +0x38  (0)
-    void*            m_pathB;       // +0x40  begin = &sentinel
-    void*            m_pathBAux;    // +0x48  (0)
+    void*            m_owner;       // +0x20  ctor a2; passed as eval context to m_extra vslot2 (sub_18059A4A0); only null-checked, pointee class unresolved
+    void*            m_aux28;       // +0x28  polymorphic provider iface, bound post-ctor (0 at ctor); vcalls [1]@+8 ret int (==3 test), [7]@+56 name->entry lookup, [22]@+176 ret count; class unresolved
+    void*            m_pathA;       // +0x30  provider vslot7 lookup result (variable-entry ptr); &xmmword_18533C060 = shared empty {begin,end} descriptor (16-byte elems) when unresolved
+    void*            m_pathAEnd;    // +0x38  ptr to value descriptor {void* @0, int32 kind @8}; kind==7 && ptr==0 => empty/invalid (sub_1805C6EF4, sub_1805C6854)
+    void*            m_pathB;       // +0x40  second {begin,end} range ptr; reset to &xmmword_18533C060 (shared empty) together with m_pathA
+    void*            m_pathBAux;    // +0x48  aux slot for the m_pathB range; reset to 0 with the empty-path block
     int32_t          m_count;       // +0x50  = (sentinel.size >> 4) - 1
     uint8_t          _pad54[4];     // +0x54
-    void*            m_extra;       // +0x58  freed by dtor if non-null (sub_180D132C8) [U type]
+    void*            m_extra;       // +0x58  owned polymorphic evaluator (vtable; vslot2@+16 evaluates a value, sub_18059A4A0); move-ctor nulls source; dtor calls pool getter sub_180D132C8 then nulls; class unresolved
 };
 static_assert(sizeof(S_ConstVariableReference) == 0x60, "S_ConstVariableReference must be 0x60");
 

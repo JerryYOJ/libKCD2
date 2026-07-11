@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include <list>
 #include "C_SmartEntitySubbrain.h"
 #include "I_SmartAreaListener.h"
 #include "S_VariableReference.h"
@@ -24,6 +25,8 @@
 
 namespace wh::xgenaimodule {
 
+struct S_SmartAreaEventEntry;   // [SYNTHETIC] 0x40 list node payload of m_eventQueue
+
 class C_SmartAreaSubBrain
     : public C_SmartEntitySubbrain,
       public I_SmartAreaListener {
@@ -45,10 +48,18 @@ public:
     void  SelVf7() override; void SelVf8() override; void SelVf9() override;
     void  SalVf10() override; void SalVf11() override;
 
-    uint8_t             _unkD8[8];         // +0xD8  [U]
+    void*               m_subjectD8;       // +0xD8  raw non-owning ptr; polymorphic subject/handler dispatched via sub_180FD1C34 / sub_1805B38C0 in Step; NOT released in dtor
     uint8_t             m_idTriples[0xA0]; // +0xE0..+0x180  five (atom,atom,0) id-triples / WUID pairs [U types]
-    void*               m_listNode;        // +0x180  self-linked list node (new(64)) [U element type]
-    uint8_t             _unk188[0x40];     // +0x188..+0x1C8  [U]
+    std::list<S_SmartAreaEventEntry> m_eventQueue; // +0x180  {sentinel*, size}; sentinel new(0x40); empty=(size==0) sub_18040D1C0; pop_front sub_1823C959C [std::list INFERRED]
+    // +0x188 = m_eventQueue._Mysize (belongs to the std::list above)
+    void*               m_activeSubject;   // +0x190  raw non-owning ptr to in-flight subject (same role/type as m_subjectD8); reset to 0 in Step
+    int32_t             m_reqSlot198;      // +0x198  -1 default sentinel (result of sub_18320D0C0; index/enum) [U meaning]
+    uint32_t            _pad19C;           // +0x19C  (never written)
+    int64_t             m_req1A0;          // +0x1A0  0 default [U role]
+    uint64_t            m_reqHandle1A8;    // +0x1A8  8-byte handle; default -1 (qword_1853381E0 invalid sentinel) [WUID? INFERRED]
+    CryStringT<char>    m_reqName1B0;      // +0x1B0  request name; default empty (Str); assign sub_1804F3344, dtor sub_1804FC624
+    int64_t             m_1B8;             // +0x1B8  0 [U role]
+    int64_t             m_1C0;             // +0x1C0  0 [U role]
     S_VariableReference m_varRefA;         // +0x1C8  embedded (0x60)
     S_VariableReference m_varRefB;         // +0x228  embedded (0x60)
     uint8_t             m_embedded288[0x10]; // +0x288..+0x298  (sub_1803C4794) [U interior]

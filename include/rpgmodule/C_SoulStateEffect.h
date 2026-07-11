@@ -17,7 +17,8 @@ class C_SoulStateEffect : public C_SoulValueEffect<E_SoulState, float> {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_SoulStateEffect;
     // (m_valueId @+0x18 = E_SoulState, m_amount @+0x1C = float delta from the base template)
-    uint64_t m_unk20;    // +0x20  ctor 0 [role UNVERIFIED]
+    float    m_capturedValue;    // +0x20  writer 0x1814407F4: snapshot of soul state[valueId] (soul+0x708+4*id); float per C_SoulValueEffect<E_SoulState,float>
+    float    m_effectiveAmount;  // +0x24  writer 0x1814407F4: sub_18046EA68 clamp(amount) -> float (fminf/fmaxf) [field roles inferred]
     uint8_t  m_flag28;   // +0x28  ctor 0 [role UNVERIFIED]
     uint8_t  _pad29[7];  // +0x29
 };

@@ -46,7 +46,7 @@ struct Message {
     const char* sender;
     uint32_t    type;
     uint32_t    dataLen;
-    void*       data;
+    void*       data;    // +0x10 type-erased payload of dataLen bytes; pointee type keyed by 'type' (see IMessagingInterface::Dispatch)
 };
 
 // ---- Task function ----

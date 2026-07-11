@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include "E_AuxLightType.h"
 #include "../CryEngine/CryCommon/CryString.h"
 
 // -----------------------------------------------
@@ -19,7 +20,7 @@ public:
     CryStringT<char> m_name;         // +0x00  "PlayerAuxTorchLight" / "NPCAuxTorchLight"
     CryStringT<char> m_presetPath;   // +0x08  "Lights.Standard.Light_Torch_*"
     int32_t  m_attachmentSlot;       // +0x10  (= actor+48)
-    int16_t  m_typeId;               // +0x14  10 = player, 20 = npc
+    E_AuxLightType m_typeId;         // +0x14  builder sub_1804CE30C (Player/NPC torch light)
     uint8_t  _pad16[2];              // +0x16
     float    m_param0;               // +0x18  0.2 / 0.0
     float    m_param1;               // +0x1C  -0.2 / 0.2

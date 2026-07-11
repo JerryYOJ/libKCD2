@@ -30,10 +30,10 @@ public:
     virtual void _vf12() = 0;   // [12] role UNVERIFIED
     virtual void _vf13() = 0;   // [13] role UNVERIFIED
 
-    void*                     m_unk18;     // +0x18  ctor 0 [role UNVERIFIED]
+    void*                     m_unk18;     // +0x18  active drag payload/context ptr (non-owning): set from arg in DnD-target vf[1] sub_1811A234C, cleared in vf[2] sub_1811A2A40
     C_UIApseCharacterContent* m_pContent;  // +0x20  -> owner's content pane (owner+0x1C8)
     C_UICharacterBase*        m_pOwner;    // +0x28  owning character panel
-    void*                     m_unk30;     // +0x30  ctor 0 [role UNVERIFIED]
+    void*                     m_unk30;     // +0x30  non-owning context ptr: read as m_unk30+0x668 w/ vtable calls in DnD-target vf[1] sub_1811A234C; identity-compared in vf[12] sub_181F4B660 (sets m_flag38), reset in vf[11] sub_180C4A540
     bool                      m_flag38;    // +0x38  ctor 0 [role UNVERIFIED]
     uint8_t                   _pad39[7];   // +0x39
     void*                     m_unk40;     // +0x40  ctor 0 [role UNVERIFIED]

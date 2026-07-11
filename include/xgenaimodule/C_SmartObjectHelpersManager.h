@@ -22,8 +22,8 @@ public:
 
     float    m_scale08;       // +0x08  ctor: 1.0f [U role]
     uint8_t  _pad0C[4];       // +0x0C
-    void*    m_listHead;      // +0x10  intrusive list head (32-byte node)
-    uint8_t  _unk18[8];       // +0x18  [U]
+    void*    m_listHead;      // +0x10  unordered_map<CryStringT<char>,void*> _List._Myhead: 32B sentinel {next,prev,pair<CryStringT<char>,void*>}; whole map = +0x08..+0x48
+    size_t   m_helpersCount;  // +0x18  unordered_map _List._Mysize element count (ctor 0; erase does --count)
     uint8_t  m_hash20[0x28];  // +0x20..+0x48  hash-map (mask 7 @+0x38, count 8 @+0x40) [U interior]
     uint8_t  m_byte48;        // +0x48  ctor: 0 [U role]
     uint8_t  _pad49[7];       // +0x49

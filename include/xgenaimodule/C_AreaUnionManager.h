@@ -26,7 +26,7 @@ public:
     ~C_AreaUnionManager() override;                            // iface [2] [U body mapping]
     virtual void _vf3();                                       // appended own virtual [U role/mapping]
 
-    void*    m_defaultRep08;   // +0x08  &unk_18566BEB0 (static table) [U type]
+    void*    m_defaultRep08;   // +0x08  DynArray<T> head (WHDynStorage single ptr); empty -> &unk_18566BEB0 (game empty-prefix sentinel); elem stride 0x10. T [U]
     uint16_t m_id10;           // +0x10  ctor: 0xFFFF
     uint16_t m_id12;           // +0x12  ctor: 0xFFFF
     uint8_t  _pad14[4];        // +0x14

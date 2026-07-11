@@ -33,7 +33,13 @@ public:
     virtual void _vf10();      // [10] nullsub [U role]
     virtual void _vf11();      // [11] nullsub [U role]
 
-    uint8_t            _unk08[0x10];  // +0x08..+0x18  [U]
+    uint8_t            _unk08;         // +0x08  (init byte 0; flag/enum, bool candidate)
+    uint8_t            _pad09[3];      // +0x09  align to +0x0C
+    float              m_field0C;      // +0x0C  (init FLT_MAX 0x7F7FFFFF)
+    float              m_field10;      // +0x10  (init FLT_MAX 0x7F7FFFFF)
+    uint8_t            _unk14;         // +0x14  (init byte 0; flag, bool candidate)
+    uint8_t            m_flags15;      // +0x15  (ctor AND 0xFC -> bits 0-1 are bitfield bools)
+    uint8_t            _pad16[2];      // +0x16  align to +0x18 (vector)
     std::vector<void*> m_vec18;       // +0x18  elem stride 0x10 in dtor free [U elem type]
 };
 // abstract; full size folded into derived -- no static_assert.

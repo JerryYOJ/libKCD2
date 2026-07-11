@@ -69,8 +69,8 @@ public:
     S_RPGCVars*     m_pCVars;             // +0xA8  the 0x158 cvar POD (raw alloc, no ctor; consumer sub_181010980)
     C_EventManager* m_pEventManager;      // +0xB0  (0x40)  VERIFIED
     C_RPGLocationManager* m_pLocationManager;  // +0xB8  (0x2B0)  VERIFIED
-    void*    m_soulClassReg;              // +0xC0  registry handle for "soul_class" (instSize 32; registry vfunc+96)
-    void*    m_skaldCharacterReg;         // +0xC8  registry handle for "skald_character" (instSize 40)
+    void*    m_soulClassReg;              // +0xC0  NON-owning class-registry handle ("soul_class"): C_RPGModule dtor sub_182CED32C never releases a1[24]; ctor zero-inits +0xC0; assigning writer not located
+    void*    m_skaldCharacterReg;         // +0xC8  NON-owning class-registry handle ("skald_character"): C_RPGModule dtor sub_182CED32C never releases a1[25]; assigning writer not located
     std::vector<int32_t> m_bodyPartIndexTable;  // +0xD0  head-face/body-part index table (sized dword_185324478+1)
     int32_t  m_headFaceAttachIdx;         // +0xE8  init -1 (from "head_face" lookup)
     uint32_t _padEC;                      // +0xEC

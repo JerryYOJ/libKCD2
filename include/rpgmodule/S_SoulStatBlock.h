@@ -30,7 +30,7 @@ class C_Soul;
 // element ctor, never observed being read -- possibly XP / cached-modified / reserved (UNVERIFIED).
 struct S_StatCell {
     uint32_t value;   // +0x00  base value (the number gameplay reads)
-    uint32_t _unk04;  // +0x04  unresolved (ctor-zeroed; not read by any located getter)
+    uint32_t _unk04;  // +0x04  reserved/unused: element ctor sub_180C23340 zeroes the whole 8B cell; every located reader (sub_180469D7C stats, sub_18046F854 skills) and writer (sub_180670788 addss/movss) touches only +0x00 (value); never observed non-zero
 };
 static_assert(sizeof(S_StatCell) == 0x8, "S_StatCell must be 0x8");
 
@@ -63,8 +63,8 @@ struct S_SoulStatBlock {
     S_StatCell m_skills[35];              // +0x088  base skill values (E_SoulSkill; reader sub_18046F854)
     C_Soul*  m_pSkillsOwner;              // +0x1A0  skills sub-object owner backref
     float    m_levelBlock[6];             // +0x1A8  [0]=Level (level-up-notified), [1]/[5]=caps; per-index roles partly inferred
-    float    m_reserved1C0[2];            // +0x1C0  (zeroed; role unknown)
-    float    m_reserved1C8[4];            // +0x1C8  (zeroed; xmmword_185583B38 = all zero)
+    float    m_reserved1C0[2];            // +0x1C0  reserved level-block slots 6-7: contiguous with m_levelBlock float array, addressed by setter sub_18046F6CC as a1[id+106]; progression reset sub_18046F5CC enumerates only indices 0-5, never these
+    float    m_reserved1C8[4];            // +0x1C8  reserved level-block slots 8-11: ctor OWORD-zeroes (xmmword_185583B38=0); setter sub_18046F6CC never called with idx>5 by any located path; no reader found
     S_StatPoolEntry m_pool[4];            // +0x1D8  per-category mult/cap (semantic name inferred)
     C_PerkList m_perks;                   // +0x1F8  (0x70; fills block to 0x268)
 };

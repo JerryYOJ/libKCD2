@@ -20,7 +20,7 @@ public:
     void Update() override;          // [3] 0x182B37C9C
     void Reset() override;           // [4] nullsub
     void _vf5() override;            // [5] 0x180838AE0
-    int  GetType() const override;   // [6] 0x181A7F810
+    E_CutsceneType::Type GetType() const override;   // [6] 0x181A7F810  Credits(7)
     bool IsActive() const override;  // [7] 0x181A72E80
 
     bool    m_flag60;    // +0x60  ctor 0 [role UNVERIFIED]

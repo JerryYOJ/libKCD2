@@ -24,7 +24,9 @@ public:
     ~C_RecognizingThresholdManager() override;           // [0] sub_1808ACF2C [U slot order vs [1]]
     void OnEntitySideEffect(void* sideEffect) override;  // [1] sub_1808AC6F4 -- drops per-entity thresholds matching PM+0xD0
 
-    uint8_t  _unk08[0x18];        // +0x08..+0x1F [U roles]
+    uint8_t  _unk08[8];           // +0x08  [U] left uninit by ctor sub_180FB74DC and untouched by PM-init sub_180F661D0; no reader/writer seen from any PM-getter caller -- reserved/unresolved
+    void*    m_field10;           // +0x10  PM-init sub_180F661D0 (PM[53]) stores &qword_1855E63B0 -- process-global AI singleton (guarded ctor sub_1819DD880); non-owning back-ref
+    void*    m_field18;           // +0x18  PM-init sub_180F661D0 (PM[54]) stores heap 0x160-byte perception sub-manager (its +0x00 = C_PerceptionManager*, holds 2 unordered_maps); read as this-ptr across ~12 sites; non-owning back-ref
     float    m_thresholdScale;    // +0x20  ctor: 1.0f -- per-manager threshold scale [V]
     uint8_t  _pad24[4];           // +0x24
     uint64_t m_listHead[2];       // +0x28  intrusive circular-list head (32B nodes)

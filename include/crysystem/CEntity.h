@@ -3,6 +3,9 @@
 #include <cstdint>
 #include "../Offsets/vtables/IEntity.h"   // Offsets::IEntity (158-slot binary vtable) + EntityId
 
+struct IEntityClass;
+struct IEntityArchetype;
+
 // -----------------------------------------------
 // CEntity - CryEntitySystem concrete entity (CryEngine 3 + Warhorse, KCD2)
 // -----------------------------------------------
@@ -38,8 +41,8 @@ public:
     uint64_t     m_guid;               // +0x10   GetGuid() (EntityGUID) [slot 2]          VERIFIED
     uint32_t     m_flags;              // +0x18   EEntityFlags;   Get/Set/Add/Clear/Check  VERIFIED
     uint32_t     m_flagsExtended;      // +0x1C   EEntityFlagsExtended; Get/Set/CheckExt   VERIFIED
-    void*        m_pClass;             // +0x20   IEntityClass*      GetClass()  [slot 3]  VERIFIED
-    void*        m_pArchetype;         // +0x28   IEntityArchetype*  GetArchetype [slot 4] VERIFIED
+    IEntityClass* m_pClass;            // +0x20   GetClass() [slot 3]; ctor <- SpawnParams+0x18          VERIFIED
+    IEntityArchetype* m_pArchetype;    // +0x28   GetArchetype [slot 4]; ctor <- SpawnParams+0x20        VERIFIED
 
     // Local transform (initialised from SpawnParams vPosition / qRotation / vScale).
     Vec3         m_localPos;           // +0x30   GetLocalPosPtr()   [slot 40]             VERIFIED
@@ -53,15 +56,18 @@ public:
 
     uint32_t     m_aiObjectID;         // +0x94   tAIObjectID; HasAI / Get / SetAIObjectID [slots 68-70] VERIFIED
 
-    void*        m_pProxyContainer;    // +0x98   proxy/binding container (slots 25-31)          /* tentative */
-    void*        m_pParent;            // +0xA0   parent entity? plain getter slot 85            /* tentative */
-    void*        m_pEventListeners;    // +0xA8   intrusive list head (ctor sub_1803CE0A8; slot 74) /* tentative */
-    void*        m_unkB0;              // +0xB0   ctor=0 (second word of the +0xA8 sub-object)
-    void*        m_unkB8;              // +0xB8   ctor=0
-    void*        m_unkC0;              // +0xC0   ctor=0
-    void*        m_unkC8;              // +0xC8   ctor=0
+    void*        m_pProxyContainer;    // +0x98   ptr to heap {first,last,..} range of 8-byte elems; slot25 sub_18041F6B4 returns (last-first)>>3; read by slots 25-29; ctor=0  /* pointee unresolved */
+    void*        m_pParent;            // +0xA0   owned refcounted iface; dtor sub_1803A7D74 Release via pointee vtbl slot3; getter slot85; ctor=0  /* pointee unresolved; NOT confirmed a parent */
+    // +0xA8..+0xB7  std::map (MSVC _Tree, always 0x10) = entity proxy/component map, keyed by
+    //   proxy-type id (proxy vfn slot7). Built in ctor via sub_1803CEDA0 / sub_1803CE9A8 (keys 2, 19, ..);
+    //   dtor _Tidy sub_1808E3168 @0x1808E30F4 recursively frees nodes then frees the sentinel.
+    //   NOTE: this is the proxy MAP, not an event-listener list (prior guess was wrong).
+    struct SProxySlot { void* _p0; void* _pOwner; };   // 0x10 mapped_type; +8 is a CryEngine-refcounted ptr (Release=sub_1804F6588)
+    std::map<int32_t, SProxySlot>  m_proxyMap;         // +0xA8   _Tree head node @+0xA8, _Mysize @+0xB0     /* value class unresolved */
+    std::vector<SProxySlot>        m_proxyVec;         // +0xB8   {first@+0xB8, last@+0xC0, end@+0xC8} (24 bytes)
+                                                       //         dtor destroys range (sub_1805B8164, stride 0x10, Release elem+8) then frees buffer  /* elem class unresolved */
     void*        m_pPhysics;           // +0xD0   IPhysicalEntity*? GetPhysics (slots 117/157)   /* tentative */
-    void*        m_unkD8;              // +0xD8   ctor=0
+    void*        m_unkD8;              // +0xD8   ctor=0; no accessor references it in the 158-slot vtable  /* unresolved */
 
     CryStringT<char> m_name;               // +0xE0   CryStringT<char>; GetName() = *(char**)0xE0 [slot 18] VERIFIED
     CryStringT<char> m_str_E8;             // +0xE8   CryStringT<char> (second string; ctor = empty) /* tentative */

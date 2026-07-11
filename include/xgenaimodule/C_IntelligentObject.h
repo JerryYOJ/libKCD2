@@ -33,13 +33,15 @@ public:
     virtual void _vf25();                                  // [25] sub_183209730 [U role]
     virtual void _vf26();                                  // [26] sub_180A2C3E0 [U role]
 
-    void*           m_staticDefault;   // +0x60  = &unk_185665430 (static default object) [U role]
+    void*           m_staticDefault;   // +0x60  DynArray<T> head (CryEngine SmallDynStorage, single ptr; empty = &unk_185665430; blk hdr {cap@-8,cnt@-4}); elem 0x10 {obj* @0, callback/vtbl* @8}; teardown sub_1804CDAE8 / walk sub_180875DF8 [elem T U]
     int16_t         m_word68;          // +0x68  ctor: -1 [U role]
     int16_t         m_word6A;          // +0x6A  ctor: -1 [U role]
     uint8_t         _pad6C[4];         // +0x6C
     void*           m_messageGate;     // +0x70  message-gate object*, set post-ctor; concrete type [U] (brain candidate, G4 wave)
-    void*           m_typeToken;       // +0x78  ref-counted type token via sub_1804FB678 (from puppet host record, else rttr default) [U exact type]
-    uint64_t        m_unk80[3];        // +0x80..+0x97  zeroed by ctor [U roles]
+    void*           m_typeToken;       // +0x78  intrusive _smart_ptr<T> (assign sub_1804FB678: AddRef vf[3]/Release vf[4]; dtor sub_1804FB980 Release vf[4]); pointee = RTTR type descriptor (puppet host type via sub_1805D7094, else registry qword_18492D828 vf[13](0)) [pointee class U]
+    void*           m_entries;         // +0x80  flat-vec data {T* data; size_t count; size_t cap}; elem 0x10 {CryStringT<char> @0, void* @8 (obj*, U role)}; dtor sub_180A2C368 decrefs each name @[ptr-12]
+    uint64_t        m_entryCount;      // +0x88  element count (arg a1[1] to sub_180A2C368/sub_180A2C3A8)
+    uint64_t        m_entryCap;        // +0x90  capacity (elements)
     framework::WUID m_wuid;            // +0x98  own WUID copy at this level
     bool            m_flagA0;          // +0xA0  ctor: 0 [U role]
     bool            m_flagA1;          // +0xA1  ctor: 0 [U role]

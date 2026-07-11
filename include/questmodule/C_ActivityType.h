@@ -19,7 +19,7 @@ public:
     conceptmodule::C_TypedPortRef<uint32_t> m_portE0;    // +0xE0   [role UNVERIFIED]
     conceptmodule::C_TypedPortRef<float>    m_port120;   // +0x120  [role UNVERIFIED]
     conceptmodule::C_TypedPortRef<uint32_t> m_port160;   // +0x160  [role UNVERIFIED]
-    uint64_t m_unk1A0;                                   // +0x1A0  ctor 0 [role UNVERIFIED]
+    uint64_t m_unk1A0;                                   // +0x1A0  ctor sub_181F379B0 zeroes; no writer found (vtable 0x183ED43A0 ref'd only by ctor) [role UNRESOLVED]
 };
 static_assert(sizeof(C_ActivityType) == 0x1A8, "modeled extent (ctor sub_181F379B0; alloc UNPROVEN)");
 

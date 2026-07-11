@@ -25,12 +25,12 @@ public:
     uint64_t    m_callbackHead;    // +0x08  C_CallbackListHolder list head, ctor: 0
     uint8_t     m_trackSeq;        // +0x10  C_TrackSequencing<1> flag, ctor: 0
     uint8_t     _pad11[7];         // +0x11
-    const void* m_tickCounter;     // +0x18  = sub_1804FD80C()+3 (frame/tick counter ptr idiom)
+    CryStringT<char> m_str18;      // +0x18  CryStringT<char>, ctor inits empty (data = empty-string static + 12); dtor decrefs (ptr-12)
     int32_t     m_dword20;         // +0x20  ctor: -1 [U role]
     int32_t     m_dword24;         // +0x24  ctor: 0 [U role]
-    uint64_t    m_unk28;           // +0x28  ctor: 0 [U role]
-    uint64_t    m_unk30;           // +0x30  ctor: 0 [U role]
-    uint64_t    m_unk38;           // +0x38  ctor: 0 [U role]
+    // +0x28  std::vector<Entry> {first,last,end} (member-dtor sub_18041B29C frees a1[5], element stride 0x20 via sub_18041A4A8)
+    struct Entry { uint64_t _key; uint8_t _sublist[0x18]; };  // 0x20; _sublist @+0x08 = nested std::vector (0x10-byte non-trivial elems, sub_180ECED34) modeled as blob
+    std::vector<Entry> m_entries;  // +0x28
 };
 static_assert(sizeof(C_MessageInbox) == 0x40, "C_MessageInbox must be 0x40");
 

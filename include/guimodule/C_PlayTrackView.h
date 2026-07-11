@@ -32,7 +32,7 @@ public:
     uint8_t m_byte108;    // +0x108  ctor 0 [role UNVERIFIED]
     uint8_t _pad109[7];   // +0x109
     _smart_ptr<C_TrackViewCutscene> m_pRunning;   // +0x110  running instance (built on trigger, released by dtor sub_18052C7A8)
-    void* m_pConfig;                              // +0x118  name-keyed cutscene config [type UNVERIFIED]
+    void* m_pConfig;                              // +0x118  _smart_ptr (with m_pRefCount@+0x120) to a refcounted POLYMORPHIC cutscene-DB config entry (has vtable; name CryString @+0x8); resolved by name via sub_1809AE704 from the CutscenePlayer global registry xmmword_185326660 on TRIGGER; config class UNVERIFIED
     volatile int32_t* m_pRefCount;                // +0x120  config smart-ptr control [role UNVERIFIED]
 };
 static_assert(sizeof(C_PlayTrackView) == 0x128, "C_PlayTrackView must be 0x128 (creator sub_182B0BD98)");

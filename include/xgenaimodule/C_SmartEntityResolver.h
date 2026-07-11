@@ -33,11 +33,11 @@ public:
     void OnSmartAreaRemoved(void* area) override; // [1] 0x3FBC58
     void _vf2() override;                       // [2] nullsub
 
-    void*   m_defaultRepA;   // +0x10  &unk_18566BE78 (static default rep) [U type]
+    void*   m_defaultRepA;   // +0x10  default 'rep' = shared-empty static unk_18566BE78 of a mutable length-prefixed char-buffer string ({u32 cap@ptr-8, u32 len@ptr-4}; resized by sub_180BD7F70) [U string class name]
     int16_t m_idA0;          // +0x18  ctor: -1
     int16_t m_idA1;          // +0x1A  ctor: -1
     uint8_t _pad1C[4];       // +0x1C
-    void*   m_defaultRepB;   // +0x20  &unk_18566BE78
+    void*   m_defaultRepB;   // +0x20  &unk_18566BE78 -- same shared-empty length-prefixed string sentinel as m_defaultRepA
     int16_t m_idB0;          // +0x28  ctor: -1
     int16_t m_idB1;          // +0x2A  ctor: -1
     uint8_t _pad2C[4];       // +0x2C

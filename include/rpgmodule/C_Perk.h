@@ -49,7 +49,7 @@ public:
 
     const S_Perk* m_pDefinition;   // +0x08  ctor 0; filled by Resolve [9]
     S_PerkDefinitionId m_id;       // +0x10  ctor = invalid (xmmword_18409A0C0)
-    void*    m_pOwner;             // +0x20  ctor arg deref (owning C_PerkDatabase candidate -- UNVERIFIED)
+    void*    m_pOwner;             // +0x20  non-owning owner back-ptr = ctor arg (C_CompanionPerk ctor 0x18096497E: mov [this+20h], a2; creator sub_1809648D0 passes *a1); subclasses subscribe a listener at owner+0x4A0; dtor does not free -- owner class not certified
     uint8_t  m_active;             // +0x28  set/cleared by Activate/Deactivate
     uint8_t  _pad29[7];            // +0x29
 };

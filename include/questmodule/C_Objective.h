@@ -29,8 +29,8 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_Objective;
     framework::S_ResourceHandle m_ref48;                     // +0x48  (&unk_1856691B8) [target UNVERIFIED]
     conceptmodule::C_PortRef m_port58;                       // +0x58  untyped port (sub_1806B2890)
-    uint64_t m_unk90;                                        // +0x90  not written by ctor (typed-port
-                                                             //        tail slot candidate)
+    _smart_ptr<conceptmodule::C_SharedResource> m_port58BoundValue;  // +0x90  bound-value tail of the m_port58 port (m_port58+0x38);
+                                                             //        port dtor sub_1806B30CC releases +0x38 when m_flag30(+0x88) set. Set on bind, not by ctor.
     conceptmodule::C_TypedPortRef<S_Tracker> m_trackerPort;  // +0x98  objective tracker port
     CryStringT<char> m_name;                                 // +0xD8  objective name shown on map/compass markers
                                                              //        (VERIFIED: read as the marker name by sub_180DC5F24
@@ -40,9 +40,9 @@ public:
     framework::C_LocalizedString m_locText;                  // +0xE0  localized objective text (ctor sub_1803D28B4);
                                                              //        distinct from m_name [exact consumer UNVERIFIED --
                                                              //        likely the quest-log body/description]
-    uint64_t m_unkF0;                                        // +0xF0  ctor 0
-    uint64_t m_unkF8;                                        // +0xF8  ctor 0
-    uint64_t m_unk100;                                       // +0x100 ctor 0
+    void*    m_vecF0Begin;                                   // +0xF0  boost::container::vector<T> begin; T=0x18 {CryStringT<char>@0, refcounted*@0x10}
+    uint64_t m_vecF0Size;                                    // +0xF8  element count (dtor loop sub_181F317D0, stride 0x18)
+    uint64_t m_vecF0Cap;                                     // +0x100 capacity (dtor frees begin via sub_181AB5160 if !=0)
     uint8_t  m_flag108;                                      // +0x108 ctor 0
     uint8_t  _pad109[3];                                     // +0x109
     int32_t  m_param10C;                                     // +0x10C ctor -1 [role UNVERIFIED]

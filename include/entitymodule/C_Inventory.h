@@ -23,13 +23,13 @@ class C_Inventory
 {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_Inventory;
-    void*    m_registryOrManager;              // +0x158  owning manager/registry back-ptr (runtime-set)  tentative
+    wh::framework::WUID m_wuid;                 // +0x158  inventory's own WUID registry key (tag 3 = Inventory); acquire sub_1823D154C stores v4|0x0300000000000000
     CryGUID  m_guid;                           // +0x160  16-byte registry key (the C_InventoryManager map key)  VERIFIED (key)
-    void*    m_sharedState;                    // +0x170  intrusive-refcounted shared default block
+    CryStringT<char> m_sharedState;            // +0x170  CryString; ctor inits to empty shared static (_emptyHeader+12), dtor sub_1804FC624 decrefs SStringData header @ ptr-12
     uint16_t m_flags16;                        // +0x178  (ctor 0)
     uint8_t  m_flag;                           // +0x17A  init 1 (KCD1 m_flag2)
     uint8_t  _pad17B[5];                       // +0x17B
-    void*    m_ownerRef;                       // +0x180  ref-counted owner handle (Released in dtor)  tentative type
+    void*    m_ownerRef;                       // +0x180  owned polymorphic obj: dtor sub_1803A4944 calls (*(vtbl+0x28))(obj, 1) -- virtual disposal with flag 1, C_Inventory owns/deletes it (slot semantics INFERRED; pointee class UNVERIFIED)
 };
 static_assert(sizeof(C_Inventory) == 0x188, "C_Inventory must be 0x188");
 

@@ -23,7 +23,8 @@ namespace wh::environmentmodule {
 class C_RespawnManager : public I_RespawnManager, public Offsets::IMergeMeshStreamListener {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_RespawnManager;
-    uint8_t  _pad10[0x10];                    // +0x10  not walked
+    Vec3     m_lastRaycastPos;                // +0x10  last raycast target (writer 0x1809F2DC3; read as 3 floats vs wh_env_RespawnRaycastUpdateDelta @+0x58)
+    uint8_t  _pad1C[4];                        // +0x1C  alignment pad (ctor memset covers only +0x10..+0x1C)
     ICVar*         m_cvarRespawnDistance;            // +0x20  wh_env_RespawnDistance
     ICVar*         m_cvarRespawnDebug;               // +0x28  wh_env_RespawnDebug
     ICVar*         m_cvarRespawnDebugIntervalSec;    // +0x30  wh_env_RespawnDebugIntervalSec
@@ -34,7 +35,7 @@ public:
     ICVar*         m_cvarRaycastUpdateDelta;         // +0x58  wh_env_RespawnRaycastUpdateDelta
     uint8_t  m_container60[0x40];             // +0x60  sub_180E3C63C container [shape not walked]
     std::unordered_map<uint64_t, uint64_t> m_mapA0;   // +0xA0  [element types UNVERIFIED]
-    uint8_t  _padE0[0x18];                    // +0xE0  not walked
+    std::vector<std::array<uint8_t, 0x20>> m_vecE0;   // +0xE0  MSVC std::vector{begin@+0xE0,end@+0xE8,cap@+0xF0}; elem stride 0x20 proven; ELEMENT TYPE UNVERIFIED
     uint8_t  m_gridF8[0x40];                  // +0xF8   respawn-grid container 1 (sub_18043C878;
     uint8_t  m_grid138[0x40];                 // +0x138  respawn-grid container 2  0x40 footprint,
     uint8_t  m_grid178[0x40];                 // +0x178  respawn-grid container 3  shape not walked)

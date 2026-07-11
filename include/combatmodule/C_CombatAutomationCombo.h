@@ -17,7 +17,7 @@ class C_CombatAutomationCombo : public C_CombatAutomationAction {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_CombatAutomationCombo;
     const char* GetName() const override { return "AutomationCombo"; }   // [3] 0x181A7E1A0
-    int GetActionKind() const override { return 12; }                    // [10] 0x181A74D00
+    E_CombatAutomationActionKind GetActionKind() const override { return E_CombatAutomationActionKind::Combo; }                    // [10] 0x181A74D00
 
     uint64_t m_rngA;               // +0x30  LCG-seeded (consumer not located)
     uint64_t m_rngB;               // +0x38  LCG-seeded (consumer not located)

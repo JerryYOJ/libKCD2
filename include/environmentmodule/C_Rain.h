@@ -27,9 +27,7 @@ public:
                                       //               holder; interior not walked)
     uint8_t  m_flag160;               // +0x160  ctor 0
     uint8_t  _pad161[7];              // +0x161
-    void*    m_ptr168;                // +0x168  ctor 0 [role UNVERIFIED]
-    void*    m_ptr170;                // +0x170  ctor 0 [role UNVERIFIED]
-    void*    m_ptr178;                // +0x178  ctor 0 [role UNVERIFIED]
+    std::vector<ITexture*> m_rainTextures;  // +0x168  {first,last,end}; dtor sub_182ADA98C Releases each elem (vtbl+0x10) then frees buffer; filled sub_182ADB5F4 from %ENGINE%/EngineAssets/raintextures.xml
 };
 static_assert(sizeof(C_Rain) == 0x180, "C_Rain must be 0x180 (alloc 384)");
 static_assert(offsetof(C_Rain, m_particleHolder) == 0x40, "particle holder at +0x40");

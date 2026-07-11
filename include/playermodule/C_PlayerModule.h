@@ -33,6 +33,15 @@ namespace wh::playermodule {
 
 class C_FastTravel;
 class C_ForgeWardrobeManager;   // NEW in KCD2
+class C_TutorialManager;
+class C_RandomEventManager;
+class C_FOWManager;
+class C_Keybinds;
+class C_ActionHintManager;
+class C_ActionSets;
+class C_PlayerManager;
+class C_ShelverManager;
+class C_ControllerFeedbackManager;
 
 class C_PlayerModule
     : public wh::framework::C_BaseModule
@@ -52,20 +61,20 @@ public:
     // C_BaseModule base occupies +0x00 (vtable) / +0x08 (m_state) / +0x0C (pad);
     // ISystemEventListener base occupies +0x10 (vtable). Members follow at +0x18.
     void*                   m_sub18;            // +0x18  sub-manager (0xB0,  ctor sub_180EF7184)
-    void*                   m_sub20;            // +0x20  sub-manager (0x50,  ctor sub_18179FD3C)
+    C_TutorialManager*      m_pTutorialManager; // +0x20  (0x50,  ctor sub_18179FD3C stores C_TutorialManager vtable)
     C_FastTravel*           m_pFastTravel;      // +0x28  (0x130, ctor sub_180BE9BA0)            VERIFIED
-    void*                   m_sub30;            // +0x30  sub-manager (0x118, ctor sub_180BE83E8)
-    void*                   m_sub38;            // +0x38  sub-manager (0xA8,  ctor sub_180BE9FB4)
-    void*                   m_sub40;            // +0x40  sub-manager (0x1F0, ctor sub_18124417C)
+    C_RandomEventManager*   m_pRandomEventManager; // +0x30  (0x118, ctor sub_180BE83E8 stores C_RandomEventManager vtable)
+    C_FOWManager*           m_pFOWManager;      // +0x38  (0xA8,  ctor sub_180BE9FB4 stores C_FOWManager vtable; embeds C_NullFogOfWar)
+    C_Keybinds*             m_pKeybinds;        // +0x40  (0x1F0, ctor sub_18124417C stores C_Keybinds vtable)
     void*                   m_sub48;            // +0x48  sub-manager (0x20,  intrusive list node)
     void*                   m_sub50;            // +0x50  sub-manager (0x50,  C_Signal-like)
-    void*                   m_sub58;            // +0x58  sub-manager (0x140, ctor sub_181748CFC)
-    void*                   m_sub60;            // +0x60  sub-manager (0x90,  ctor sub_180BE9E68)
+    C_ActionHintManager*    m_pActionHintManager; // +0x58  (0x140, ctor sub_181748CFC stores C_ActionHintManager vtable)
+    C_ActionSets*           m_pActionSets;      // +0x60  (0x90,  ctor sub_180BE9E68; field holds obj+8 secondary base subobject)
     void*                   m_sub68;            // +0x68  sub-manager (0x20,  C_Signal-like)
     void*                   m_sub70;            // +0x70  sub-manager (0x10,  single-node list)
-    void*                   m_sub78;            // +0x78  sub-manager (0xD8,  ctor sub_180BE9868)
-    void*                   m_sub80;            // +0x80  sub-manager (0x88,  ctor sub_180794D8C)
-    void*                   m_sub88;            // +0x88  sub-manager (0x58,  ctor sub_180C3D1CC)
+    C_PlayerManager*        m_pPlayerManager;   // +0x78  (0xD8,  ctor sub_180BE9868 stores C_PlayerManager vtable; registers name "C_PlayerManager")
+    C_ShelverManager*       m_pShelverManager;  // +0x80  (0x88,  ctor sub_180794D8C stores C_ShelverManager vtable)
+    C_ControllerFeedbackManager* m_pControllerFeedbackManager; // +0x88  (0x58,  ctor sub_180C3D1CC stores C_ControllerFeedbackManager vtable)
     C_ForgeWardrobeManager* m_pForgeWardrobe;   // +0x90  (0x20)  NEW in KCD2                    VERIFIED
     uint64_t                m_98;               // +0x98  zero-init, no verified reader; NOT the KCD1 autosave flag (UNVERIFIED)
 };

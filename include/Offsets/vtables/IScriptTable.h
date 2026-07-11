@@ -60,10 +60,10 @@ struct IScriptTable {
 
     // Iterator: tentative layout (~0x50) reconstructed from BeginIteration/MoveNext disasm.
     struct Iterator {
-        void*    pInternal;             // +0x00  current lua object/table
+        const char* sKey;              // +0x00  string key (lua_tolstring); null when integer-keyed
         int      nKey;                  // +0x08  integer key (-1 => string-key iteration)
         uint8_t  value[0x18];           // +0x10  ScriptAnyValue (current value)
-        uint8_t  _pad28[0x18];          // +0x28  (key any / internal state)
+        uint8_t  key[0x18];             // +0x28  ScriptAnyValue (current key)
         uint8_t  bResolvePrototype;     // +0x40  resolvePrototypeTableAsWell
         uint8_t  _pad41[3];             // +0x41
         int      nStackMarker;          // +0x44  pushed-stack-entry count

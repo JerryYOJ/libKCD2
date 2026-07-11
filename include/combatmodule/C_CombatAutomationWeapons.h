@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include "C_CombatAutomationAction.h"
+#include "E_CombatAutomationWeaponRequest.h"
 #include "../entitymodule/I_EquipmentManagerListener.h"
 #include "../game/I_EntitySideEffectCallback.h"
 #include "../framework/C_Signal.h"
@@ -24,7 +25,7 @@ class C_CombatAutomationWeapons
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_CombatAutomationWeapons;
     const char* GetName() const override { return "AutomationWeapons"; }   // [3] 0x181A7E250
-    int GetActionKind() const override { return 14; }                      // [10] 0x181A7D850
+    E_CombatAutomationActionKind GetActionKind() const override { return E_CombatAutomationActionKind::Weapons; }                      // [10] 0x181A7D850
     void OnEntitySideEffect(void* sideEffect) override {}                  // sub_182767740: sets the bool in m_stateFlags80 on match
 
     wh::shared::C_Signal<> m_signalA;      // +0x40  (sentinel unk_1855D4D60; args unrecovered)
@@ -32,7 +33,7 @@ public:
     CTimeValue m_updateTimer;              // +0x60  "Update %.2fs"
     CTimeValue m_equipReplanTimer;         // +0x68  reset to -100000 by the equip callback
     float      m_cfg70;                    // +0x70  init 5.0
-    uint8_t    m_requestedWeapon;          // +0x74  enum {0=none, 1=melee, 2=missile, 3=oversized, 4=undefined}; "Req"
+    E_CombatAutomationWeaponRequest m_requestedWeapon;  // +0x74  "Req" model (ToString sub_1827690D4)
     uint8_t    _pad75[3];                  // +0x75
     CTimeValue m_overrideReplaceTimer;     // +0x78  "OverRepl %.2fs"
     int32_t    m_stateFlags80;             // +0x80  state/flags; the side-effect callback sets the byte at +0x82

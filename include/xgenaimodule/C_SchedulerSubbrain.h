@@ -56,19 +56,25 @@ public:
     void  SeslVf0() override; void SeslVf1() override; void SeslVf2() override;
     void  OnExternalDataUpdate() override;
 
-    uint8_t  _unk100[8];          // +0x100  [U]
+    int32_t  m_schedulerPhase;    // +0x100  ctor=2; sub_18205B420 writes 0 then 2 via &field (scheduler step phase)
+    uint8_t  _pad104[4];          // +0x104
     uint8_t  m_embedded108[0x30]; // +0x108..+0x138  48-byte zeroed block (sub_180414100) [U interior]
     int32_t  m_138;               // +0x138  ctor: -1 [U role]
-    uint8_t  _unk13C[0xC];        // +0x13C  [U]
+    uint8_t  _pad13C[4];          // +0x13C  alignment pad (ctor leaves uninit; 8-byte align for m_140)
+    void*    m_140;               // +0x140  ptr -> active scheduled-activity context; (*m_140)[+8] used by scheduler [U pointee]
     int32_t  m_148;               // +0x148  ctor: -1 [U role]
     int32_t  m_14C;               // +0x14C  ctor: -1 [U role]
-    uint8_t  _unk150[0x10];       // +0x150  [U]
+    void*    m_150;               // +0x150  ptr -> scheduler activity source; null-checked; pointee[+0]=ptr, pointee+0x1D byte read [U pointee]
+    uint8_t  m_158;               // +0x158  byte accumulator (_vf33 max-of pointee+0x1D, then clears)
+    uint8_t  _pad159[7];          // +0x159
     uint8_t  m_embedded160[0x90]; // +0x160..+0x1F0  embedded struct (sub_180414204) [U interior]
-    uint8_t  _unk1F0[8];          // +0x1F0  [U]
+    int32_t  m_1F0;               // +0x1F0  tail dword of the +0x160 embedded struct (sub_180414204 a1+144 = dword_184932288 = 0)
+    uint8_t  _pad1F4[4];          // +0x1F4
     uint32_t m_1F8;               // +0x1F8  ctor: 0x4000000 [U meaning]
     uint8_t  _pad1FC[4];          // +0x1FC
-    void*    m_200;               // +0x200  ctor ptr [U pointee]
-    void*    m_208;               // +0x208  ctor ptr [U pointee]
+    // +0x200  Concurrency::details::TaskStack (16B embedded; dtor ??1TaskStack@details@Concurrency@@QEAA@XZ @0x1823C8A8C)
+    void*    m_taskStackHead;     // +0x200  head; deref -> vtable'd task node (flag byte @pointee+0x38)
+    void*    m_taskStackRef;      // +0x208  refcounted ptr; ~TaskStack releases via sub_1804F6588 when non-null
 };
 static_assert(sizeof(C_SchedulerSubbrain) == 0x210, "C_SchedulerSubbrain must be 0x210 (operator new(528))");
 

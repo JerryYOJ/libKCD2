@@ -23,7 +23,7 @@ public:
     virtual void _vf3() {}                                     // [3]  nullsub (distinct slot; role unresolved)
     virtual bool IsExtended() const { return m_type > 0x46; }  // [4]  0x18047A02C
 
-    int32_t m_type;       // +0x08  message type (SaveGameRequest = 4; other values UNVERIFIED for KCD2)
+    int32_t m_type;       // +0x08  message-type enum, PARTIAL: observed {4=SaveGameRequest, 0x32, 0x38, 0x3A, 0x4C}; full set needs a sweep of all derived ctors (>=0x47 = extended)
     int32_t m_param;      // +0x0C  (inline builders set -1)
     uint8_t m_flag;       // +0x10  (inline builders set 0)
     uint8_t _pad11[7];    // +0x11

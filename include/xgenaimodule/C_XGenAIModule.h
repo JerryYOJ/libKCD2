@@ -39,11 +39,15 @@
 // Only +0x78 / +0xA0 / +0xA8 member types are certified; the rest are opaque regions
 // with ctor init values preserved in comments (offsets [V], C++ types [U]).
 
-namespace wh::navigation { class C_Navigation; }   // recast/detour navmesh system (unported)
+namespace wh::xgenaimodule::navigation { class C_Navigation; }   // recast/detour navmesh system (unported); RTTI .?AVC_Navigation@navigation@xgenaimodule@wh@@
+namespace wh::shared { template <typename T> class C_RegularGridDynamic; }
 
 namespace wh::xgenaimodule {
 
 class C_XGenAIModuleSingletons;
+class C_AIObject;
+class C_SmartAreaManager;
+class C_SmartObjectsManager;
 
 class C_XGenAIModule
     : public framework::C_BaseModule            // +0x00  (0x10; brings I_ModuleMessageListener)
@@ -56,18 +60,22 @@ public:
     uint8_t   m_list0[0x10];          // +0x28  ctor sub_1808DDC28 -- intrusive list/deque head [type UNVERIFIED]
     uint8_t   m_list1[0x10];          // +0x38  ctor sub_1808DDC28 [type UNVERIFIED]
     uint8_t   m_list2[0x10];          // +0x48  ctor sub_1808DDC28 [type UNVERIFIED]
-    void*     m_p58;                  // +0x58  ctor 0 [role UNVERIFIED]
-    void*     m_p60;                  // +0x60  ctor 0 [role UNVERIFIED]
-    void*     m_p68;                  // +0x68  ctor 0 [role UNVERIFIED]
-    void*     m_publishedHandle;      // +0x70  set by sub_1807D25A8; Init mirrors it into 3
-                                      //        global registries [role UNVERIFIED]
+    std::vector<void*> m_vec58;       // +0x58  std::vector {first,last,end} 0x18; ctor zeroes all
+                                      //        3 (0x181889600..0x18188960c); dtor 0x18342FAB5 frees
+                                      //        first, cap=(end-first)&~7, no per-elem dtor -> 8-byte POD
+                                      //        elems [element type UNVERIFIED]
+    shared::C_RegularGridDynamic<C_AIObject*>* m_publishedHandle;  // +0x70  writer sub_1817A346C:
+                                      //        alloc 0x238, built by sub_1817A359C (feeds std::function<bool(C_AIObject*)>
+                                      //        callbacks). Init mirrors into 3 global registries. [name kept for static_assert]
     navigation::C_Navigation* m_pNavigation;   // +0x78  navmesh system (Init: alloc 448,
                                       //        ctor sub_180D39C78(_, qword_185493D30+8))
     uint8_t   m_b80;                  // +0x80  ctor 0
     uint8_t   _pad81[7];              // +0x81
     void*     m_p88;                  // +0x88  ctor 0
-    void*     m_pHelper90;            // +0x90  Init sub_1807D24D8() [type UNVERIFIED]
-    void*     m_pHelper98;            // +0x98  Init sub_1807D2540() [type UNVERIFIED]
+    C_SmartAreaManager* m_pSmartAreaManager;   // +0x90  Init sub_1807D24D8(): alloc 0x460,
+                                      //        ctor sub_180BEB26C, also cached in singleton qword_185493BB0
+    C_SmartObjectsManager* m_pSmartObjectsManager;  // +0x98  Init sub_1807D2540(): alloc 0x5C0,
+                                      //        ctor sub_180BEB428, also cached in singleton qword_185493D30
     S_RPGPerceptionHelper m_perceptionHelper;  // +0xA0  embedded (0x08, vtable 0x184772508)
     C_XGenAIModuleSingletons* m_pSingletons;   // +0xA8  THE HUB (Init: alloc 8, sub_1807D3078)
     CryStringT<char> m_strB0;         // +0xB0  ctor assigns global empty-string literal
@@ -77,8 +85,10 @@ public:
     uint8_t   m_b118;                 // +0x118 ctor 0
     uint8_t   _pad119[3];             // +0x119
     uint32_t  m_d11C;                 // +0x11C ctor 0
-    void*     m_rttrList;             // +0x120 ctor = &unk_18566BFB8 (RTTR trio registers
-                                      //        into it via sub_1805FEFF4) [U]
+    void*     m_rttrList;             // +0x120 ctor = &unk_18566BFB8 (shared static empty buffer,
+                                      //        entry count at ptr-4); head of a growable array of 16-byte
+                                      //        {ctx,handler} listener entries. ctor self-registers via
+                                      //        sub_1805FEFF4 (linear find) + sub_1817A24F8 (insert). [type kept opaque]
     uint16_t  m_w128;                 // +0x128 ctor 0xFFFF
     uint16_t  m_w12A;                 // +0x12A ctor 0xFFFF
     uint8_t   _pad12C[4];             // +0x12C

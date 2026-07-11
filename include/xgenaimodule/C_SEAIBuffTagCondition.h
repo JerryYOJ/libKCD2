@@ -20,7 +20,8 @@ public:
     void _vf7() override;  void _vf8() override;  void _vf9() override;
     void _vf10() override; void _vf11() override;   // [1..11] impls [U roles]
 
-    uint8_t _unk10[8];   // +0x10  [U roles]
+    int32_t m_buffTagId;   // +0x10  buff-tag id (name->id via registry; -1 = unknown); writer slot9 sub_18197BB14
+    uint8_t _pad14[4];     // +0x14  padding to 0x18 (zero-init at ctor; not copied by clone)
 };
 static_assert(sizeof(C_SEAIBuffTagCondition) == 0x18, "must be 0x18 (factory new 24, enum 13)");
 

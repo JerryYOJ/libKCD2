@@ -16,8 +16,8 @@ namespace wh::rpgmodule {
 class C_RPGParamOverridePerk : public C_Perk {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_RPGParamOverridePerk;
-    void* m_rowsBegin;   // +0x30  ctor: db index end [INFERRED range]
-    void* m_unk38;       // +0x38  ctor argument [role UNVERIFIED]
+    S_PerkRPGParamOverride** m_rowsBegin;  // +0x30  = C_PerkRPGParamOverrideDatabase sorted-index end() snapshot (db+0xA0)
+    S_PerkRPGParamOverride** m_rowsEnd;    // +0x38  = same end() ptr as m_rowsBegin; empty [begin,end) row range (NOT a ctor arg)
 };
 static_assert(sizeof(C_RPGParamOverridePerk) == 0x40, "C_RPGParamOverridePerk must be 0x40 (operator new(64))");
 

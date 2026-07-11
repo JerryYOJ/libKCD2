@@ -15,8 +15,8 @@ namespace wh::rpgmodule {
 class C_SoulAbilityPerk : public C_Perk {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_SoulAbilityPerk;
-    void* m_rowsBegin;   // +0x30  ctor: db index end (empty range) [INFERRED]
-    void* m_rowsEnd;     // +0x38  ctor: db index end
+    S_PerkSoulAbility** m_rowsBegin;   // +0x30  = C_PerkSoulAbilityDatabase sorted-index end() snapshot (db+0xA0), empty range
+    S_PerkSoulAbility** m_rowsEnd;     // +0x38  = same end() ptr as m_rowsBegin; empty [begin,end) ability-row range
 };
 static_assert(sizeof(C_SoulAbilityPerk) == 0x40, "C_SoulAbilityPerk must be 0x40 (operator new(64))");
 

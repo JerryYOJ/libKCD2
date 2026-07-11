@@ -25,7 +25,7 @@ class C_SmartObjectAnimationDatabase : public databasemodule::C_ObjectTreeDataba
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_SmartObjectAnimationDatabase;
 
-    uint64_t m_unk78;   // +0x78  not written by ctor [U type/role]
+    uint64_t m_unk78;   // +0x78  not written by ctor sub_180DED6DC; occupies the same post-base slot as C_SmartEntityDatabase::m_colBrain (a column handle) -- this DB registers no column so it stays 0 [U role]
     std::unordered_map<uint64_t, uint64_t> m_index;   // +0x80  (0x40) key/value types [U]
 };
 static_assert(sizeof(C_SmartObjectAnimationDatabase) == 0xC0, "C_SmartObjectAnimationDatabase must be 0xC0");

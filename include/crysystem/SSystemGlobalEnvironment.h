@@ -22,7 +22,7 @@ namespace Offsets {
     struct IScriptSystem; struct IPhysicalWorld; struct IInput; struct ITimer;
     struct IGame; struct IEntitySystem; struct IConsole; struct ISystem;
     struct ILog; struct IRenderer; struct IFlashUI; struct I3DEngine;
-    struct IHardwareMouse;
+    struct IHardwareMouse; struct ICharacterManager;
 }
 
 struct SSystemGlobalEnvironment {
@@ -39,7 +39,7 @@ struct SSystemGlobalEnvironment {
     void*                       _unk40;                 // +0x40
     Offsets::IInput*            pInput;                 // +0x48  VERIFIED: AddEventListener("C_Keybinds")
     void*                       _unk50;                 // +0x50
-    void*                       _unk58;                 // +0x58
+    void*                       _unk58;                 // +0x58  inferred pCryPak (ICryPak*): single most-referenced gEnv slot (681 reads); KCD1 pCryPak is also +0x58. UNVERIFIED (base-register writer, no direct-absolute store to confirm).
     void*                       _unk60;                 // +0x60
     void*                       _unk68;                 // +0x68
     void*                       _unk70;                 // +0x70
@@ -55,8 +55,8 @@ struct SSystemGlobalEnvironment {
     void*                       _unkC0;                 // +0xC0
     Offsets::ISystem*           pSystem;                // +0xC8  VERIFIED: == CSystem self
     void*                       _unkD0;                 // +0xD0
-    void*                       _unkD8;                 // +0xD8
-    void*                       pCharacterManager;      // +0xE0  ("MediumSizedCharacters"); NOT pLog in KCD2
+    Offsets::ICharacterManager* pCharacterManager;      // +0xD8  ICharacterManager* set by the CryAnimation engine module (sub_18099B504 @0x18099B672 stores its manager to gEnv+0xD8, also mirrored to g_pCharacterManager qword_185189BE0; module string "CEngineModule_CryAnimation")
+    void*                       _unkE0;                 // +0xE0  NOT pCharacterManager (that is +0xD8, proven via CryAnimation module). Inferred pAISystem: reader sub_1803CF0D0 @0x1803CF0F3 calls vtable[0x1D0] (slot 58, a very large iface); KCD1 pAISystem +0xD8 -> +0xE0 with the +8 shift; 281 reads. UNVERIFIED interface name.
     Offsets::ILog*              pLog;                   // +0xE8  VERIFIED: Log/LogError (was +0xE0)
     void*                       _unkF0;                 // +0xF0
     void*                       _unkF8;                 // +0xF8
@@ -75,14 +75,15 @@ struct SSystemGlobalEnvironment {
     void*                       _unk160;                // +0x160
     void*                       _unk168;                // +0x168
     void*                       _unk170;                // +0x170
-    void*                       _unk178;                // +0x178
+    void*                       pAudioSystem;           // +0x178  audio system singleton = CB_FmodStudioWrapper*; its ctor sub_180E3C9E4 (sets *this = CB_FmodStudioWrapper::vftable) stores `this` here at 0x180E3D06C
     void*                       _unk180;                // +0x180
     void*                       _unk188;                // +0x188
     void*                       _unk190;                // +0x190
     void*                       _unk198;                // +0x198
     void*                       _unk1A0;                // +0x1A0
     void*                       _unk1A8;                // +0x1A8
-    void*                       _unk1B0;                // +0x1B0
+    uint32_t                    mMainThreadId;          // +0x1B0  GetCurrentThreadId() cached at init (sub_18079FFD4: 0x1807A002D call GetCurrentThreadId -> 0x1807A0038 mov cs:dword_18492D9A8, eax); 4-byte scalar, NOT a pointer
+    uint8_t                     _pad1B4[4];             // +0x1B4
     void*                       _unk1B8;                // +0x1B8
 
     static SSystemGlobalEnvironment* GetInstance()

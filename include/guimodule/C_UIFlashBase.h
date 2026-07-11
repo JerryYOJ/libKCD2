@@ -71,7 +71,7 @@ public:
     struct S_Dispatcher : I_Dispatcher {
         void Dispatch(void* pUserData, const SUIArguments& args) const override;
 
-        void* m_pObject;                       // +0x08  handler "this"
+        void* m_pObject;                       // +0x08  handler "this" (type-erased: each of the 22 S_Dispatcher instantiations binds a different receiver; void* is correct)
         Ret (*m_pfnHandler)(void*, Args...);   // +0x10  handler thunk (non-virtual member fn address)
     };
 

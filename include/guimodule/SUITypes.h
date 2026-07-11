@@ -61,7 +61,7 @@ struct TUIData
         Vec3      m_vec3;
         uint8_t   m_bool;
         char      m_buffer[16];      // CryStringT<char>/<wchar_t> handle lives here
-        void*     _align8;           // force 8-byte alignment for the string handle
+        void*     _align8;           // 8-byte align device (not a real field): String case stores an 8B CryStringT<char> handle at +0x00 (sub_1804FD208, refcnt at ptr-12); Vec3 case does a QWORD store there
     };
     int32_t m_type;                  // +0x10  EUIDataTypes discriminant (+0x14..+0x17 pad)
 

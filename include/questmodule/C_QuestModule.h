@@ -22,8 +22,8 @@ class C_QuestModule : public framework::C_BaseModule {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_QuestModule;
     C_QuestManager* m_pQuestManager;   // +0x10  Init alloc 120
-    uint64_t        m_unk18;           // +0x18  ctor 0 (C_ActivityManager lives in its own
-                                       //        global, not here)
+    uint64_t        m_unk18;           // +0x18  ctor 0; no writer in Init sub_18182B864 / Deinit sub_182AF2EA4 /
+                                       //        OnModuleMessage sub_182AF2F30 (C_ActivityManager is a separate global) [role UNRESOLVED -- likely pad to 0x20]
 
     [[nodiscard]] static C_QuestModule* GetInstance()
     {

@@ -23,7 +23,8 @@ public:
     float            m_value;       // +0x28
     int32_t          m_int2C;       // +0x2C
     int32_t          m_int30;       // +0x30
-    uint8_t          _unk34[0x1C];  // +0x34..+0x50  ctor tail (likely stolen-item vector @8-aligned +0x38) [UNVERIFIED]
+    uint8_t          _pad34[4];     // +0x34  alignment padding (ctor never writes)
+    std::vector<std::shared_ptr<C_UIFlashHudCrimeStolenItem>> m_stolenItems;  // +0x38  ctor push_back sub_182B5CFF4 (elem sz 16); dtor 0x182B62A54 frees [+0x38..+0x50)
 };
 static_assert(sizeof(C_UIFlashHudCrime) == 0x50, "C_UIFlashHudCrime must be 0x50 (creator sub_182B85FAC)");
 

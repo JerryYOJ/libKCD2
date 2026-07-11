@@ -18,7 +18,7 @@ class C_FactionBase {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_FactionBase;
     virtual ~C_FactionBase() = default;   // +0x00  vptr (C_Faction vtable 0x183B1DF10 in the derived object)
-    void*          m_debugRepLogVptr;     // +0x08  embedded C_DebugReputationLog vptr (extent unresolved)
+    void*          m_debugRepLogVptr;     // +0x08  vtable of embedded C_DebugReputationLog (RTTI 2nd base disp+0x08, vtbl 0x183A334D8); interior +0x10..+0x40 below, owner back-ptr @+0x40
     uint64_t       m_unk10[6];            // +0x10..+0x40  C_DebugReputationLog interior / unresolved (ctor-zeroed)
     C_FactionBase* m_pSelf;               // +0x40  self back-ptr (INFERRED intrusive)
     int32_t        m_i48;                 // +0x48  (ctor-zeroed; role unresolved)

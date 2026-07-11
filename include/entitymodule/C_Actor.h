@@ -113,21 +113,21 @@ public:
     uint8_t  m_unk174[8];                              // +0x174  qword (ctor 0; unaligned)
     float    m_someScale17C;                           // +0x17C  init 1.0
     IMovementController* m_pMovementController;         // +0x180  IActor GetMovementController[69]  VERIFIED
-    void*    m_deferTaskHandle;                        // +0x188  Concurrency::_AutoDeleter<_TaskProcHandle> (CryDeferrable task)
+    void*    m_deferTaskHandle;                        // +0x188  Concurrency::_AutoDeleter<_TaskProcHandle>; CERTIFIED dtor 0x1808E1398 (owns deferred task node)
     C_RagdollManager* m_pRagdollManager;               // +0x190  (0xD0, ctor sub_181366514)  VERIFIED
     C_ActorShoutManager* m_pShoutManager;              // +0x198  OWNED 56B (PostInit; RTTI-verified)
-    void*    m_pHelper1A0;                             // +0x1A0  OWNED 16B {C_Actor* owner, int32, bool} (lazy sub_180C02EA0; class name unresolved)
-    void*    m_subscription1A8;                        // +0x1A8  delegate/subscription token
+    void*    m_pHelper1A0;                             // +0x1A0  OWNED 16B POD {C_Actor* owner@0, int32@8, bool@0xC}; lazy factory sub_180C03A8C (no vtable -> POD, no RTTI name)
+    void*    m_subscription1A8;                        // +0x1A8  OWNED polymorphic T*; dtor sub_18046B5D8 unconditional vtable[0](this,1) (same helper as m_pHitDeathReactions@0x240); T unresolved
     C_DamageZoneManager* m_pDamageZoneManager;         // +0x1B0  (0x90, ctor sub_181366548)  tentative (no RTTI; KCD1 m_damageZones)
-    void*    m_pUnk1B8;                                // +0x1B8  raw ptr (external setter)
-    void*    m_pUnk1C0;                                // +0x1C0  raw ptr (external setter)
-    void*    m_pUnk1C8;                                // +0x1C8  raw ptr (external setter)
+    void*    m_pUnk1B8;                                // +0x1B8  OWNED _smart_ptr<T> (intrusive refcount); dtor sub_1808E15E8 (--*(int*)(p+8)==1 -> vtable[0](this,1)); Cry ref-counted T unresolved
+    void*    m_pUnk1C0;                                // +0x1C0  OWNED _smart_ptr<T> (intrusive refcount); dtor sub_1808E1730 (--*(int*)(p+8)==1 -> vtable[0](this,1)); Cry ref-counted T unresolved
+    void*    m_pUnk1C8;                                // +0x1C8  OWNED _smart_ptr<T> (intrusive refcount); dtor sub_1808E15E8 (same helper/T as +0x1B8); Cry ref-counted T unresolved
     C_PhysicsIgnoreLists m_physicsIgnore;              // +0x1D0  (0x58)
     CryStringT<char> m_str228;                         // +0x228
     CryStringT<char> m_str230;                         // +0x230
     C_ActorPhysicsState* m_pPhysicsState;              // +0x238  (owns 0x98 alloc, ctor sub_181110A8C)  VERIFIED
     C_HitDeathReactions* m_pHitDeathReactions;         // +0x240  (0x290, ctor sub_180515D90)  VERIFIED (NEW in KCD2)
-    void*    m_pHelper248;                             // +0x248  OWNED 32B {C_Actor* owner, ...} (PostInit sub_18124D554; class name unresolved)
+    void*    m_pHelper248;                             // +0x248  OWNED 32B POD {void* owner@0, uint32[3]@8, uint64@0x14}; factory sub_18124D554 (no vtable -> POD, no RTTI name)
     C_ActorHelper* m_pHelper250;                       // +0x250  (0x20 alloc, ctor sub_181332C70)
     C_ActorConditionController* m_pConditionController; // +0x258  (0x80, ctor sub_18136662C)  VERIFIED (NEW in KCD2)
     C_ActorDirtHelper* m_pDirtHelper;                  // +0x260  OWNED 0x50 polymorphic (setter sub_1808DD578; RTTI-verified)
@@ -136,7 +136,7 @@ public:
     wh::combatmodule::C_CombatActor* m_pCombatActor;   // +0x278  VERIFIED (GetOrCreateCombatActor this[79])  [KCD1 was +0x1A0]
     C_ActionActor* m_pActionActor;                     // +0x280  (0x80, ctor sub_180515D90)  VERIFIED
     wh::animationmodule::C_LookAimIK m_lookAimIK;      // +0x288  (0x188) "Bip01 Head", 6 blend channels
-    void*    m_block410[3];                            // +0x410  3 zeroed pointers (vector-shaped but never destructed; identity unresolved)
+    void*    m_block410[3];                            // +0x410  0x18 zero-init by sub_1809CF028; ABSENT from dtor -> non-owning triple, NOT a std::vector; identity unresolved
     uint8_t  _pad428[8];                               // +0x428
     uint32_t m_unk430;                                 // +0x430  (ctor 0)
     uint8_t  m_stateBlock[0x94];                       // +0x434  zeroed state block (ctor memset 0x94; internals unresolved)
@@ -189,7 +189,7 @@ public:
     uint8_t  m_flags9B3;                               // +0x9B3  bitflags (ctor &= 0xFC)
     uint8_t  m_flag9B4;                                // +0x9B4  (ctor 0; FullSerialize[14] checks it)
     uint8_t  _pad9B5[3];                               // +0x9B5
-    void*    m_pDeferredMonster;                       // +0x9B8  I_SystemFromMonsterLODPostponer deferred node (last member)
+    void*    m_pDeferredMonster;                       // +0x9B8  I_SystemFromMonsterLODPostponer deferred node; dtor sub_1808E15D8 detaches via sub_1817450BC if non-null (last member)
 };
 static_assert(sizeof(C_Actor) == 0x9C0, "C_Actor must be 0x9C0");
 static_assert(offsetof(C_Actor, m_stateMachine) == 0x58, "m_stateMachine offset");

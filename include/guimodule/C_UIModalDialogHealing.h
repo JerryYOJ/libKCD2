@@ -28,7 +28,10 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_UIModalDialogHealing;
     std::function<void()> m_onConfirm;    // +0x58  (0x40) "OnHealingDialogConfirmClicked" [role from name]
     std::function<void()> m_onCancel;     // +0x98  (0x40) "OnHealingDialogCancelClicked" [role from name]
-    uint8_t               _unkD8[0x28];   // +0xD8..+0x100  heal-effect delegate state ("OnGetHealEffect"); layout UNVERIFIED
+    std::vector<wh::entitymodule::C_Item*> m_selectedItems;  // +0xD8  heal-item list; passed by-ref to confirm cb std::function<void(vector<C_Item*>&,uint,int)> (lambda sig 0x181F4B989)
+    void*                 m_pHintOwner;   // +0xF0  caller-owned iface (module+0x20); opener 0x182B1452C stores it, close 0x182B11A8F calls vf[1](this,0) then nulls it
+    bool                  m_isActive;     // +0xF8  dialog-open gate; every handler tests *(this+0xF8) (0x182B13ED8); set 1 by opener 0x182B1452C, 0 by close 0x182B1199F
+    uint8_t               _padF9[7];      // +0xF9  pad to sizeof 0x100
 };
 static_assert(sizeof(C_UIModalDialogHealing) == 0x100, "C_UIModalDialogHealing must be 0x100");
 static_assert(offsetof(C_UIModalDialogHealing, m_onCancel) == 0x98, "second callback at 0x98");

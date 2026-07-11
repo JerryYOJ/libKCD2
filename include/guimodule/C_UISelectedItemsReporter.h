@@ -17,7 +17,7 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_UISelectedItemsReporter;
     virtual ~C_UISelectedItemsReporter();   // [0]; further slots UNVERIFIED
 
-    uint64_t m_unk08;   // +0x08  ctor 0 [role UNVERIFIED; possibly owned by Combine]
+    C_UIFlashBase* m_pScreen;   // +0x08  flash-callable target: vtbl[0]/[1] (ChangeSelection true/false handlers 0x181779978/0x182B13890) read this and drive it as a C_UIFlashBase (vf[12] pre-hook + m_pElement@+0x48 + IUIElement::CallFunction vf[+0x228]) via sub_1817799E4
     uint64_t m_unk10;   // +0x10  ctor 0 [role UNVERIFIED; possibly owned by Combine]
 };
 static_assert(sizeof(C_UISelectedItemsReporter) == 0x18, "C_UISelectedItemsReporter must be 0x18");

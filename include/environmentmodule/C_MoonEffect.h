@@ -23,9 +23,9 @@ public:
     conceptmodule::C_TypedPortRef<float> m_port148;   // +0x148  [role UNVERIFIED]
     uint8_t  m_flag188;    // +0x188  ctor 0
     uint8_t  _pad189[3];   // +0x189
-    int32_t  m_unk18C;     // +0x18C  ctor 0
-    int32_t  m_unk190;     // +0x190  ctor 0
-    int32_t  m_unk194;     // +0x194  ctor 0
+    float    m_savedParamA; // +0x18C  saved orig moon celestial param (system vtbl[104]) restored on deactivate; setter 0x182AD7080, reader 0x182AD724C
+    float    m_savedParamB; // +0x190  saved orig moon celestial param (system vtbl[96]) restored on deactivate; setter 0x182AD7080, reader 0x182AD724C
+    int32_t  m_unk194;     // +0x194  ctor 0; no writer beyond ctor across 36 vtable methods (scanned) -- reserved/tail pad
 };
 static_assert(sizeof(C_MoonEffect) == 0x198, "modeled extent (ctor field extent; alloc UNPROVEN)");
 

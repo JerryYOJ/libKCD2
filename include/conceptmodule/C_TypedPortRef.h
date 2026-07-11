@@ -17,7 +17,7 @@ namespace wh::conceptmodule {
 template <typename T>
 class C_TypedPortRef : public C_PortRef {
 public:
-    uint64_t m_unk38;   // +0x38  never written by the ctor [UNVERIFIED]
+    _smart_ptr<C_SharedResource> m_boundValue;   // +0x38  bound resource; dtor sub_18266F018 Releases *(this+0x38) via C_SharedResource::Release when C_PortRef::m_flag30 (+0x30) set; set on bind, not at ctor
 };
 
 }  // namespace wh::conceptmodule

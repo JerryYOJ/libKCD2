@@ -24,7 +24,7 @@ public:
     void _vf16() override;                                 // [16] sub_18041A6A0 (return 1)
     void _vf17() override;                                 // [17] sub_181AA5710 -- writes m_unk10 [U role]
 
-    framework::WUID m_unk10;   // +0x10  written by slot [17] (SetOwner-shaped body) [U role]
+    framework::WUID m_owner;   // +0x10  slot [17] SetOwner body sub_181AA5710 stores the 8-byte owner WUID (*a2 -> [this+0x10])
 };
 static_assert(sizeof(C_HorseInventoryOwnership) == 0x18, "C_HorseInventoryOwnership modeled 0x18 (size inferred, create site not located)");
 

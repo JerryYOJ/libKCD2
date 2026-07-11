@@ -112,9 +112,9 @@ public:
     // ways to establish the attacker<->victim link, exactly like KCD1. sub_182757B10.
     void SetOpponent(C_CombatActor* target);
 
-    uint8_t  m_updateMode;                             // +0x28   init 4
+    uint8_t  m_updateMode;                             // +0x28   init 4 (update-bucket mode; enum domain UNVERIFIED, no reader traced)
     uint8_t  _pad29[7];                                // +0x29
-    uint64_t m_field30;                                // +0x30   (zero-init; unverified)
+    uint64_t m_field30;                                // +0x30   dtor sub_1823C8B4C deregisters &this+0x31 from global registry qword_18492D988; init writer & type unrecovered
 
     // ---- signals (+0x38..+0x1F8, 28 x 0x10; args KCD1-correlated & tentative unless noted) ----
     wh::shared::C_Signal<I_CombatActor&, I_CombatActor&, E_CombatActorStateId, E_CombatActorStateId> m_onCombatStateChange;       // +0x38
@@ -162,7 +162,7 @@ public:
     C_CombatActorVirtualWeapon*   m_pVirtualWeapon;    // +0x258  (0x20)   VERIFIED
     C_CombatModifierAim*          m_pModifierAim;      // +0x260  (0x20)   VERIFIED
     C_CombatModifierLookEnemy*    m_pModifierLookEnemy; // +0x268 (0x20)   VERIFIED
-    void*                         m_pActorRef0;        // +0x270  actor back-ref helper (8B)
+    void*                         m_pActorRef0;        // +0x270  -> 8-byte heap cell holding C_CombatActor* back-ref (builder alloc(8); *cell=this)
 
     // ---- scalars + listeners (+0x278..+0x386) ----
     uint16_t m_flags278;                               // +0x278  (init 0)
@@ -172,13 +172,13 @@ public:
     uint8_t  m_isInitialized;                          // +0x280  init 1
     uint8_t  m_flag281;                                // +0x281  (init 0)
     uint8_t  _pad282[2];                               // +0x282
-    uint8_t  m_field284[8];                            // +0x284  qword (init 0; unaligned)
+    uint8_t  m_field284[8];                            // +0x284  combat runtime state; state-reset sub_1810EFF60 zeroes it as a qword (with m_stateIndex/m_flags278/timers); non-zero writer & sub-type unrecovered
     uint8_t  m_stateFlags28C;                          // +0x28C  masked &0xFC
     uint8_t  _pad28D[3];                               // +0x28D
     float    m_timerA;                                 // +0x290  init -1.0
     float    m_timerB;                                 // +0x294  init -1.0
     uint8_t  m_meleeRuntimeState[0x1C];                // +0x298  gameplay-set state block
-    uint8_t  m_updatePhase;                            // +0x2B4  init 4
+    uint8_t  m_updatePhase;                            // +0x2B4  init 4 (per-frame update phase; enum domain UNVERIFIED)
     uint8_t  _pad2B5[3];                               // +0x2B5
     wh::shared::C_Listeners<C_CombatActorObject, 1>        m_objectListeners;   // +0x2B8  registered subsystem objects
     wh::shared::C_Listeners<C_CombatActorUpdatedObject, 1> m_updateListeners0;  // +0x2E0  per-frame update buckets
@@ -191,9 +191,9 @@ public:
 
     // ---- subsystem region 2 (+0x388..+0x438) ----
     C_CombatRPG*                    m_pCombatRPG;       // +0x388  (0x60)  VERIFIED
-    void*                           m_pActorRef1;       // +0x390  actor back-ref helper (8B)
+    void*                           m_pActorRef1;       // +0x390  -> 8-byte heap cell holding C_CombatActor* back-ref (builder alloc(8); *cell=this)
     C_CombatHumanPhysics*           m_pHumanPhysics;    // +0x398  (0x18)  VERIFIED
-    void*                           m_pStateListener;   // +0x3A0  state-signal listener (0x20, non-poly)
+    void*                           m_pStateListener;   // +0x3A0  -> heap 0x20 non-poly obj (ctor sub_1809179E4): {C_CombatActor* owner; ListNode* conn; qword; qword}; subscribes cb sub_180C5B160 to m_pState(+0x210) signal @+0x18
     C_CombatActorActionManager*     m_pActionManager;   // +0x3A8  (0x70)  VERIFIED
     C_CombatComboManager*           m_pComboManager;    // +0x3B0  (0xF0)  VERIFIED
     C_CombatActorOpponentManager*   m_pOpponentManager; // +0x3B8  (0x40)  VERIFIED
@@ -212,8 +212,8 @@ public:
     C_CombatOpponentAimingListener* m_pOpponentAimingListener; // +0x420 (0x18) VERIFIED (NEW in KCD2)
     C_CombatActorClenchedHand*      m_pClenchedHand;    // +0x428  (0x48)  VERIFIED (NEW in KCD2)
     C_CombatActorActivity*          m_pActivity;        // +0x430  (0x10)  VERIFIED (NEW in KCD2)
-    void*                           m_field438;         // +0x438  zero-init; unverified (likely lazy ptr/reserved)
-    void*                           m_lock;             // +0x440  SRWLOCK (InitializeSRWLock)
+    void*                           m_field438;         // +0x438  ctor 0x1810F05CC zero-init; no writer in ctor/builder/dtor/reset; sits directly before m_lock (lock-guarded lazy ptr candidate, unconfirmed)
+    void*                           m_lock;             // +0x440  SRWLOCK.Ptr -- ctor 0x1810F05D3 InitializeSRWLock(&this+0x440); field IS the lock (one pointer-sized word), not a pointer to a lock
 };
 static_assert(sizeof(C_CombatActor) == 0x448, "C_CombatActor must be 0x448");
 

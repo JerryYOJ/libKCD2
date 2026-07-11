@@ -35,7 +35,7 @@ struct S_MountAnimState {
     bool m_hasAimDirection;  // +0x5D  (getter sets 1)
     uint8_t m_flag5E;        // +0x5E  from movement-controller predicate sub_1823CE124 (MED)
     uint8_t _pad5F;          // +0x5F
-    uint64_t m_unk60;        // +0x60  NOT written by getter/consumers (zero-init + copied); WUID hypothesis UNPROVEN
+    uint64_t m_unk60;        // +0x60  zero-init only (sub_180A709E8 @a1+96=0); producer getter sub_1804B8E88 never writes a3+96; type UNRESOLVED (WUID hypothesis unproven)
     uint8_t m_flag68;        // +0x68  allow/animForced from predicate sub_1823CE130 (MED)
     uint8_t _pad69[7];       // +0x69  tail padding to 0x70
 };

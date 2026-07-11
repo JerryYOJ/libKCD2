@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include <vector>
 #include "I_DebugDraw.h"
 #include "../framework/I_ReadinessTask.h"
 
@@ -19,6 +20,8 @@
 
 namespace wh::xgenaimodule {
 
+class C_LODAgent;   // per-agent LOD record (see C_LODAgent.h)
+
 class C_LODManager
     : public I_DebugDraw,
       public wh::I_ReadinessTask {
@@ -34,7 +37,7 @@ public:
     uint8_t  _pad11[3];        // +0x11
     float    m_scale14;        // +0x14  ctor: 1.0f [U role]
     uint8_t  m_hashSet18[0x38]; // +0x18..+0x50  WH hash-set (node sub_181AB55C0(32); mask 7 @+0x40, count 8 @+0x48) [U interior]
-    uint8_t  _unk50[0x18];     // +0x50..+0x68  [U]
+    std::vector<C_LODAgent*> m_agents50; // +0x50  {first,last,end}; dtor free 0x18332057E, erase memmove 0x1805D2370, elem stride 8 = C_LODAgent*
     uint8_t  m_map68[0x40];    // +0x68..+0xA8  WH map/list (sub_18043C878) [U interior]
     uint64_t m_A8;             // +0xA8  ctor: 0 [U role]
     uint8_t  m_byteB0;         // +0xB0  ctor: 0 [U role]

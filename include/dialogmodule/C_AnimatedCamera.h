@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include "C_DialogCamera.h"
+#include "E_DialogCameraType.h"
 
 // -----------------------------------------------
 // wh::dialogmodule::C_AnimatedCamera -- concrete dialog shot camera (KCD2 1.5.6, kd7u).
@@ -19,7 +20,7 @@ namespace wh::dialogmodule {
 class C_AnimatedCamera : public C_DialogCamera {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_AnimatedCamera;
-    int32_t m_type;      // +0xC8  shot type 0..3 (ctor arg3)
+    E_DialogCameraType m_type;  // +0xC8  shot type (ctor arg3; the manager's 4 cameras use BONE_MASTER..BONE_CLOSEUP)
     uint8_t _padCC[4];   // +0xCC
 };
 static_assert(sizeof(C_AnimatedCamera) == 0xD0, "C_AnimatedCamera must be 0xD0 (alloc 208)");

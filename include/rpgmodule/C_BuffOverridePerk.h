@@ -13,7 +13,7 @@ namespace wh::rpgmodule {
 class C_BuffOverridePerk : public C_Perk {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_BuffOverridePerk;
-    void* m_unk30;   // +0x30  ctor 0 [role UNVERIFIED]
+    void* m_pResolvedDef;   // +0x30  ctor 0; Resolve[9] override (0x1811D682C) caches the sub_1811D6860(m_id) lookup result here [pointer to the buff-override definition/row; pointee not RE'd]. Name inferred.
 };
 static_assert(sizeof(C_BuffOverridePerk) == 0x38, "C_BuffOverridePerk must be 0x38 (operator new(56))");
 

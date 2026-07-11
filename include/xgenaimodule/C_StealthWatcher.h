@@ -23,10 +23,8 @@ public:
     void _vf1() override;           // [1] sub_181A71D30 [U role]
     void _vf2() override;           // [2] sub_180F668C0 -- trespass/stealth-context check (see banner) [U exact signature]
 
-    uint64_t m_unk08;   // +0x08  ctor: 0 [U role]
-    uint64_t m_unk10;   // +0x10  ctor: 0 [U role]
-    uint64_t m_unk18;   // +0x18  ctor: 0 [U role]
-    uint64_t m_unk20;   // +0x20  ctor: 0; the watched-object list consumed by the trespass check [U exact type]
+    boost::container::vector<void*> m_watchList;  // +0x08  flat vector {data,size,cap}; 8-byte elems, sorted insert (add sub_18087889C) / clear (sub_1809DD670); elem type [U]
+    void*    m_watchedTarget;   // +0x20  ptr to polymorphic watched target; trespass sub_180460B88 calls its vslot2 & builds an ownership list, update sub_18061D1D4 reads *(t+8); class [U]
     uint64_t m_unk28;   // +0x28  ctor: 0 [U role]
 };
 static_assert(sizeof(C_StealthWatcher) == 0x30, "C_StealthWatcher must be 0x30 (48)");

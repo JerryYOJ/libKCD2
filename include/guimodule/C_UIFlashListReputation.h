@@ -21,7 +21,8 @@ public:
     bool             m_bool24;      // +0x24
     uint8_t          _pad25[3];     // +0x25
     int32_t          m_int28;       // +0x28
-    uint8_t          _unk2C[0x1C];  // +0x2C..+0x48  ctor tail [UNVERIFIED]
+    uint8_t          _pad2C[4];     // +0x2C  alignment (int32 @+0x28, vector 8-byte aligned)
+    std::vector<std::shared_ptr<C_UIFlashListReputation>> m_children;  // +0x30  child reputation nodes; ctor zeroes {first,last,end}, sub_1807840C8 builds each shared_ptr, push_back sub_1823CD368
 };
 static_assert(sizeof(C_UIFlashListReputation) == 0x48, "C_UIFlashListReputation must be 0x48 (creator sub_180783E20)");
 

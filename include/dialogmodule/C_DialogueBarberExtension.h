@@ -14,20 +14,26 @@
 // exact tail layout UNVERIFIED; offsets of the pinned fields below are asserted, the
 // total size is provisional.
 
+namespace wh::rpgmodule { class C_Barber; }
+
 namespace wh::dialogmodule {
+
+class C_DialogInstance;
+class C_BarberExtensionController;
 
 class C_DialogueBarberExtension : public I_DialogueExtension {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_DialogueBarberExtension;
     bool     m_active;                 // +0x08  [per-extension convention; UNVERIFIED]
     uint8_t  _pad09[7];                // +0x09
-    void*    m_pOwner;                 // +0x10  owning C_DialogInstance [UNVERIFIED]
+    uint16_t m_u10;                    // +0x10  ctor 0 (WORD store; NOT the owner -- owner is at +0x20)
+    uint8_t  _pad12[6];                // +0x12
     int64_t  m_priceSentinel;          // +0x18  ctor -100000
-    void*    _q20;                     // +0x20  [not walked]
-    void*    _q28;                     // +0x28  shared_ptr half? [UNVERIFIED]
+    C_DialogInstance* m_pOwner;        // +0x20  owning dialog (ctor sub_181E68500 arg a2; reads a2+0x280 = C_DialogInstance::m_pParticipant)
+    C_BarberExtensionController* m_pController;  // +0x28  owned; ctor sub_181E68060 (alloc 0x60, ctor sub_181E5DFB0), released on reassign
     std::vector<void*> m_stylesA;      // +0x30  style records (40B stride) [elem type UNVERIFIED]
     std::vector<void*> m_stylesB;      // +0x48  style records (40B stride) [elem type UNVERIFIED]
-    void*    _q60;                     // +0x60  [conflicting observations; UNVERIFIED]
+    wh::rpgmodule::C_Barber* m_pBarber;  // +0x60  owned; ctor sub_181FD3D60 (alloc 0x78, ctor sub_182D25140 stores wh::rpgmodule::C_Barber vftable), released on reassign
     uint32_t _d68;                     // +0x68
     float    m_f6C;                    // +0x6C  ctor 0.5f
 };

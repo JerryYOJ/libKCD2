@@ -2,6 +2,8 @@
 #include <cstdint>
 #include <cstddef>
 #include "S_PerkDefinitionId.h"
+#include "E_SoulStat.h"
+#include "E_SoulSkill.h"
 #include "../CryEngine/CryCommon/CryString.h"
 
 // -----------------------------------------------
@@ -26,15 +28,15 @@ struct S_Perk {
     CryStringT<char> m_str30;     // +0x30  } ui name / description / icon / script hook
     CryStringT<char> m_str38;     // +0x38  } candidates [UNVERIFIED]
     CryStringT<char> m_str40;     // +0x40  }
-    uint32_t m_statSelector;      // +0x48  clamped: > 10 -> 10 (10 = none; 0..3 = stats)
-    uint32_t m_skillSelector;     // +0x4C  clamped: >= 36 -> 35 (35 = none; E_SoulSkill)
+    E_SoulStat  m_statSelector;   // +0x48  clamp >10 -> Count(10)=none (sub_1809409B8; data uses 0..3)
+    E_SoulSkill m_skillSelector;  // +0x4C  clamp >=36 -> Count(35)=none (sub_1809409B8)
     uint32_t m_unk50;             // +0x50  raw copy [level-requirement candidate, UNVERIFIED]
-    uint32_t m_visibility;        // +0x54  clamped: > 3 -> 0
+    uint32_t m_visibility;        // +0x54  clamp >3 -> 0; 4-value visibility enum, names UNVERIFIED
     uint64_t m_id58[2];           // +0x58  16B id [buff/effect candidate, UNVERIFIED]
     uint8_t  m_flag68;            // +0x68  raw byte copy
     uint8_t  _pad69[3];           // +0x69
     uint32_t m_unk6C;             // +0x6C  raw copy
-    int32_t  m_unk70;             // +0x70  converter: negative -> 1 [count/mode, UNVERIFIED]
+    int32_t  m_unk70;             // +0x70  converter sub_1809409B8 0x180940B65: if(v<0) v=1 (SIGNED int32 confirmed); count/mode with min 1 [role UNVERIFIED]
     uint32_t _pad74;              // +0x74
 };
 static_assert(sizeof(S_Perk) == 0x78, "S_Perk must be 0x78 (parsed vector stride 120)");

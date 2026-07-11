@@ -48,13 +48,9 @@ public:
     void* GetValueForWuid(const void* wuid) override;          // [0] 0x32EFF54
     void  GetWuidForKey(void* out, const void* key) override;  // [1] 0x32EFF0C
 
-    void*    m_listHeadA;       // +0x20  intrusive circular list head (node alloc sub_181AB55C0)
+    void*    m_listHeadA;       // +0x20  std::list<T> _Myhead sentinel (self-ref 24B node: {_Next8,_Prev8,val8}); _Mysize @+0x28; standalone (no bucket vec); T (8B value) unknown -- node alloc sub_181AB55C0(sub_180699848(1)=24)
     uint64_t m_listSizeA;       // +0x28  ctor: 0
-    uint32_t _unk30;            // +0x30  [U]
-    float    m_scale34;         // +0x34  ctor: 1.0f [U role]
-    void*    m_listHeadB;       // +0x38  second intrusive list head (32-byte node)
-    uint8_t  _unk40[8];         // +0x40  [U]
-    uint8_t  m_hash48[0x28];    // +0x48..+0x70  hash-map (sub_1803B5774; mask 7 @+0x60, count 8 @+0x68) [U interior]
+    std::unordered_map<uint64_t, void*> m_map30;  // +0x30..+0x70  MSVC _Hash (0x40): traits/EBO @+0x30, max_load_factor 1.0f @+0x34, _List _Myhead @+0x38 / _Mysize @+0x40, bucket vec @+0x48/+0x50/+0x58, _Mask 7 @+0x60, _Maxidx 8 @+0x68; node 32B = pair<K8,V8ptr>; find sub_1807E3D68 uses base this+0x30, FNV-1a hash over 8B key (sub_18208BC00). K exact type unknown (8B); V = ptr to polymorphic entry (GetWuidForKey calls value->vfn+24).
     uint8_t  m_sub70[0x40];     // +0x70..+0xB0  sub-object (sub_1806030C0) [U interior]
     uint64_t m_B0;              // +0xB0  ctor: 0
     C_SmartObjectHelpersManager*    m_pHelpers;    // +0xB8  owned (new 80)

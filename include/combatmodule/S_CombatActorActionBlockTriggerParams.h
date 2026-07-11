@@ -15,7 +15,7 @@
 namespace wh::combatmodule {
 
 struct S_CombatActorActionBlockTriggerParams {
-    uint16_t m_field00;      // +0x00  init 1  (flag/kind; UNVERIFIED)
+    uint16_t m_field00;      // +0x00  WORD 1 written by action base ctor sub_18169965C (0x181699694); only field touched; params embedded in C_ParamAction<S_CombatActorActionBlockTriggerParams,...> [role UNVERIFIED]
     uint8_t  _pad02[6];      // +0x02
 };
 static_assert(sizeof(S_CombatActorActionBlockTriggerParams) == 0x08,

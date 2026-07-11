@@ -32,6 +32,8 @@
 // The string members are CryStringT<char> (a single char* each) - kept as void* here, exactly like
 // CEntity.h / C_Actor.h, so this header stands alone before the KCD2 kcd.h umbrella exists.
 
+struct ISystem;   // engine root (m_pSystem +0x200)
+
 // ---- SDK support types (param interfaces for Offsets::IConsole; global namespace) ----
 
 // Flags used by ICVar registration (EVarFlags); the common ones.
@@ -108,7 +110,11 @@ public:
     uint8_t   m_dqHistory[0x28];         // +0x40  command/scroll history deque (ctor sub_1803DF440) /* tentative */
 
     uint8_t   m_bStaticBackground;       // +0x68  StaticBackground(bool)[19]                       VERIFIED
-    uint8_t   _pad69[0x17];              // +0x69  background/keybind scratch (ctor zeroes 0x6C,0x74)
+    uint8_t   _pad69[3];                 // +0x69
+    int32_t   m_nLoadingBackTexID;       // +0x6C  loading-screen tex id (SetLoadingImage[20]@0x182482e64 stores GetIRenderer()->LoadTexture id here)
+    uint8_t   _blk70[8];                 // +0x70  ctor-zeroed (likely white/font tex ids)
+    int32_t   m_progressRange;           // +0x78  ResetProgressBar[47]@0x18247f9dc sets / TickProgressBar[48] checks   VERIFIED
+    uint8_t   _pad7C[4];                 // +0x7C
 
     void*     m_sInputBuffer;            // +0x80  CryStringT<char> current input line
     void*     m_sReturnString;           // +0x88  CryStringT<char> ExecuteString return string
@@ -116,32 +122,32 @@ public:
     int32_t   m_nTabCount;               // +0x98  autocomplete match index; reset by [45]          VERIFIED
     uint8_t   _pad9C[4];                 // +0x9C
 
-    void*     m_pListHeadA0;             // +0xA0  intrusive circular list head (ctor sub_181AB55C0) /* tentative */
-    void*     m_unkA8;                   // +0xA8  (ctor=0)
-    void*     m_pObjB0;                  // +0xB0  heap obj (ctor sub_180452BA4; dtor sub_181AD7868) /* tentative */
-    void*     m_unkB8;                   // +0xB8  (ctor=0)
+    // std::map<CryStringT<char>, CConsoleCommand> - console COMMAND registry (AddCommand[32/33]@0x18100f1d4 -> this+0xA0).
+    //   80-byte _Tree node: key CryStringT<char>@+32, value CConsoleCommand(~40B: CryString name/exec + CryString help + int flags)@+40.
+    void*     m_mapCommands_head;        // +0xA0  _Tree sentinel (ctor 3-way self-ref + isnil word 0x0101; node=80 via sub_1807B46D8)
+    size_t    m_mapCommands_size;        // +0xA8  _Mysize
+    // std::map<CryStringT<char>, CryStringT<char>> - KEYBIND registry (CreateKeyBind[16]@0x180b908a4 -> this+0xB0).
+    //   48-byte _Tree node: key CryStringT<char>@+32, value CryStringT<char>@+40.
+    void*     m_mapBinds_head;           // +0xB0  _Tree sentinel (ctor sub_180452BA4: node=48, 3-way self-ref + isnil 0x0101)
+    size_t    m_mapBinds_size;           // +0xB8  _Mysize
 
     void*     m_pCVarRegistry;           // +0xC0  variable registry root; a1+0xC0 used by all Register*/GetCVar/Unregister VERIFIED (use)
     uint32_t  m_nCVarCount;              // +0xC8  GetNumVars()[38] = *(u32)0xC8                     VERIFIED
     uint8_t   _padCC[4];                 // +0xCC
 
-    // Cheat-checkable cvar table (std::vector, 0x10-byte elems); GetNumCheatVars()[52]=(end-begin)/16.
-    void*     m_cheatVarsBegin;          // +0xD0                                                    VERIFIED
-    void*     m_cheatVarsEnd;            // +0xD8
-    void*     m_cheatVarsCap;            // +0xE0
+    // std::vector<std::pair<const char*, ICVar*>> - cheat-checkable cvars; 16B elem {const char* name@0, ICVar* pVar@8}.
+    // GetNumCheatVars[52]=(end-begin)/16; CalcCheatVarHash[54]@0x182475d9c -> sub_182474C34 walks this+0xD0 stride 16.
+    std::vector<std::pair<const char*, ICVar*>> m_cheatVars;   // +0xD0  {first,last,end}
 
-    // VF_CHEAT_ALWAYS_CHECK cvar table (std::vector); UnregisterVariable uses a1+0xE8.
-    void*     m_alwaysCheckVarsBegin;    // +0xE8                                                    VERIFIED (use)
-    void*     m_alwaysCheckVarsEnd;      // +0xF0
-    void*     m_alwaysCheckVarsCap;      // +0xF8
+    // std::vector<std::pair<const char*, ICVar*>> - VF_CHEAT_ALWAYS_CHECK cvars; same 16B elem as m_cheatVars.
+    // CalcCheatVarHash[54] hashes this+0xE8..(end-16) stride 16; UnregisterVariable uses this+0xE8.
+    std::vector<std::pair<const char*, ICVar*>> m_alwaysCheckVars;  // +0xE8  {first,last,end}
 
-    // Output print sinks (std::vector<IOutputPrintSink*>); Add/RemoveOutputPrintSink [12/13] a1+0x100.
-    void*     m_outputSinksBegin;        // +0x100                                                   VERIFIED
-    void*     m_outputSinksEnd;          // +0x108
-    void*     m_outputSinksCap;          // +0x110
+    std::vector<IOutputPrintSink*> m_OutputSinks;  // +0x100  {first,last,end}; Add/RemoveOutputPrintSink[12/13] push/erase at this+0x100
 
-    void*     m_pListHead118;            // +0x118  32-byte intrusive list head (ctor sub_1804F75C0(32)) /* tentative */
-    void*     m_unk120;                  // +0x120  (ctor=0)
+    // std::list<T> (T = 16-byte element) - role unresolved. 32-byte list node {_Next,_Prev,T(16)}.
+    void*     m_list118_head;            // +0x118  std::list sentinel (ctor sub_1804F75C0(32): _Next=_Prev=self, no color/isnil word)
+    size_t    m_list118_size;            // +0x120  _Mysize
     uint8_t   m_flag128;                 // +0x128  (ctor=0)
     uint8_t   _pad129[3];                // +0x129
     uint32_t  m_unk12C;                  // +0x12C  (ctor=0)
@@ -149,8 +155,10 @@ public:
     uint32_t  m_unk138;                  // +0x138  (ctor=0)
     uint8_t   _pad13C[4];                // +0x13C
 
-    void*     m_pCommandRegistry;        // +0x140  command registry root (ctor sub_180451E4C; AddCommand[32/33]) /* tentative */
-    void*     m_unk148;                  // +0x148  (ctor=0; registry count)
+    // std::map<CryStringT<char>, IConsoleArgumentAutoComplete*> - AUTOCOMPLETE registry (RegisterAutoComplete[43]@0x18100f524 -> this+0x140).
+    //   48-byte _Tree node: key CryStringT<char>@+32, value IConsoleArgumentAutoComplete*@+40.
+    void*     m_mapArgAutoComplete_head; // +0x140  _Tree sentinel (ctor sub_181AB55C0(sub_180451E4C(1)=48) + 3-way self-ref + 0x0101)
+    size_t    m_mapArgAutoComplete_size; // +0x148  _Mysize
 
     uint8_t   m_conVarSinks[0x10];       // +0x150  IConsoleVarSink* container (ctor sub_1803C4794; Add/RemoveConsoleVarSink[59/60]) VERIFIED (offset)
     void*     m_pListHead160;            // +0x160  56-byte intrusive list head (ctor sub_181AB55C0(56)) /* tentative */
@@ -163,13 +171,13 @@ public:
     int32_t   m_unk180;                  // +0x180  (ctor=-1)
     uint8_t   _pad184[4];                // +0x184
     void*     m_unk188;                  // +0x188  (ctor=0)
-    void*     m_pImage;                  // +0x190  ITexture* background image; GetImage()[18]       VERIFIED
+    ITexture* m_pImage;                  // +0x190  background image (ctor=0); GetImage[18]@0x181a73a30 returns it, SetImage[17]@0x182482e34 stores  VERIFIED
     uint32_t  m_unk198;                  // +0x198  (ctor=0)
     uint8_t   _pad19C[4];                // +0x19C
 
     uint8_t   m_flag1A0;                 // +0x1A0  (ctor=0xFF)
     uint8_t   _pad1A1[7];                // +0x1A1
-    void*     m_sLoadingImage;           // +0x1A8  CryStringT<char> loading-image name (ctor = empty) /* tentative */
+    const char* m_pLoadingImageName;     // +0x1A8  non-owning const char* (ctor lea &byte_183A3D1E0 = empty ""); NOT an owned CryStringT (base dtor never decrefs +0x1A8)
     int32_t   m_unk1B0;                  // +0x1B0  (ctor=-1)
     uint8_t   _blk1B4[0x1C];             // +0x1B4  ctor-zeroed block (0x1B4,0x1C0,0x1C8 stores)
     uint32_t  m_unk1D0;                  // +0x1D0  (ctor=0)
@@ -190,7 +198,7 @@ public:
     uint8_t   _pad1F1[7];                // +0x1F1
     uint64_t  m_cheatVarHash;            // +0x1F8  GetCheatVarHash()[56]                            VERIFIED
 
-    uint64_t  m_unk200;                  // +0x200  (ctor=0)
+    ISystem*  m_pSystem;                 // +0x200  engine ISystem* (ctor=0, set post-init); GetIRenderer via vtbl+0x2D8 in SetLoadingImage@0x182482e64; used by GetCVar@0x1809d8d38 (vtbl+0x5F8)
     uint8_t   _blk208[0x30];             // +0x208  ctor-zeroed block (0x208,0x210,0x218,0x228,0x230 stores)
     int32_t   m_state238;                // +0x238  get-set by vtable slot [64] (ctor=0)            VERIFIED (accessor)
     uint8_t   _pad23C[4];                // +0x23C

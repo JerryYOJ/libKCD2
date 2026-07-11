@@ -29,7 +29,7 @@ public:
     std::set<T>              m_value;    // +0x08  the stored set (0x10)
     typename Own::OwnerPtr   m_pOwner;   // +0x18  owning combat actor
     typename SigSet::Signal  m_signal;   // +0x20  change-notify (0x10)
-    uint8_t                  _pad30[8];  // +0x30
+    uint8_t                  _pad30[8];  // +0x30  tail pad (empty trailing Trace/Own policy member + align); never ctor-init/dtor/read -- forces sizeof to 0x38 (cf. C_ModelArrayProperty::_tail)
 };
 
 }  // namespace wh::shared

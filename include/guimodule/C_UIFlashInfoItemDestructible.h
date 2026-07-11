@@ -16,7 +16,7 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_UIFlashInfoItemDestructible;
     void FillUIArgs(void* pArgs) const override;   // [1] 0x182B6349C
 
-    uint8_t _unk50[4];   // +0x50  ctor-only gap [UNVERIFIED]
+    float   m_float50;   // +0x50  ctor movss [rsi+50h]=sub_18096F7D4(src) (float); FillUIArgs reads as GFxValue number
     int32_t m_int54;     // +0x54  tag-2 sub_1803C1F4C
 };
 static_assert(sizeof(C_UIFlashInfoItemDestructible) == 0x58, "C_UIFlashInfoItemDestructible must be 0x58 (creator sub_182B0C580)");

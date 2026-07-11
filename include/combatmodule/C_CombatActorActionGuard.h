@@ -36,14 +36,16 @@ class C_CombatActorActionGuard
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_CombatActorActionGuard;
     // ---- C_CombatActorActionGuard own data (+0x70..+0x98; init 0 unless noted) ----
-    uint64_t m_field70;            // +0x70  (init 0)
-    uint64_t m_field78;            // +0x78  (init 0)
-    uint64_t m_field80;            // +0x80  (init 0)
-    uint16_t m_field88;            // +0x88  (init 0)
+    _smart_ptr<I_CombatActorActionPrivate> m_action0;  // +0x70  owning ref to a delegate sub-action; ctor 0, dtor 0x18171101E Releases via vtbl[2]
+    _smart_ptr<I_CombatActorActionPrivate> m_action1;  // +0x78  owning ref to a delegate sub-action; ctor 0, dtor 0x18171100F Releases via vtbl[2]
+    _smart_ptr<I_CombatActorActionPrivate> m_action2;  // +0x80  owning ref to a delegate sub-action; ctor 0, dtor 0x181710FFD Releases via vtbl[2]
+    bool     m_field88;            // +0x88  bool; dtor-path slot[58] skips a reset (context+336) when set
+    bool     m_field89;            // +0x89  bool; dtor-path slot[58] skips a reset (context+1488=-1) when set; setters 0x181A71900/0x181A71910 write 0/1
     uint16_t _pad8A;               // +0x8A
-    uint32_t m_field8C;            // +0x8C  (init 0)
-    uint32_t m_field90;            // +0x90  (init 0)
-    uint16_t m_field94;            // +0x94  (init 1)   -- the one non-zero-initialised flag
+    uint32_t m_field8C;            // +0x8C  (init 0)  dword copied to action-info out[0] by slot[35] 0x1809E37FF; role UNVERIFIED
+    uint32_t m_field90;            // +0x90  (init 0)  dword copied to action-info out[4] and tested (if(!field90)) by slot[35] 0x1809E380A/0x1809E381E; role UNVERIFIED
+    bool     m_field94;            // +0x94  bool init 1; virtual getter slot[30] 0x181A7D990 returns this byte
+    uint8_t  _pad95;               // +0x95
     uint16_t _pad96;               // +0x96
 };
 static_assert(sizeof(C_CombatActorActionGuard) == 0x98, "ctor sub_180916CF4 allocates 0x98");

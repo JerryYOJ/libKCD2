@@ -21,7 +21,7 @@ public:
     ~C_AreaProximityManager() override;          // [0] sub_1832B7430
     void OnModuleMessage(void* msg) override;    // [1] sub_18047A408
 
-    void*    m_pSubscribers;   // +0x08  head of 112-byte intrusive tree/list (sentinel self-refs)
+    void*    m_pSubscribers;   // +0x08  MSVC std::_Tree head node (std::set/map): sentinel 0x70 (_Left/_Parent/_Right=self @+0/+8/+16, _Color=_Isnil=1 -> WORD 0x0101 @+24, _Myval @+0x20, value 0x50); companion _Mysize @+0x10 [element type U]
     uint64_t m_10;             // +0x10  ctor: 0 [U role]
     bool     m_bRegistered;    // +0x18  toggled by OnModuleMessage (65 -> 1; 52/63/77 -> 0)
     uint8_t  _pad19[7];        // +0x19

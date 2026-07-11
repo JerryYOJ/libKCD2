@@ -16,7 +16,8 @@ struct S_Tracker {
     inline static constexpr auto RTTI = Offsets::RTTI_S_Tracker;
     virtual ~S_Tracker();   // [0]; slot roles not mapped
 
-    uint64_t m_unk08;       // +0x08  ctor 0 [role UNVERIFIED]
+    int32_t m_field08;      // +0x08  ctor sub_181A8C080 stores arg2 here [role UNVERIFIED]
+    int32_t m_field0C;      // +0x0C  ctor sub_181A8C080 stores arg3 here [role UNVERIFIED]
 };
 static_assert(sizeof(S_Tracker) == 0x10, "S_Tracker must be 0x10 (C_CarryItemTarget embedding)");
 

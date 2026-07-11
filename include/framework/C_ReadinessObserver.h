@@ -16,17 +16,18 @@
 
 namespace wh {
 
+class I_ReadinessService;   // RTTI .?AVI_ReadinessService@wh@@
+
 class C_ReadinessObserver {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_ReadinessObserver;
     virtual ~C_ReadinessObserver() = default;   // +0x00  vptr (slot order UNVERIFIED)
-    void*    m_pReadinessSystem;   // +0x08  readiness-system backref (ctor arg; concrete type not RE'd)
+    I_ReadinessService* m_pReadinessSystem;  // +0x08  readiness service (ctor stores env->framework->GetReadinessService()); dtor unregisters via vslot3
     CryStringT<char> m_eventName;  // +0x10  observed event (e.g. "AfterGameLoad")
     int32_t  m_int18;              // +0x18  (ctor 0; role unresolved)
     uint32_t _pad1C;               // +0x1C
     CTimeValue m_time;             // +0x20  init -100000 ("never"; last-signal time -- INFERRED)
-    uint64_t _unk28[7];            // +0x28..+0x60  ctor-unwritten observer state (UNRESOLVED)
-    uint64_t m_qw60;               // +0x60  (ctor 0; role unresolved)
+    std::function<void()> m_callback;  // +0x28  (0x40) deferred nullary callback; MSVC impl ptr @+0x60 (0 = empty), storage +0x28..+0x5F
     uint8_t  m_flag68;             // +0x68  (ctor 0; role unresolved)
     uint8_t  _pad69[7];            // +0x69
 };

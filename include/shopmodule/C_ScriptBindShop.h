@@ -33,9 +33,9 @@ class C_ScriptBindShop : public ::CScriptableBase   // +0x00  (0x60)
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_ScriptBindShop;
     Offsets::IScriptSystem* m_pSS2;          // +0x60  raw ctor pScriptSystem
-    void*                   m_pSubsystem;    // +0x68  = pScriptSys->vf79() result (pointee unresolved)
-    void*                   m_pShopManager;  // +0x70  0 at ctor; populated during module wiring --
-                                             //        OpenInventory reads it as the shop-manager ptr (sub_18152EDA4)
+    Offsets::IScriptSystem* m_pSubsystem;    // +0x68  == base m_pSS: Init a2 (0x18144CE16); CreateTable vf13/byte0x68 called on it @0x18144CE2B
+    C_ShopModule*           m_pShopManager;  // +0x70  0 at ctor; owning module written by C_ShopModule::Init @0x1819A1A85
+                                             //        OpenInventory 0x182EFE944 -> sub_18152EDA4 reads *(module+0x10) = shop-list head
 };
 static_assert(sizeof(C_ScriptBindShop) == 0x78, "C_ScriptBindShop must be 0x78");
 

@@ -19,6 +19,8 @@
 
 namespace wh::xgenaimodule::movement {
 
+class C_FormationSpine;   // owning spine (pools puppets per spacing key)
+
 class C_FormationSpinePointPuppet : public C_PuppetAdapter {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_FormationSpinePointPuppet;
@@ -44,10 +46,12 @@ public:
     void _vf20() override;
 
     framework::WUID m_wuid;         // +0x08  generated: (gen | 0x1300000000000000)
-    uint8_t         _unk10[0x24];   // +0x10..+0x33  not touched by ctor [U]
-    uint8_t         m_byte34;       // +0x34  ctor: 0 [U role]
+    Vec3            m_cachedPoint;      // +0x10  cached spine point at m_spacing (sub_1832A524C: from sub_1832A15A4)
+    Vec3            m_cachedDir;        // +0x1C  cached normalized tangent/dir (sub_1832A524C: from sub_1832A123C)
+    Vec3            m_cachedScaledDir;  // +0x28  cached m_cachedDir * scalar sub_1832A3490 (sub_1832A524C)
+    bool            m_transformCached;  // +0x34  cache-valid flag: ctor 0, set 1 by sub_1832A524C after filling m_cached* (gate @0x1832A525B)
     uint8_t         _pad35[3];      // +0x35
-    void*           m_owner;        // +0x38  pool owner (holds the refcounted per-spacing vector) [U type]
+    C_FormationSpine* m_owner;      // +0x38  owning spine; pools this puppet per m_spacing (release sub_1832A55DC, cache src sub_1832A524C)
     float           m_spacing;      // +0x40  pool key
     uint8_t         _pad44[4];      // +0x44
 };

@@ -74,8 +74,8 @@ class C_ScriptBindSoul : public ::CScriptableBase   // +0x00  (0x60)
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_ScriptBindSoul;
     Offsets::IScriptSystem* m_pSS2;        // +0x60  raw ctor pSS (*a2; base +0x50 holds the vf[+0x278] accessor result)
-    void*                   m_pGlobalSys;  // +0x68  = qword_18492D8A0 (runtime-init global, 0 statically; INFERRED gEnv/module singleton)
-    void*                   m_pOwner;      // +0x70  ctor a4 (INFERRED owning module/context)
+    void*                   m_pGlobalSys;  // +0x68  = qword_18492D8A0 snapshot: a global vtable-bearing engine singleton (accessor 0x180479B4C calls its vf[14] then vf[74]) [exact class UNVERIFIED]
+    C_SoulList*             m_pOwner;      // +0x70  owning soul list (ctor a4 = module->m_pSoulList @C_RPGModule+0x80)
 };
 static_assert(sizeof(C_ScriptBindSoul) == 0x78, "C_ScriptBindSoul must be 0x78");
 static_assert(offsetof(C_ScriptBindSoul, m_pOwner) == 0x70, "owner at 0x70");

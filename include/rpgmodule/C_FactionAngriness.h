@@ -22,7 +22,7 @@ public:
     int32_t    m_value;       // +0x08  angriness value; ctor default = global tuning table
                               //        sub_180649D30()[721] (value not dereferenced)
     uint32_t   _pad0C;        // +0x0C
-    uint64_t   m_unk10;       // +0x10  (ctor 0; INFERRED current/cached level or node ptr)
+    uint64_t   m_decayDeadline;// +0x10  decay-deadline timestamp (game-clock ms *(*(sub_1809155C8()+0x1A8)+0x48)); vtbl[2] 0x180474D94 sets = nodeTime + cfg[727]*3600000; setter vtbl[3] 0x1803F3910 resets to 0 when m_value set (ctor 0)
     C_Faction* m_pOwner;      // +0x18  back-ptr (ctor arg)
     bool       m_flag20;      // +0x20  channel flag: instance @+0xE8 = true, @+0x138 = false
     uint8_t    _pad21[7];     // +0x21

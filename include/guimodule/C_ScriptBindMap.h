@@ -23,7 +23,7 @@ class C_ScriptBindMap : public CScriptableBase {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_ScriptBindMap;
     // Same bind tail pair as C_ScriptBindUI (see there; +0x60 identity UNVERIFIED).
-    void*                   m_pGameFramework;   // +0x60
+    Offsets::ISystem*       m_pSystem;          // +0x60  gEnv ISystem: framework->GetISystem() (IGameFramework vf[0x98]); its vf[0x278]() = gEnv->pScriptSystem -> m_pScriptSystem@+0x68
     Offsets::IScriptSystem* m_pScriptSystem;    // +0x68
 };
 static_assert(sizeof(C_ScriptBindMap) == 0x70, "C_ScriptBindMap must be 0x70");

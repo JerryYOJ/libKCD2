@@ -11,10 +11,12 @@
 
 namespace wh::rpgmodule {
 
+struct S_PerkCompanion;   // row type (see S_PerkCompanion.h)
+
 class C_CompanionPerk : public C_Perk {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_CompanionPerk;
-    void* m_unk30;   // +0x30  ctor 0 [role UNVERIFIED]
+    S_PerkCompanion* m_pCompanionRow;   // +0x30  Resolve[9] 0x18116DA84: resolved perk_companion row (sub_18116DAB0 lookup of m_id, null if absent); ctor 0. Activate 0x180A20180 reads +0x10 m_companionType
 };
 static_assert(sizeof(C_CompanionPerk) == 0x38, "C_CompanionPerk must be 0x38 (ctor write extent)");
 

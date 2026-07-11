@@ -25,9 +25,7 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_TemporaryFactionEffect;
     conceptmodule::C_TypedArrayPortRef<std::vector<I_Soul*>> m_soulsPort;    // +0x88
     conceptmodule::C_TypedPortRef<S_FactionDefinitionID> m_factionIdPort;    // +0xC8
-    uint64_t m_unk108;   // +0x108  ctor 0 } vector-shaped triple
-    uint64_t m_unk110;   // +0x110  ctor 0 } [std::vector INFERRED, element type unknown]
-    uint64_t m_unk118;   // +0x118  ctor 0 }
+    std::vector<uint64_t> m_vec108;  // +0x108  {begin,end,capEnd}; std::vector PROVEN (ctor 0x1812A1061 zeros triple; dtor sub_1803E6C3C frees begin, (capEnd-begin)&~7, no per-elem dtor loop) -- 8-byte trivially-destructible elems (I_Soul*/WUID candidates; element type UNRESOLVED)
 };
 static_assert(sizeof(C_TemporaryFactionEffect) == 0x120,
               "C_TemporaryFactionEffect must be 0x120 (operator new(288))");

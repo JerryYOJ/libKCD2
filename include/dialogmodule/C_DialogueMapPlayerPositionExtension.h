@@ -23,8 +23,9 @@ public:
     // +0x00 I_DialogueExtension vptr / +0x08 I_SourceMonitorListener vptr
     bool    m_active;     // +0x10  [role UNVERIFIED]
     uint8_t _pad11[7];    // +0x11
-    void*   m_pOwner;     // +0x18  owning C_DialogInstance [role UNVERIFIED]
-    void*   _q20;         // +0x20  [not walked]
+    C_DialogInstance* m_pOwner;  // +0x18  owning dialog (ctor sub_181E6B4F0 arg a2)
+    uint8_t _b20;         // +0x20  ctor zeroes 1 byte [role UNVERIFIED; not a pointer]
+    uint8_t _pad21[7];    // +0x21
 };
 static_assert(sizeof(C_DialogueMapPlayerPositionExtension) == 0x28,
               "C_DialogueMapPlayerPositionExtension must be 0x28");

@@ -21,7 +21,7 @@ public:
     void _vf7() override;  void _vf8() override;  void _vf9() override;
     void _vf10() override; void _vf11() override;   // [1..11] impls [U roles]
 
-    uint8_t m_genderFlag;   // +0x10  ctor: 1 [U meaning]
+    uint8_t m_genderFlag;   // +0x10  gender selector {0..3}: ctor default 1, overwritten by parse slot [9] sub_1819D4BAC (atoi, rejects >3); member names UNVERIFIED
     uint8_t _pad11[7];      // +0x11
 };
 static_assert(sizeof(C_SmartEnvironmentSoulGenderBehaviorCondition) == 0x18, "must be 0x18 (factory new 24)");

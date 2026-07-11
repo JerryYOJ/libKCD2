@@ -6,6 +6,7 @@
 #include "I_DialogCommandReceiver.h"
 #include "I_DialogInteractionCallback.h"
 #include "C_PlayerDialogController.h"
+#include "S_DialogParams.h"
 #include "../entitymodule/I_ActorSpeakCallback.h"
 #include "../xgenaimodule/I_IntermissionInvoker.h"
 
@@ -40,13 +41,15 @@ class C_DialogInstance
 {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_DialogInstance;
-    uint8_t  _unk30[0x128];           // +0x030..+0x157  [not walked]
-    void*    m_pScene;                // +0x158  232-byte scene/interaction runtime (built
-                                      //         sub_180D58108; actor vector @+0, flags @+188)
+    uint8_t  _unk30[0x28];            // +0x030..+0x057  0x28B obj (ctor sub_1808DCBEC / dtor sub_1808DB258)
+    S_DialogParams m_params;          // +0x058  embedded copy; copy-ctor sub_18093CBD4 stores S_DialogParams vftable (0xE8)
+    uint8_t  _unk140[0x18];           // +0x140  std::vector<16B elem> (dtor sub_181E62E50; elem dtor sub_18086F8D0 on elem+8)
+    void*    m_pScene;                // +0x158  ->232B non-poly scene runtime; Init sub_180D577A8 allocs 0xE8, builds
+                                      //         sub_180D58108 (std::vector<32B> actors @+0, std::vector<8B> @+72, flags dword @+188)
     uint8_t  _unk160[0x118];          // +0x160..+0x277  [not walked]
     int32_t  m_phase;                 // +0x278  Init sets 23 on abort
     uint8_t  _pad27C[4];              // +0x27C
-    void*    m_pParticipant;          // +0x280  gates PlayerDialogController creation
+    void*    m_pParticipant;          // +0x280  ctor arg a6 (= *(dialogMgr+0x280)); non-null + I_Dialog vf gate m_pPlayerCtl create in Init sub_180D577A8
     uint8_t  _unk288[0x14];           // +0x288..+0x29B  [not walked]
     uint16_t m_stateWord;             // +0x29C  reset to 256 by Haggle-OnEnd + interaction cb
     uint8_t  _unk29E[0x4A];           // +0x29E..+0x2E7  [not walked]

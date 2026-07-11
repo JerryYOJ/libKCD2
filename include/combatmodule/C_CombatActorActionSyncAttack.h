@@ -37,7 +37,7 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_CombatActorActionSyncAttack;
     C_CombatActionHelperAttack* m_pAttackHelper;  // +0x90  (alloc 0x50; owner = this HelperAttackOwner subobject @+0x88)
     C_CombatActionEarlyExitHelper* m_pSyncHelper;    // +0x98  (alloc 0x18)
-    uint64_t                    m_unknown_A0;     // +0xA0  (init 0)
+    void*                       m_pSyncPartner;   // +0xA0  owning _smart_ptr back-ref to the paired sync action (pointee class unresolved); OnStop sub_180D4BA30 SetPriority(2) @0x180D4BA59, zeroes pointee+0xC0 @0x180D4BA61, then releases null+slot2 via sub_180C5385C @0x180D4BA6C -- identical +0xA0 back-ref mechanism documented in C_CombatActorActionSyncHit / C_CombatActorActionSyncPerfectBlock
     bool                        m_syncFlag;       // +0xA8  (init 0)
     uint8_t                     _padA9[7];        // +0xA9
 };

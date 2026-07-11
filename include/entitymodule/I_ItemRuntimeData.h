@@ -33,16 +33,19 @@ public:
     virtual ~I_ItemRuntimeData() = 0;   // vtable slot0 = _purecall in the binary (abstract);
                                         // real deletion goes through slot22 (ref-release, vf(obj,1))
 
-    void*   m_sentinel08[2];    // +0x08  embedded 0x10 node the list ptrs point at (UNRESOLVED:
-                                //        intrusive-list sentinel or signal-like sub-object)
+    uint8_t m_sboInline[0x10];  // +0x08  SBO inline storage: 1 element (stride 0x10) of the small-vector @+0x28.
+                                //        NOT a list sentinel. In-use flag is m_flag18 @+0x18 (=inline_ptr+0x10).
+                                //        Element type UNRESOLVED (no external insert site found).
     bool    m_flag18;           // +0x18  (=0)
     uint8_t _pad19[7];          // +0x19
     void*   m_pListNext;        // +0x20  init = &m_sentinel08 (empty intrusive list)
-    void*   m_pListPrev;        // +0x28  init = &m_sentinel08
+    void*   m_pSboInlinePtr;    // +0x28  = &m_sboInline; base of the SBO small-vector control block
+                                //        {inline_ptr@+0x28, begin@+0x30, end@+0x38, cap_end@+0x40}, element stride 0x10
     std::vector<void*> m_vec30; // +0x30  REAL element stride 0x10 (element type unresolved; freed
                                 //        via sub_180FF9998 in dtor)
     C_Item* m_pOwner;           // +0x48  owning item back-ptr (ctor a2)  VERIFIED
-    void*   m_pCache50;         // +0x50  (=0; INFERRED cached provider ptr)
+    void*   m_pProvider50;      // +0x50  settable provider ptr: virtual setter slot8=sub_180EEF62C (stores arg or
+                                //        default &unk_1855A5060 when null), clearer slot10=sub_181A88CB0 (=0). Pointee type UNRESOLVED
 };
 static_assert(sizeof(I_ItemRuntimeData) == 0x58, "I_ItemRuntimeData must be 0x58");
 static_assert(offsetof(I_ItemRuntimeData, m_pOwner) == 0x48, "owner back-ptr at 0x48");

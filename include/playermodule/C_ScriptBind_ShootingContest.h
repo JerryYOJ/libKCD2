@@ -28,7 +28,7 @@ namespace wh::playermodule {
 class C_ScriptBind_ShootingContest : public CScriptableBase {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_ScriptBind_ShootingContest;
-    void* m_pOwner;   // +0x60  ctor-zeroed (no owner passed; slot exists for the shared layout)
+    void* m_pOwner;   // +0x60  ctor sub_180EF758C @0x180EF75B0 zeros it (single-arg ctor, no owner passed); shared-layout slot, always null for this bind
 };
 static_assert(sizeof(C_ScriptBind_ShootingContest) == 0x68, "C_ScriptBind_ShootingContest must be 0x68");
 

@@ -45,7 +45,7 @@ public:
     int32_t  m_type;           // +0x08  ctor arg (C_ReputationChangeDatabase passes 1); Load
                                //        verifies it against the table handle's type dword
     uint32_t _pad0C;           // +0x0C
-    uint64_t m_unk10;          // +0x10  NOT initialized by the ctor chain [UNVERIFIED]
+    uint64_t m_unk10;          // +0x10  VERIFIED uninit: ctor sub_180EF4F30 writes +0x08 (m_type) then vec +0x18/+0x20/+0x28, skips +0x0C/+0x10; Load 0x180EF3A4C never touches it; no writer found -- type/role unresolved
     std::vector<void*> m_vec18;// +0x18  ctor zeroes begin/end/cap; element type UNRESOLVED
                                //        (listener/pending list candidate)
 };

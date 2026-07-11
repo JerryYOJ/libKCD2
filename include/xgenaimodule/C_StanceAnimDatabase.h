@@ -28,7 +28,7 @@ class C_StanceAnimDatabase : public databasemodule::C_ObjectTreeDatabase<S_Stanc
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_StanceAnimDatabase;
 
-    const void* m_iface78Vptr;   // +0x78  2nd-base subobject vptr (vtable rva 0x3AD7FB8, 1 slot) -- raw-modeled, iface identity [U]
+    const void* m_iface78Vptr;   // +0x78  vptr of 2nd base wh::xgenaimodule::I_StanceAnimDatabase (RTTI-certified; vtable rva 0x3AD7FB8, 1 slot sub_1814D8EC8) -- SHOULD be a public base; raw-modeled per escape hatch
     uint8_t     m_byte80;        // +0x80  ctor write [U role]
     uint8_t     _pad81[7];       // +0x81
 };

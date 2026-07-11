@@ -54,12 +54,11 @@ public:
     uint8_t  _padE1[7];         // +0xE1
     uint8_t  m_subE8[0x348];    // +0xE8..+0x430  big sub-object (sub_180EC4B30) [U interior]
     uint64_t m_430;             // +0x430  ctor: 0
-    void*    m_defaultRep438;   // +0x438  &unk_185602E98 (default rep) [U type]
+    void*    m_defaultRep438;   // +0x438  head of a DynArray-family length-prefixed buffer (16-byte elems); dtor 0x1824B8214 frees size=count<<4, count@ptr-8; shared-empty sentinel &unk_185602E98; element type [U]
     int16_t  m_id440;           // +0x440  ctor: -1
     int16_t  m_id442;           // +0x442  ctor: -1
     uint8_t  _pad444[4];        // +0x444
-    uint8_t  _unk448[0x10];     // +0x448..+0x458  ctor: 0 [U roles]
-    uint8_t  _unk458[8];        // +0x458  [U]
+    std::vector<I_SmartAreasManagerListener*> m_listeners;  // +0x448..+0x460  {first@+0x448,last@+0x450,end@+0x458}; AddListener (I_SmartAreaManager slot16 / vtbl+128) push_back 0x180AF27E0; sorted insert/erase 0x1832C42EC; dtor frees 0x1832C1D14
 };
 static_assert(sizeof(C_SmartAreaManager) == 0x460, "C_SmartAreaManager must be 0x460 (alloc 1120 at sub_1807D24D8)");
 

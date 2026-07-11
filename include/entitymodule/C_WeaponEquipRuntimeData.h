@@ -18,7 +18,7 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_WeaponEquipRuntimeData;
     float    m_equipState[4];   // +0xA8  OWORD zero-init (INFERRED 4 floats, equip/aim state --
                                 //        no reader decompiled)
-    int32_t  m_fieldB8;         // +0xB8  (=0; role unresolved)
+    int32_t  m_fieldB8;         // +0xB8  int32 scalar (ctor 0; clone dword-copy 0x180F1974D); role unresolved
     uint32_t _padBC;            // +0xBC
 };
 static_assert(sizeof(C_WeaponEquipRuntimeData) == 0xC0, "C_WeaponEquipRuntimeData must be 0xC0");

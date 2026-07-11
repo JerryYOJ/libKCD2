@@ -21,7 +21,7 @@ namespace wh::combatmodule {
 
 struct S_CombatActorActionSyncAttackParams : public I_CombatActionAttackHelperParams {
     inline static constexpr auto RTTI = Offsets::RTTI_S_CombatActorActionSyncAttackParams;
-    uint64_t m_field10;   // +0x10  (init 0; sync-specific; role UNVERIFIED)
+    uint64_t m_field10;   // +0x10  init 0 (ctor sub_180C621A0@0x180C621EB); NOT read by any of the 22 SyncAttack getters (all deref m_pAttackData@+0x08); creator sub_180C61FA8 never writes it. Role UNVERIFIED.
 };
 static_assert(sizeof(S_CombatActorActionSyncAttackParams) == 0x18);
 

@@ -37,7 +37,7 @@ public:
     bool SaveOverride(void* writer) override;
     bool LoadOverride(void* reader) override;
 
-    uint64_t m_unk08[3];   // +0x08..+0x1F  ctor zeroes all three [U roles]
+    std::vector<framework::WUID> m_extraOwners;   // +0x08  {first,last,end}; extra owners only (getters return no-owner sentinel, setters are no-ops)
 };
 static_assert(sizeof(C_NoOwnerOwnership) == 0x20, "C_NoOwnerOwnership must be 0x20");
 

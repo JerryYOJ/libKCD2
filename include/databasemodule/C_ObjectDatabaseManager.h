@@ -27,7 +27,7 @@ class C_ObjectDatabaseBase;
 // Compact 16B-entry container (shared zero sentinel + two int16 hints); see C_FactionManager.h
 // for the family notes.
 struct S_DbCompactMap {
-    void*   m_entries;   // +0x00  shared zero sentinel while empty (unk_1856664D8)
+    void*   m_entries;   // +0x00  ptr to size-prefixed 16B-entry block (int32 count @ptr-8); shared zero sentinel unk_1856664D8 while empty; teardown sub_181AB8C4C / grow sub_180396724 (key/value element semantics UNRESOLVED)
     int16_t m_hint0;     // +0x08  init -1
     int16_t m_hint1;     // +0x0A  init -1
     uint8_t _pad0C[4];   // +0x0C
@@ -46,7 +46,7 @@ public:
 
     S_DbCompactMap m_compact10;   // +0x10  [role UNRESOLVED]
     S_DbCompactMap m_compact20;   // +0x20  [role UNRESOLVED]
-    uint64_t m_unk30[3];          // +0x30  ctor zeroes +0x30..+0x47
+    std::vector<C_ObjectDatabaseBase*> m_loadList;   // +0x30  load/reload working set; same std::vector teardown (sub_1803E6C3C) as +0x48; iterated in sub_180EF4048/sub_182740ED0 [role-name inferred]
     std::vector<C_ObjectDatabaseBase*> m_databases;  // +0x48  every db self-registers here (ctor push)
     // +0x60  stock MSVC std::unordered_map (1.0f/mask 7/maxidx 8 fingerprint; 56-byte nodes) --
     // name -> database candidate [key/value typing UNVERIFIED]
@@ -54,7 +54,7 @@ public:
                        wh::shared::S_DefaultHash<uint64_t>> m_map60;   // +0x60
     uint16_t m_flagsA0;           // +0xA0  ctor 0
     uint8_t  _padA2[6];           // +0xA2
-    uint64_t m_unkA8;             // +0xA8  ctor 0
+    void*    m_pLevelLoadJob;     // +0xA8  owned heap obj (0x58B, [+0x00]=JobManager::SJobState::SJobStateImpl*) = async level-load job; alloc'd on system evt 27 (sub_1804DA550), cleared on LEVEL_LOAD_END evt 28; dtor frees via sub_181141560+sub_181AB5160
 };
 static_assert(sizeof(C_ObjectDatabaseManager) == 0xB0, "C_ObjectDatabaseManager must be 0xB0 (ctor sub_1814BCFF8)");
 static_assert(offsetof(C_ObjectDatabaseManager, m_databases) == 0x48, "database vector at 0x48");

@@ -16,7 +16,7 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_BuffPerk;
     uint64_t m_buffId[2];   // +0x30  16-byte buff id; ctor = the invalid constant
                             //        (buff GUID candidate -- interior typing UNVERIFIED)
-    void*    m_pUnk40;      // +0x40  ctor 0 [role UNVERIFIED]
+    void*    m_pActiveBuff;      // +0x40  ctor 0; activation worker sub_180470F98 stores a buff-instance pointer here via sub_1804712D0, back-links it (*(ptr+0x20)=this) and validity-checks it via sub_18039B210 [pointer to the applied buff instance; pointee not RE'd]. Name inferred.
 };
 static_assert(sizeof(C_BuffPerk) == 0x48, "C_BuffPerk must be 0x48 (operator new(72))");
 

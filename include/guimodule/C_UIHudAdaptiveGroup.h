@@ -33,15 +33,15 @@ public:
 
     float    m_param58;                       // +0x58  ctor helper sub_180A70610 a3 [role UNVERIFIED]
     float    m_param5C;                       // +0x5C  helper a4 [role UNVERIFIED]
-    int32_t  m_unk60;                         // +0x60  ctor-untouched [role UNVERIFIED]
+    int32_t  m_unk60;                         // +0x60  untouched by ctor(sub_181F77680)/helper(sub_180A70610)/Update(0x181F7B530) [role UNVERIFIED]
     int32_t  m_state64;                       // +0x64  ctor 0 [role UNVERIFIED]
     float    m_delay68;                       // +0x68  helper a2 [role UNVERIFIED]
     float    m_fadeIn6C;                      // +0x6C  helper a5 [role UNVERIFIED]
     float    m_fadeOut70;                     // +0x70  helper a6 [role UNVERIFIED]
     float    m_duration;                      // +0x74  = m_delay68 + m_fadeIn6C + m_fadeOut70 (ctor helper @0x180a7064f)
     float    m_elapsed;                       // +0x78  ctor 0; Update compares vs m_duration
-    int32_t  m_unk7C;                         // +0x7C  ctor 0 (qword zero-fill with +0x78)
-    int32_t  m_unk80;                         // +0x80  ctor-untouched [role UNVERIFIED]
+    int32_t  m_unk7C;                         // +0x7C  zeroed as qword pair with m_elapsed (sub_180A70610 @0x180a70648); Update 0x181F7B530 ignores it [role UNVERIFIED]
+    int32_t  m_unk80;                         // +0x80  untouched by ctor(sub_181F77680)/helper(sub_180A70610)/Update(0x181F7B530) [role UNVERIFIED]
     int32_t  m_stepAlpha;                     // +0x84  helper 0; Update copies it into m_currentAlpha [role UNVERIFIED]
     std::vector<uint64_t> m_widgets;          // +0x88  flash widget handles faded together (Update walk @0x181f7b5c9)
     int32_t  m_currentAlpha;                  // +0xA0  ctor 100.0f bit-pattern; Update writes ints [dual use, semantics UNVERIFIED]

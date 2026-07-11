@@ -22,7 +22,7 @@ public:
     virtual void Apply() = 0;        // [0] applies the transform to m_pTarget [U exact signature]
     virtual ~I_SpatialOperation();   // [1] deleting dtor
 
-    void* m_pTarget;    // +0x08  target object (exposes a movement/transform sub-iface via vtbl[3]) [U pointee]
+    void* m_pTarget;    // +0x08  target: vtbl[3](target) yields a movement iface, then iface->vtbl[39](transform@subclass+0x10,0,0,flag) applies it (Apply sub_1803CEEB8) [U pointee class]
 };
 static_assert(sizeof(I_SpatialOperation) == 0x10, "I_SpatialOperation: vptr + target ptr");
 

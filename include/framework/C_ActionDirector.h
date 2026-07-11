@@ -28,6 +28,14 @@ class I_Action;
 // Notification kind passed to m_onActionNotification (set / removed / replaced). Values unresolved.
 enum class E_ActionNotificationType : int32_t;
 
+// Director kind (ctor arg stored @+0x68 by sub_1809CDAD0). KCD2-verified domain:
+// C_CombatActorDirector ctor sub_180917E80 passes 0; C_ActorDirector passes 1.
+// (KCD1 additionally has minigame modes 2/3 — NOT observed in kd7u, not ported.)
+enum class E_ActionDirectorMode : int32_t {
+    Combat = 0,
+    Actor  = 1,
+};
+
 class C_ActionDirector {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_ActionDirector;
@@ -42,7 +50,7 @@ public:
     wh::shared::C_Signal<> m_signal3;                   // +0x28  NEW in KCD2; role/args unresolved (unk_1855D04E8)
     std::vector<_smart_ptr<I_Action>> m_actions;        // +0x38  current action per slot (resized to slotCount+10)
     std::vector<_smart_ptr<I_Action>> m_actionsPrev;    // +0x50  parallel per-slot vector (lock-step resize; name KCD1-correlated)
-    int32_t  m_mode;                                    // +0x68  ctor arg (0 = combat, 1 = actor)
+    E_ActionDirectorMode m_mode;                        // +0x68  ctor arg (sub_1809CDAD0)
     bool     m_notifying;                               // +0x6C  reentrancy guard around notification emits
     bool     m_flag6D;                                  // +0x6D  gates the previous-action-tracking path (writer not located)
     uint8_t  _pad6E[2];                                 // +0x6E

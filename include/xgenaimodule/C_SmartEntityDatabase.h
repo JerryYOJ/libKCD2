@@ -35,7 +35,7 @@ public:
     void SedVf0() override; void SedVf1() override; void SedVf2() override;
     void SedVf3() override; void SedVf4() override; void SedVf5() override;
 
-    void* m_colBrain;   // +0x78  column handle "brain" (registered size 24)
+    void* m_colBrain;   // +0x78  opaque column handle: return of (reg->vf[96])("brain",24) where reg=*(sub_1809155C8()+0x148) reflection column registry; prior vf[72]("brain",0) declares it [U handle==ptr|index]
     std::unordered_map<uint64_t, uint64_t> m_index;   // +0x80  (0x40) key/value types [U]
 };
 static_assert(sizeof(C_SmartEntityDatabase) == 0xC0, "C_SmartEntityDatabase must be 0xC0 (new 192 at sub_18109764C)");

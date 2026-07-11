@@ -101,7 +101,7 @@ public:
     void PushElementVisibility(wh::framework::E_HudElements::Type id);                         // sub_180555A10
 
     ICVar*  m_pShowHudCVar;                  // +0x68  wh_ui_ShowHud (Init @0x180c3cc59; callback sub_182B8E3A0)
-    void*   m_elementSources[28];            // +0x70  per-element source handles; vf[+0x10]()->bool visible (IsElementVisible @0x180555e3d); populated per id by the Init lambda 0x181F7C080 -> sub_181F5E3F0
+    ICVar*  m_elementSources[28];            // +0x70  per-element "wh_ui_Show<Element>" int CVars (RegisterInt sub_180B9512C(name,1,0x8000,help,0) @0x181F5E474; store @0x181F5E484); IsElementVisible reads (*vf[+0x10])()!=0 @0x180555e3d (GetIVal); on-change cb sub_182B8E15C (GetName vf[+0x78] -> ElementNameToId)
     uint32_t m_visibleBits;                  // +0x150 28-bit per-element visibility set (std::bitset<28>; writer sub_180556744)
     uint8_t  _pad154[4];                     // +0x154
     S_HudElementRule m_elementRules[28];     // +0x158 per-element source rules (ctor tail sub_1817945A8)

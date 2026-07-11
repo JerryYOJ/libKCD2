@@ -11,7 +11,7 @@
 namespace wh::rpgmodule {
 
 struct S_GenericMinigameData {
-    uint8_t m_minigameType;   // +0x00  minigame-type enum8 [proposed]
+    uint8_t m_minigameType;   // +0x00  playermodule::E_MinigameType::Type truncated to a byte (RTTR reg sub_180227FD0; create sub_182CF1DD8 passes Dice=7)
     uint8_t _pad01[7];        // +0x01
 };
 static_assert(sizeof(S_GenericMinigameData) == 0x08, "S_GenericMinigameData must be 0x08");

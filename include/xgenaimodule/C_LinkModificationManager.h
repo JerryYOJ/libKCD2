@@ -23,8 +23,8 @@ public:
     virtual void _vf1();                           // [1] sub_180871EA0 [U role]
     virtual void Apply(void* edgeTriple, int addRemove);  // [2] sub_180A30478 [U exact signature]
 
-    void*    m_pendingHead;   // +0x08  -> 112-byte intrusive circular-list head node (sub_181AB55C0: self-ptrs @+0x00/+0x08/+0x10, i16 pair @+0x18 = 0x0101) [V]
-    uint64_t m_unk10;         // +0x10  ctor: 0 [U role]
+    void*    m_pEntries;      // +0x08  base C_OverrideConflictManager<S_LinkTagHandle,E_AddRemove::Type>::m_pEntries: head of a 112-byte std::_Tree sentinel (sub_181AB55C0(112): _Left/_Parent/_Right self-refs @+0/+8/+0x10, WORD@0x18=0x0101 _Color=1/_Isnil=1)
+    uint64_t m_count;         // +0x10  base C_OverrideConflictManager::m_count (RB-tree entry count; ctor 0)
     uint64_t m_unk18;         // +0x18  ctor: 0 [U role]
     uint64_t m_unk20;         // +0x20  ctor: 0 [U role]
     uint64_t m_unk28;         // +0x28  ctor: 0 [U role]

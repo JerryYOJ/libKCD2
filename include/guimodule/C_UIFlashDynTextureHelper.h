@@ -23,7 +23,8 @@ public:
     uint64_t m_unk08;   // +0x08  ctor 0 [role UNVERIFIED]
     uint64_t m_unk10;   // +0x10  ctor 0 [role UNVERIFIED]
     uint64_t m_unk18;   // +0x18  ctor 0 [role UNVERIFIED]
-    uint64_t m_unk20;   // +0x20  host ctors leave untouched [role UNVERIFIED]
+    int32_t  m_instanceIndex;  // +0x20  flash instance index, written by sub_18073D68C (DWORD, loop index v16)
+    uint8_t  _pad24[4];        // +0x24
 };
 static_assert(sizeof(C_UIFlashDynTextureHelper) == 0x28, "C_UIFlashDynTextureHelper must be 0x28");
 

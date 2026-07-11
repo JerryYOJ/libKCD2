@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include "C_CombatAutomationAction.h"
+#include "E_CombatAutomationDirectorState.h"
 
 // -----------------------------------------------
 // wh::combatmodule::C_CombatAutomationDirector : C_CombatAutomationAction -- KCD2 1.5.6 (kd7u).  sizeof 0x90.
@@ -16,11 +17,11 @@ class C_CombatAutomationDirector : public C_CombatAutomationAction {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_CombatAutomationDirector;
     const char* GetName() const override { return "AutomationDirector"; }   // [3] 0x181A7E1C0
-    int GetActionKind() const override { return 1; }                        // [10] 0x181A72470
+    E_CombatAutomationActionKind GetActionKind() const override { return E_CombatAutomationActionKind::Director; }                        // [10] 0x181A72470
 
     bool       m_pursuit;              // +0x30  "Pursuit: %s"
     uint8_t    _pad31[3];              // +0x31
-    int32_t    m_state;                // +0x34  "State %s" (enum values unresolved)
+    E_CombatAutomationDirectorState m_state;  // +0x34  "DIR: State %s" (ToString sub_182769FAC)
     CTimeValue m_waitUntil;            // +0x38  init -100000; "Wait %.2fs"
     int32_t    m_lastUpdatableTick;    // +0x40  32-bit tick timestamp; "LastU.able %.2fs"
     uint32_t   _pad44;                 // +0x44  (ctor-zeroed; role unresolved)
