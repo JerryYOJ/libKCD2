@@ -160,7 +160,7 @@ public:
     void*     m_mapArgAutoComplete_head; // +0x140  _Tree sentinel (ctor sub_181AB55C0(sub_180451E4C(1)=48) + 3-way self-ref + 0x0101)
     size_t    m_mapArgAutoComplete_size; // +0x148  _Mysize
 
-    uint8_t   m_conVarSinks[0x10];       // +0x150  IConsoleVarSink* container (ctor sub_1803C4794; Add/RemoveConsoleVarSink[59/60]) VERIFIED (offset)
+    uint8_t   m_conVarSinks[0x10];       // +0x150  std::list<IConsoleVarSink*> {sentinel,size} (Add[59]@0x181684790 push_back; dispatched by OnBefore/OnAfterVarChange[74/75]) VERIFIED (body)
     void*     m_pListHead160;            // +0x160  56-byte intrusive list head (ctor sub_181AB55C0(56)) /* tentative */
     void*     m_unk168;                  // +0x168  (ctor=0)
 

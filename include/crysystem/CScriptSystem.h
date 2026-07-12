@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include <cstddef>
+#include "ScriptAnyValue.h"               // ScriptAnyValue / ScriptVarType / ScriptAnyType (KCD2 layouts)
 #include "../Offsets/vtables/IScriptSystem.h"
 #include "../Offsets/vtables/ISystem.h"   // Offsets::ISystemEventListener (secondary base)
 
@@ -28,33 +29,11 @@
 // Shared lua_State* also cached at global 0x18549CFA0.
 
 typedef struct lua_State lua_State;
-struct IScriptTable;
 struct ISystem;
 class CScriptTimerMgr;   // owned timer manager (+0xB0, 0x40 bytes)
 class CLUADbg;           // lazy Lua debugger (+0x43D0, 0x390 bytes)
 
-// -----------------------------------------------
-// ScriptAnyValue - type-discriminated get/set/call payload (0x18 bytes in KCD2)
-// -----------------------------------------------
-// type tags (from wrappers): 0=Nil/Any, 2=Bool, 3=Handle(int64), 4=Number(float),
-// 5=String, 6=Table(IScriptTable*), 7/8=Function, 9=Vec3.
-// CloneAny [28] writes value@+0x08 (qword) and an aux dword@+0x10 (userdata nRef /
-// func ref); EndCallAnyN [21] strides results by 0x18 -> sizeof confirmed 0x18.
-struct ScriptAnyValue {
-    int             type;           // +0x00
-    int             _pad04;         // +0x04
-    union {                         // +0x08 .. +0x18
-        bool            b;              // type 2
-        int64_t         nHandle;        // type 3 (ScriptHandle / WUID / EntityId)
-        float           number;         // type 4
-        const char*     str;            // type 5
-        IScriptTable*   table;          // type 6
-        HSCRIPTFUNCTION function;       // type 7/8
-        struct { float x, y, z; } vec3; // type 9  (z lands at +0x10)
-        struct { void* ptr; int nRef; } ud; // userdata (nRef at +0x10)
-    };
-};
-static_assert(sizeof(ScriptAnyValue) == 0x18, "ScriptAnyValue must be 0x18 in KCD2");
+// ScriptAnyValue (0x18-byte KCD2 layout) lives in ScriptAnyValue.h.
 
 // -----------------------------------------------
 // CScriptSystem

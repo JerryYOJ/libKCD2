@@ -770,6 +770,7 @@ namespace Offsets {
     inline constexpr ::REL::Offset RTTI_C_UIModalDialogItem                                          { 0x4C9EBD8 };  // .?AVC_UIModalDialogItem@guimodule@wh@@
     inline constexpr ::REL::Offset RTTI_C_UIModalDialogQuestion                                      { 0x4C9EA60 };  // .?AVC_UIModalDialogQuestion@guimodule@wh@@
     inline constexpr ::REL::Offset RTTI_C_UIModalDialogRandomEvent                                   { 0x4C9EC10 };  // .?AVC_UIModalDialogRandomEvent@guimodule@wh@@
+    inline constexpr ::REL::Offset RTTI_C_UIPhotomodeMenu                                            { 0x4CD9B98 };  // .?AVC_UIPhotomodeMenu@guimodule@wh@@
     inline constexpr ::REL::Offset RTTI_C_UIQAMSelectionHandler                                      { 0x4CD0F50 };  // .?AVC_UIQAMSelectionHandler@guimodule@wh@@
     inline constexpr ::REL::Offset RTTI_C_UIQuestLog                                                 { 0x4C91DA0 };  // .?AVC_UIQuestLog@guimodule@wh@@
     inline constexpr ::REL::Offset RTTI_C_UIReputation                                               { 0x4C92658 };  // .?AVC_UIReputation@guimodule@wh@@

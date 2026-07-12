@@ -81,7 +81,7 @@ public:
     // This body captures pResult into the deferred closure (closure+0x40) and passes it
     // to I_Dispatcher::Dispatch as pUserData; C_UICommonEventHandler's slot [0]
     // (sub_180557F3C, "GetButtonId") WRITES a TUIData{4, id} result through it.
-    void OnUIEvent(Offsets::IUIElement* pSender, const Offsets::SUIEventDesc& event,
+    void OnUIEvent(Offsets::IUIElement* pSender, const SUIEventDesc& event,
                    const SUIArguments& args, void* pResult) override;   // [L0] 0x180557C2C
 
     // Listener slots [1..6] are implemented as empty defaults in the binary vtable

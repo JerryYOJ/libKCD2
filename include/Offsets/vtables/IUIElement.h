@@ -54,8 +54,11 @@
 //   => declared in full reverse: (name), (desc), (varobj). [group-reversal per MSVC rule;
 //   pair case runtime-proven, triple order flagged for /FA verification before first use]
 
-struct SUIArguments;   // FlashUI value types -- GLOBAL namespace (defined in guimodule/SUITypes.h)
+struct SUIArguments;      // FlashUI value types -- GLOBAL namespace (defined in guimodule/SUITypes.h)
 struct TUIData;
+struct SUIParameterDesc;  // GLOBAL namespace (defined in guimodule/SUIParameterDesc.h)
+struct SUIEventDesc;      // GLOBAL namespace (defined in guimodule/SUIEventDesc.h)
+struct SUIMovieClipDesc;  // GLOBAL namespace (SDK type; not yet REd)
 
 namespace Offsets {
 
@@ -64,9 +67,6 @@ struct IFlashVariableObject;
 struct IUIElementEventListener;
 struct IDynTextureSource;
 struct ITexture;
-struct SUIParameterDesc;
-struct SUIMovieClipDesc;
-struct SUIEventDesc;
 struct XmlNodeRef;
 
 struct IUIElement {

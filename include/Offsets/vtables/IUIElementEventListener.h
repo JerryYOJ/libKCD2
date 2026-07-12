@@ -32,12 +32,12 @@
 // OnUnload 2-arg and OnSetVisible 3-arg call-site-proven).
 
 struct SUIArguments;   // FlashUI value type -- GLOBAL namespace (defined in guimodule/SUITypes.h)
+struct SUIEventDesc;   // GLOBAL namespace (defined in guimodule/SUIEventDesc.h)
 
 namespace Offsets {
 
 struct IUIElement;
 struct IFlashPlayer;
-struct SUIEventDesc;
 
 struct IUIElementEventListener {
     // pResult: nullable out-param -> 16-byte TUIData { int32 type; pad; value @+0x08 }

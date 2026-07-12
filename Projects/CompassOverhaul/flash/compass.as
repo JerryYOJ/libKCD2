@@ -14,9 +14,12 @@
 //
 // NAMES (all strings arrive PRE-LOCALIZED -- the GFx translator does not
 // resolve "@keys" set at runtime in this movie, so the plugin localizes
-// natively via sub_1803C235C and pushes display text as flat string arrays):
-//   co_names     = [markerId, name, ...]  quest objectives, from the
-//                  C_UIQuestLog::AddObjectiveCompassMarkers hook (0xDC5F24)
+// natively via sub_1803C235C and pushes display text as flat string arrays).
+// Both tables are pushed onto this clip from quest-marker events ONLY (the
+// C_UIQuestLog::AddObjectiveCompassMarkers hook, 0xDC5F24), which fire after
+// the queued loadMovie has completed -- an earlier push would be wiped when
+// the load replaces this clip's content:
+//   co_names     = [markerId, name, ...]  quest objectives
 //   co_typeNames = [type, name, ...]      every mark type with a
 //                  "ui_maplegend_<type>" loc entry (the map-tooltip key);
 //                  types without one are absent -> their name label hides

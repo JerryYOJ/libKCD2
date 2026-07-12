@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include "../../crysystem/ScriptAnyValue.h"   // ScriptAnyValue / ScriptVarType (KCD2 layouts)
 
 // -----------------------------------------------
 // IScriptTable - KCD2 binary vtable order  (CryScriptSystem CScriptTable)
@@ -13,12 +14,12 @@
 // Every method drives the shared Lua stack held by the CScriptSystem singleton
 // (global CScriptSystem* @ 0x18549CF98; per-table Lua registry ref = CScriptTable::m_nRef).
 
-struct IScriptSystem;
 struct IScriptTableDumpSink;
-struct ScriptAnyValue;       // type-discriminated get/set payload (see IScriptSystem.h)
-struct SUserFunctionDesc;    // C-function registration descriptor
+struct SUserFunctionDesc;    // C-function registration descriptor (crysystem/SUserFunctionDesc.h)
 
 namespace Offsets {
+
+struct IScriptSystem;        // Offsets/vtables/IScriptSystem.h
 
 struct IScriptTable {
     // ---- lifetime / identity ----
@@ -37,8 +38,8 @@ struct IScriptTable {
                              bool bChain = false) = 0;                       // [8]  0x40  get field -> any; false if missing                        VERIFIED
     virtual bool _vf9() = 0;                                                 // [9]  0x48  pushes self, returns true (stub-like)                     tentative
     virtual int  _vf10() = 0;                                                // [10] 0x50  pops if top-of-stack lua type == table(5)                 tentative
-    virtual int  GetValueType(const char* sKey) = 0;                        // [11] 0x58  ScriptVarType of field (lua->svt map)                      VERIFIED
-    virtual int  GetAtType(int nIdx) = 0;                                   // [12] 0x60  ScriptVarType of array element                             VERIFIED
+    virtual ScriptVarType GetValueType(const char* sKey) = 0;               // [11] 0x58  ScriptVarType of field (lua->svt map)                      VERIFIED
+    virtual ScriptVarType GetAtType(int nIdx) = 0;                          // [12] 0x60  ScriptVarType of array element                             VERIFIED
     virtual void SetAtAny(int nIndex, const ScriptAnyValue& any) = 0;        // [13] 0x68  set array element                                          VERIFIED
     virtual bool GetAtAny(int nIndex, ScriptAnyValue& any) = 0;             // [14] 0x70  get array element -> any                                    VERIFIED
 
@@ -60,16 +61,17 @@ struct IScriptTable {
 
     // Iterator: tentative layout (~0x50) reconstructed from BeginIteration/MoveNext disasm.
     struct Iterator {
-        const char* sKey;              // +0x00  string key (lua_tolstring); null when integer-keyed
+        const char* sKey;               // +0x00  string key (lua_tolstring); null when integer-keyed
         int      nKey;                  // +0x08  integer key (-1 => string-key iteration)
-        uint8_t  value[0x18];           // +0x10  ScriptAnyValue (current value)
-        uint8_t  key[0x18];             // +0x28  ScriptAnyValue (current key)
+        ScriptAnyValue value;           // +0x10  current value
+        ScriptAnyValue key;             // +0x28  current key
         uint8_t  bResolvePrototype;     // +0x40  resolvePrototypeTableAsWell
         uint8_t  _pad41[3];             // +0x41
         int      nStackMarker;          // +0x44  pushed-stack-entry count
         int      nCursor;               // +0x48  internal cursor
         uint8_t  _pad4C[4];             // +0x4C
     };
+    static_assert(sizeof(Iterator) == 0x50, "iterator frame size (BeginIteration/MoveNext)");
 };
 
 }  // namespace Offsets

@@ -37,15 +37,11 @@ namespace {
             flat.data(), static_cast<unsigned int>(flat.size()));
     }
 
-    void PushObjectiveNames(gm::C_UICompass* compass) {
-        if (auto fp = compass->m_pElement->GetFlashPlayer())
-            PushTable(fp.get(), "_root.compassOverlay.co_names", g_objectiveNames);
+    void PushObjectiveNames(Offsets::IFlashPlayer* fp) {
+        PushTable(fp, "_root.compassOverlay.co_names", g_objectiveNames);
     }
 
-    void PushTypeNames(gm::C_UICompass* compass) {
-        auto fp = compass->m_pElement->GetFlashPlayer();
-        if (!fp) return;
-
+    void PushTypeNames(Offsets::IFlashPlayer* fp) {
         static const std::map<std::string, std::string> kKeySuffixOverride = {
             { "HorseTrader",     "horse_trader" },
             { "ArcheryArena",    "archery_arena" },
@@ -74,7 +70,7 @@ namespace {
             if (loc.empty() || key == loc.c_str()) continue;   // no loc entry -> hide
             table[name] = loc.c_str();
         }
-        PushTable(fp.get(), "_root.compassOverlay.co_typeNames", table);
+        PushTable(fp, "_root.compassOverlay.co_typeNames", table);
     }
 
     class{
@@ -111,16 +107,26 @@ namespace {
                 g_objectiveNames["marker" + std::string(mark->m_id.c_str())] = name.c_str();
                 added = true;
             }
-            if (added) PushObjectiveNames(compass);
+            if (added) {
+                auto* hud = static_cast<CFlashUIElement*>(compass->m_pElement);
+                if (hud && hud->m_pFlashPlayer)
+                    PushObjectiveNames(hud->m_pFlashPlayer.get());
+            }
         }
 
         static inline REL::Relocation<decltype(&thunk)> orig;
     }hkAddObjectiveCompassMarkers;
 
+    // CFlashUIElement::Init -- the single point every element-movie load funnels
+    // through (game-initiated or lazy via GetFlashPlayer): loads Libs/UI/<file>,
+    // creates the player, fires the OnInit listeners. Injecting post-orig follows
+    // the game's own load timing instead of forcing it (the old C_UICompass::Init
+    // site called GetFlashPlayer while the HUD was deliberately unloaded during
+    // the new-game intro, force-loading the movie early -> black screen).
     class{
     public:
         static bool Install() {
-            void* target = reinterpret_cast<void*>(REL::Offset(0xC3D0A8).address());
+            void* target = reinterpret_cast<void*>(REL::Offset(0x88EF1C).address());
             if (MH_CreateHook(target, reinterpret_cast<void*>(&thunk),
                 reinterpret_cast<void**>(&orig)) != MH_OK)
                 return false;
@@ -129,37 +135,42 @@ namespace {
         }
 
         static void Uninstall() {
-            void* target = reinterpret_cast<void*>(REL::Offset(0xC3D0A8).address());
+            void* target = reinterpret_cast<void*>(REL::Offset(0x88EF1C).address());
             MH_RemoveHook(target);
         }
 
     protected:
-        static void thunk(gm::C_UICompass* self, void* pModule) {
-            orig(self, pModule);
+        static bool thunk(CFlashUIElement* self, bool load) {
+            const bool ok = orig(self, load);
+            if (!ok || !load)
+                return ok;
+            
+            if(self->m_sName == "hud"){
+                const auto& fp = self->m_pFlashPlayer;
+                if (!fp || fp->IsAvailable("_root.compassOverlay")) return ok;
 
-            auto* hud = static_cast<CFlashUIElement*>(self->m_pElement);
-            if (!hud) return;
-            auto fp = hud->GetFlashPlayer();
-            if (!fp || fp->IsAvailable("_root.compassOverlay")) return;
+                Offsets::FlashVarPtr root, mc;
+                if (!fp->GetVariable("_root", root.put()) || !root) return ok;
+                if (!root->CreateEmptyMovieClip(mc.put(), "compassOverlay") || !mc) return ok;
 
-            Offsets::FlashVarPtr root, mc;
-            if (!fp->GetVariable("_root", root.put()) || !root) return;
-            if (!root->CreateEmptyMovieClip(mc.put(), "compassOverlay") || !mc) return;
+                SFlashVarValue url("compass.gfx");   // resolved relative to the parent movie dir "Libs/UI/"
+                if (!mc->Invoke("loadMovie", &url, 1, nullptr)) return ok;
 
-            SFlashVarValue url("compass.gfx");   // resolved relative to the parent movie dir "Libs/UI/"
-            if (!mc->Invoke("loadMovie", &url, 1, nullptr)) return;
+                // The stopped HUD timeline only drains its load queue on a frame-step,
+                // so service our entry now (see GFxMovieRoot.h).
+                if (auto* movie = static_cast<CFlashPlayer*>(fp.get())->GetMovieRoot())
+                    movie->ProcessLoadQueue();
 
-            // The stopped HUD timeline only drains its load queue on a frame-step,
-            // so service our late-added entry now (see GFxMovieRoot.h).
-            if (auto* movie = static_cast<CFlashPlayer*>(fp.get())->GetMovieRoot())
-                movie->ProcessLoadQueue();
+                PushObjectiveNames(fp.get());
+                PushTypeNames(fp.get());
+            }
 
-            PushObjectiveNames(self);
-            PushTypeNames(self);
+            
+            return ok;
         }
 
         static inline REL::Relocation<decltype(&thunk)> orig;
-    }hkCompassInit;
+    }hkCFlashUIElementInit;
 
 }  // namespace
 
@@ -168,7 +179,7 @@ bool InstallHooks() {
         return false;
 
     return hkAddObjectiveCompassMarkers.Install()
-        && hkCompassInit.Install();
+        && hkCFlashUIElementInit.Install();
 }
 
 KCSE_PLUGIN_INFO("CompassOverhaul", "JerryYOJ", 1);

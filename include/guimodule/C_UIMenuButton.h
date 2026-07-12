@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include <functional>
 #include "guimodule/E_ButtonId.h"
 #include "framework/C_LocalizedString.h"
 
@@ -10,8 +11,15 @@
 // deserialized from XML by class name -- NOT a table row). vtable 0x183AB1A70 = RTTR trio
 // ONLY, no virtual dtor. Creator sub_182B851BC (operator new 120); batch ctor sub_180DC1400
 // (memset 0x78); default ctor sub_180DC1444, copy ctor sub_180DC1488, get_type sub_181A6CB10.
-// rttr props: int, C_LocalizedString (x2, one wrapper TD), E_ButtonId::Type. Member NAMES
-// are inferred from the property types/semantics (registrar strings not located -- G4d §UNVERIFIED).
+// Runtime DB = byte-keyed sorted vector @0x1853266E0 (lookup sub_181441328, row getter
+// sub_180558E78(pScreen, id)).
+//
+// Member names VERIFIED against the widget helpers (menu_wrappers.md / menu_page_builders.md):
+// AddBasicButton sub_180558CCC sends flash ("AddBasicButton", name=sub_180558EB8(m_buttonId),
+// m_containerIndex, text=sub_18039956C(row), tooltip=sub_180558E98(row) -> copy of +0x28,
+// !enabled) and move-assigns the click handler into m_onClick (sub_1808E71DC). The flash
+// OnButton dispatch sub_180C07A98 maps the name back to the id (sub_180C07AE4) and invokes
+// m_onClick -- so the row doubles as the button's click-handler registry.
 
 namespace rttr {
 class type;
@@ -28,15 +36,16 @@ public:
     virtual void* get_ptr();                                 // [1] 0x1805F5DA0
     virtual rttr::detail::derived_info get_derived_info();   // [2]
 
-    E_ButtonId::Type m_buttonId;               // +0x08  identity key (DefaultKeyExtractor)
-    uint8_t _pad09[7];                         // +0x09
-    wh::framework::C_LocalizedString m_textA;  // +0x10  localized text [name INFERRED]
-    wh::framework::C_LocalizedString m_textB;  // +0x20  localized text [name INFERRED]
-    int32_t m_int30;                           // +0x30  rttr int prop [name UNVERIFIED]
-    uint8_t _pad34[4];                         // +0x34
-    uint8_t m_actionHolder[0x40];              // +0x38  move-managed small-object holder (buffer +0x38..+0x70, manager ptr @+0x70; relocated by sub_18042DC90) -- runtime button callback, NOT an rttr prop [internal layout UNVERIFIED]
+    E_ButtonId::Type m_buttonId;                  // +0x08  identity key (DefaultKeyExtractor)
+    uint8_t _pad09[7];                            // +0x09
+    wh::framework::C_LocalizedString m_text;      // +0x10  button label -- resolved via sub_18039956C, sent as flash "uiText"
+    wh::framework::C_LocalizedString m_tooltip;   // +0x20  default tooltip -- sub_180558E98 copies the CryStringT half (+0x28); overridable per Add* call
+    int32_t m_containerIndex;                     // +0x30  flash "containerIndex" (column/list the button lands in) -- sent by every Add*/Set* helper
+    uint8_t _pad34[4];                            // +0x34
+    std::function<void()> m_onClick;              // +0x38  click handler (0x40, impl ptr @+0x70): assigned by AddBasicButton (sub_1808E71DC), built in-place as _Func_impl_no_alloc (e.g. sub_181F809C0), invoked by the OnButton dispatch sub_180C07A98
 };
 static_assert(sizeof(C_UIMenuButton) == 0x78, "C_UIMenuButton must be 0x78 (creator sub_182B851BC)");
-static_assert(offsetof(C_UIMenuButton, m_actionHolder) == 0x38, "action holder at 0x38");
+static_assert(offsetof(C_UIMenuButton, m_containerIndex) == 0x30, "containerIndex at 0x30 (read *(row+48))");
+static_assert(offsetof(C_UIMenuButton, m_onClick) == 0x38, "click handler at 0x38 (assign sub_1808E71DC, invoke sub_180C07A98)");
 
 }  // namespace wh::guimodule

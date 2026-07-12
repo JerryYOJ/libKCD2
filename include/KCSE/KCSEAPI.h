@@ -72,6 +72,7 @@ public:
         kMessage_SaveGame,
         kMessage_NewGame,
         kMessage_DataLoaded,
+        kMessage_PreDataLoaded,
     };
 
     using EventCallback = void(*)(Message* msg);

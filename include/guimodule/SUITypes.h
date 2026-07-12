@@ -63,7 +63,14 @@ struct TUIData
         char      m_buffer[16];      // CryStringT<char>/<wchar_t> handle lives here
         void*     _align8;           // 8-byte align device (not a real field): String case stores an 8B CryStringT<char> handle at +0x00 (sub_1804FD208, refcnt at ptr-12); Vec3 case does a QWORD store there
     };
-    int32_t m_type;                  // +0x10  EUIDataTypes discriminant (+0x14..+0x17 pad)
+    // +0x10  CryVariant index: a SINGLE BYTE (-1 = valueless); the engine NEVER
+    // initializes +0x11..+0x17. Reading this as int32 poisons the tag with heap
+    // garbage (probe 2026-07-12: float tag read as 0x3F800001 -> AsString ''/
+    // AsFloat 0 -> the whole phantom "EI transport kills args" saga). Writers in
+    // the binary: builders 0x1803C2034/0x1803C2158 et al. store the byte only;
+    // copy loop 0x1810C2AD8 presets byte -1 then dispatches on (tag+1).
+    int8_t  m_type;
+    uint8_t _pad11[7];               // +0x11  uninitialized in engine-built args
 
     TUIData()                             : m_type(eUIDT_Int)     { m_int = 0; }
     TUIData(int v)                        : m_type(eUIDT_Int)     { m_int = v; }
@@ -108,6 +115,7 @@ struct TUIData
             case eUIDT_Bool:     return m_bool ? 1.f : 0.f;
             case eUIDT_Vec3:     return m_vec3.x;
             case eUIDT_String:   return (float)atof(str().c_str());
+            case eUIDT_WString:  return (float)wcstod(wstr().c_str(), nullptr);   // binary case 5 in sub_180B5BBB8
             default:             return 0.f;
         }
     }
@@ -118,6 +126,35 @@ struct TUIData
     CryStringT<char> AsString() const
     {
         if (m_type == eUIDT_String) return str();
+        if (m_type == eUIDT_WString) {
+            // GFx hands flash strings over WIDE, so event args commonly arrive as
+            // eUIDT_WString; narrow as UTF-8 (engine equivalent: SUIConversion<wstring,string>).
+            const CryStringT<wchar_t>& w = wstr();
+            CryStringT<char> out;
+            for (size_t i = 0; i < w.length(); ++i) {
+                unsigned int c = (unsigned int)(uint16_t)w[i];
+                if (c >= 0xD800 && c <= 0xDBFF && i + 1 < w.length()) {   // surrogate pair
+                    unsigned int lo = (unsigned int)(uint16_t)w[i + 1];
+                    if (lo >= 0xDC00 && lo <= 0xDFFF) { c = 0x10000 + ((c - 0xD800) << 10) + (lo - 0xDC00); ++i; }
+                }
+                if (c < 0x80) {
+                    out.push_back((char)c);
+                } else if (c < 0x800) {
+                    out.push_back((char)(0xC0 | (c >> 6)));
+                    out.push_back((char)(0x80 | (c & 0x3F)));
+                } else if (c < 0x10000) {
+                    out.push_back((char)(0xE0 | (c >> 12)));
+                    out.push_back((char)(0x80 | ((c >> 6) & 0x3F)));
+                    out.push_back((char)(0x80 | (c & 0x3F)));
+                } else {
+                    out.push_back((char)(0xF0 | (c >> 18)));
+                    out.push_back((char)(0x80 | ((c >> 12) & 0x3F)));
+                    out.push_back((char)(0x80 | ((c >> 6) & 0x3F)));
+                    out.push_back((char)(0x80 | (c & 0x3F)));
+                }
+            }
+            return out;
+        }
         char tmp[64];
         switch (m_type) {
             case eUIDT_Int:      snprintf(tmp, sizeof(tmp), "%d", m_int); break;

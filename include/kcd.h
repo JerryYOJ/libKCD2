@@ -617,6 +617,7 @@
 #include "guimodule/C_UICommonEventHandler.h"
 #include "guimodule/I_UIMenu.h"
 #include "guimodule/C_UIMenuBase.h"
+#include "guimodule/C_UIPhotomodeMenu.h"
 #include "guimodule/C_UISaveLoad.h"
 #include "guimodule/C_UISettings.h"
 #include "guimodule/C_UIMenu.h"

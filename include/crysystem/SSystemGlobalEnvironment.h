@@ -22,7 +22,7 @@ namespace Offsets {
     struct IScriptSystem; struct IPhysicalWorld; struct IInput; struct ITimer;
     struct IGame; struct IEntitySystem; struct IConsole; struct ISystem;
     struct ILog; struct IRenderer; struct IFlashUI; struct I3DEngine;
-    struct IHardwareMouse; struct ICharacterManager;
+    struct IHardwareMouse; struct ICharacterManager; struct ICryPak;
 }
 
 struct SSystemGlobalEnvironment {
@@ -39,7 +39,7 @@ struct SSystemGlobalEnvironment {
     void*                       _unk40;                 // +0x40
     Offsets::IInput*            pInput;                 // +0x48  VERIFIED: AddEventListener("C_Keybinds")
     void*                       _unk50;                 // +0x50
-    void*                       _unk58;                 // +0x58  inferred pCryPak (ICryPak*): single most-referenced gEnv slot (681 reads); KCD1 pCryPak is also +0x58. UNVERIFIED (base-register writer, no direct-absolute store to confirm).
+    Offsets::ICryPak*           pCryPak;                // +0x58  VERIFIED: IActorSystem::Scan 0x180E46CE8 runs the FindFirst/FindNext wildcard loop (vtable +0x1F8/+0x200) on qword_18492D850, matching CCryPak vtable 0x183a97328 slots [63]/[64]; single most-referenced gEnv slot (681 reads); KCD1 pCryPak also +0x58.
     void*                       _unk60;                 // +0x60
     void*                       _unk68;                 // +0x68
     void*                       _unk70;                 // +0x70

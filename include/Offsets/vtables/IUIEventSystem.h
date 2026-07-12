@@ -34,11 +34,11 @@
 //   must be checked individually.)
 
 struct SUIArguments;   // FlashUI value type -- GLOBAL namespace (defined in guimodule/SUITypes.h)
+struct SUIEventDesc;   // GLOBAL namespace (defined in guimodule/SUIEventDesc.h)
 
 namespace Offsets {
 
 struct IUIEventListener;
-struct SUIEventDesc;
 struct SUIEvent;
 struct ICrySizer;
 

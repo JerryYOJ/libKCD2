@@ -4,6 +4,7 @@
 #include "guimodule/I_UIMenu.h"
 #include "guimodule/C_UISaveLoad.h"
 #include "guimodule/C_UISettings.h"
+#include "guimodule/E_MenuPage.h"
 #include "framework/C_Signal.h"
 #include "Offsets/vtables/IActionListener.h"
 #include "Offsets/vtables/ISystem.h"   // Offsets::ISystemEventListener
@@ -25,8 +26,16 @@
 // C_UIMenuBase), embeds the save/load and settings sub-controllers by value, exposes
 // the wh::I_UIMenu control surface to the rest of the game, listens to action-map
 // input (OnAction 0x180557658 forwards ("SetInput", action, activationMode) to flash
-// when the +0xA0 state byte is set) and to system events. ctor registers CVar
+// when m_state is set) and to system events. ctor registers CVar
 // "wh_ui_showFirstTimeOverlays" (default from pSystem vf[+0x668]() == 0).
+//
+// ROOT-MENU FLOW: the I_UIMenu open vfunc 0x180C04B38 (iface +0x58, base = iface-0x58)
+// writes m_state = mode and dispatches the matching root builder -- 1 RootMain /
+// 2 RootIngame (ESC pause) / 3 RootPause (restricted) / 4 RootMain death variant /
+// 5 RootPhotomode (via C_UISettings 0x181F8DE50). sub_180C0A5AC = rebuild current root
+// page per m_state + SelectButton. Flash button clicks come back through the OnButton
+// dispatch sub_180C07A98 (name -> E_ButtonId sub_180C07AE4 -> menu_buttons row ->
+// invoke the row's std::function).
 //
 // [FUNDAMENTAL vs KCD1] KCD1 had no single menu object -- menu flow was spread over
 // CUIManager's C_UIMenuEvents/C_UIHUDElements event systems. KCD2 folds it into this
@@ -47,13 +56,39 @@ public:
     // 0x180ED549C, get_derived_info [9] 0x1819A2894.
     // IActionListener::OnAction = 0x180557658; I_UIMenu impls: see I_UIMenu.h.
 
+    // --- Native methods (RVA forwarders in src/guimodule/C_UIMenu.cpp) ---
+    // Open a page: writes m_currentPageId, then flash "ClearAll" -> "SetMenuColor"
+    // (m_state) -> "PreparePage"(ContainerX, ContainerY, MaxButtons, header,
+    // ButtonHalfWidth) from the menu_pages row. No-op when the id has no row.
+    // Follow with C_UIMenuBase::Add* calls, then ShowPage().
+    void PreparePage(E_MenuPage::Type page);                       // 0x180F69448
+    void ShowPage();   // flash "ShowPage" -- finalize the prepared page               // 0x181F8DB80
+    // Rebuild the CURRENT root page (per m_state: 1/4 RootMain, 2 RootIngame,
+    // 3 RootPause) and SelectButton(selectAfter) -- the canonical "refresh the pause
+    // menu" entry (e.g. after registering a new button).
+    void RebuildRootPage(E_ButtonId::Type selectAfter);            // 0x180C0A5AC
+    // Root/hub page builders (each = PreparePage + widget adds + ShowPage; button sets
+    // documented in analysis/ui_survey/menu_page_builders.md §2). MCM injection point:
+    // hook BuildRootIngamePage and add an AddBasicButton before its ShowPage.
+    void BuildRootMainPage();                                      // 0x180F6820C  page 1 (+ mode-4 death variant)
+    void BuildRootIngamePage();                                    // 0x1805598CC  page 2 -- the ESC pause menu
+    void BuildRootPausePage();                                     // 0x182BAA95C  page 3 -- restricted pause
+    void BuildSettingsHubPage(E_ButtonId::Type selectButton);      // 0x180559C6C  page 10 (re-selects selectButton)
+    void BuildHelpOverlaysPage();                                  // 0x180821504  page 18
+    void BuildDLCListPage();                                       // 0x182BA9D18  page 19
+
     // Signal argument signatures UNVERIFIED (subscribers are 0x10 S_Delegate pairs;
     // exposed through I_UIMenu [10..15]).
     wh::shared::C_Signal<> m_signalA;        // +0x70  empty-sentinel unk_1856694A8
     wh::shared::C_Signal<> m_signalB;        // +0x80  empty-sentinel unk_1856694A8
     wh::shared::C_Signal<> m_signalC;        // +0x90  empty-sentinel unk_185665430
-    bool                   m_state;          // +0xA0  gate byte returned by I_UIMenu::GetState [9]; gates OnAction forwarding
-    uint8_t                _padA1[7];        // +0xA1  (+0xA0 word-zeroed by ctor)
+    // Menu state/mode byte (0 = closed): set by the I_UIMenu open vfunc 0x180C04B38
+    // (1 main / 2 ingame / 3 restricted-pause / 4 death / 5 photomode); returned by
+    // I_UIMenu::GetState [9]; gates OnAction forwarding; sent to flash as the
+    // "SetMenuColor" argument by PreparePage.
+    uint8_t                m_state;          // +0xA0  (+0xA0 word-zeroed by ctor)
+    E_MenuPage::Type       m_currentPageId;  // +0xA1  written by PreparePage; read back by the save/load builders
+    uint8_t                _padA2[6];        // +0xA2
     uint64_t               m_A8;             // +0xA8  ctor 0 (role UNVERIFIED)
     C_UISaveLoad           m_saveLoad;       // +0xB0  EMBEDDED (ctor sub_1805FF494)
     C_UISettings           m_settings;       // +0x1D8 EMBEDDED (ctor sub_180600544)
@@ -63,6 +98,8 @@ public:
 };
 static_assert(sizeof(C_UIMenu) == 0x698, "C_UIMenu must be 0x698");
 static_assert(offsetof(C_UIMenu, m_signalA) == 0x70, "signals from 0x70 (ctor writes)");
+static_assert(offsetof(C_UIMenu, m_state) == 0xA0, "state byte at 0xA0 (writer 0x180C04B38)");
+static_assert(offsetof(C_UIMenu, m_currentPageId) == 0xA1, "page id at 0xA1 (writer PreparePage 0x180F69456)");
 static_assert(offsetof(C_UIMenu, m_saveLoad) == 0xB0, "embedded C_UISaveLoad at 0xB0");
 static_assert(offsetof(C_UIMenu, m_settings) == 0x1D8, "embedded C_UISettings at 0x1D8");
 

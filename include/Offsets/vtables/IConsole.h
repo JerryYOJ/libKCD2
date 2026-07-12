@@ -114,7 +114,7 @@ struct IConsole {
     virtual uint64_t GetCheatVarHash() = 0;                                                              // [56] 0x181a739b0  return m_cheatVarHash@0x1F8  VERIFIED
     virtual void   PrintCheatVars(bool bUseLastHashRange) = 0;                                           // [57] 0x1803b6e80  stub (retn)                  VERIFIED
     virtual char*  GetCheatVarAt(uint32_t nOffset) = 0;                                                  // [58] 0x182478260  tentative
-    virtual void   AddConsoleVarSink(IConsoleVarSink* sink) = 0;                                         // [59] 0x181684790  tentative
+    virtual void   AddConsoleVarSink(IConsoleVarSink* sink) = 0;                                         // [59] 0x181684790  push_back std::list<IConsoleVarSink*>@0x150  VERIFIED (body)
     virtual void   RemoveConsoleVarSink(IConsoleVarSink* sink) = 0;                                      // [60] 0x180da7464  sinks container@0x150        VERIFIED (offset)
     virtual const char* GetHistoryElement(bool bUpOrDown) = 0;                                           // [61] 0x18247867c  tentative
     virtual void   AddCommandToHistory(const char* command) = 0;                                         // [62] 0x181007488  tentative
@@ -130,8 +130,13 @@ struct IConsole {
     virtual void   _vf71() = 0;                                                                          // [71] 0x182478214
     virtual void   _vf72() = 0;                                                                          // [72] 0x1824781c8
     virtual void   _vf73() = 0;                                                                          // [73] 0x182477fc0
-    virtual void   _vf74() = 0;                                                                          // [74] 0x180b9409c
-    virtual void   _vf75() = 0;                                                                          // [75] 0x180b93d88
+    // Sink broadcast pair (plain methods in stock CryEngine, appended virtuals here). Called from
+    // INSIDE every CXConsoleVariable*::Set* body (e.g. IntRef SetInt@0x180C05DB8 / SetFloat@0x18197D6B0
+    // / SetString@0x180B924B4: vtbl+592 gate -> store -> change cb -> vtbl+600), so sinks observe ALL
+    // value changes - console lines, config eval, Lua SetCVar, C++ ICVar::Set - not just console input.
+    // Set* early-outs when the value is unchanged (unless flag 0x200000), so no-op sets never reach sinks.
+    virtual bool   OnBeforeVarChange(ICVar* pVar, const char* sNewValue) = 0;                            // [74] 0x180b9409c  flag gate (0x3000002/0x800/0x40000000, bypass this+0x1DE) then sinks vf[1]; any false blocks  VERIFIED (body)
+    virtual void   OnAfterVarChange(ICVar* pVar) = 0;                                                    // [75] 0x180b93d88  sinks vf[2] over list@0x150  VERIFIED (body)
 };
 
 // ---------------------------------------------------------------------------

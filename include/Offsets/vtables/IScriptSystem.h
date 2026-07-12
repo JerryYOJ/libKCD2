@@ -22,12 +22,13 @@
 typedef void*          HSCRIPTFUNCTION;   // opaque Lua registry function reference
 typedef struct lua_State lua_State;
 
-struct ScriptAnyValue;   // 0x18-byte type-discriminated payload (CryCommon/IScriptSystem.h)
-struct IScriptTable;
+struct ScriptAnyValue;   // 0x18-byte type-discriminated payload (crysystem/ScriptAnyValue.h)
 struct ISerialize;
 class  CScriptableBase;
 
 namespace Offsets {
+
+struct IScriptTable;     // Offsets/vtables/IScriptTable.h
 
 struct IScriptSystem {
     // ---- lifecycle ----
@@ -50,23 +51,34 @@ struct IScriptSystem {
     virtual bool ReloadScripts() = 0;                                              // [10] 0x050  walks m_pLoadedScripts @this+0x60                          tentative
     virtual void DumpLoadedScripts() = 0;                                          // [11] 0x058  walks m_pLoadedScripts @this+0x60                          tentative
 
+    // NOTE: overload groups are DE-OVERLOADED (distinct names per slot). MSVC
+    // allocates vtable slots for adjacent same-name overloads in REVERSE
+    // declaration order, so keeping the engine's overloaded names here makes
+    // OUR compiled calls land on the mirrored slot: BeginCall(HSCRIPTFUNCTION)
+    // dispatched to [15] BeginCallTable and crashed in CScriptTable::PushRef
+    // 0x180715F64 (ref int dereferenced as table). Same rule as ICryPak's
+    // FOpen/FOpen_GamePath.
+
     // ---- tables ----
     virtual IScriptTable* CreateTable(int nArraySize, int nHashSize) = 0;          // [12] 0x060  lua_createtable(narr,nrec)                                 VERIFIED
-    virtual IScriptTable* CreateTable(bool bEmpty) = 0;                            // [13] 0x068                                                             VERIFIED
+    virtual IScriptTable* CreateTableEmpty(bool bEmpty) = 0;                       // [13] 0x068  SDK CreateTable(bool) overload                             VERIFIED
     virtual IScriptTable* AllocScriptTable() = 0;                                  // [14] 0x070  allocs 0x18 wh::scriptsystem::C_ScriptTableTemplate         tentative
 
     // ---- function calls ----
-    virtual bool BeginCall(IScriptTable* pTable, const char* sFuncName) = 0;       // [15] 0x078  push table, index func                                     VERIFIED
-    virtual bool BeginCall(const char* sTableName, const char* sFuncName) = 0;     // [16] 0x080  push global table, index func                              VERIFIED
-    virtual bool BeginCall(const char* sFuncName) = 0;                             // [17] 0x088  push global func                                           VERIFIED
-    virtual bool BeginCall(HSCRIPTFUNCTION hFunc) = 0;                             // [18] 0x090  push registered func ref                                   VERIFIED
+    virtual bool BeginCallTable(IScriptTable* pTable, const char* sFuncName) = 0;  // [15] 0x078  push table, index func (0x1808FE42C)                       VERIFIED
+    virtual bool BeginCallTableName(const char* sTableName,
+                                    const char* sFuncName) = 0;                    // [16] 0x080  push global table, index func                              VERIFIED
+    virtual bool BeginCallGlobal(const char* sFuncName) = 0;                       // [17] 0x088  push global func                                           VERIFIED
+    virtual bool BeginCall(HSCRIPTFUNCTION hFunc) = 0;                             // [18] 0x090  push registered func ref (0x180712B1C)                     VERIFIED
     virtual bool EndCall() = 0;                                                    // [19] 0x098  thunk -> EndCallAnyN(0,nullptr)                            VERIFIED
     virtual bool EndCallAny(ScriptAnyValue& any) = 0;                             // [20] 0x0A0  call, pop 1 result                                          VERIFIED
     virtual bool EndCallAnyN(int n, ScriptAnyValue* anys) = 0;                    // [21] 0x0A8  call, pop n results (stride 0x18)                          VERIFIED
 
     // ---- function references ----
-    virtual HSCRIPTFUNCTION GetFunctionPtr(IScriptTable* pTable, const char* sFuncName) = 0;  // [22] 0x0B0                                       VERIFIED
-    virtual HSCRIPTFUNCTION GetFunctionPtr(const char* sTableName, const char* sFuncName) = 0;// [23] 0x0B8                                       VERIFIED
+    virtual HSCRIPTFUNCTION GetFunctionPtrTable(IScriptTable* pTable,
+                                                const char* sFuncName) = 0;        // [22] 0x0B0  (de-overloaded, see note above)                            VERIFIED
+    virtual HSCRIPTFUNCTION GetFunctionPtrTableName(const char* sTableName,
+                                                    const char* sFuncName) = 0;    // [23] 0x0B8  (de-overloaded)                                            VERIFIED
     virtual HSCRIPTFUNCTION GetFunctionPtr(const char* sFuncName) = 0;             // [24] 0x0C0                                                             VERIFIED
     virtual HSCRIPTFUNCTION AddFuncRef(HSCRIPTFUNCTION f) = 0;                     // [25] 0x0C8  add reference (KCD2-inserted slot)                         VERIFIED
     virtual bool CompareFuncRef(HSCRIPTFUNCTION f1, HSCRIPTFUNCTION f2) = 0;       // [26] 0x0D0                                                             VERIFIED

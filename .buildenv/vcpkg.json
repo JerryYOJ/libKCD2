@@ -4,7 +4,8 @@
     "spdlog",
     "boost-container",
     "boost-smart-ptr",
-    "minhook"
+    "minhook",
+    "pugixml"
   ],
   "overrides": []
 }
