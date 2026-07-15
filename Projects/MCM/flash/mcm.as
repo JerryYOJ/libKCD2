@@ -144,10 +144,13 @@ function num3(v) {
 // Text uses embedded per-style templates "mcm_t<size><l|c|r><rrggbb>":
 // DefineEditText bound to the gfxfontlib import at the TAG level with size,
 // alignment and color BAKED IN (compass.gfx pattern; embed.py TEXT_STYLES is
-// the authoritative list -- both sides build the same name). Runtime
-// TextFormat/textColor is a no-op in the game's GFx player: AS only attaches
+// the authoritative list -- both sides build the same name). AS only attaches
 // a template and assigns .text. A style missing from TEXT_STYLES renders
-// NOTHING (silently) -- keep the lists in sync.
+// NOTHING (silently) -- keep the lists in sync. CORRECTED (2026-07-13): this
+// used to claim runtime TextFormat/textColor is a no-op in this GFx player --
+// disproven by analysis/CompassOverhaul/texttest.gfx (restyle works fine with
+// .embedFonts = true set first). Kept as one template per style regardless;
+// this table already works and there's no functional need to collapse it.
 function mkText(mc, name, d, x, y, w, h, size, color, align) {
     var al = "l";
     if (align == "center") {

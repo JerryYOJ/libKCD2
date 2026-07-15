@@ -19,8 +19,11 @@ public:
     // (m_valueId @+0x18 = E_SoulState, m_amount @+0x1C = float delta from the base template)
     float    m_capturedValue;    // +0x20  writer 0x1814407F4: snapshot of soul state[valueId] (soul+0x708+4*id); float per C_SoulValueEffect<E_SoulState,float>
     float    m_effectiveAmount;  // +0x24  writer 0x1814407F4: sub_18046EA68 clamp(amount) -> float (fminf/fmaxf) [field roles inferred]
-    uint8_t  m_flag28;   // +0x28  ctor 0 [role UNVERIFIED]
-    uint8_t  _pad29[7];  // +0x29
+    uint8_t  m_sourceTag;  // +0x28  ctor 0; damage pipeline writes a producer tag on the STAMINA effect
+                           //        instance via sub_180726FD0 @0x180726FDC (4 melee/missile, 7 collision,
+                           //        10 block-chip; melee core overwrites 5 blocked / 6 flag154
+                           //        @0x180C6433A/0x180C6431E); role for other effect kinds UNVERIFIED
+    uint8_t  _pad29[7];    // +0x29
 };
 static_assert(sizeof(C_SoulStateEffect) == 0x30, "C_SoulStateEffect must be 0x30 (operator new(48))");
 

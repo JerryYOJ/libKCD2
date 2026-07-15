@@ -10,10 +10,16 @@
 // thunk sub_180BE3D54) rejects id >= 0xDA (218): 218 is the DECLARED range / miss sentinel,
 // but ids 103..217 are unregistered ("<unknown enum value>").
 //
-// The enumerators are the raw 3-letter derived_stat.xml row codes; their human meanings were NOT
-// decoded from the binary (needs rpg/derived_stat.xml). hlh(10)/slh(11)/sls(12) are the
-// health/stamina-family candidates (UNVERIFIED). Derived stats are NOT stored on the soul --
-// computed on demand by sub_180648B18 from base stats + config.
+// Human meanings were recovered from the retail Tables.pak buff_params users and their matching
+// English_xml.pak perk/buff descriptions. No rpg/derived_stat.xml exists in the retail data.
+// Confidence tags:  [V] verified by a localized description or a directly named live-data use
+//                   [S] strong: isolated/paired use identifies the quantity consistently
+//                   [I] inferred: domain is known, but the exact engine quantity is not pinned
+//                   [?] unknown: no naming-grade evidence; no meaning is fabricated
+//
+// IMPORTANT: this is the 103-entry STRING-CODE registry used by the script converter. Its ordinals
+// are not interchangeable with the separate 218-slot internal derived-stat id domain described
+// below; do not cast one of these values directly into a native GetDerivedStat(int) call.
 //
 // NOTE: a genuinely DIFFERENT 218-slot enum (codes "charisma", "rch", "cse", ..., ids 0..109 +
 // 213..217; name->id builder sub_1801C39F0 @0x185330DD0, id->name sub_181121EE8) is wired to
@@ -26,27 +32,109 @@
 namespace wh::rpgmodule {
 
 enum class E_DerivedStat : uint32_t {
-    ade = 0,    uat = 1,    wat = 2,    wac = 3,    ahm = 4,
-    rtm = 5,    act = 6,    asp = 7,    pbs = 8,    cli = 9,
-    hlh = 10,   slh = 11,   sls = 12,   dig = 13,   exh = 14,
-    hod = 15,   psp = 16,   lcs = 17,   srg = 18,   sco = 19,
-    srb = 20,   sra = 21,   ard = 22,   skp = 23,   rst = 24,
-    pdp = 25,   eep = 26,   lpd = 27,   lpn = 28,   ain = 29,
-    hin = 30,   fae = 31,   dee = 32,   dew = 33,   osb = 34,
-    dsl = 35,   cos = 36,   pac = 37,   lpb = 38,   res = 39,
-    ors = 40,   ptp = 41,   shr = 42,   ser = 43,   pim = 44,
-    ald = 45,   aam = 46,   uab = 47,   fhm = 48,   fne = 49,
-    dth = 50,   dtd = 51,   tdh = 52,   adc = 53,   sla = 54,
-    sta = 55,   ssa = 56,   wsr = 57,   war = 58,   wrs = 59,
-    wra = 60,   efc = 61,   dsc = 62,   wde = 63,   ewd = 64,
-    scv = 65,   scx = 66,   skv = 67,   cat = 68,   acm = 69,
-    rat = 70,   rls = 71,   ptw = 72,   ala = 73,   apq = 74,
-    bid = 75,   fob = 76,   ode = 77,   dmd = 78,   dmh = 79,
-    drn = 80,   bqc = 81,   bqy = 82,   ifc = 83,   pwc = 84,
-    paa = 85,   itd = 86,   rkm = 87,   rhm = 88,   phv = 89,
-    bnv = 90,   pnv = 91,   fnv = 92,   aps = 93,   fbm = 94,
-    tdm = 95,   cps = 96,   spv = 97,   pct = 98,   nhp = 99,
-    nrb = 100,  btd = 101,  opd = 102,
+    ade = 0,    // [?] UNKNOWN -- only turtle-skin/tournament data uses it
+    uat = 1,    // [S] Unarmed attack damage
+    wat = 2,    // [V] Weapon attack damage
+    wac = 3,    // [V] Weapon/combat-action stamina cost
+    ahm = 4,    // [V] Mounted attack damage
+    rtm = 5,    // [?] UNKNOWN -- mount-related; only the Warhorse perk uses it
+    act = 6,    // [?] UNKNOWN -- no retail buff/perk user
+    asp = 7,    // [S] Attack-success probability
+    pbs = 8,    // [V] Perfect-block/master-strike chance
+    cli = 9,    // [V] Clinch-overpower chance
+    hlh = 10,   // [V] Incoming health-damage multiplier
+    slh = 11,   // [S] Incoming stamina-damage multiplier
+    sls = 12,   // [V] Shield-block stamina cost
+    dig = 13,   // [V] Digestion/hunger rate
+    exh = 14,   // [V] Exhaustion/energy-drain rate
+    hod = 15,   // [V] Hangover recovery time (lower clears it faster)
+    psp = 16,   // [V] Healing-potion healing speed
+    lcs = 17,   // [S] Aim sway/hand-shake magnitude
+    srg = 18,   // [V] Stamina-regeneration rate
+    sco = 19,   // [?] UNKNOWN -- stamina/action-cost domain, exact quantity unpinned
+    srb = 20,   // [?] UNKNOWN -- stamina-state cap domain, exact quantity unpinned
+    sra = 21,   // [S] In-combat/backswing stamina regeneration
+    ard = 22,   // [V] Stamina drain while aiming
+    skp = 23,   // [S] Stealth-kill success probability
+    rst = 24,   // [V] Resistance to health-derived maximum-stamina loss
+    pdp = 25,   // [V] Resistance to being pulled from a horse
+    eep = 26,   // [S] Fast-travel encounter-escape chance
+    lpd = 27,   // [S] Lockpicking difficulty
+    lpn = 28,   // [S] Lockpicking noise
+    ain = 29,   // [V] Chance to inflict bleeding
+    hin = 30,   // [V] Incoming bleeding susceptibility
+    fae = 31,   // [S] First-aid/bandage effectiveness
+    dee = 32,   // [V] Armour-condition damage dealt
+    dew = 33,   // [V] Enemy weapon/shield condition damage dealt
+    osb = 34,   // [V] Opponent stamina cost when blocking your attacks
+    dsl = 35,   // [V] Combat-dodge chance/effectiveness
+    cos = 36,   // [?] UNKNOWN -- defensive-reaction probability, exact action unpinned
+    pac = 37,   // [S] Poison-application chance
+    lpb = 38,   // [V] Lockpick break/snap chance
+    res = 39,   // [I] Crime-search/recognition responsiveness
+    ors = 40,   // [S] AI observability/detectability
+    ptp = 41,   // [?] UNKNOWN -- tremor/combat-direction probability domain
+    shr = 42,   // [V] Health regeneration while sleeping
+    ser = 43,   // [V] Energy regeneration while sleeping
+    pim = 44,   // [S] Poison immunity/cure control
+    ald = 45,   // [V] Alcoholism-effect multiplier
+    aam = 46,   // [I] Alcohol/potion metabolism or effect-duration multiplier
+    uab = 47,   // [V] Damage bonus against an unaware target
+    fhm = 48,   // [V] Food-healing multiplier
+    fne = 49,   // [V] Crime-fine amount multiplier
+    dth = 50,   // [V] Ranged chest/heart-hit damage multiplier
+    dtd = 51,   // [?] UNKNOWN -- no retail buff/perk user
+    tdh = 52,   // [V] Head-hit damage taken/helmet protection multiplier
+    adc = 53,   // [?] UNKNOWN -- no retail buff/perk user
+    sla = 54,   // [V] Slashing-damage multiplier
+    sta = 55,   // [V] Stabbing/piercing-damage multiplier
+    ssa = 56,   // [V] Smashing/blunt-damage multiplier
+    wsr = 57,   // [?] UNKNOWN -- no retail buff/perk user
+    war = 58,   // [?] UNKNOWN -- no retail buff/perk user
+    wrs = 59,   // [?] UNKNOWN -- no retail buff/perk user
+    wra = 60,   // [?] UNKNOWN -- no retail buff/perk user
+    efc = 61,   // [S] Fast-travel event reaction/avoidance chance
+    dsc = 62,   // [V] Dodge stamina cost
+    wde = 63,   // [V] Own weapon-defence effectiveness
+    ewd = 64,   // [V] Enemy weapon/shield-defence effectiveness
+    scv = 65,   // [V] Skill-check value bonus
+    scx = 66,   // [V] Skill-check experience multiplier
+    skv = 67,   // [S] Dialogue skill-check effectiveness
+    cat = 68,   // [V] Clinch-attack damage multiplier
+    acm = 69,   // [V] Charged-attack damage multiplier
+    rat = 70,   // [V] Ranged-attack damage multiplier
+    rls = 71,   // [V] Ranged reload/cocking speed
+    ptw = 72,   // [V] Aiming time-warp/slow-motion factor
+    ala = 73,   // [V] Extra alchemy products brewed
+    apq = 74,   // [V] Alchemy-process quality/tolerance
+    bid = 75,   // [V] Blocking-item durability-loss multiplier
+    fob = 76,   // [V] Feint effectiveness/opponent response difficulty
+    ode = 77,   // [?] UNKNOWN -- no retail buff/perk user
+    dmd = 78,   // [V] Mutt obedience-decay multiplier
+    dmh = 79,   // [V] Damage taken by Mutt
+    drn = 80,   // [V] Mutt return time after fleeing
+    bqc = 81,   // [S] Bed-quality contribution/bonus
+    bqy = 82,   // [V] Bed/sleep-quality multiplier
+    ifc = 83,   // [V] Time for an item's stolen flag to clear
+    pwc = 84,   // [V] Poisoned-weapon coating longevity/hit count
+    paa = 85,   // [V] Poisoned-arrow count per poison dose
+    itd = 86,   // [V] Item/food spoilage rate
+    rkm = 87,   // [V] Repair-kit material consumption
+    rhm = 88,   // [V] Horse-rearing fear/morale effect
+    phv = 89,   // [V] Healing-potion healing value/effectiveness
+    bnv = 90,   // [V] Beer nourishment value
+    pnv = 91,   // [V] Potion nourishment value
+    fnv = 92,   // [V] Food nourishment value
+    aps = 93,   // [V] Arrow/bolt ballistic speed, range, and penetration
+    fbm = 94,   // [V] Foliage/bush movement-noise multiplier
+    tdm = 95,   // [S] Criminal-brand disappearance/decay rate
+    cps = 96,   // [V] Carrying-capacity gain per Strength level
+    spv = 97,   // [V] Stamina-point gain per Vitality level
+    pct = 98,   // [V] Pickpocket collection-time gain rate
+    nhp = 99,   // [I] Secondary hangover duration/severity multiplier
+    nrb = 100,  // [S] NPC crime-search/recognition bonus
+    btd = 101,  // [S] Visible bleeding/blood-trail persistence
+    opd = 102,  // [?] UNKNOWN -- no retail buff/perk user
 
     RegisteredCount = 103,   // last registered id + 1 (SYNTHETIC enumerator)
     DeclaredRange   = 218,   // handler reject threshold / name->id miss sentinel (0xDA)

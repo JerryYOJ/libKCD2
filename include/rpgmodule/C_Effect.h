@@ -21,6 +21,7 @@ namespace wh::rpgmodule {
 
 class C_EffectVisitor;        // TD 0x184CE4C20 -- abstract, one Visit slot per effect type
 class C_ConstEffectVisitor;   // TD 0x184CE8DC0
+class C_Event;                 // owner type, see C_Event.h
 
 class C_Effect {
 public:
@@ -38,7 +39,7 @@ public:
     // [8] 0x40  returns a TLS-init static CryStringT ("StatXP", ...) per concrete type
     virtual const CryStringT<char>& GetName() = 0;
 
-    void* m_pOwner;   // +0x08  effect queue/owner object; ctor pushes `this` into owner+0x10 vector
+    C_Event* m_pOwner;   // +0x08  non-owning; ctor pushes `this` into owner->m_effects (+0x10)
 };
 static_assert(sizeof(C_Effect) == 0x10, "C_Effect must be 0x10 (branch ctors write +0x10 themselves)");
 

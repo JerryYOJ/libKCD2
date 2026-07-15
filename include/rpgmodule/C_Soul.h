@@ -64,11 +64,12 @@ public:
     // 0 / 73 additionally require derived stat 186 / 187 > 0. KCD2 ability ids differ
     // from KCD1's E_SoulAbility -- not yet enumerated, hence the raw uint32_t.
     bool HasAbility(uint32_t abilityId) const;
+    Offsets::IEntity* GetBoundEntity() const;  // resolves m_entityGuid via IEntitySystem::FindEntityByGuid+GetEntity; null if unbound
 
     UnsafeOp::CryDeferrableSlot m_deferred2;   // +0x20  second deferrable -- MEMBER, not in the CHD
     wh::framework::WUID m_selfWuid;            // +0x30  ctor inits INVALID (-1, qword_185332358); factory
                                                //        writes slotIdx | 0x05 << 56 (soul WUID tag = 5)
-    uint64_t m_unk38;                          // +0x38  (ctor 0; possibly the S_WuidSlot pair half -- LOW)
+    EntityGUID m_entityGuid;                   // +0x38  IEntity::GetGuid() (NOT CryGUID/WUID) -- sub_180AD7EE4
     CryStringT<char> m_name;                   // +0x40  init "<not-initialized-soul>"
     CryGUID  m_guid;                           // +0x48  SetGuid sub_1803F1A60; registered in the global
                                                //        GUID->Soul map @(qword_1853322A0 + 128)

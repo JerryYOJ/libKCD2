@@ -2,6 +2,7 @@
 #include <cstdint>
 
 typedef unsigned int EntityId;
+typedef uint64_t EntityGUID;   // CryEngine SDK CryCommon/IEntity.h: typedef uint64 EntityGUID
 
 // -----------------------------------------------
 // IEntity - KCD2 binary vtable order  (CryEntitySystem CEntity)
@@ -22,7 +23,7 @@ namespace Offsets {
 struct IEntity {
     virtual void _vf0() = 0;                                          // [0]   0x00  scalar-deleting dtor (0x1808e2e00)
     virtual EntityId GetId() const = 0;                              // [1]   0x08  return *(uint32*)(this+0x0C)                 VERIFIED
-    virtual uint64_t GetGuid() const = 0;                            // [2]   0x10  return *(uint64*)(this+0x10)                 VERIFIED
+    virtual EntityGUID GetGuid() const = 0;                          // [2]   0x10  return *(uint64*)(this+0x10)                 VERIFIED
     virtual void* GetClass() const = 0;                              // [3]   0x18  return *(this+0x20) (IEntityClass*)          VERIFIED
     virtual void* GetArchetype() const = 0;                          // [4]   0x20  return *(this+0x28)                          VERIFIED
     virtual void SetFlags(uint32_t flags) = 0;                       // [5]   0x28  *(this+0x18)=flags, notify proxies           VERIFIED
@@ -54,8 +55,8 @@ struct IEntity {
     virtual void SetWorldTM(const Matrix34& tm, int flags) = 0;      // [31]  0xF8  204 bytes                                    tentative
     virtual Matrix34* GetWorldTMPtr() = 0;                           // [32]  0x100 lea rax,[this+0x58]                          VERIFIED worldTM@0x58
     virtual void _vf33() = 0;                                        // [33]  0x108
-    virtual void _vf34() = 0;                                        // [34]  0x110
-    virtual void _vf35() = 0;                                        // [35]  0x118
+    virtual void GetWorldBounds(AABB& bbox) const = 0;               // [34]  0x110  VERIFIED via CFlowNode_EntityGetBounds::ProcessEvent (sub_18361B6E0, "World" branch, offset 272)
+    virtual void GetLocalBounds(AABB& bbox) const = 0;               // [35]  0x118  VERIFIED via same node's "Local" branch, offset 280
     virtual void _vf36() = 0;                                        // [36]  0x120  197 bytes
     virtual void _vf37() = 0;                                        // [37]  0x128
     virtual void _vf38() = 0;                                        // [38]  0x130

@@ -8,7 +8,7 @@
 // Do not edit by hand. One entry per RE'd polymorphic class, matched to the binary
 // by exact mangled name. Consumed by Offsets/RTTI.h (kcd_cast) and the
 // `static constexpr auto RTTI` member on each class.
-// Target: WHGame.dll 1.5.6. Count: 999 classes.
+// Target: WHGame.dll 1.5.6. Count: 1007 classes.
 
 namespace Offsets {
 
@@ -119,6 +119,8 @@ namespace Offsets {
     inline constexpr ::REL::Offset RTTI_C_CombatActorActionSyncPerfectBlock                          { 0x4AFB560 };  // .?AVC_CombatActorActionSyncPerfectBlock@combatmodule@wh@@
     inline constexpr ::REL::Offset RTTI_C_CombatActorActionSyncPerfectBlockHit                       { 0x4AFBC50 };  // .?AVC_CombatActorActionSyncPerfectBlockHit@combatmodule@wh@@
     inline constexpr ::REL::Offset RTTI_C_CombatActorActionSyncTransition                            { 0x4AFABF0 };  // .?AVC_CombatActorActionSyncTransition@combatmodule@wh@@
+    inline constexpr ::REL::Offset RTTI_C_CombatActorAnimCollisions                                  { 0x4B13020 };  // .?AVC_CombatActorAnimCollisions@combatmodule@wh@@
+    inline constexpr ::REL::Offset RTTI_C_CombatActorCollisions                                      { 0x4B12FD8 };  // .?AVC_CombatActorCollisions@combatmodule@wh@@
     inline constexpr ::REL::Offset RTTI_C_CombatActorDirector                                        { 0x4B00948 };  // .?AVC_CombatActorDirector@combatmodule@wh@@
     inline constexpr ::REL::Offset RTTI_C_CombatActorHorsePullDown                                   { 0x4B005F0 };  // .?AVC_CombatActorHorsePullDown@combatmodule@wh@@
     inline constexpr ::REL::Offset RTTI_C_CombatActorHuntAttack                                      { 0x4B007A8 };  // .?AVC_CombatActorHuntAttack@combatmodule@wh@@
@@ -792,8 +794,10 @@ namespace Offsets {
     inline constexpr ::REL::Offset RTTI_C_WantedBuff                                                 { 0x4D0B1F8 };  // .?AVC_WantedBuff@rpgmodule@wh@@
     inline constexpr ::REL::Offset RTTI_C_WeaponDestroyCause                                         { 0x4D5D9E0 };  // .?AVC_WeaponDestroyCause@rpgmodule@wh@@
     inline constexpr ::REL::Offset RTTI_C_WeaponEquipRuntimeData                                     { 0x4C37EB8 };  // .?AVC_WeaponEquipRuntimeData@entitymodule@wh@@
+    inline constexpr ::REL::Offset RTTI_C_WeaponProcSolver                                           { 0x4B38808 };  // .?AVC_WeaponProcSolver@combatmodule@wh@@
     inline constexpr ::REL::Offset RTTI_C_WeaponRaisedCause                                          { 0x4D5F010 };  // .?AVC_WeaponRaisedCause@rpgmodule@wh@@
     inline constexpr ::REL::Offset RTTI_C_WeaponRuntimeData                                          { 0x4C6F078 };  // .?AVC_WeaponRuntimeData@entitymodule@wh@@
+    inline constexpr ::REL::Offset RTTI_C_WeaponSolver                                               { 0x4B3B678 };  // .?AVC_WeaponSolver@combatmodule@wh@@
     inline constexpr ::REL::Offset RTTI_C_WeatherProfileDatabase                                     { 0x4C7FAB0 };  // .?AVC_WeatherProfileDatabase@environmentmodule@wh@@
     inline constexpr ::REL::Offset RTTI_C_WeatherSituationGlobalCondition                            { 0x4F52110 };  // .?AVC_WeatherSituationGlobalCondition@xgenaimodule@wh@@
     inline constexpr ::REL::Offset RTTI_C_WeatherSystem                                              { 0x4C7FBB8 };  // .?AVC_WeatherSystem@environmentmodule@wh@@
@@ -858,6 +862,7 @@ namespace Offsets {
     inline constexpr ::REL::Offset RTTI_I_EEFunction                                                 { 0x4A57B50 };  // .?AVI_EEFunction@framework@wh@@
     inline constexpr ::REL::Offset RTTI_I_EntitySideEffectCallback                                   { 0x4B063D0 };  // .?AVI_EntitySideEffectCallback@game@wh@@
     inline constexpr ::REL::Offset RTTI_I_EquipmentManagerListener                                   { 0x4B054C0 };  // .?AVI_EquipmentManagerListener@entitymodule@wh@@
+    inline constexpr ::REL::Offset RTTI_I_Event                                                      { 0x4D40F00 };  // .?AVI_Event@rpgmodule@wh@@
     inline constexpr ::REL::Offset RTTI_I_EventListener                                              { 0x4CE91A8 };  // .?AVI_EventListener@rpgmodule@wh@@
     inline constexpr ::REL::Offset RTTI_I_EventLogListener                                           { 0x4CCFCC0 };  // .?AVI_EventLogListener@framework@wh@@
     inline constexpr ::REL::Offset RTTI_I_FactionManager                                             { 0x4D4E6F8 };  // .?AVI_FactionManager@rpgmodule@wh@@
@@ -875,6 +880,7 @@ namespace Offsets {
     inline constexpr ::REL::Offset RTTI_I_IntermissionManager                                        { 0x4FF5B20 };  // .?AVI_IntermissionManager@xgenaimodule@wh@@
     inline constexpr ::REL::Offset RTTI_I_InventoryListener                                          { 0x4C0B228 };  // .?AVI_InventoryListener@entitymodule@wh@@
     inline constexpr ::REL::Offset RTTI_I_InventoryManagerListener                                   { 0x4F5C180 };  // .?AVI_InventoryManagerListener@entitymodule@wh@@
+    inline constexpr ::REL::Offset RTTI_I_InventorySoul                                              { 0x4D72550 };  // .?AVI_InventorySoul@rpgmodule@wh@@
     inline constexpr ::REL::Offset RTTI_I_ItemAttachmentListener                                     { 0x4C1F848 };  // .?AVI_ItemAttachmentListener@entitymodule@wh@@
     inline constexpr ::REL::Offset RTTI_I_ItemCollectionListener                                     { 0x4BC02F0 };  // .?AVI_ItemCollectionListener@entitymodule@wh@@
     inline constexpr ::REL::Offset RTTI_I_ItemRuntimeData                                            { 0x4C38C80 };  // .?AVI_ItemRuntimeData@entitymodule@wh@@
@@ -914,6 +920,7 @@ namespace Offsets {
     inline constexpr ::REL::Offset RTTI_I_Reward                                                     { 0x4D5AA50 };  // .?AVI_Reward@rpgmodule@wh@@
     inline constexpr ::REL::Offset RTTI_I_SEBehaviorConditionManager                                 { 0x4F4E2C0 };  // .?AVI_SEBehaviorConditionManager@xgenaimodule@wh@@
     inline constexpr ::REL::Offset RTTI_I_SceneListener                                              { 0x4B13068 };  // .?AVI_SceneListener@animationmodule@wh@@
+    inline constexpr ::REL::Offset RTTI_I_ScheduleUpdatable                                          { 0x4C64A50 };  // .?AVI_ScheduleUpdatable@framework@wh@@
     inline constexpr ::REL::Offset RTTI_I_SchedulerActivityHost                                      { 0x4EFF1B0 };  // .?AVI_SchedulerActivityHost@scheduler@xgenaimodule@wh@@
     inline constexpr ::REL::Offset RTTI_I_SchedulerInterruptListener                                 { 0x4F4D540 };  // .?AVI_SchedulerInterruptListener@scheduler@xgenaimodule@wh@@
     inline constexpr ::REL::Offset RTTI_I_SeekableOutputStream                                       { 0x4A37898 };  // .?AVI_SeekableOutputStream@shared@wh@@

@@ -22,6 +22,7 @@
 #include "CryEngine/CryCommon/BaseTypes.h"
 #include "CryEngine/CryCommon/CryString.h"   // CryStringT<char>
 #include "CryEngine/CryCommon/Cry_Math.h"    // Vec3 / Vec2 / Quat / QuatT / Matrix34 (self-includes platform.h)
+#include "CryEngine/CryCommon/Cry_Geo.h"     // AABB (self-includes Cry_Math.h)
 #include "CryEngine/CryCommon/CryArray.h"    // DynArray
 
 // ---- Offsets / RTTI infrastructure (must precede class headers) ----
@@ -49,6 +50,7 @@
 #include "Offsets/vtables/IActionMapManager.h"
 #include "Offsets/vtables/IGameFrameworkListener.h"
 #include "Offsets/vtables/I3DEngine.h"
+#include "Offsets/vtables/IRenderer.h"
 #include "Offsets/vtables/IFlashPlayer.h"
 #include "Offsets/vtables/IFlashPlayer_RenderProxy.h"
 #include "Offsets/vtables/IFlashVariableObject.h"
@@ -129,6 +131,12 @@
 #include "combatmodule/S_CombatActorState.h"
 #include "combatmodule/C_CombatActorObject.h"
 #include "combatmodule/C_CombatActorUpdatedObject.h"
+#include "combatmodule/S_CombatCollisionDetails.h"
+#include "combatmodule/S_CombatAnimCollision.h"
+#include "combatmodule/C_WeaponProcSolver.h"
+#include "combatmodule/C_WeaponSolver.h"
+#include "combatmodule/C_CombatActorCollisions.h"
+#include "combatmodule/C_CombatActorAnimCollisions.h"
 #include "combatmodule/I_CombatComboManager.h"
 #include "combatmodule/C_CombatComboManager.h"
 #include "combatmodule/C_CombatActorOpponentManager.h"
@@ -170,9 +178,11 @@
 
 // ---- Tranche 5: RPG core (souls / buffs / factions / module) ----
 #include "framework/C_ParallelModuleUpdater.h"
+#include "framework/I_ScheduleUpdatable.h"
 #include "databasemodule/I_DatabaseListener.h"
 // soul stack
 #include "rpgmodule/I_Soul.h"
+#include "rpgmodule/I_InventorySoul.h"
 #include "rpgmodule/I_SoulResolver.h"
 #include "rpgmodule/S_ModifierNode.h"
 #include "rpgmodule/C_SoulPropertyNotifier.h"
@@ -210,10 +220,10 @@
 #include "rpgmodule/C_RPGModule.h"
 
 // ---- Tranche 6: Lua ScriptBind surface + item runtime data + RPG value enums ----
-// enums (index the S_SoulStatBlock arrays / GetDerivedStat string codes)
-#include "rpgmodule/E_SoulStat.h"
-#include "rpgmodule/E_SoulSkill.h"
-#include "rpgmodule/E_DerivedStat.h"
+  // enums (index the S_SoulStatBlock arrays / GetDerivedStat string codes)
+  #include "rpgmodule/E_SoulStat.h"
+  #include "rpgmodule/E_SoulSkill.h"
+  #include "rpgmodule/E_DerivedStat.h"
 #include "rpgmodule/E_SoulCondition.h"
 // ScriptBind surface (the Lua cheat entry points; fn tables documented per header)
 #include "crysystem/CScriptableBase.h"
@@ -1375,6 +1385,8 @@
 //      I_RPGDialog scope for the nested SkillCheck payload)
 //      (composed from analysis/rpgmodule_port/g11{a..e}_dossier.md; wf8i9sn4w)
 #include "rpgmodule/I_RPGDialog.h"
+#include "rpgmodule/E_EventState.h"
+#include "rpgmodule/I_Event.h"
 #include "rpgmodule/C_Event.h"
 //   -- payload POD structs (no RTTI; size-proven) --
 #include "rpgmodule/S_ActorLootData.h"
@@ -1562,3 +1574,12 @@
 #include "rpgmodule/C_UknownScriptCause.h"
 #include "rpgmodule/C_WeaponDestroyCause.h"
 #include "rpgmodule/C_WeaponRaisedCause.h"
+
+// ---- Tranche 28: damage-application pipeline (producers C_CombatSoul[42..45] ->
+// S_DamageEventData -> dispatcher S_DamageEventData::Dispatch -> C_*ValueEffect deltas) ----
+#include "rpgmodule/E_BloodZoneId.h"
+#include "rpgmodule/E_DamageEventType.h"
+#include "rpgmodule/E_DamageTypeMask.h"
+#include "entitymodule/StabSlashSmashValue.h"
+#include "rpgmodule/S_DealDamageParams.h"
+#include "rpgmodule/S_DamageEventData.h"

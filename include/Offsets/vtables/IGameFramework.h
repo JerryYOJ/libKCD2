@@ -1,5 +1,8 @@
 #pragma once
 #include <cstdint>
+#include "IActor.h"          // Offsets::IActor       (GetClientActor return type)
+#include "IEntity.h"         // Offsets::IEntity       (GetClientEntity return type)
+#include "IActorSystem.h"    // Offsets::IActorSystem  (GetIActorSystem return type)
 
 typedef unsigned int EntityId;
 
@@ -25,10 +28,6 @@ typedef unsigned int EntityId;
 //   +0x520 CItemSystem         +0x530 CActionMapManager   +0x538 CViewSystem
 //   +0x558 CGameObjectSystem   +0x560 CUIDraw             +0x578 CMannequinInterface
 //   +0x5F8 CGameStatistics     +0x610 CGameSessionHandler +0x490 game GUID string[0x80]
-
-struct IActor;
-struct IEntity;
-struct IActorSystem;
 
 // Action event dispatched to IGameFrameworkListeners via OnActionEvent.
 struct SActionEvent {

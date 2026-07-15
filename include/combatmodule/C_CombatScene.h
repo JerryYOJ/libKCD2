@@ -39,7 +39,7 @@ public:
     void GetActorsByEntityId(uint32_t, std::vector<C_CombatActor*>&) override {} // [1] sub_180C5962C
     void RefreshActorRelations() override {}                                     // [2] sub_1809D45A4
     // ---- I_SceneListener ----
-    void OnSceneChanged() override {}                                            // nop (sub_1803B6E80)
+    void OnCollision(const void*, const void*, const EventPhysCollision&) override {} // nop (sub_1803B6E80)
     // ---- I_GameSideEffectCallback (2 callback slots, no dtor -- see the header) ----
     void OnSideEffectDeactivated(char sideEffectId) override;                    // [0] sub_1827C7D74 (re-caches sub_1809D385C() into m_field40)
     void OnSideEffectActivated(char sideEffectId) override {}                    // [1] nop (sub_1803B6E80)

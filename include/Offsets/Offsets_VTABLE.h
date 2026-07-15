@@ -1612,6 +1612,8 @@ inline constexpr std::array<::REL::Offset, 1> VTABLE_I_Dialog{ ::REL::Offset(0x3
 inline constexpr std::array<::REL::Offset, 1> VTABLE_I_EEFunction{ ::REL::Offset(0x3A51940) };
 // .?AVI_EquipmentManagerListener@entitymodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::Offset, 1> VTABLE_I_EquipmentManagerListener{ ::REL::Offset(0x3A5D958) };
+// .?AVI_Event@rpgmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
+inline constexpr std::array<::REL::Offset, 1> VTABLE_I_Event{ ::REL::Offset(0x3F1A6B0) };
 // .?AVI_FogOfWarListener@playermodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::Offset, 1> VTABLE_I_FogOfWarListener{ ::REL::Offset(0x3ED92A0) };
 // .?AVI_InputStream@shared@wh@@ -- 1 subobject vtable(s) @ +0x0

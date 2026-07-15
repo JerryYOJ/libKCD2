@@ -10,7 +10,16 @@
 // TEXT (authentic game pattern): both labels are AUTHORED DefineEditTexts bound
 // to the ImportAssets2-imported "DefaultFont" from gfxfontlib.gfx -- the exact
 // mechanism hud.gfx uses (sprite prototype + instance "tField"; see base.xml).
-// AS only attachMovie()s them and sets .text; never touch .font.
+// AS only attachMovie()s them and sets .text here. CORRECTED (2026-07-13): an
+// earlier version of this comment claimed runtime TextFormat.font/size/color
+// changes are ignored by GFx -- that's wrong, disproven by
+// analysis/CompassOverhaul/texttest.gfx: TextFormat correctly restyles both
+// fresh createTextField() fields and already tag-bound fields like these,
+// PROVIDED .embedFonts = true is set first (the real missing ingredient
+// behind the old belief -- unset, a field silently falls back to
+// non-embedded/device rendering, indistinguishable from "the restyle did
+// nothing"). Left baked here anyway: this template predates the finding and
+// already works, so there's no functional reason to change it.
 //
 // NAMES (all strings arrive PRE-LOCALIZED -- the GFx translator does not
 // resolve "@keys" set at runtime in this movie, so the plugin localizes

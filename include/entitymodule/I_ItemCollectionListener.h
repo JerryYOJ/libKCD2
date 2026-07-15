@@ -1,18 +1,23 @@
 #pragma once
-#include "I_InventoryListener.h"
 
 // -----------------------------------------------
-// wh::entitymodule::I_ItemCollectionListener : I_InventoryListener -- KCD2 1.5.6 (kd7u)
+// wh::entitymodule::I_ItemCollectionListener -- KCD2 WHGame.dll 1.5.6 (kd7u)
 // -----------------------------------------------
-// Item-collection change listener (vtable only). Primary base of C_EquipmentManager (@+0x00). Derives
-// I_InventoryListener. KCD2 vtable slots not fully re-verified.
+// Standalone item-collection listener. RTTI CHD 0x1842B1140 contains no base
+// classes; vtable 0x183A65020 has five no-op slots and a deleting destructor.
 
 namespace wh::entitymodule {
 
-class I_ItemCollectionListener : public I_InventoryListener {
+class I_ItemCollectionListener {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_I_ItemCollectionListener;
-    virtual void OnItemCollectionChanged() {}   // (KCD1-derived; KCD2 slots unverified)
+    virtual void ItemCollectionListenerUnk0() {}  // [0] [U signature]
+    virtual void ItemCollectionListenerUnk1() {}  // [1] [U signature]
+    virtual void ItemCollectionListenerUnk2() {}  // [2] [U signature]
+    virtual void ItemCollectionListenerUnk3() {}  // [3] [U signature]
+    virtual void ItemCollectionListenerUnk4() {}  // [4] [U signature]
+    virtual ~I_ItemCollectionListener() = default; // [5] sub_1829174F8
 };
+static_assert(sizeof(I_ItemCollectionListener) == 0x08, "I_ItemCollectionListener must be vptr-only");
 
 }  // namespace wh::entitymodule

@@ -22,6 +22,7 @@
 namespace Offsets {
 
 struct IEntity;
+typedef uint64_t EntityGUID;
 
 struct IEntitySystem {
     virtual void Dtor(char flags) = 0;  // [0] 0x18380959C  scalar deleting dtor
@@ -71,7 +72,7 @@ struct IEntitySystem {
     virtual void _vf44() = 0;  // [44]
     virtual void AddEntityEventListener(uint32_t id, int event, void* listener) = 0;  // [45] 0x1807086F4  bucket @+0x600280+0x10*event [KCD1 27]
     virtual void RemoveEntityEventListener(uint32_t id, int event, void* listener) = 0;  // [46] 0x18060829C  same bucket erase [KCD1 28]
-    virtual uint32_t FindEntityByGuid(const void* guid) = 0;  // [47] 0x18047AB4C  FNV-1a over 8B guid, map @+0x600680 [KCD1 46]
+    virtual uint32_t FindEntityByGuid(const EntityGUID& guid) = 0;  // [47] 0x18047AB4C  FNV-1a over 8B guid, map @+0x600680 [KCD1 46]
     virtual void _vf48() = 0;  // [48]
     virtual uint32_t RegisterEntityGuid(const void* guid) = 0;  // [49] 0x18380BD8C  get-or-add in guid map @+0x6003C0 [LIKELY]
     virtual void _vf50() = 0;  // [50]

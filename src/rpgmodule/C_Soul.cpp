@@ -2,6 +2,9 @@
 #include "rpgmodule/C_SoulList.h"
 #include "rpgmodule/C_RPGModule.h"
 #include "Offsets/Offsets.h"
+#include "Offsets/vtables/IEntitySystem.h"
+#include "Offsets/vtables/IEntity.h"
+#include "crysystem/SSystemGlobalEnvironment.h"
 
 // C_Soul / C_SoulList engine-function forwarders. Thin wrappers around verified
 // KCD2 1.5.6 RVAs (mirrors C_FactionManager.cpp).
@@ -48,6 +51,16 @@ bool C_Soul::HasAbility(uint32_t abilityId) const
     if (abilityId == 73)
         return r.present && GetDerivedStat(187) > 0.0f;
     return r.present;
+}
+
+Offsets::IEntity* C_Soul::GetBoundEntity() const
+{
+    auto* env = SSystemGlobalEnvironment::GetInstance();
+    if (!env || !env->pEntitySystem)
+        return nullptr;
+
+    const uint32_t id = env->pEntitySystem->FindEntityByGuid(m_entityGuid);
+    return id ? env->pEntitySystem->GetEntity(id) : nullptr;
 }
 
 }}  // namespace wh::rpgmodule
