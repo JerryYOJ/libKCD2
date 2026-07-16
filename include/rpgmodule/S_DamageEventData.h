@@ -27,9 +27,10 @@
 // the +0x158..+0x15F tail is unobserved (padding assumption, flagged).
 //
 // After Dispatch() returns, m_staminaDamage/m_healthDamage hold the FINAL post-mitigation
-// values for ALL types (verified per handler), m_nonlethalClampApplied whether a would-be-lethal
-// hit got clamped, and m_bloodZoneId the resolved blood/body zone -- the single best hook site
-// for damage observation.
+// values for ALL types (verified per handler), m_nonlethalClampApplied records whether the
+// nonlethal clamp branch ran, and m_bloodZoneId is the resolved blood/body zone -- the single
+// best hook site for damage observation. There is no general fatal-result flag in this record:
+// m_forceFatal is a producer input, and m_nonlethalClampApplied is not its inverse.
 //
 // NOT a universal per-hit record: fall damage bypasses this context entirely (sub_1807243B0
 // builds C_HealthValueEffect/C_ActStaminaValueEffect directly and stamps m_amount -- never
@@ -76,7 +77,7 @@ struct S_DamageEventData {
     bool     m_scaleByImpactVelocity; // +0x09B  (rename unverified)
     bool     m_applyAttackerPostHitEffects; // +0x09C  gates post-step sub_182CEE6A4 (@0x180C646C9) (rename unverified)
     bool     m_flag9D;                // +0x09D
-    bool     m_forceFatal;            // +0x09E  forces m_healthDamage = rpg_param dword[231] (@0x180C64308) (rename unverified)
+    bool     m_forceFatal;            // +0x09E  producer input copied from S_CombatHitData::m_forceFatal; forces m_healthDamage = rpg_param dword[231] (@0x180C64308), not an output result
     bool     m_forceNonlethalClamp;   // +0x09F  forces m_nonlethalClampApplied=true, skipping the margin check (sub_180C62F1C @0x1822A157D)
     bool     m_fail;                  // +0x0A0  melee handler early-out (@0x180727CFD) (rename unverified)
     bool     m_stealthAction;         // +0x0A1  (word store desc+100 covers +0xA0/+0xA1) (rename unverified)
@@ -114,12 +115,12 @@ struct S_DamageEventData {
     int32_t  m_bodyMaterialId;        // +0x11C  body_material2subpart.body_material_id; melee origMatId0 + 1 (@0x180727B10), 0 = unavailable
     int32_t  m_targetSurfaceId;       // +0x120  ctor -1; melee desc+80; missile passes it to the arrow-stick path sub_182CEF6C0
     E_BloodZoneId m_bloodZoneId;      // +0x124  ctor Undefined; FINAL body_part.blood_zone_id; consumed by C_BloodEffect via sub_180C629AC
-    float    m_attackerEwd;           // +0x128  ctor -1.0; attacker effective-weapon-damage, derived stat 64 (sub_180728170 @0x180727D73)
+    float    m_effectiveWeaponDefense; // +0x128  ctor -1.0; victim weapon's defense after E_PerkStat::wde(63) on victim and E_PerkStat::ewd(64) on attacker (sub_180728170)
     E_SoulSkill m_weaponSkill;        // +0x12C  ctor Count(35, =none); resolved by sub_180727FC8 (24=weapon_unarmed sentinel default, clamps out-of-range to Count); 19(marksmanship)/35(Count) special-cased in the reaction tail (@0x180C645BB)
     int32_t  m_armorSurfaceTypeId;    // +0x130  ctor -1; armor-selection out-param written by sub_182CFCC54/sub_182CFCC78; separate domain from body_subpart_id and E_BloodZoneId
     bool     m_cannotKill;             // +0x134  attack-type-data vfn[3] result, keyed by m_attackType (@0x180727DA6)
     bool     m_meleeArmorPath;        // +0x135  set 1 by melee fill (@0x180727BF9); selects sub_180BE16DC vs sub_182D25C74 armor path
-    bool     m_nonlethalClampApplied; // +0x136  gated on m_cannotKill: true only when a lethal hit got clamped nonlethal (sub_180C62F1C @0x180C62FC4; threshold rpg_param+0x308)
+    bool     m_nonlethalClampApplied; // +0x136  output: m_cannotKill branch clamped final health damage to leave >=1 health; not a general nonfatal/fatal indicator (sub_180C62F1C @0x180C62FC4)
     uint8_t  _pad137;                 // +0x137
     float    m_staminaDamage;         // +0x138  FINAL stamina damage (negated into m_pStaminaEffect delta @0x180C626FB)
     float    m_healthDamage;          // +0x13C  FINAL health damage (negated into m_pHealthEffect delta @0x180C627CD)
@@ -139,6 +140,7 @@ static_assert(offsetof(S_DamageEventData, m_type) == 0xC0, "type at 0xC0");
 static_assert(offsetof(S_DamageEventData, m_pHealthEffect) == 0xD0, "health effect at 0xD0");
 static_assert(offsetof(S_DamageEventData, m_bodyMaterialId) == 0x11C, "body material id at 0x11C");
 static_assert(offsetof(S_DamageEventData, m_bloodZoneId) == 0x124, "blood zone id at 0x124");
+static_assert(offsetof(S_DamageEventData, m_effectiveWeaponDefense) == 0x128, "effective weapon defense at 0x128");
 static_assert(offsetof(S_DamageEventData, m_weaponSkill) == 0x12C, "weapon skill at 0x12C");
 static_assert(offsetof(S_DamageEventData, m_staminaDamage) == 0x138, "stamina damage at 0x138");
 static_assert(offsetof(S_DamageEventData, m_healthDamage) == 0x13C, "health damage at 0x13C");

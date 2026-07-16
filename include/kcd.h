@@ -220,10 +220,11 @@
 #include "rpgmodule/C_RPGModule.h"
 
 // ---- Tranche 6: Lua ScriptBind surface + item runtime data + RPG value enums ----
-  // enums (index the S_SoulStatBlock arrays / GetDerivedStat string codes)
+  // enums (Soul stat/skill arrays, native derived stats, and perk/buff modifier targets)
   #include "rpgmodule/E_SoulStat.h"
   #include "rpgmodule/E_SoulSkill.h"
   #include "rpgmodule/E_DerivedStat.h"
+  #include "rpgmodule/E_PerkStat.h"
 #include "rpgmodule/E_SoulCondition.h"
 // ScriptBind surface (the Lua cheat entry points; fn tables documented per header)
 #include "crysystem/CScriptableBase.h"

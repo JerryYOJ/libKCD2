@@ -105,12 +105,33 @@ float ComputeTextSize(float amount) {
     return g_minTextSizePx + t * (g_maxTextSizePx - g_minTextSizePx);
 }
 
+// Inverse-linear distance decay for popup size: full scale at/inside g_decayStartDist
+// meters from the player, then shrinks like real perspective (half at 2x the distance,
+// a third at 3x), floored at g_minDistanceScale. Both knobs MCM-configurable (mcm.h);
+// slider at 0 m disables decay entirely. Player = IGameFramework::GetClientEntity
+// (slot [66], body-verified -- see Offsets/vtables/IGameFramework.h); on lookup
+// failure the popup just keeps full size.
+float ComputeDistanceScale(const Vec3& worldPos) {
+    if (g_decayStartDist <= 0.0f) return 1.0f;
+
+    auto* fw = Offsets::GetCCryAction();
+    auto* playerEntity = fw ? fw->GetClientEntity() : nullptr;
+    if (!playerEntity) return 1.0f;
+
+    Vec3 eye{};
+    playerEntity->GetWorldPos(eye);
+    const float dx = worldPos.x - eye.x, dy = worldPos.y - eye.y, dz = worldPos.z - eye.z;
+    const float dist = std::sqrt(dx * dx + dy * dy + dz * dz);
+    if (dist <= g_decayStartDist) return 1.0f;
+    return std::max(g_decayStartDist / dist, g_minDistanceScale);
+}
+
 // yOffsetFrac is a fraction of screen HEIGHT, not the xPx/yPx crossing into Flash below --
 // this stays native-side only (multiplied by h, our own renderer-verified height) before
 // InvokeShowDamage ever sees it, so it never depends on GFx's Stage dimensions the way the
 // old xFrac/yFrac-to-Flash convention did. Resolution-independent on purpose: a fixed pixel
 // nudge would look proportionally larger on a smaller viewport.
-void ShowDamageAtWorldPos(float amount, bool isHealthDmg, const Vec3& worldPos, float yOffsetFrac, bool isFatal) {
+void ShowDamageAtWorldPos(float amount, bool isHealthDmg, const Vec3& worldPos, float yOffsetFrac, bool isFatal, float sizeScale) {
     auto* env = SSystemGlobalEnvironment::GetInstance();
     if (!env || !env->pRenderer) return;
 
@@ -125,7 +146,10 @@ void ShowDamageAtWorldPos(float amount, bool isHealthDmg, const Vec3& worldPos, 
 
     if (offscreen) return;
 
-    InvokeShowDamage(amount, isHealthDmg, pxX, pxY + yOffsetFrac * h, ComputeTextSize(amount), isFatal);
+    // sizeScale (distance decay) deliberately multiplies AFTER the damage->px mapping,
+    // so a far popup can drop below the MCM "Min Text Size" -- that floor is the
+    // damage-scale floor; the decay floor is g_minDistanceScale.
+    InvokeShowDamage(amount, isHealthDmg, pxX, pxY + yOffsetFrac * h, ComputeTextSize(amount) * sizeScale, isFatal);
 }
 
 // Collision/BlockDamage/ScriptedDamage/VelocityImpact producers never write m_hitPosition --
@@ -198,9 +222,23 @@ protected:
         const int64_t ret = orig(ctx);
 
         if (ctx->m_healthDamage > 0.0f || ctx->m_staminaDamage > 0.0f) {
+            // Attacker resolved for both the only-player filter and the decay exemption below.
+            auto* attackerEntity = ctx->m_pAttacker ? ctx->m_pAttacker->GetBoundEntity() : nullptr;
+            auto* attackerActor = attackerEntity
+                ? wh::game::S_GameContext::GetInstance()->GetActorById(attackerEntity->GetId())
+                : nullptr;
+            const bool playerCaused = attackerActor && attackerActor->IsPlayer();
+
+            if (g_onlyShowPlayerAttacks && !playerCaused)
+                return ret;
+
             const Vec3 pos = GetPopupAnchor(ctx);
+            // Player-dealt hits stay full size at any range (aimed bow shots must read
+            // clearly); everything else shrinks with distance from the player.
+            const float sizeScale = playerCaused ? 1.0f : ComputeDistanceScale(pos);
+
             if (ctx->m_healthDamage > 0.0f) {
-                
+
                 auto* entity = ctx->m_pVictimEntity;
                 auto* actor = entity ? wh::game::S_GameContext::GetInstance()->GetActorById(entity->GetId()) : nullptr;
                 auto* soul = ctx->m_pVictim;
@@ -209,12 +247,12 @@ protected:
                     healthBefore > 0.0f &&
                     !ctx->m_nonlethalClampApplied &&
                     healthBefore - ctx->m_healthDamage <= 0.0f &&
-                    soul->GetDerivedStat(static_cast<int>(wh::rpgmodule::E_DerivedStat::aps)) <= 0.0f;
-                
-                ShowDamageAtWorldPos(ctx->m_healthDamage, true, pos, 0.023, isFatal);
+                    soul->GetDerivedStat(wh::rpgmodule::E_DerivedStat::Imm) <= 0.0f;
+
+                ShowDamageAtWorldPos(ctx->m_healthDamage, true, pos, 0.023, isFatal, sizeScale);
             }
             if (ctx->m_staminaDamage > 0.0f)
-                ShowDamageAtWorldPos(ctx->m_staminaDamage, false, pos, 0.046, false);
+                ShowDamageAtWorldPos(ctx->m_staminaDamage, false, pos, 0.046, false, sizeScale);
         }
 
         return ret;

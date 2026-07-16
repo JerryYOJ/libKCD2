@@ -2,142 +2,241 @@
 #include <cstdint>
 
 // -----------------------------------------------
-// wh::rpgmodule::E_DerivedStat -- KCD2 WHGame.dll 1.5.6 (kd7u).  4-byte enum, 103 registered values.
+// wh::rpgmodule::E_DerivedStat -- KCD2 WHGame.dll 1.5.6 (moyw).  4-byte enum, 218 values.
 // -----------------------------------------------
-// THE enum Soul:GetDerivedStat("code") resolves. Recovered from the C_RPGUtils converters:
-// name->id vtable+0x70 = sub_180BE2B8C (table builder sub_1801C2E30 @0x185331B70), id->name
-// sub_182CCC474. VERIFIED both directions for ids 0..102. The Lua handler (sub_180BE3834 via
-// thunk sub_180BE3D54) rejects id >= 0xDA (218): 218 is the DECLARED range / miss sentinel,
-// but ids 103..217 are unregistered ("<unknown enum value>").
+// Native id domain consumed by the derived-stat evaluator sub_180648B18. The exact contiguous
+// id/code registry (0..217) is built by sub_1801C39F0; sub_181121EE8 resolves id to code, and
+// wrapper sub_182CF4574 rejects ids >= 0xDA. Enumerator names preserve the binary registry
+// tokens without inventing meanings for unresolved abbreviations.
 //
-// Human meanings were recovered from the retail Tables.pak buff_params users and their matching
-// English_xml.pak perk/buff descriptions. No rpg/derived_stat.xml exists in the retail data.
-// Confidence tags:  [V] verified by a localized description or a directly named live-data use
-//                   [S] strong: isolated/paired use identifies the quantity consistently
-//                   [I] inferred: domain is known, but the exact engine quantity is not pinned
-//                   [?] unknown: no naming-grade evidence; no meaning is fabricated
-//
-// IMPORTANT: this is the 103-entry STRING-CODE registry used by the script converter. Its ordinals
-// are not interchangeable with the separate 218-slot internal derived-stat id domain described
-// below; do not cast one of these values directly into a native GetDerivedStat(int) call.
-//
-// NOTE: a genuinely DIFFERENT 218-slot enum (codes "charisma", "rch", "cse", ..., ids 0..109 +
-// 213..217; name->id builder sub_1801C39F0 @0x185330DD0, id->name sub_181121EE8) is wired to
-// C_RPGUtils vtable+0x78 (sub_182CF4574, same 0xDA reject). It is NOT what GetDerivedStat's
-// string argument maps to; its binary enum name is unresolved, so it is documented here but
-// deliberately not fabricated as a typed enum.
-//
-// The readable Health/Stamina METERS are a separate 6-value condition enum -- see E_SoulCondition.h.
+// IMPORTANT: E_PerkStat is a separate 103-value modifier target domain. Soul:GetDerivedStat's
+// Lua string handler sub_180BE3834 converts strings with the E_PerkStat converter and then
+// passes that ordinal to this native evaluator. That verified script-path mismatch does not
+// make the two enum domains interchangeable. Native C++ calls should use E_DerivedStat only.
 
 namespace wh::rpgmodule {
 
-enum class E_DerivedStat : uint32_t {
-    ade = 0,    // [?] UNKNOWN -- only turtle-skin/tournament data uses it
-    uat = 1,    // [S] Unarmed attack damage
-    wat = 2,    // [V] Weapon attack damage
-    wac = 3,    // [V] Weapon/combat-action stamina cost
-    ahm = 4,    // [V] Mounted attack damage
-    rtm = 5,    // [?] UNKNOWN -- mount-related; only the Warhorse perk uses it
-    act = 6,    // [?] UNKNOWN -- no retail buff/perk user
-    asp = 7,    // [S] Attack-success probability
-    pbs = 8,    // [V] Perfect-block/master-strike chance
-    cli = 9,    // [V] Clinch-overpower chance
-    hlh = 10,   // [V] Incoming health-damage multiplier
-    slh = 11,   // [S] Incoming stamina-damage multiplier
-    sls = 12,   // [V] Shield-block stamina cost
-    dig = 13,   // [V] Digestion/hunger rate
-    exh = 14,   // [V] Exhaustion/energy-drain rate
-    hod = 15,   // [V] Hangover recovery time (lower clears it faster)
-    psp = 16,   // [V] Healing-potion healing speed
-    lcs = 17,   // [S] Aim sway/hand-shake magnitude
-    srg = 18,   // [V] Stamina-regeneration rate
-    sco = 19,   // [?] UNKNOWN -- stamina/action-cost domain, exact quantity unpinned
-    srb = 20,   // [?] UNKNOWN -- stamina-state cap domain, exact quantity unpinned
-    sra = 21,   // [S] In-combat/backswing stamina regeneration
-    ard = 22,   // [V] Stamina drain while aiming
-    skp = 23,   // [S] Stealth-kill success probability
-    rst = 24,   // [V] Resistance to health-derived maximum-stamina loss
-    pdp = 25,   // [V] Resistance to being pulled from a horse
-    eep = 26,   // [S] Fast-travel encounter-escape chance
-    lpd = 27,   // [S] Lockpicking difficulty
-    lpn = 28,   // [S] Lockpicking noise
-    ain = 29,   // [V] Chance to inflict bleeding
-    hin = 30,   // [V] Incoming bleeding susceptibility
-    fae = 31,   // [S] First-aid/bandage effectiveness
-    dee = 32,   // [V] Armour-condition damage dealt
-    dew = 33,   // [V] Enemy weapon/shield condition damage dealt
-    osb = 34,   // [V] Opponent stamina cost when blocking your attacks
-    dsl = 35,   // [V] Combat-dodge chance/effectiveness
-    cos = 36,   // [?] UNKNOWN -- defensive-reaction probability, exact action unpinned
-    pac = 37,   // [S] Poison-application chance
-    lpb = 38,   // [V] Lockpick break/snap chance
-    res = 39,   // [I] Crime-search/recognition responsiveness
-    ors = 40,   // [S] AI observability/detectability
-    ptp = 41,   // [?] UNKNOWN -- tremor/combat-direction probability domain
-    shr = 42,   // [V] Health regeneration while sleeping
-    ser = 43,   // [V] Energy regeneration while sleeping
-    pim = 44,   // [S] Poison immunity/cure control
-    ald = 45,   // [V] Alcoholism-effect multiplier
-    aam = 46,   // [I] Alcohol/potion metabolism or effect-duration multiplier
-    uab = 47,   // [V] Damage bonus against an unaware target
-    fhm = 48,   // [V] Food-healing multiplier
-    fne = 49,   // [V] Crime-fine amount multiplier
-    dth = 50,   // [V] Ranged chest/heart-hit damage multiplier
-    dtd = 51,   // [?] UNKNOWN -- no retail buff/perk user
-    tdh = 52,   // [V] Head-hit damage taken/helmet protection multiplier
-    adc = 53,   // [?] UNKNOWN -- no retail buff/perk user
-    sla = 54,   // [V] Slashing-damage multiplier
-    sta = 55,   // [V] Stabbing/piercing-damage multiplier
-    ssa = 56,   // [V] Smashing/blunt-damage multiplier
-    wsr = 57,   // [?] UNKNOWN -- no retail buff/perk user
-    war = 58,   // [?] UNKNOWN -- no retail buff/perk user
-    wrs = 59,   // [?] UNKNOWN -- no retail buff/perk user
-    wra = 60,   // [?] UNKNOWN -- no retail buff/perk user
-    efc = 61,   // [S] Fast-travel event reaction/avoidance chance
-    dsc = 62,   // [V] Dodge stamina cost
-    wde = 63,   // [V] Own weapon-defence effectiveness
-    ewd = 64,   // [V] Enemy weapon/shield-defence effectiveness
-    scv = 65,   // [V] Skill-check value bonus
-    scx = 66,   // [V] Skill-check experience multiplier
-    skv = 67,   // [S] Dialogue skill-check effectiveness
-    cat = 68,   // [V] Clinch-attack damage multiplier
-    acm = 69,   // [V] Charged-attack damage multiplier
-    rat = 70,   // [V] Ranged-attack damage multiplier
-    rls = 71,   // [V] Ranged reload/cocking speed
-    ptw = 72,   // [V] Aiming time-warp/slow-motion factor
-    ala = 73,   // [V] Extra alchemy products brewed
-    apq = 74,   // [V] Alchemy-process quality/tolerance
-    bid = 75,   // [V] Blocking-item durability-loss multiplier
-    fob = 76,   // [V] Feint effectiveness/opponent response difficulty
-    ode = 77,   // [?] UNKNOWN -- no retail buff/perk user
-    dmd = 78,   // [V] Mutt obedience-decay multiplier
-    dmh = 79,   // [V] Damage taken by Mutt
-    drn = 80,   // [V] Mutt return time after fleeing
-    bqc = 81,   // [S] Bed-quality contribution/bonus
-    bqy = 82,   // [V] Bed/sleep-quality multiplier
-    ifc = 83,   // [V] Time for an item's stolen flag to clear
-    pwc = 84,   // [V] Poisoned-weapon coating longevity/hit count
-    paa = 85,   // [V] Poisoned-arrow count per poison dose
-    itd = 86,   // [V] Item/food spoilage rate
-    rkm = 87,   // [V] Repair-kit material consumption
-    rhm = 88,   // [V] Horse-rearing fear/morale effect
-    phv = 89,   // [V] Healing-potion healing value/effectiveness
-    bnv = 90,   // [V] Beer nourishment value
-    pnv = 91,   // [V] Potion nourishment value
-    fnv = 92,   // [V] Food nourishment value
-    aps = 93,   // [V] Arrow/bolt ballistic speed, range, and penetration
-    fbm = 94,   // [V] Foliage/bush movement-noise multiplier
-    tdm = 95,   // [S] Criminal-brand disappearance/decay rate
-    cps = 96,   // [V] Carrying-capacity gain per Strength level
-    spv = 97,   // [V] Stamina-point gain per Vitality level
-    pct = 98,   // [V] Pickpocket collection-time gain rate
-    nhp = 99,   // [I] Secondary hangover duration/severity multiplier
-    nrb = 100,  // [S] NPC crime-search/recognition bonus
-    btd = 101,  // [S] Visible bleeding/blood-trail persistence
-    opd = 102,  // [?] UNKNOWN -- no retail buff/perk user
+enum class E_DerivedStat : int32_t {
+    Charisma = 0,  // "charisma"
+    Rch = 1,       // "rch"
+    Cse = 2,       // "cse"
+    Vib = 3,       // "vib"
+    Evi = 4,       // "evi"
+    Con = 5,       // "con"
+    Mst = 6,       // "mst"
+    Mhs = 7,       // "mhs"
+    Hlt = 8,       // "hlt"
+    Sdt = 9,       // "sdt"
+    Fov = 10,      // "fov"
+    Vir = 11,      // "vir"
+    Tsr = 12,      // "tsr"
+    Dtf = 13,      // "dtf"
+    Dbf = 14,      // "dbf"
+    Pt1 = 15,      // "pt1"
+    Pt5 = 16,      // "pt5"
+    Dai = 17,      // "dai"
+    Bnc = 18,      // "bnc"
+    Hac = 19,      // "hac"
+    Hde = 20,      // "hde"
+    Lfu = 21,      // "lfu"
+    Lio = 22,      // "lio"
+    Cap = 23,      // "cap"
+    Alo = 24,      // "alo"
+    Oad = 25,      // "oad"
+    Owa = 26,      // "owa"
+    Wud = 27,      // "wud"
+    Lvl = 28,      // "lvl"
+    Noi = 29,      // "noi"
+    Fsm = 30,      // "fsm"
+    Nrs = 31,      // "nrs"
+    Rsb = 32,      // "rsb"
+    Nsb = 33,      // "nsb"
+    Rsa = 34,      // "rsa"
+    Ble = 35,      // "ble"
+    Ibi = 36,      // "ibi"
+    Bow = 37,      // "bow"
+    Cow = 38,      // "cow"
+    Aco = 39,      // "aco"
+    Caw = 40,      // "caw"
+    Rcw = 41,      // "rcw"
+    Mor = 42,      // "mor"
+    Dem = 43,      // "dem"
+    Mcf = 44,      // "mcf"
+    Obe = 45,      // "obe"
+    Psr = 46,      // "psr"
+    Xpm = 47,      // "xpm"
+    Osl = 48,      // "osl"
+    Mos = 49,      // "mos"
+    Ore = 50,      // "ore"
+    Caf = 51,      // "caf"
+    Rdq = 52,      // "rdq"
+    Erq = 53,      // "erq"
+    Sle = 54,      // "sle"
+    Coc = 55,      // "coc"
+    Ufo = 56,      // "ufo"
+    Mut = 57,      // "mut"
+    Prb = 58,      // "prb"
+    Fpa = 59,      // "fpa"
+    Apa = 60,      // "apa"
+    Cag = 61,      // "cag"
+    Def = 62,      // "def"
+    Dru = 63,      // "dru"
+    Poi = 64,      // "poi"
+    Pos = 65,      // "pos"
+    Ran = 66,      // "ran"
+    Iex = 67,      // "iex"
+    Hcm = 68,      // "hcm"
+    Was = 69,      // "was"
+    Grm = 70,      // "grm"
+    Brm = 71,      // "brm"
+    Drt = 72,      // "drt"
+    Sml = 73,      // "sml"
+    Smi = 74,      // "smi"
+    Frg = 75,      // "frg"
+    Hko = 76,      // "hko"
+    Enc = 77,      // "enc"
+    Fdm = 78,      // "fdm"
+    Sma = 79,      // "sma"
+    Bma = 80,      // "bma"
+    Hgs = 81,      // "hgs"
+    Pds = 82,      // "pds"
+    Sha = 83,      // "sha"
+    Pbm = 84,      // "pbm"
+    Rml = 85,      // "rml"
+    Hml = 86,      // "hml"
+    Bso = 87,      // "bso"
+    Bld = 88,      // "bld"
+    Bba = 89,      // "bba"
+    Arr = 90,      // "arr"
+    Jrm = 91,      // "jrm"
+    Sur = 92,      // "sur"
+    Imm = 93,      // "imm" Immortality gate; sub_180C63408 tests GetDerivedStat(Imm) > 0
+    Apr = 94,      // "apr"
+    Ppr = 95,      // "ppr"
+    Ltp = 96,      // "ltp"
+    Upr = 97,      // "upr"
+    Skpr = 98,     // "skpr"
+    Kopr = 99,     // "kopr"
+    Cds = 100,     // "cds"
+    Edm = 101,     // "edm"
+    Prc = 102,     // "prc"
+    Cdw = 103,     // "cdw"
+    Eqw = 104,     // "eqw"
+    Pla = 105,     // "pla"
+    Wbc = 106,     // "wbc"
+    Cbi = 107,     // "cbi"
+    Nbi = 108,     // "nbi"
+    Alc = 109,     // "alc"
+    Map = 110,     // "map"
+    Adm = 111,     // "adm"
+    Alm = 112,     // "alm"
+    Hov = 113,     // "hov"
+    Btw = 114,     // "btw"
+    Owl = 115,     // "owl"
+    Rms = 116,     // "rms"
+    Deb = 117,     // "deb"
+    Ach = 118,     // "ach"
+    Prs = 119,     // "prs"
+    Imp = 120,     // "imp"
+    Drd = 121,     // "drd"
+    Crc = 122,     // "crc"
+    Dmt = 123,     // "dmt"
+    Mgt = 124,     // "mgt"
+    Bad = 125,     // "bad"
+    Nrv = 126,     // "nrv"
+    Vag = 127,     // "vag"
+    Mag = 128,     // "mag"
+    Aag = 129,     // "aag"
+    Red = 130,     // "red"
+    Drv = 131,     // "drv"
+    Pmc = 132,     // "pmc"
+    Sdn = 133,     // "sdn"
+    Brn = 134,     // "brn"
+    Plr = 135,     // "plr"
+    Bea = 136,     // "bea"
+    Kko = 137,     // "kko"
+    Sse = 138,     // "sse"
+    Ies = 139,     // "ies"
+    Lrm = 140,     // "lrm"
+    Prm = 141,     // "prm"
+    Uvh = 142,     // "uvh"
+    Uva = 143,     // "uva"
+    StaminaCooldownDefault = 144,                    // "StaminaCooldownDefault"
+    StaminaCooldownWeaponRaised = 145,               // "StaminaCooldownWeaponRaised"
+    StaminaCooldownAttack = 146,                     // "StaminaCooldownAttack"
+    StaminaCooldownDodge = 147,                      // "StaminaCooldownDodge"
+    StaminaCooldownHit = 148,                        // "StaminaCooldownHit"
+    StaminaCooldownBlock = 149,                      // "StaminaCooldownBlock"
+    StaminaCooldownBrokenBlock = 150,                // "StaminaCooldownBrokenBlock"
+    StaminaCooldownCollisionHit = 151,               // "StaminaCooldownCollisionHit"
+    StaminaCooldownJump = 152,                       // "StaminaCooldownJump"
+    StaminaCooldownFallDamage = 153,                 // "StaminaCooldownFallDamage"
+    StaminaCooldownArcherySelfHarm = 154,            // "StaminaCooldownArcherySelfHarm"
+    StaminaCooldownSharpeningDoPedal = 155,          // "StaminaCooldownSharpeningDoPedal"
+    StaminaCooldownBlacksmithingStroke = 156,        // "StaminaCooldownBlacksmithingStroke"
+    StaminaCooldownBlacksmithingExhaustingStroke = 157, // "StaminaCooldownBlacksmithingExhaustingStroke"
+    Cnp = 158,     // "cnp"
+    Cbp = 159,     // "cbp"
+    Csp = 160,     // "csp"
+    Slp = 161,     // "slp"
+    Cep = 162,     // "cep"
+    Icp = 163,     // "icp"
+    Crp = 164,     // "crp"
+    Dfe = 165,     // "dfe"
+    Csc = 166,     // "csc"
+    Hvp = 167,     // "hvp"
+    Pqe = 168,     // "pqe"
+    Sks = 169,     // "sks"
+    Sst = 170,     // "sst"
+    Sss = 171,     // "sss"
+    Xst = 172,     // "xst"
+    Xag = 173,     // "xag"
+    Xvi = 174,     // "xvi"
+    Xsp = 175,     // "xsp"
+    Pxp = 176,     // "pxp"
+    Xsw = 177,     // "xsw"
+    Xcr = 178,     // "xcr"
+    Xsu = 179,     // "xsu"
+    Xhw = 180,     // "xhw"
+    Xma = 181,     // "xma"
+    Xsc = 182,     // "xsc"
+    Srr = 183,     // "srr"
+    Bap = 184,     // "bap"
+    Alp = 185,     // "alp"
+    Atd = 186,     // "atd" secondary gate for ability id 0 in sub_1809DCC70's caller
+    Ams = 187,     // "ams" secondary gate for ability id 73 in sub_1809DCC70's caller
+    Rcx = 188,     // "rcx"
+    Lfb = 189,     // "lfb"
+    Tba = 190,     // "tba"
+    Nrw = 191,     // "nrw"
+    Fac = 192,     // "fac"
+    Ahe = 193,     // "ahe"
+    Apo = 194,     // "apo"
+    Ano = 195,     // "ano"
+    Fpd = 196,     // "fpd"
+    Eph = 197,     // "eph"
+    Rpd = 198,     // "rpd"
+    Rpr = 199,     // "rpr"
+    Rpa = 200,     // "rpa"
+    Hla = 201,     // "hla"
+    Rpp = 202,     // "rpp"
+    Efd = 203,     // "efd"
+    Aml = 204,     // "aml"
+    Bmr = 205,     // "bmr"
+    Lgp = 206,     // "lgp"
+    Bbn = 207,     // "bbn"
+    Shd = 208,     // "shd"
+    Atp = 209,     // "atp"
+    Hlm = 210,     // "hlm"
+    Dip = 211,     // "dip"
+    Hcd = 212,     // "hcd"
+    Fba = 213,     // "fba"
+    Lip = 214,     // "lip"
+    Sxm = 215,     // "sxm"
+    Fvh = 216,     // "fvh"
+    Plg = 217,     // "plg"
 
-    RegisteredCount = 103,   // last registered id + 1 (SYNTHETIC enumerator)
-    DeclaredRange   = 218,   // handler reject threshold / name->id miss sentinel (0xDA)
+    Count = 218,   // reject threshold in native wrappers (SYNTHETIC enumerator)
 };
 
 }  // namespace wh::rpgmodule

@@ -65,7 +65,9 @@
 //   OnCompanionEvent          0x182CF9490  (companion, eventType)
 //   CanEatItem                0x182CF115C  (itemClassIdDef)
 //   EatItem                   0x182CF24B4  (itemClassIdDef)
-// stat/skill/derivedStat string args resolve via E_SoulStat / E_SoulSkill / E_DerivedStat codes.
+// stat/skill string args resolve via E_SoulStat / E_SoulSkill. GetDerivedStat is anomalous:
+// its string converter uses E_PerkStat's 103-code registry, but sub_180BE3834 passes the
+// resulting ordinal to the native E_DerivedStat evaluator (218-value domain). See both enums.
 
 namespace wh::rpgmodule {
 

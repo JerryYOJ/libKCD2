@@ -51,7 +51,7 @@ struct S_CombatHitData {
     bool m_scaleByImpactVelocity;        // +0x5F
     bool m_applyAttackerPostHitEffects;  // +0x60
     bool m_unk61;                        // +0x61
-    bool m_fatal;                        // +0x62
+    bool m_forceFatal;                   // +0x62  input request copied to S_DamageEventData::m_forceFatal; not a result flag
     bool m_forceNonlethalClamp;          // +0x63
     bool m_fail;                         // +0x64
     bool m_stealthAction;                // +0x65

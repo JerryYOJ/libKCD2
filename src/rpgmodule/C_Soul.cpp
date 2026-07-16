@@ -26,12 +26,12 @@ C_Soul* C_SoulList::LookupByWUID(const wh::framework::WUID& wuid)
     return fn(&m_soulTable, &wuid);
 }
 
-float C_Soul::GetDerivedStat(int statId) const
+float C_Soul::GetDerivedStat(E_DerivedStat statId) const
 {
     // sub_180648B18(soul, statId, 0): derived-stat evaluator; float in xmm0.
     using Fn = float (__fastcall*)(const C_Soul*, int, int64_t);
     static REL::Relocation<Fn> fn{ REL::Offset(0x648B18) };
-    return fn(this, statId, 0);
+    return fn(this, static_cast<int32_t>(statId), 0);
 }
 
 bool C_Soul::HasAbility(uint32_t abilityId) const
@@ -47,9 +47,9 @@ bool C_Soul::HasAbility(uint32_t abilityId) const
     S_Result r{};
     fn(reinterpret_cast<const uint8_t*>(this) + 0x320, &r, abilityId);
     if (abilityId == 0)
-        return r.present && GetDerivedStat(186) > 0.0f;
+        return r.present && GetDerivedStat(E_DerivedStat::Atd) > 0.0f;
     if (abilityId == 73)
-        return r.present && GetDerivedStat(187) > 0.0f;
+        return r.present && GetDerivedStat(E_DerivedStat::Ams) > 0.0f;
     return r.present;
 }
 

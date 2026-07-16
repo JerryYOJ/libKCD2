@@ -5,6 +5,7 @@
 #include "IActorSystem.h"    // Offsets::IActorSystem  (GetIActorSystem return type)
 
 typedef unsigned int EntityId;
+struct INetChannel;   // CryNetwork channel (global ns, as in the SDK); opaque here
 
 // -----------------------------------------------
 // IGameFramework - KCD2 binary vtable order  (CryAction CCryAction)
@@ -120,16 +121,16 @@ struct IGameFramework {
     virtual void _vf61() = 0;                                      // [61]  0x1E8 uses +0x88
     virtual void _vf62() = 0;                                      // [62]  0x1F0 140 bytes
     virtual void _vf63() = 0;                                      // [63]  0x1F8 jmp sub_183584E00
-    virtual void _vf64() = 0;                                      // [64]  0x200 uses +0x88
-    virtual void _vf65() = 0;                                      // [65]  0x208 uses +0x88
-    virtual void _vf66() = 0;                                      // [66]  0x210 calls (*this)[0x218]
-    virtual void _vf67() = 0;                                      // [67]  0x218 uses +0x88
-    virtual void _vf68() = 0;                                      // [68]  0x220 uses +0x88
-    virtual IActor* GetClientActor() const = 0;                   // [69]  0x228 101 bytes (KCD1 GetClientActor - slid +1)      tentative
-    virtual EntityId GetClientActorId() const = 0;                // [70]  0x230 53 bytes                                       tentative
-    virtual IEntity* GetClientEntity() const = 0;                 // [71]  0x238 65 bytes                                       tentative
-    virtual void _vf72() = 0;                                      // [72]  0x240
-    virtual void _vf73() = 0;                                      // [73]  0x248 cmp cs:byte_18492DA38
+    virtual IActor*  GetClientActor() const = 0;                   // [64]  0x200 0x1806458C4 -> helper 0x1806458E0: m_pGame(+0x88) -> clientNub(+0x48) -> channel(+0x10) -> playerId(+0x20) -> IActorSystem::GetActor (slot 3), cached at game+0xA3C/+0xA40; editor branch via qword_18492D890
+    virtual EntityId GetClientActorId() const = 0;                 // [65]  0x208 0x1807EF07C: GetClientActor()->m_entityId (IGameObjectExtension +0x30)
+    virtual IEntity* GetClientEntity() const = 0;                  // [66]  0x210 0x1835711A4: pEntitySystem(qword_18492D8A0)->GetEntity( (*this)[67]() )
+    virtual EntityId GetClientEntityId() const = 0;                // [67]  0x218 0x1809F3CD0: m_pGame -> clientNub -> channel -> raw id @+0x20
+    virtual INetChannel* GetClientChannel() const = 0;             // [68]  0x220 0x18357117C: same chain -> INetChannel* @channel+0x08
+    virtual void DelegateAuthority(EntityId entityId, uint16_t channelId) = 0; // [69] 0x228 0x183565EE0: channelId ? (*this)[73](channelId) : 0, then gamecontext obj(+0x58)->vfunc[24](entityId, chan)
+    virtual void GetServerTime(int64_t& serverTimeOut) = 0;        // [70]  0x230 0x1813125F8: CTimeValue sret (ref param = the hidden return ptr); server: timer qword_18492D880 slot 6; client: channel remote time + offset @+0x70
+    virtual uint16_t GetGameChannelId(INetChannel* pNetChannel) = 0; // [71] 0x238 0x183571568: server nub via (*this)[141], reverse lookup sub_180B85DA8
+    virtual bool IsChannelOnHold(uint16_t channelId) = 0;          // [72]  0x240 0x183574240: server nub channel (sub_180B876D8) -> hold byte @+0x3B
+    virtual INetChannel* GetNetChannel(uint16_t channelId) = 0;    // [73]  0x248 0x1835724EC: gated on byte_18492DA38 (server-side flag, role unverified); server nub channel -> INetChannel* @+0x08
     virtual void _vf74() = 0;                                      // [74]  0x250 uses cs:qword_18492D8A0
     virtual void _vf75() = 0;                                      // [75]  0x258 88 bytes
     virtual void _vf76() = 0;                                      // [76]  0x260 165 bytes

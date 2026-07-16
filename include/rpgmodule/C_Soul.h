@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include <vector>
+#include "E_DerivedStat.h"
 #include "I_Soul.h"
 #include "S_ModifierNode.h"
 #include "C_SoulPropertyNotifier.h"
@@ -56,9 +57,8 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_Soul;
 
     // ---- engine-function forwarders (src/rpgmodule/C_Soul.cpp) ----
-    // sub_180648B18(soul, statId, 0) -- derived-stat evaluator (the Lua GetDerivedStat
-    // impl rejects statId >= 218 before calling it).
-    float GetDerivedStat(int statId) const;
+    // sub_180648B18(soul, statId, 0) -- native 218-value derived-stat evaluator.
+    float GetDerivedStat(E_DerivedStat statId) const;
     // Lua HasAbility semantics (handler 0x182CF7D88): worker sub_1809DCC70 searches the
     // sorted ability block @+0x320 (also true when the all-abilities cvar is set); ids
     // 0 / 73 additionally require derived stat 186 / 187 > 0. KCD2 ability ids differ

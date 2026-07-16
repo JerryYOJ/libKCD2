@@ -57,6 +57,12 @@ namespace {
             { "VegetableShop",   "vegetable_shop" },
             { "FastTravelLevel", "fasttravel_level" },
             { "FastTravelSedlec","fasttravel_sedlec" },
+            { "SmokingFood",     "smokehouse" },
+            { "DryingFood",      "dryer" },
+            { "Washing",         "laundry" },
+            { "Indulgences",     "indulgenceBox" },
+            { "FishingSpot",     "fisherman" },
+            { "MineEnrtrance",   "undegroundEntrance" },   // (sic, matches the game's own key typo)
         };
 
         std::map<std::string, std::string> table;
