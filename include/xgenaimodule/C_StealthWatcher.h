@@ -13,6 +13,9 @@
 // [2] sub_180F668C0 -> sub_180460B88(this, *(this+0x20)) = the trespass check:
 // for each object in the +0x20 list, GetOwnership tags "private" / "personal" /
 // "prohibited"; returns private && (personal || prohibited).
+// NOTE: NOT the sneak-XP ticker -- sneak XP is C_RPGPerception vtable slot 23
+// (sub_180C5C114), invoked only virtually; independent system.  Exposed to the
+// rpg side via S_RPGPerceptionHelper slot [1] GetStealthWatcher.
 
 namespace wh::xgenaimodule {
 

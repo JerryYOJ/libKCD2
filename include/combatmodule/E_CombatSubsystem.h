@@ -29,14 +29,16 @@ enum E_CombatSubsystem : int32_t {
     COMBAT_SUB_RESTRICTION          = 19,   // GetName "Restriction"          (sub_181A7DE90)
     COMBAT_SUB_OPPONENT_MANAGER     = 21,   // GetName "OpponentManager"      (sub_181A7DE80)
     COMBAT_SUB_AUTOMATION           = 25,   // C_CombatActorObject.h
-    COMBAT_SUB_TIME_COP             = 27,   // GetName "TimeCop"              (sub_181A7DEB0)
+    COMBAT_SUB_STEALTH              = 27,   // GetName "STEALTH" (sub_181A7DEA0) -- VTABLE-ANCHORED: C_CombatActorStealth primary vtbl 0x183B0A590 slot2 sub_181A7DFA0 = return 27; completes the member-order run 27/28/29/30 = +0x3F8/+0x400/+0x408/+0x410
     COMBAT_SUB_HORSE_PULLDOWN       = 28,   // GetName "HORSE_PULLDOWN"       (sub_181A7DE40)
     COMBAT_SUB_HUNT_ATTACK          = 29,   // GetName "HUNT_ATTACK"          (sub_181A7DE50)  [anchor]
     COMBAT_SUB_MERCY_KILL           = 30,   // GetName "MERCY_KILL"           (sub_181A7DE60)
     COMBAT_SUB_TIME_WARP            = 31,   // GetName "CombatActorTimewarp"  (sub_181A7DEC0)
     COMBAT_SUB_NEXT_GUARD_SELECTOR  = 34,   // GetName "NEXT_GUARD_SELECTOR"  (sub_181A7DE70)
     COMBAT_SUB_EVENTS               = 41,   // GetName "EVENTS"               (sub_181A7DE30)
-    COMBAT_SUB_STEALTH              = 42,   // GetName "STEALTH"              (sub_181A7DEA0)
+    // COMBAT_SUB_TIME_COP: previous revision had TIME_COP=27 / STEALTH=42 from unanchored
+    // GetName/GetSubsystemId alignment pairing; STEALTH=27 is now vtable-anchored (above), so
+    // TimeCop's id must be re-verified from its own vtable slot 2 before re-adding [U]
     COMBAT_SUB_VIRTUAL_WEAPON       = 44,   // GetName "VIRTUAL_WEAPON"       (sub_181A7DED0)
     COMBAT_SUB_DIRECTOR             = 45,   // GetName "Director"             (sub_181A7DE20)
     COMBAT_SUB_ALIGNMENT            = 47,   // GetName "Alignment"            (sub_181A7DEF0)

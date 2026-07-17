@@ -334,8 +334,11 @@ namespace Offsets {
     inline constexpr ::REL::Offset RTTI_C_ItemUseCause                                               { 0x4D5E410 };  // .?AVC_ItemUseCause@rpgmodule@wh@@
     inline constexpr ::REL::Offset RTTI_C_JailEndedCause                                             { 0x4D5D1F8 };  // .?AVC_JailEndedCause@rpgmodule@wh@@
     inline constexpr ::REL::Offset RTTI_C_KeyRuntimeData                                             { 0x4C6F198 };  // .?AVC_KeyRuntimeData@entitymodule@wh@@
+    inline constexpr ::REL::Offset RTTI_C_Keybinds                                                   { 0x4DD5588 };  // .?AVC_Keybinds@playermodule@wh@@
     inline constexpr ::REL::Offset RTTI_C_KilledByTimerCause                                         { 0x4D71FE8 };  // .?AVC_KilledByTimerCause@rpgmodule@wh@@
     inline constexpr ::REL::Offset RTTI_C_LODAgent                                                   { 0x4EFF2D0 };  // .?AVC_LODAgent@xgenaimodule@wh@@
+    inline constexpr ::REL::Offset RTTI_C_LODAgentPassiveGrid                                        { 0x4EFF3F8 };  // .?AVC_LODAgentPassiveGrid@xgenaimodule@wh@@
+    inline constexpr ::REL::Offset RTTI_C_LODAgentPerceptibleVolume                                  { 0x4F49060 };  // .?AVC_LODAgentPerceptibleVolume@xgenaimodule@wh@@
     inline constexpr ::REL::Offset RTTI_C_LODManager                                                 { 0x4F6E308 };  // .?AVC_LODManager@xgenaimodule@wh@@
     inline constexpr ::REL::Offset RTTI_C_LazyNCSituationSearch                                      { 0x4F4DB10 };  // .?AVC_LazyNCSituationSearch@xgenaimodule@wh@@
     inline constexpr ::REL::Offset RTTI_C_LearnPerkEffect                                            { 0x4D5FDF0 };  // .?AVC_LearnPerkEffect@rpgmodule@wh@@
@@ -1019,5 +1022,20 @@ namespace Offsets {
     inline constexpr ::REL::Offset RTTI_conceptmodule_C_SoulEffect                                   { 0x4AC2960 };  // .?AVC_SoulEffect@conceptmodule@wh@@
     inline constexpr ::REL::Offset RTTI_rpgmodule_C_Effect                                           { 0x4CE4D60 };  // .?AVC_Effect@rpgmodule@wh@@
     inline constexpr ::REL::Offset RTTI_rpgmodule_C_SoulEffect                                       { 0x4CE4BF0 };  // .?AVC_SoulEffect@rpgmodule@wh@@
+
+    // ---- stealth/perception detection-flow tranche ----
+    inline constexpr ::REL::Offset RTTI_C_RPGPerception                                              { 0x4D5FEE8 };  // .?AVC_RPGPerception@rpgmodule@wh@@
+    inline constexpr ::REL::Offset RTTI_I_RPGPerception                                              { 0x4D603D8 };  // .?AVI_RPGPerception@rpgmodule@wh@@
+    inline constexpr ::REL::Offset RTTI_C_RPGHearing                                                 { 0x4D5F818 };  // .?AVC_RPGHearing@rpgmodule@wh@@
+    inline constexpr ::REL::Offset RTTI_I_RPGHearing                                                 { 0x4D60410 };  // .?AVI_RPGHearing@rpgmodule@wh@@
+    inline constexpr ::REL::Offset RTTI_C_Nervousness                                                { 0x4D4E230 };  // .?AVC_Nervousness@rpgmodule@wh@@
+    inline constexpr ::REL::Offset RTTI_I_Negativity                                                 { 0x4D4E188 };  // .?AVI_Negativity@rpgmodule@wh@@
+    inline constexpr ::REL::Offset RTTI_C_NPCFactionNode                                             { 0x4D4E540 };  // .?AVC_NPCFactionNode@rpgmodule@wh@@
+    inline constexpr ::REL::Offset RTTI_C_FactionVisibility                                          { 0x4D09E30 };  // .?AVC_FactionVisibility@rpgmodule@wh@@
+    inline constexpr ::REL::Offset RTTI_C_ManlyOdourStealthBuff                                      { 0x4CE8498 };  // .?AVC_ManlyOdourStealthBuff@rpgmodule@wh@@
+    inline constexpr ::REL::Offset RTTI_C_ManlyOdourBase                                             { 0x4CE84D8 };  // .?AVC_ManlyOdourBase@rpgmodule@wh@@
+    inline constexpr ::REL::Offset RTTI_C_NamedIntervalDatabase                                      { 0x4D37B98 };  // .?AVC_NamedIntervalDatabase@rpgmodule@wh@@
+    inline constexpr ::REL::Offset RTTI_C_CombatActorStealth                                         { 0x4B00688 };  // .?AVC_CombatActorStealth@combatmodule@wh@@
+    inline constexpr ::REL::Offset RTTI_I_CombatActorStealth                                         { 0x4B00AC8 };  // .?AVI_CombatActorStealth@combatmodule@wh@@
 
 }  // namespace Offsets

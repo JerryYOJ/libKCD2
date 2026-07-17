@@ -21,8 +21,8 @@ namespace wh::xgenaimodule {
 class C_LightSourceManager : public game::I_EntitySideEffectCallback {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_LightSourceManager;
-    ~C_LightSourceManager() override;                     // [0] sub_181025124
-    void OnEntitySideEffect(void* sideEffect) override;   // [1] sub_1810250D8
+    void OnEntitySideEffectAdded(void* sideEffect) override;    // [0] sub_181025124 (previously misread as dtor; ESEC has no vdtor -- RTM proof)
+    void OnEntitySideEffectRemoved(void* sideEffect) override;  // [1] sub_1810250D8
     virtual void _vf2();                                  // [2] sub_1833BDA70 (appended own virtual) [U role]
 
     uint32_t m_nameIdInterior;    // +0x08  interned "interior"

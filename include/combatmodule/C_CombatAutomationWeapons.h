@@ -26,7 +26,8 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_CombatAutomationWeapons;
     const char* GetName() const override { return "AutomationWeapons"; }   // [3] 0x181A7E250
     E_CombatAutomationActionKind GetActionKind() const override { return E_CombatAutomationActionKind::Weapons; }                      // [10] 0x181A7D850
-    void OnEntitySideEffect(void* sideEffect) override {}                  // sub_182767740: sets the bool in m_stateFlags80 on match
+    void OnEntitySideEffectAdded(void* sideEffect) override {}             // [0]+[1] ICF-folded onto sub_182767740: sets the bool in m_stateFlags80 on match
+    void OnEntitySideEffectRemoved(void* sideEffect) override {}           // (same folded handler)
 
     wh::shared::C_Signal<> m_signalA;      // +0x40  (sentinel unk_1855D4D60; args unrecovered)
     wh::shared::C_Signal<> m_signalB;      // +0x50  (sentinel unk_185665AC0; args unrecovered)

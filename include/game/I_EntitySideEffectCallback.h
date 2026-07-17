@@ -3,18 +3,24 @@
 // -----------------------------------------------
 // wh::game::I_EntitySideEffectCallback -- KCD2 WHGame.dll 1.5.6 (kd7u).
 // -----------------------------------------------
-// Callback interface for entity side-effect completion. Secondary MI base of
-// combatmodule::C_CombatAutomationWeapons (RTTI-confirmed, mdisp 0x38; its 2-slot vtable at
-// 0x183B0A260 points both slots at the same handler sub_182767740 -- the second slot is presumed
-// the dtor thunk collapsed by ICF; slot split tentative).
+// Callback interface for per-entity side-effect add/remove notifications.
+// SHAPE CORRECTED (was "[0] dtor / [1] OnEntitySideEffect"): the
+// C_RecognizingThresholdManager impl proves BOTH slots are real handlers and
+// there is NO virtual dtor -- [0] sub_1808ACF2C push_backs a per-entity
+// threshold float (side-effect ADDED, @0x1808acf35), [1] sub_1808AC6F4
+// erase-removes matching floats (side-effect REMOVED, @0x1808ac737).  Mirrors
+// the same correction already made on I_GameSideEffectCallback.
+// Other impls: C_CombatAutomationWeapons (secondary base, mdisp 0x38; both
+// slots ICF-folded onto sub_182767740), C_LightSourceManager, C_NPCManager
+// (subobject vt 0x183FF1930), C_SituationManager, C_CrimeLevelAggregator.
 
 namespace wh::game {
 
 class I_EntitySideEffectCallback {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_I_EntitySideEffectCallback;
-    virtual ~I_EntitySideEffectCallback() = default;              // [0] (ICF-folded with [1])
-    virtual void OnEntitySideEffect(void* sideEffect) = 0;        // [1] sub_182767740
+    virtual void OnEntitySideEffectAdded(void* sideEffect) = 0;    // [0] fires when a side-effect is added to an entity
+    virtual void OnEntitySideEffectRemoved(void* sideEffect) = 0;  // [1] fires when a side-effect is removed
 };
 
 }  // namespace wh::game

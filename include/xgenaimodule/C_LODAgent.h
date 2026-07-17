@@ -21,17 +21,17 @@ class C_LODAgent {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_LODAgent;
     virtual ~C_LODAgent();     // [0]  dtor sub_183320CB4
-    virtual void _vf1() = 0;   // [1]  [U role]
+    virtual void* GetOwner() = 0;                 // [1]  role proven by C_LODAgentPerceptibleVolume impl (returns owner object)
     virtual void _vf2() = 0;   // [2]  [U role]
     virtual void _vf3();       // [3]  sub_181A74A40 [U role]
     virtual void _vf4() = 0;   // [4]  [U role]
     virtual void _vf5();       // [5]  sub_180838AE0 (shared) [U role]
     virtual void _vf6();       // [6]  nullsub [U role]
-    virtual void _vf7();       // [7]  sub_1833220F0 [U role]
+    virtual float GetLODDistanceSq(const Vec3& pt);  // [7]  base sub_1833220F0 [U base impl]; role proven by PerceptibleVolume override (dist^2 to owner)
     virtual void _vf8();       // [8]  sub_180838AE0 (shared) [U role]
-    virtual void _vf9() = 0;   // [9]  [U role]
-    virtual void _vf10();      // [10] nullsub [U role]
-    virtual void _vf11();      // [11] nullsub [U role]
+    virtual void OnLODEvent(int ev) = 0;          // [9]  role proven by PerceptibleVolume impl (LOD scheduler event dispatch)
+    virtual void OnDeactivate();                  // [10] base nullsub; PerceptibleVolume override removes owner from grid
+    virtual void OnActivate();                    // [11] base nullsub; PerceptibleVolume override adds owner to grid
 
     uint8_t            _unk08;         // +0x08  (init byte 0; flag/enum, bool candidate)
     uint8_t            _pad09[3];      // +0x09  align to +0x0C

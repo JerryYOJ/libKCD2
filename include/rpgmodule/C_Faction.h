@@ -67,7 +67,7 @@ public:
     C_FactionAngriness m_angriness[2];     // +0xE8  (2 x 0x50; ctor sub_1811651F4 flags 1/0;
                                            //        array teardown sub_182CA82CC) RUNTIME
     S_LocationId m_locationId;             // +0x188  RTTR "LocationId" (builder sub_180EB1F8C, 392)
-    int32_t  m_runtime198;                 // +0x198  RUNTIME, unreflected (purpose unknown)
+    int32_t  m_visibilityRefCount;         // +0x198  RUNTIME faction-visibility ref-counter: C_FactionVisibility effect Activate/Deactivate (sub_182BFEF4C/sub_182BFF248) does += (sign ? +1 : -1); backs RTTR "Visibility" (get sub_182CAE368 / set sub_182CAE838)
     uint32_t _pad19C;                      // +0x19C
     std::vector<CryStringT<char>> m_labels;      // +0x1A0  RTTR "Labels" (via getter sub_180D92404 /
                                            //        setter sub_182CAC2CC; COW release *elem-12)

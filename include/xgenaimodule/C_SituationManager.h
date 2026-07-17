@@ -28,8 +28,9 @@ class C_SituationManager
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_SituationManager;
     void BcmVf0() override;                        // primary [0] sub_1832B98D8
-    ~C_SituationManager() override;                // primary [1] sub_1832B760C / secondary [0] thunk sub_1815FFE3C
-    void OnEntitySideEffect(void* sideEffect) override; // secondary [1] sub_1815FFE30
+    ~C_SituationManager() override;                // primary [1] sub_1832B760C
+    void OnEntitySideEffectAdded(void* sideEffect) override;    // ESEC secondary [0] sub_1815FFE3C (adjustor thunk; previously misread as dtor thunk)
+    void OnEntitySideEffectRemoved(void* sideEffect) override;  // ESEC secondary [1] sub_1815FFE30
 
     std::vector<std::array<uint8_t, 40>> m_ctrlEntries10; // +0x10..+0x28  first/last/cap; 40B elems {u64 key; _8; std::vector<T*>@+0x10}; per-elem dtor sub_1811921D0
     uint8_t  _unk28[8];               // +0x28  [U] NOT written by ctor (disasm-verified); no writer in ctor/dtor/add(sub_180D9BC5C)/remove(sub_180D9AEC8)

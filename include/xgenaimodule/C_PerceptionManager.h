@@ -20,6 +20,8 @@
 
 namespace wh::xgenaimodule {
 
+class C_PerceptionItemListener;
+
 class C_PerceptionManager {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_PerceptionManager;
@@ -44,8 +46,8 @@ public:
     float    m_recognizingThreshold;           // +0x0D0  wh_ai_perception_recognizing_threshold -- DETECTION THRESHOLD (read by RTM slot [1] as PM+0xD0) [V]
     uint8_t  _padD4[4];                        // +0x0D4
     // ----
-    uint64_t m_listHeads[8];                   // +0x0D8/+0xE8/+0xF8/+0x108  four intrusive circular-list heads (perceptor/perceptible lists; 40B nodes, {self, self, 0x0101-pair})
-    uint64_t _unk118;                          // +0x118 [U role]
+    uint64_t m_listHeads[8];                   // +0x0D8/+0xE8/+0xF8/+0x108  four intrusive circular-list heads (perceptor/perceptible lists; 40B nodes, {self, self, 0x0101-pair}); list[0] @+0xD8 is THE perceptibles container the recognition loop sub_180584B88 iterates (via *(sensingCtx+216))
+    C_PerceptionItemListener* m_itemListener;  // +0x118  16-byte world-inventory listener {vptr, +8=this}; created+registered by sub_180F661D0 @0x180f66399 (list at *(gameCtx+224)+232) [V]
     C_PerceptibleVolumeManager m_volumeManager;        // +0x120 (0x60) embedded (ctor sub_180FB7764) [V]
     uint64_t m_listHead180[3];                 // +0x180..+0x197  intrusive list head (56B nodes) [U +0x190 role]
     C_RecognizingThresholdManager m_thresholdManager;  // +0x198 (0x90) embedded [V]

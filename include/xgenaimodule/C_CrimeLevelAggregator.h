@@ -30,7 +30,6 @@ class C_CrimeLevelAggregator : public I_CrimeLevelAggregator,
                                public rpgmodule::I_LocationListener {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_CrimeLevelAggregator;
-    ~C_CrimeLevelAggregator() override;   // ESEC subobject [0] = dtor thunk sub_181785754
     // I_CrimeLevelAggregator impls (primary vtable 0x183ABEA48)
     int32_t GetEffectiveCrimeLevel() override;             // [0] sub_18082DBFC -- bit-scan m_levelFlags, threshold m_levelThreshold
     void _cla_vf1() override;                              // [1] sub_181AA5650 [U role]
@@ -44,8 +43,9 @@ public:
     // game::I_GameSideEffectCallback impls (both -> sub_1832A6414)
     void OnSideEffectDeactivated(char sideEffectId) override;  // GSEC [0] sub_1832A6414
     void OnSideEffectActivated(char sideEffectId) override;    // GSEC [1] sub_1832A6414
-    // game::I_EntitySideEffectCallback impl
-    void OnEntitySideEffect(void* sideEffect) override;        // ESEC [1] sub_1817856D0
+    // game::I_EntitySideEffectCallback impls (interface shape corrected: 2 handlers, no vdtor)
+    void OnEntitySideEffectAdded(void* sideEffect) override;   // ESEC [0] [U EA -- previously misread as a dtor thunk]
+    void OnEntitySideEffectRemoved(void* sideEffect) override; // ESEC [1] sub_1817856D0
     // rpgmodule::I_LocationListener impls (subobject vt 0x183ABEA98)
     void _vf0() override;   // LL [0] nullsub_1
     void _vf1() override;   // LL [1] nullsub_1
