@@ -5,7 +5,9 @@
 // RPG Parameter System -- KCD2 WHGame.dll 1.5.6 (kd7u).  namespace rpg_module -> rpgmodule.
 // -----------------------------------------------
 //   S_Constants    -- live value store @ 0x1855E63D0 (RVA 0x55E63D0). Polymorphic (3-slot vtable);
-//                     param values start at +0x08, indexed by S_RPGParam::offset.
+//                     param values start at +0x08.  A def's `offset` is the byte offset from the
+//                     OBJECT BASE (vptr included): def #0 AttackStamModMin = 0x08, i.e. values[0].
+//                     Read sites confirm base-relative
 //   S_RpgParamDefs -- 1025 metadata entries @ 0x1849327C0 (RVA 0x49327C0), stride 0x28.
 //   Value store renamed S_RpgParamValues -> S_Constants; element S_RPGParamDef -> S_RPGParam.
 
@@ -18,8 +20,8 @@ union S_RPGValue {
 };
 static_assert(sizeof(S_RPGValue) == 4);
 
-// Live RPG value store. Slots begin at +0x08 (offset already skips the vtable); a S_RPGParam's
-// byte offset indexes this array as values[offset/4].
+// Live RPG value store. Slots begin at +0x08; a S_RPGParam's base-relative byte offset lands on
+// values[offset/4 - 2] (the -2 skips the vptr's two dword-widths).
 struct S_Constants {
     inline static constexpr auto RTTI = Offsets::RTTI_S_Constants;
     virtual void _vf0() = 0;                 // [0]
@@ -34,15 +36,15 @@ static_assert(sizeof(S_Constants) == 0x1010);
 // One RPG parameter descriptor (0x28). name is statically baked in .data; the ctor fills the tail.
 struct S_RPGParam {
     const char* name;                       // +0x00
-    uint32_t    offset;                     // +0x08  byte offset into S_Constants (index = offset/4)
+    uint32_t    offset;                     // +0x08  byte offset from the S_Constants OBJECT BASE (def #0 = 0x08)
     uint32_t    _pad0C;                     // +0x0C
     const char* description;                // +0x10
     const char* unit;                       // +0x18
     uint32_t    flags;                      // +0x20  (0..3 in KCD2; meaning UNVERIFIED)
     uint32_t    _pad24;                     // +0x24
 
-    uint32_t    Index() const { return offset / 4; }
-    S_RPGValue& Value() const { return S_Constants::Get()->values[offset / 4]; }
+    uint32_t    Index() const { return offset / 4 - 2; }   // slot index into values[]
+    S_RPGValue& Value() const { return S_Constants::Get()->values[offset / 4 - 2]; }
 };
 static_assert(sizeof(S_RPGParam) == 0x28);
 
