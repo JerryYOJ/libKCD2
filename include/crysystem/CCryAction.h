@@ -49,6 +49,11 @@ struct IGameSessionHandler;
 class CCryAction : public Offsets::IGameFramework
 {
 public:
+    // The engine-owned singleton: cached framework-pointer global qword_18549D328 (REL::ID
+    // 2356); the object itself is the static CCryAction @0x18562EF50.  Single inheritance,
+    // so the cached IGameFramework* IS the CCryAction*.  (src/crysystem/CCryAction.cpp)
+    static CCryAction* GetInstance();
+
     // ---- +0x08 .. +0x43: uninitialised-by-ctor head (listener/factory containers) ----
     uint8_t     _pad08[0x3C];                    // +0x08
 

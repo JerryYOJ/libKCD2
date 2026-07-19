@@ -16,7 +16,7 @@ void C_CombatActor::DispatchCounterAction(I_CombatActorActionPtr* pOutAction, E_
     // does not exist in KCD2 -- the a7 guard struct was dropped and a5/a6 are caller-supplied,
     // so this forwarder targets the core with KCD1-wrapper-equivalent defaults.
     using Fn = void*(__fastcall*)(C_CombatActor*, I_CombatActorActionPtr*, char, uint32_t, char, int32_t);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x1483580) };
+    static REL::Relocation<Fn> fn{ REL::ID(59) };
     fn(this, pOutAction, static_cast<char>(type), scopeIndex, useOpponentDefenseZone, queryId);
 }
 
@@ -28,7 +28,7 @@ void C_CombatActor::SetOpponent(C_CombatActor* target)
     // analogue: same dedup checks, exclusive-lock release, target store + LinkTarget chain).
     // Called both ways by the hunt-attack Request sub_18275EB64, the KCD1 usage pattern.
     using Fn = void(__fastcall*)(C_CombatActor*, C_CombatActor*);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x2757B10) };
+    static REL::Relocation<Fn> fn{ REL::ID(80) };
     fn(this, target);
 }
 

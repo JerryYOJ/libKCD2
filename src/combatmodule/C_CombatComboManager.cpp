@@ -12,7 +12,7 @@ namespace wh::combatmodule {
 void C_CombatComboManager::ForceAdvanceStep()
 {
     using Fn = void(__fastcall*)(C_CombatComboManager*);
-    static REL::Relocation<Fn> fn{ REL::Offset(0xC5C52C) };
+    static REL::Relocation<Fn> fn{ REL::ID(35) };
     fn(this);
 }
 

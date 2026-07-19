@@ -25,7 +25,7 @@ C_UICompass* C_GUIModule::GetUICompass()
     // cached process-wide in qword_18548B068 (cleared with the UI). Used by the
     // quest-log marker producer sub_180DC5F24 and the checkpoint/POI paths.
     using Fn = C_UICompass*(__fastcall*)(C_GUIModule*);
-    static REL::Relocation<Fn> fn{ REL::Offset(0xC4E098) };
+    static REL::Relocation<Fn> fn{ REL::ID(34) };
     return fn(this);
 }
 
@@ -41,7 +41,7 @@ std::map<std::string, std::shared_ptr<C_UIBase>> C_GUIModule::GetUIElementsByNam
     // CrySDKStubs.cpp), so destroying the map on our side is fine.
     using Map = std::map<std::string, std::shared_ptr<C_UIBase>>;
     using Fn = Map*(__fastcall*)(const C_GUIModule*, Map*);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x2B8D8D8) };
+    static REL::Relocation<Fn> fn{ REL::ID(89) };
 
     alignas(Map) unsigned char storage[sizeof(Map)];
     Map* built = fn(this, reinterpret_cast<Map*>(storage));

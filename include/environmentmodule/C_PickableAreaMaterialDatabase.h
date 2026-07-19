@@ -29,7 +29,7 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_PickableAreaMaterialDatabase;
     [[nodiscard]] static C_PickableAreaMaterialDatabase* GetInstance()
     {
-        return reinterpret_cast<C_PickableAreaMaterialDatabase*>(REL::Offset(0x5326130).address());
+        return reinterpret_cast<C_PickableAreaMaterialDatabase*>(REL::ID(2327).address());
     }
 };
 

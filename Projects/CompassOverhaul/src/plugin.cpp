@@ -82,7 +82,7 @@ namespace {
     class{
     public:
         static bool Install() {
-            void* target = reinterpret_cast<void*>(REL::Offset(0xDC5F24).address());
+            void* target = reinterpret_cast<void*>(REL::ID(36).address());
             if (MH_CreateHook(target, reinterpret_cast<void*>(&thunk),
                 reinterpret_cast<void**>(&orig)) != MH_OK)
                 return false;
@@ -91,7 +91,7 @@ namespace {
         }
 
         static void Uninstall() {
-            void* target = reinterpret_cast<void*>(REL::Offset(0xDC5F24).address());
+            void* target = reinterpret_cast<void*>(REL::ID(36).address());
             MH_RemoveHook(target);
         }
 
@@ -132,7 +132,7 @@ namespace {
     class{
     public:
         static bool Install() {
-            void* target = reinterpret_cast<void*>(REL::Offset(0x88EF1C).address());
+            void* target = reinterpret_cast<void*>(REL::ID(24).address());
             if (MH_CreateHook(target, reinterpret_cast<void*>(&thunk),
                 reinterpret_cast<void**>(&orig)) != MH_OK)
                 return false;
@@ -141,7 +141,7 @@ namespace {
         }
 
         static void Uninstall() {
-            void* target = reinterpret_cast<void*>(REL::Offset(0x88EF1C).address());
+            void* target = reinterpret_cast<void*>(REL::ID(24).address());
             MH_RemoveHook(target);
         }
 

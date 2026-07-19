@@ -16,7 +16,7 @@ void C_UIMenu::PreparePage(E_MenuPage::Type page)
     // (silent no-op when missing); flash "ClearAll" -> "SetMenuColor"(m_state) ->
     // "PreparePage"(ContainerX, ContainerY, MaxButtons, header, ButtonHalfWidth).
     using Fn = void(__fastcall*)(C_UIMenu*, uint8_t);
-    static REL::Relocation<Fn> fn{ REL::Offset(0xF69448) };
+    static REL::Relocation<Fn> fn{ REL::ID(43) };
     fn(this, page);
 }
 
@@ -24,7 +24,7 @@ void C_UIMenu::ShowPage()
 {
     // sub_181F8DB80: flash "ShowPage" -- finalize/display the prepared page.
     using Fn = void(__fastcall*)(C_UIMenu*);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x1F8DB80) };
+    static REL::Relocation<Fn> fn{ REL::ID(75) };
     fn(this);
 }
 
@@ -33,7 +33,7 @@ void C_UIMenu::RebuildRootPage(E_ButtonId::Type selectAfter)
     // sub_180C0A5AC: re-runs the root builder matching m_state (1/4 -> RootMain,
     // 2 -> RootIngame, 3 -> RootPause) then SelectButton(selectAfter).
     using Fn = void(__fastcall*)(C_UIMenu*, uint8_t);
-    static REL::Relocation<Fn> fn{ REL::Offset(0xC0A5AC) };
+    static REL::Relocation<Fn> fn{ REL::ID(28) };
     fn(this, selectAfter);
 }
 
@@ -43,7 +43,7 @@ void C_UIMenu::BuildRootMainPage()
     // Continue/TryAgain(death)/NewGame/[debug]/LoadGame/Settings/HelpOverlays/DLC/
     // Credits/Exit + ShowPage. Death variant selected by m_state == 4.
     using Fn = void(__fastcall*)(C_UIMenu*);
-    static REL::Relocation<Fn> fn{ REL::Offset(0xF6820C) };
+    static REL::Relocation<Fn> fn{ REL::ID(40) };
     fn(this);
 }
 
@@ -53,7 +53,7 @@ void C_UIMenu::BuildRootIngamePage()
     // Settings/HelpOverlays/DLC/Credits/Exit/SaveExit/[SaveReset dbg] + ShowPage.
     // MCM injection point: add an AddBasicButton between this and ShowPage (or hook it).
     using Fn = void(__fastcall*)(C_UIMenu*);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x5598CC) };
+    static REL::Relocation<Fn> fn{ REL::ID(13) };
     fn(this);
 }
 
@@ -62,7 +62,7 @@ void C_UIMenu::BuildRootPausePage()
     // sub_182BAA95C: restricted pause (page 3) -- same set with SaveGame/Settings/
     // SaveExit disabled ("ui_cant_save_other"/"ui_cant_change_settings").
     using Fn = void(__fastcall*)(C_UIMenu*);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x2BAA95C) };
+    static REL::Relocation<Fn> fn{ REL::ID(98) };
     fn(this);
 }
 
@@ -72,7 +72,7 @@ void C_UIMenu::BuildSettingsHubPage(E_ButtonId::Type selectButton)
     // SoundSettings/Controls/[Keybinds kb+m]/[PhotoMode ingame]/Back, then
     // SelectButton(selectButton). The "leave page?" guards re-enter here.
     using Fn = void(__fastcall*)(C_UIMenu*, uint8_t);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x559C6C) };
+    static REL::Relocation<Fn> fn{ REL::ID(14) };
     fn(this, selectButton);
 }
 
@@ -80,7 +80,7 @@ void C_UIMenu::BuildHelpOverlaysPage()
 {
     // sub_180821504: page 18 -- one "AddHelpOverlayButton" per help-overlay list entry.
     using Fn = void(__fastcall*)(C_UIMenu*);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x821504) };
+    static REL::Relocation<Fn> fn{ REL::ID(23) };
     fn(this);
 }
 
@@ -89,7 +89,7 @@ void C_UIMenu::BuildDLCListPage()
     // sub_182BA9D18: page 19 -- "AddDLCButton" rows per IDLCManager entry + the
     // extras group (PROS/Rewards/Social).
     using Fn = void(__fastcall*)(C_UIMenu*);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x2BA9D18) };
+    static REL::Relocation<Fn> fn{ REL::ID(93) };
     fn(this);
 }
 

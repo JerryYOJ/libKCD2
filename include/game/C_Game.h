@@ -1,7 +1,7 @@
 #pragma once
 
 #include <cstdint>
-#include "REL/Offset.h"
+#include "REL/ID.h"
 #include "../Offsets/vtables/IGame.h"
 
 // -----------------------------------------------
@@ -52,7 +52,7 @@ class C_Game : public Offsets::IGame,                    // +0x00
 {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_Game;
-    static C_Game* GetInstance() { return *reinterpret_cast<C_Game**>(REL::Offset(0x549D300).address()); }
+    static C_Game* GetInstance() { return *reinterpret_cast<C_Game**>(REL::ID(2355).address()); }
 
     // ===================================================================
     // Data members (+0x28 onwards, after the five interface vptrs)

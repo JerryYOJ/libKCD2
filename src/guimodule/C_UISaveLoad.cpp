@@ -18,7 +18,7 @@ void C_UISaveLoad::RequestSave(uint8_t saveType, uint32_t slot, bool a4, bool a5
     // overwrite list ("AddLoadButton" rows, "ui_you_have_to_overwrite_save").
     // a4/a5 roles UNVERIFIED (potion-check / confirmation gates at observed sites).
     using Fn = void(__fastcall*)(C_UISaveLoad*, uint8_t, uint32_t, char, char);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x2BA938C) };
+    static REL::Relocation<Fn> fn{ REL::ID(92) };
     fn(this, saveType, slot, a4, a5);
 }
 
@@ -27,7 +27,7 @@ void C_UISaveLoad::BuildLoadGamePage(int playline)
     // sub_182BAA354: page 8 -- one "AddLoadButton" per save of the playline
     // (list sub_180B41BDC, label sub_180821600, enable/tooltip sub_180B41500) + Back.
     using Fn = void(__fastcall*)(C_UISaveLoad*, int);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x2BAA354) };
+    static REL::Relocation<Fn> fn{ REL::ID(94) };
     fn(this, playline);
 }
 
@@ -37,7 +37,7 @@ void C_UISaveLoad::BuildSelectPlaylineLoadPage(char a2)
     // straight to page 8 when exactly one playline has saves, or back to the root
     // (RebuildRootPage(LoadGame)) when none do. a2 role UNVERIFIED.
     using Fn = void(__fastcall*)(C_UISaveLoad*, char);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x2BAA7D8) };
+    static REL::Relocation<Fn> fn{ REL::ID(96) };
     fn(this, a2);
 }
 
@@ -46,7 +46,7 @@ void C_UISaveLoad::BuildSelectPlaylineNewPage()
     // sub_182BAA8C0: page 4 -- AddPlaylineButtons(saveType, 0) + Back; tail-calls the
     // page-5 builder when mode selection is unavailable.
     using Fn = void(__fastcall*)(C_UISaveLoad*);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x2BAA8C0) };
+    static REL::Relocation<Fn> fn{ REL::ID(97) };
     fn(this);
 }
 
@@ -55,7 +55,7 @@ void C_UISaveLoad::BuildNewGameModePage()
     // sub_182BAAC18: page 5 -- NormalMode(69)/HardcoreMode(70)/Back; starts mode 1
     // directly (sub_182BAA530) when m_gameModeSelecting == 0.
     using Fn = void(__fastcall*)(C_UISaveLoad*);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x2BAAC18) };
+    static REL::Relocation<Fn> fn{ REL::ID(99) };
     fn(this);
 }
 
@@ -64,7 +64,7 @@ void C_UISaveLoad::BuildNewGameModeDebugPage(void* pDebugCtx)
     // sub_181846FF0: page 6 -- same mode pair with the captured debug context
     // (starts via sub_181847120(this, 1, "", ctx) when selection is unavailable).
     using Fn = void(__fastcall*)(C_UISaveLoad*, void*);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x1846FF0) };
+    static REL::Relocation<Fn> fn{ REL::ID(60) };
     fn(this, pDebugCtx);
 }
 
@@ -74,7 +74,7 @@ void C_UISaveLoad::AddPlaylineButtons(int saveType, char a3, bool forLoad)
     // "ui_PlaylineEmpty"/"ui_PlaylineHardcore" suffixes); the 4-arg flash shape is
     // used when m_pMenu->m_currentPageId == SelectPlaylineNew. a3 role UNVERIFIED.
     using Fn = void(__fastcall*)(C_UISaveLoad*, int, char, bool);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x2BAA55C) };
+    static REL::Relocation<Fn> fn{ REL::ID(95) };
     fn(this, saveType, a3, forLoad);
 }
 

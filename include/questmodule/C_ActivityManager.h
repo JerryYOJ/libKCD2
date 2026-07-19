@@ -24,7 +24,7 @@ public:
     [[nodiscard]] static C_ActivityManager* GetInstance()
     {
         using Fn = C_ActivityManager* (__fastcall*)();
-        static REL::Relocation<Fn> fn{ REL::Offset(0x1F43610) };   // lazy-construct getter
+        static REL::Relocation<Fn> fn{ REL::ID(66) };   // lazy-construct getter
         return fn();
     }
 };

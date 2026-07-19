@@ -31,7 +31,7 @@ public:
     [[nodiscard]] static C_ConceptModule* GetInstance()
     {
         // qword_185480280 -- written by the ctor.
-        return *reinterpret_cast<C_ConceptModule**>(REL::Offset(0x5480280).address());
+        return *reinterpret_cast<C_ConceptModule**>(REL::ID(2350).address());
     }
 
     C_ResourceRegistry*    m_pResourceRegistry;   // +0x10

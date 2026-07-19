@@ -3,6 +3,7 @@
 #include "IActor.h"          // Offsets::IActor       (GetClientActor return type)
 #include "IEntity.h"         // Offsets::IEntity       (GetClientEntity return type)
 #include "IActorSystem.h"    // Offsets::IActorSystem  (GetIActorSystem return type)
+#include "IItemSystem.h"     // Offsets::IItemSystem   (GetIItemSystem return type)
 
 typedef unsigned int EntityId;
 struct INetChannel;   // CryNetwork channel (global ns, as in the SDK); opaque here
@@ -83,7 +84,7 @@ struct IGameFramework {
     virtual void* GetIGameObjectSystem() = 0;                      // [23]  0xB8  return *(this+0x558) (CGameObjectSystem)     VERIFIED
     virtual void* GetILevelSystem() = 0;                           // [24]  0xC0  return *(this+0x510) (CLevelSystem)          VERIFIED
     virtual IActorSystem* GetIActorSystem() = 0;                   // [25]  0xC8  return *(this+0x518) (CActorSystem)          VERIFIED
-    virtual void* GetIItemSystem() = 0;                            // [26]  0xD0  return CItemSystem inner ptr (+0x520+8)      VERIFIED
+    virtual IItemSystem* GetIItemSystem() = 0;                     // [26]  0xD0  return CItemSystem inner ptr (+0x520+8)      VERIFIED
     virtual void* GetITimeDemoRecorder() = 0;                      // [27]  0xD8  return global qword_1856652A0+8              VERIFIED
     virtual void* GetIActionMapManager() = 0;                      // [28]  0xE0  return *(this+0x530) (CActionMapManager)     VERIFIED
     virtual void* GetIViewSystem() = 0;                            // [29]  0xE8  return *(this+0x538) (CViewSystem)           VERIFIED

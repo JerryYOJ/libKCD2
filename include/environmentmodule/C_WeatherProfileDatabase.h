@@ -24,7 +24,7 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_WeatherProfileDatabase;
     [[nodiscard]] static C_WeatherProfileDatabase* GetInstance()
     {
-        return reinterpret_cast<C_WeatherProfileDatabase*>(REL::Offset(0x5326240).address());
+        return reinterpret_cast<C_WeatherProfileDatabase*>(REL::ID(2328).address());
     }
 };
 

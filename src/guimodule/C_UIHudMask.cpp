@@ -18,7 +18,7 @@ C_UIHudMask* C_UIHudMask::GetInstance()
 {
     // ctor sub_1817944DC publishes `this` at qword_18548BFA8; the dtor clears it.
     // Rebuilt with the UI (rttr creator sub_1817943BC), NOT process-lifetime.
-    static REL::Relocation<C_UIHudMask**> p{ REL::Offset(0x548BFA8) };
+    static REL::Relocation<C_UIHudMask**> p{ REL::ID(2354) };
     return *p;
 }
 
@@ -26,7 +26,7 @@ bool C_UIHudMask::ElementNameToId(const char* name, wh::framework::E_HudElements
 {
     // sub_180556410: strcmp chain over the 28 element names; false on no match.
     using Fn = bool(__fastcall*)(const char*, wh::framework::E_HudElements::Type*);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x556410) };
+    static REL::Relocation<Fn> fn{ REL::ID(11) };
     return fn(name, &outId);
 }
 
@@ -34,7 +34,7 @@ const char* C_UIHudMask::ElementIdToName(wh::framework::E_HudElements::Type id)
 {
     // sub_180555AC0: switch over ids 0..27; "<invalid enum value>" otherwise.
     using Fn = const char*(__fastcall*)(uint8_t);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x555AC0) };
+    static REL::Relocation<Fn> fn{ REL::ID(9) };
     return fn(static_cast<uint8_t>(id));
 }
 
@@ -46,7 +46,7 @@ void C_UIHudMask::RefreshAll()
     // (iterator sub_180C3BF10, lambda 0x181F7C940) and tail-calls the ratio-preset
     // selector. Undoes any direct m_visibleBits/m_ratioPreset pokes.
     using Fn = void(__fastcall*)(C_UIHudMask*);
-    static REL::Relocation<Fn> fn{ REL::Offset(0xC3BE68) };
+    static REL::Relocation<Fn> fn{ REL::ID(29) };
     fn(this);
 }
 
@@ -57,7 +57,7 @@ void C_UIHudMask::UpdateRatioPreset()
     // always "SetDialogShiftMovieClips"(bool) for sources 14/8. Force-no-letterbox
     // hooks land here.
     using Fn = void(__fastcall*)(C_UIHudMask*);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x5561F0) };
+    static REL::Relocation<Fn> fn{ REL::ID(10) };
     fn(this);
 }
 
@@ -69,7 +69,7 @@ void C_UIHudMask::PushElementVisibility(wh::framework::E_HudElements::Type id)
     // sub_180555E48) and runs the per-element epilogue sub_180555C4C
     // (role UNVERIFIED). No-op when the flash element (+0x48) is unbound.
     using Fn = void(__fastcall*)(C_UIHudMask*, uint8_t);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x555A10) };
+    static REL::Relocation<Fn> fn{ REL::ID(8) };
     fn(this, static_cast<uint8_t>(id));
 }
 

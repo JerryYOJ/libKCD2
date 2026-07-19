@@ -1,5 +1,5 @@
 #include "combatmodule/S_CombatSettings.h"
-#include "REL/Offset.h"
+#include "REL/ID.h"
 
 // KCD2 WHGame.dll 1.5.6 (kd7u).
 //
@@ -12,7 +12,7 @@
 namespace wh::combatmodule {
 
 S_CombatSettings* S_CombatSettings::GetInstance() {
-    return reinterpret_cast<S_CombatSettings*>(REL::Offset(0x55D4D70).address());
+    return reinterpret_cast<S_CombatSettings*>(REL::ID(2358).address());
 }
 
 }  // namespace wh::combatmodule

@@ -16,7 +16,7 @@ void C_UIModalDialogQuestion::Open(CryStringT<char> question, void* delegate,
     using Fn = void(__fastcall*)(C_UIModalDialogQuestion*, CryStringT<char>, void*,
                                  std::function<void()>, std::function<void()>,
                                  CryStringT<char>, CryStringT<char>);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x11A0D58) };
+    static REL::Relocation<Fn> fn{ REL::ID(58) };
     fn(this, std::move(question), delegate, std::move(onConfirm), std::move(onCancel),
        std::move(hintConfirm), std::move(hintCancel));
 }
@@ -26,7 +26,7 @@ void C_UIModalDialogQuestion::Close()
     // sub_1808C1840: clear m_flagE0, CallFunction("CloseQuestionDialog"), set audio state
     // "modal_dialog_question"=0, un-dim (SetFaderState 8) and release the delegate(+0xD8).
     using Fn = void(__fastcall*)(C_UIModalDialogQuestion*);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x8C1840) };
+    static REL::Relocation<Fn> fn{ REL::ID(25) };
     fn(this);
 }
 

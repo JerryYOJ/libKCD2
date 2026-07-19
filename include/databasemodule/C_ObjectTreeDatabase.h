@@ -16,7 +16,9 @@
 // base ctor sub_180EF4F30(this, 1), rows vector zeroed @+0x30 (C_ObjectDatabase layer), then
 // +0x48 ns ("wh::rpgmodule::"), +0x50 name ("SoulStateEffectContext"), +0x58 group ("rpg"),
 // +0x60 byte 0, +0x68 = sub_1803F7FAC() allocation [tree root INFERRED from the class name],
-// +0x70 zeroed.
+// +0x70 zeroed.  Byte-identical second witness: C_AlchemyRecipeDatabase ctor sub_1819AAF18
+// (@0x185332AF0; ns "wh::playermodule::", name "AlchemyRecipe", group "minigame") -- extent
+// 0x78 confirmed by its MI interface vptr landing exactly at +0x78.
 
 namespace wh::databasemodule {
 

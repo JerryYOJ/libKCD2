@@ -1,6 +1,6 @@
 #pragma once
 #include <cstdint>
-#include "REL/Offset.h"
+#include "REL/ID.h"
 #include "Offsets/vtables/IActorSystem.h"
 
 // -----------------------------------------------
@@ -20,7 +20,7 @@
 // Verified members are named; unpinned module slots (+0xF0/+0x118/+0x140/+0x148/
 // +0x158) and framework sub-objects are padded until they get their own KCD2 ports.
 
-namespace wh::framework        { class C_ModulesManager; }
+namespace wh::framework        { class C_ModulesManager; class C_ExpressionEngine; }
 namespace wh::entitymodule     { class C_EntityModule; class C_Actor; }
 namespace wh::animationmodule  { class C_AnimationModule; }
 namespace wh::xbehaviormodule  { class C_XBehaviorModule; }
@@ -44,7 +44,9 @@ namespace wh::game {
 struct S_GameContext {
     uint8_t                                 _pad00[0x18];         // +0x00
     void*                                   m_pFramework;         // +0x18  framework/system root (ctor arg0)  VERIFIED
-    uint8_t                                 _pad20[0x98];         // +0x20
+    uint8_t                                 _pad20[0x40];         // +0x20
+    framework::C_ExpressionEngine*          m_pExpressionEngine;  // +0x60  EE core (= qword_185168B30); bootstrap sub_180C103AC stores it @0x180C104EC  VERIFIED
+    uint8_t                                 _pad68[0x50];         // +0x68
     framework::C_ModulesManager*            m_pModulesManager;    // +0xB8  dispatches C_ModuleMessage          VERIFIED
     uint8_t                                 _padC0[0x20];         // +0xC0
     entitymodule::C_EntityModule*           m_pEntityModule;      // +0xE0                                      VERIFIED
@@ -70,7 +72,7 @@ struct S_GameContext {
 
     [[nodiscard]] static S_GameContext* GetInstance()
     {
-        return *reinterpret_cast<S_GameContext**>(REL::Offset(0x549D388).address());
+        return *reinterpret_cast<S_GameContext**>(REL::ID(2357).address());
     }
 
     // Look up an actor by id and cast to C_Actor. GetActor slot (+0x18) unchanged KCD1->KCD2.

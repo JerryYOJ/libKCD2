@@ -6,6 +6,7 @@
 #include <memory>
 
 #include "KCSE/KCSEAPI.h"
+#include "crysystem/CCryAction.h"
 #include "REL.h"
 
 #include "mcm.h"
@@ -50,7 +51,7 @@ bool InvokeShowDamage(float amount, bool isHealthDmg, float xPx, float yPx, floa
 class{
 public:
     static bool Install() {
-        void* target = reinterpret_cast<void*>(REL::Offset(0x88EF1C).address());
+        void* target = reinterpret_cast<void*>(REL::ID(24).address());
         if (MH_CreateHook(target, reinterpret_cast<void*>(&thunk),
             reinterpret_cast<void**>(&orig)) != MH_OK)
             return false;
@@ -59,7 +60,7 @@ public:
     }
 
     static void Uninstall() {
-        void* target = reinterpret_cast<void*>(REL::Offset(0x88EF1C).address());
+        void* target = reinterpret_cast<void*>(REL::ID(24).address());
         MH_RemoveHook(target);
     }
 
@@ -114,7 +115,7 @@ float ComputeTextSize(float amount) {
 float ComputeDistanceScale(const Vec3& worldPos) {
     if (g_decayStartDist <= 0.0f) return 1.0f;
 
-    auto* fw = Offsets::GetCCryAction();
+    auto* fw = CCryAction::GetInstance();
     auto* playerEntity = fw ? fw->GetClientEntity() : nullptr;
     if (!playerEntity) return 1.0f;
 
@@ -204,7 +205,7 @@ Vec3 GetPopupAnchor(const wh::rpgmodule::S_DamageEventData* ctx) {
 class{
 public:
     static bool Install() {
-        void* target = reinterpret_cast<void*>(REL::Offset(0x72704C).address());
+        void* target = reinterpret_cast<void*>(REL::ID(20).address());
         if (MH_CreateHook(target, reinterpret_cast<void*>(&thunk),
             reinterpret_cast<void**>(&orig)) != MH_OK)
             return false;
@@ -213,7 +214,7 @@ public:
     }
 
     static void Uninstall() {
-        void* target = reinterpret_cast<void*>(REL::Offset(0x72704C).address());
+        void* target = reinterpret_cast<void*>(REL::ID(20).address());
         MH_RemoveHook(target);
     }
 

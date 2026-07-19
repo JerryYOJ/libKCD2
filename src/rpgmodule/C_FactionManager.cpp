@@ -11,7 +11,7 @@ namespace wh { namespace rpgmodule {
 C_FactionManager* C_FactionManager::GetInstance()
 {
     using Fn = C_FactionManager* (__fastcall*)();
-    static REL::Relocation<Fn> fn{ REL::Offset(0x471F74) };  // -> &C_FactionManager
+    static REL::Relocation<Fn> fn{ REL::ID(2) };  // -> &C_FactionManager
     return fn();
 }
 

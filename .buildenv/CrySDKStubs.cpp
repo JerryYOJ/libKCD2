@@ -32,7 +32,7 @@ IMemoryManager* CryGetIMemoryManager() { return nullptr; }
 // while the stubs still pointed at plain ucrt free).
 __declspec(dllexport) void* CryModuleMalloc(size_t size) throw()
 {
-    static REL::Relocation<void* (__fastcall*)(size_t, size_t*, size_t)> f{ REL::Offset(0x4F7610) };
+    static REL::Relocation<void* (__fastcall*)(size_t, size_t*, size_t)> f{ REL::ID(5) };
     size_t allocated;
     return f(size, &allocated, 0);
 }
@@ -45,13 +45,13 @@ __declspec(dllexport) void* CryModuleCalloc(size_t count, size_t size)
 }
 __declspec(dllexport) void* CryModuleRealloc(void* p, size_t size) throw()
 {
-    static REL::Relocation<void* (__fastcall*)(void*, size_t, size_t*, size_t*, size_t)> f{ REL::Offset(0x490CFC) };
+    static REL::Relocation<void* (__fastcall*)(void*, size_t, size_t*, size_t*, size_t)> f{ REL::ID(3) };
     size_t allocated, oldSize;
     return f(p, size, &allocated, &oldSize, 0);
 }
 __declspec(dllexport) void CryModuleFree(void* p) throw()
 {
-    static REL::Relocation<void (__fastcall*)(void*, size_t)> f{ REL::Offset(0x4FD8D0) };
+    static REL::Relocation<void (__fastcall*)(void*, size_t)> f{ REL::ID(6) };
     f(p, 0);
 }
 
@@ -62,13 +62,13 @@ __declspec(dllexport) void CryModuleFree(void* p) throw()
 // itself -- callers only signal "was an aligned alloc").
 __declspec(dllexport) void* CryModuleMemalign(size_t size, size_t alignment)
 {
-    static REL::Relocation<void* (__fastcall*)(size_t, size_t*, size_t)> f{ REL::Offset(0x4F7610) };
+    static REL::Relocation<void* (__fastcall*)(size_t, size_t*, size_t)> f{ REL::ID(5) };
     size_t allocated;
     return f(size, &allocated, alignment);
 }
 __declspec(dllexport) void CryModuleMemalignFree(void* p)
 {
-    static REL::Relocation<void (__fastcall*)(void*, size_t)> f{ REL::Offset(0x4FD8D0) };
+    static REL::Relocation<void (__fastcall*)(void*, size_t)> f{ REL::ID(6) };
     f(p, 1);
 }
 
@@ -79,7 +79,7 @@ __declspec(dllexport) void CryModuleMemalignFree(void* p)
 void* WHDynArrayAlloc(size_t nBytes, size_t* nActualBytes)
 {
     // bucket alloc sub_1804F7610(size, &outActual, align) -- outActual is MANDATORY
-    static REL::Relocation<void* (__fastcall*)(size_t, long long*, unsigned long long)> f{ REL::Offset(0x4F7610) };
+    static REL::Relocation<void* (__fastcall*)(size_t, long long*, unsigned long long)> f{ REL::ID(5) };
     long long actual = 0;
     void* p = f(nBytes, &actual, 8);
     *nActualBytes = (size_t)actual;
@@ -90,7 +90,7 @@ void WHDynArrayFree(void* pBlockBase)
 {
     // bucket free sub_1804FD8D0(rawBase, adjusted): bucket ptrs ignore the flag; >0x200
     // malloc-fallback blocks carry a shift at [base-4] that nonzero unadjusts (pairs with align=8)
-    static REL::Relocation<size_t (__fastcall*)(void*, long long)> f{ REL::Offset(0x4FD8D0) };
+    static REL::Relocation<size_t (__fastcall*)(void*, long long)> f{ REL::ID(6) };
     f(pBlockBase, 1);
 }
 
@@ -98,6 +98,6 @@ void* WHDynArrayDefaultAllocFn()
 {
     // sub_1804A2C50 -- the single default realloc fn every game DynArray block carries at
     // [D-16]; stamped into our blocks so the game frees/grows them exactly like its own
-    static void* const s_fn = (void*)REL::Offset(0x4A2C50).address();
+    static void* const s_fn = (void*)REL::ID(4).address();
     return s_fn;
 }

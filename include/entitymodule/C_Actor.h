@@ -14,6 +14,7 @@
 #include "C_ActorMoveParams.h"
 #include "C_ActorBounds.h"
 #include "../animationmodule/C_LookAimIK.h"
+#include "../xgenaimodule/I_SystemFromMonsterLODPostponer.h"
 
 // -----------------------------------------------
 // wh::entitymodule::C_Actor -- Warhorse base actor (KCD2 WHGame.dll 1.5.6, kd7u).  sizeof 0x9C0.
@@ -45,20 +46,15 @@
 // virtual-getter slot comments (GetCombatActor[193] @0x1A0, GetAnimatedCharacter[221] @0x268)
 // carry stale KCD1 offsets.
 
-namespace wh::xgenaimodule {
-// Empty tag interface, unique to C_Actor (0 RTTI referrers). RTTI TD 0x184B73C80.
-struct I_SystemFromMonsterLODPostponer {
-public:
-    inline static constexpr auto RTTI = Offsets::RTTI_I_SystemFromMonsterLODPostponer;
-};
-}
 struct IMovementController;   // CryEngine
 struct IAnimatedCharacter;    // CryAction (behavioral identification)
 
 namespace wh::combatmodule { class I_CombatActor; class C_CombatActor; }
+namespace wh::rpgmodule    { class C_Soul; }
 
 namespace wh::entitymodule {
 
+class C_Inventory;
 class C_RagdollManager;
 class C_ActionActor;
 class C_HitDeathReactions;
@@ -85,6 +81,10 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_Actor;
     // Non-virtual: sub_18072DC90 returns m_pCombatActor, allocating it (C_CombatActor, 0x448) if null.
     wh::combatmodule::C_CombatActor* GetOrCreateCombatActor();
+    // The actor's item inventory via the soul chain (typed reimplementation of sub_1808D285C:
+    // m_pSoul -> C_Soul::m_inventorySoul (+0x198) -> I_InventorySoul::GetInventory [0]);
+    // null if the soul is absent.  Used by the alchemy stocking/reset paths.
+    C_Inventory* GetInventory();
 
     ::CStateMachine<C_Actor> m_stateMachine;           // +0x58   (0x48) transition signal + state ptr + event ring FIFO
 
@@ -163,7 +163,10 @@ public:
     uint8_t  _pad642[6];                               // +0x642
     wh::shared::C_Signal<> m_observer648;              // +0x648  1 entity-ref arg (thunk sub_1829AA0E8 via connect sub_180AAFDC8)
     wh::shared::C_Signal<> m_observer658;              // +0x658  1 entity-ref arg (same handler as +0x648 but distinct T)
-    IAnimatedCharacter* m_pAnimatedCharacter;          // +0x668  manager-owned (setter sub_18068A324; behavioral identification)
+    wh::rpgmodule::C_Soul* m_pSoul;                    // +0x668  the actor's soul: setter sub_18068A324
+                                                       //         resolves it from the SOUL REGISTRY
+                                                       //         (*(S_GameContext+0x1D0) vf[23], key this+0x38)
+                                                       //         [CORRECTED from "IAnimatedCharacter*"]
     CryStringT<char> m_fragmentName;                   // +0x670  "m_FragmentID" (ctor sub_1809CF050)
     C_ActorEquipmentHandler* m_pEquipmentHandler;      // +0x678  list-owned 24B (setter sub_1808D28FC; RTTI-verified)
     C_ClothingAttachmentOwnerActor* m_pClothingOwner;  // +0x680  (0x10, ctor sub_18136657C)  VERIFIED

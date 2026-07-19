@@ -15,7 +15,7 @@ void S_AttackCandidateResultHolder::Enumerate(void* context, S_CombatActionAttac
     // NOTE [vs KCD1]: KCD2 Enumerate takes an extra leading `context` arg (captured into the walk
     // lambda); KCD1's equivalent ignored its first arg.
     using Fn = void(__fastcall*)(void*, S_AttackCandidateResultHolder*, S_CombatActionAttackQueryData*);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x687F3C) };
+    static REL::Relocation<Fn> fn{ REL::ID(18) };
     fn(context, this, query);
 }
 

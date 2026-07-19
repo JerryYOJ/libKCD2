@@ -11,7 +11,7 @@ void GFxMovieRoot::ProcessLoadQueue()
     // frees the entry, then culls finished m_pLoadProgressHead tasks. Same call
     // GFxMovieView::Advance (0x181CA4D90) makes on all 3 of its exit paths.
     using Fn = void(__fastcall*)(GFxMovieRoot*);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x1CAEF50) };
+    static REL::Relocation<Fn> fn{ REL::ID(63) };
     fn(this);
 }
 
@@ -21,6 +21,6 @@ void GFxMovieRoot::AddLoadQueueEntry(GFxLoadQueueEntry* entry)
     // then tail-append to m_pLoadQueueHead + stamp entry->m_entryId with
     // ++m_lastLoadQueueEntryCnt.
     using Fn = void(__fastcall*)(GFxMovieRoot*, GFxLoadQueueEntry*);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x1CA3900) };
+    static REL::Relocation<Fn> fn{ REL::ID(62) };
     fn(this, entry);
 }

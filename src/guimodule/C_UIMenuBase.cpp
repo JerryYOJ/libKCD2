@@ -26,7 +26,7 @@ void C_UIMenuBase::AddBasicButton(E_ButtonId::Type id, std::function<void()> onC
     // (sub_1808E71DC) -- the flash OnButton dispatch sub_180C07A98 invokes it; flash
     // ("AddBasicButton", name, row->m_containerIndex, text, tooltip, !enabled).
     using Fn = void(__fastcall*)(C_UIMenuBase*, uint8_t, std::function<void()>, bool, CryStringT<char>);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x558CCC) };
+    static REL::Relocation<Fn> fn{ REL::ID(12) };
     fn(this, id, std::move(onClick), enabled, std::move(tooltipOverride));
 }
 
@@ -38,7 +38,7 @@ void C_UIMenuBase::AddValueButton(E_ButtonId::Type id, bool enabled, float value
     // boxing into ("AddValueButton", id, container, text, value, min, max, tooltip,
     // !enabled); xmm-lossy decompilation at call sites -- order UNVERIFIED beyond it.
     using Fn = void(__fastcall*)(C_UIMenuBase*, uint8_t, bool, float, float, float, CryStringT<char>);
-    static REL::Relocation<Fn> fn{ REL::Offset(0xF6A3B8) };
+    static REL::Relocation<Fn> fn{ REL::ID(50) };
     fn(this, id, enabled, value, min, max, std::move(tooltipOverride));
 }
 
@@ -48,7 +48,7 @@ void C_UIMenuBase::AddChoicesButton(E_ButtonId::Type id, bool enabled,
     // sub_180F6C164: DB row lookup -> raw-tier wrapper 0x181F8B810. The choice list
     // starts empty; append entries with AddChoiceOption afterwards.
     using Fn = void(__fastcall*)(C_UIMenuBase*, uint8_t, bool, CryStringT<char>);
-    static REL::Relocation<Fn> fn{ REL::Offset(0xF6C164) };
+    static REL::Relocation<Fn> fn{ REL::ID(54) };
     fn(this, id, enabled, std::move(tooltipOverride));
 }
 
@@ -59,7 +59,7 @@ void C_UIMenuBase::AddChoiceOption(E_ButtonId::Type id, int choiceValue,
     // table (no-op when labelId == 0 or missing), label text = row+0x18; forwards to
     // 0x181F8B8E0 with enabled = true. The a5 slot is dead in the native body.
     using Fn = void(__fastcall*)(C_UIMenuBase*, uint8_t, int, uint8_t, int64_t, const CryStringT<char>*);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x1F8BA20) };
+    static REL::Relocation<Fn> fn{ REL::ID(70) };
     fn(this, id, choiceValue, labelId, 0, &tooltip);
 }
 
@@ -70,7 +70,7 @@ void C_UIMenuBase::AddChoiceOption(E_ButtonId::Type id, int choiceValue,
     // sub_181F8B990: literal-label variant (builders use it for "SMAA 1X", "%ix%i"
     // resolutions, FOV degrees, "FSR %d.%d"); consumes label, forwards to 0x181F8B8E0.
     using Fn = void(__fastcall*)(C_UIMenuBase*, uint8_t, int, CryStringT<char>, bool, const CryStringT<char>*);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x1F8B990) };
+    static REL::Relocation<Fn> fn{ REL::ID(69) };
     fn(this, id, choiceValue, std::move(label), enabled, &tooltip);
 }
 
@@ -78,7 +78,7 @@ void C_UIMenuBase::SetValue(E_ButtonId::Type id, float value)
 {
     // sub_180F69BA0: name + row containerIndex -> typed wrapper 0x181F8D9C0.
     using Fn = void(__fastcall*)(C_UIMenuBase*, uint8_t, float);
-    static REL::Relocation<Fn> fn{ REL::Offset(0xF69BA0) };
+    static REL::Relocation<Fn> fn{ REL::ID(46) };
     fn(this, id, value);
 }
 
@@ -86,7 +86,7 @@ void C_UIMenuBase::SetChoice(E_ButtonId::Type id, int choiceValue)
 {
     // sub_180F69AE4: name + row containerIndex -> typed wrapper 0x181F8D8D0.
     using Fn = void(__fastcall*)(C_UIMenuBase*, uint8_t, int);
-    static REL::Relocation<Fn> fn{ REL::Offset(0xF69AE4) };
+    static REL::Relocation<Fn> fn{ REL::ID(44) };
     fn(this, id, choiceValue);
 }
 
@@ -95,7 +95,7 @@ float C_UIMenuBase::GetValue(E_ButtonId::Type id)
     // sub_182BA7590: result-returning flash call ("GetValue", name, container) via
     // helper 0x182BA1E68; -1.0f when the element/call fails.
     using Fn = float(__fastcall*)(C_UIMenuBase*, uint8_t);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x2BA7590) };
+    static REL::Relocation<Fn> fn{ REL::ID(91) };
     return fn(this, id);
 }
 
@@ -104,7 +104,7 @@ int C_UIMenuBase::GetChoice(E_ButtonId::Type id)
     // sub_182BA7518: result-returning flash call ("GetChoice", name, container) via
     // helper 0x182BA1DA4; -1 when the element/call fails.
     using Fn = int(__fastcall*)(C_UIMenuBase*, uint8_t);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x2BA7518) };
+    static REL::Relocation<Fn> fn{ REL::ID(90) };
     return fn(this, id);
 }
 
@@ -112,7 +112,7 @@ void C_UIMenuBase::SelectButton(E_ButtonId::Type id)
 {
     // sub_180C09B40: flash ("SelectButton", name, row containerIndex).
     using Fn = void(__fastcall*)(C_UIMenuBase*, uint8_t);
-    static REL::Relocation<Fn> fn{ REL::Offset(0xC09B40) };
+    static REL::Relocation<Fn> fn{ REL::ID(27) };
     fn(this, id);
 }
 
@@ -126,7 +126,7 @@ void C_UIMenuBase::AddValueButton(const CryStringT<char>& id, const CryStringT<c
     // max, tooltip, !enabled) via the 8-arg helper 0x181F822B0.
     using Fn = void(__fastcall*)(C_UIMenuBase*, const CryStringT<char>*, const CryStringT<char>*,
                                  bool, float, float, float, CryStringT<char>, int);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x1F8BB00) };
+    static REL::Relocation<Fn> fn{ REL::ID(71) };
     fn(this, &id, &text, enabled, value, min, max, std::move(tooltip), containerIndex);
 }
 
@@ -137,7 +137,7 @@ void C_UIMenuBase::AddChoicesButton(const CryStringT<char>& id, const CryStringT
     // !enabled) via the 5-arg helper 0x181F823B0.
     using Fn = void(__fastcall*)(C_UIMenuBase*, const CryStringT<char>*, const CryStringT<char>*,
                                  bool, CryStringT<char>, int);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x1F8B810) };
+    static REL::Relocation<Fn> fn{ REL::ID(67) };
     fn(this, &id, &text, enabled, std::move(tooltip), containerIndex);
 }
 
@@ -149,7 +149,7 @@ void C_UIMenuBase::AddChoiceOption(const CryStringT<char>& id, int choiceValue,
     // 6-arg helper 0x181F81FD0 (choiceValue, id, !enabled, label, tooltip, container).
     using Fn = void(__fastcall*)(C_UIMenuBase*, const CryStringT<char>*, int, const CryStringT<char>*,
                                  bool, const CryStringT<char>*, int);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x1F8B8E0) };
+    static REL::Relocation<Fn> fn{ REL::ID(68) };
     fn(this, &id, choiceValue, &label, enabled, &tooltip, containerIndex);
 }
 
@@ -157,7 +157,7 @@ void C_UIMenuBase::SetValue(const CryStringT<char>& id, float value, int contain
 {
     // sub_181F8D9C0: flash ("SetValue", id, containerIndex, value).
     using Fn = void(__fastcall*)(C_UIMenuBase*, const CryStringT<char>*, float, int);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x1F8D9C0) };
+    static REL::Relocation<Fn> fn{ REL::ID(74) };
     fn(this, &id, value, containerIndex);
 }
 
@@ -165,7 +165,7 @@ void C_UIMenuBase::SetChoice(const CryStringT<char>& id, int choiceValue, int co
 {
     // sub_181F8D8D0: flash ("SetChoice", id, containerIndex, choiceValue).
     using Fn = void(__fastcall*)(C_UIMenuBase*, const CryStringT<char>*, int, int);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x1F8D8D0) };
+    static REL::Relocation<Fn> fn{ REL::ID(72) };
     fn(this, &id, choiceValue, containerIndex);
 }
 
@@ -175,7 +175,7 @@ void C_UIMenuBase::SetDisable(const CryStringT<char>& id, bool enabled,
     // sub_181F8D930: flash ("SetDisable", id, containerIndex, tooltip, !enabled) --
     // used by the refresh fns for "ui_button_one_choice" lockouts.
     using Fn = void(__fastcall*)(C_UIMenuBase*, const CryStringT<char>*, bool, const CryStringT<char>*, int);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x1F8D930) };
+    static REL::Relocation<Fn> fn{ REL::ID(73) };
     fn(this, &id, enabled, &tooltip, containerIndex);
 }
 

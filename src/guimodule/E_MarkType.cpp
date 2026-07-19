@@ -10,7 +10,7 @@ const char* GetMarkTypeName(E_MarkType::Type type)
     // sub_180C4D664: the mark_type -> name switch (97 cases; default "?" =
     // unk_183B797F0). Source of every enumerator name in E_MarkType.h.
     using Fn = const char*(__fastcall*)(int32_t);
-    static REL::Relocation<Fn> fn{ REL::Offset(0xC4D664) };
+    static REL::Relocation<Fn> fn{ REL::ID(30) };
     return fn(static_cast<int32_t>(type));
 }
 

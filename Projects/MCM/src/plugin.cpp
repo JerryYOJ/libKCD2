@@ -299,7 +299,7 @@ namespace {
     class {
     public:
         static bool Install() {
-            void* target = reinterpret_cast<void*>(REL::Offset(0x5598CC).address());
+            void* target = reinterpret_cast<void*>(REL::ID(13).address());
             if (MH_CreateHook(target, reinterpret_cast<void*>(&thunk),
                               reinterpret_cast<void**>(&orig)) != MH_OK)
                 return false;

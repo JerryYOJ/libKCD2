@@ -14,12 +14,7 @@
 // wh::framework::I_SourceMonitorListener @+0x08 (0x183A80E20, 1 slot).
 
 #include "../framework/I_SourceMonitorListener.h"   // canonical 1-slot listener (callback here: sub_1814DBC2C)
-
-// CryAction action-map event listener (merged primary base; 2-slot vtable).
-struct IActionMapEventListener {
-    virtual ~IActionMapEventListener() = default;   // [0]
-    virtual void OnActionMapEvent(void* event) = 0; // [1]  sub_182AA91C4 (matches m_attachName on event code 3)
-};
+#include "../CryEngine/CryAction/IActionMapEventListener.h"   // [1] here = sub_182AA91C4 (matches m_attachName on event code 3)
 
 namespace wh::entitymodule {
 

@@ -25,7 +25,7 @@ C_UIMap* C_UIMap::GetInstance()
     // caches the rttr-resolved C_UIApse* in qword_18548B050 and walks
     // C_GUIModule::m_uiElements on a cache miss.
     using GetApseFn = void*(__fastcall*)(void* pGUIModule);
-    static REL::Relocation<GetApseFn> getApse{ REL::Offset(0x5677CC) };  // sub_1805677CC
+    static REL::Relocation<GetApseFn> getApse{ REL::ID(15) };  // sub_1805677CC
 
     auto* ctx = wh::game::S_GameContext::GetInstance();
     if (!ctx || !ctx->m_pGUIModule)
@@ -41,7 +41,7 @@ bool C_UIMap::IsPoiFilterVisible(uint32_t filterId) const
     // sub_180C4DAB0: folds DLC ids through sub_180A1B1C4, bounds-checks (> 0x60 ->
     // false) and reads m_poiFilterVisible[id] (+0x618).
     using Fn = bool(__fastcall*)(const C_UIMap*, uint32_t);
-    static REL::Relocation<Fn> fn{ REL::Offset(0xC4DAB0) };
+    static REL::Relocation<Fn> fn{ REL::ID(31) };
     return fn(this, filterId);
 }
 
@@ -54,7 +54,7 @@ void C_UIMap::SetPoiMarkersVisible(uint32_t filterId, bool visible)
     // ids) to the "ApseMap" flash element.  Also the OnModuleMessage-0x41 and
     // side-effect handlers' worker.
     using Fn = void(__fastcall*)(C_UIMap*, uint32_t, char);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x2B02B34) };
+    static REL::Relocation<Fn> fn{ REL::ID(88) };
     fn(this, filterId, visible);
 }
 
@@ -69,7 +69,7 @@ std::shared_ptr<S_EntityMapMark>& C_UIMap::GetOrCreateEntityMark(
     using Fn = std::shared_ptr<S_EntityMapMark>*(__fastcall*)(
         C_UIMap*, std::shared_ptr<S_EntityMapMark>*, uint32_t,
         wh::xgenaimodule::C_LinkableObject*, uint32_t);
-    static REL::Relocation<Fn> fn{ REL::Offset(0xC4DBD8) };
+    static REL::Relocation<Fn> fn{ REL::ID(32) };
     return *fn(this, &out, type, pObject, param);
 }
 
@@ -79,7 +79,7 @@ void C_UIMap::RegisterEntityMark(std::shared_ptr<S_EntityMapMark>& mark)
     // mark's filter group passes IsPoiFilterVisible + the global gate sub_180C4D10C,
     // spawn the live C_CompassMark into m_activeMarks and C_UICompass::m_marks.
     using Fn = char(__fastcall*)(C_UIMap*, std::shared_ptr<S_EntityMapMark>*);
-    static REL::Relocation<Fn> fn{ REL::Offset(0xC4DD5C) };
+    static REL::Relocation<Fn> fn{ REL::ID(33) };
     fn(this, &mark);
 }
 
@@ -91,7 +91,7 @@ std::shared_ptr<C_CheckpointMark>& C_UIMap::FindCurrentLevelCheckpointMark(
     // when the level has no player mark.
     using Fn = std::shared_ptr<C_CheckpointMark>*(__fastcall*)(
         C_UIMap*, std::shared_ptr<C_CheckpointMark>*);
-    static REL::Relocation<Fn> fn{ REL::Offset(0xDCB460) };
+    static REL::Relocation<Fn> fn{ REL::ID(37) };
     return *fn(this, &out);
 }
 
@@ -101,7 +101,7 @@ void C_UIMap::GetCheckpointMarkPos(Vec2& out)
     // (0, 0) when none.  UIMap.GoToCheckpointMark (0x182BA7810) teleports the player
     // here with z = terrain elevation.
     using Fn = void(__fastcall*)(C_UIMap*, Vec2*);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x2AFEE18) };
+    static REL::Relocation<Fn> fn{ REL::ID(85) };
     fn(this, &out);
 }
 
@@ -113,7 +113,7 @@ void C_UIMap::PlaceCheckpointMarkAtCursor()
     // sub_182AFB3DC) and pushes it to flash.  Bound as a map action handler
     // (m_actionHandlers; action-thunk sub_181F4E3B0).
     using Fn = void(__fastcall*)(C_UIMap*);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x2AFDC74) };
+    static REL::Relocation<Fn> fn{ REL::ID(84) };
     fn(this);
 }
 
@@ -124,7 +124,7 @@ void C_UIMap::RemoveCheckpointMark()
     // (sub_182AFAE9C @ +0x588), push flash "ResetCheckpoint" (sub_180DCB1A0) and refresh
     // the help hint (sub_180DC99C4).  No-op when the level has no mark.
     using Fn = void(__fastcall*)(C_UIMap*);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x2B00ACC) };
+    static REL::Relocation<Fn> fn{ REL::ID(86) };
     fn(this);
 }
 
@@ -133,7 +133,7 @@ void C_UIMap::DrawFastTravelRoute(std::vector<Vec3>& nodes)
     // sub_182B016B0: emit each node's (x,y) as SUIArguments to flash "FastTravelPath", then
     // "ShowFastTravelPath" on the "ApseMap" element -- the visible route polyline (Z dropped).
     using Fn = void(__fastcall*)(C_UIMap*, std::vector<Vec3>*);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x2B016B0) };
+    static REL::Relocation<Fn> fn{ REL::ID(87) };
     fn(this, &nodes);
 }
 

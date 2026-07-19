@@ -20,7 +20,7 @@
 
 namespace wh::entitymodule {
 
-class  S_ItemData;
+class  S_ItemClass;
 class  I_ItemRuntimeData;
 class  C_ItemManager;
 class  I_Inventory;
@@ -34,8 +34,9 @@ public:
     uint8_t  m_state;                                  // +0x28  init 5 (state/enum; no reader isolated)
     uint8_t  _pad29[7];                                // +0x29
     wh::framework::WUID m_wuid;                        // +0x30  registry key (tag 2 = Item)  VERIFIED
-    CryGUID  m_classGuid;                              // +0x38  item class guid  VERIFIED
-    S_ItemData* m_pClassData;                          // +0x48  class definition (GetClassDef)  VERIFIED
+    CryGUID  m_instanceGuid;                           // +0x38  
+    S_ItemClass* m_pClassData;                         // +0x48  class definition (GetClassData
+                                                       //        0x1804695B4; null -> static default row)  VERIFIED
     int32_t  m_amount;                                 // +0x50  stack count (init 1)  VERIFIED
     float    m_health;                                 // +0x54  init 1.0 (GetHealth)  VERIFIED
     I_ItemRuntimeData* m_pRuntimeData;                 // +0x58  lazily created per-item runtime data  VERIFIED

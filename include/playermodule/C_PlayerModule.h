@@ -33,12 +33,14 @@ namespace wh::playermodule {
 
 class C_FastTravel;
 class C_ForgeWardrobeManager;   // NEW in KCD2
+class C_MinigameManager;
 class C_TutorialManager;
 class C_RandomEventManager;
 class C_FOWManager;
 class C_Keybinds;
 class C_ActionHintManager;
 class C_ActionSets;
+class I_ActionSets;
 class C_PlayerManager;
 class C_ShelverManager;
 class C_ControllerFeedbackManager;
@@ -60,7 +62,7 @@ public:
 
     // C_BaseModule base occupies +0x00 (vtable) / +0x08 (m_state) / +0x0C (pad);
     // ISystemEventListener base occupies +0x10 (vtable). Members follow at +0x18.
-    void*                   m_sub18;            // +0x18  sub-manager (0xB0,  ctor sub_180EF7184)
+    C_MinigameManager*      m_pMinigameManager; // +0x18  (0xB0,  ctor sub_180EF7184) sessions + minigame scriptbinds
     C_TutorialManager*      m_pTutorialManager; // +0x20  (0x50,  ctor sub_18179FD3C stores C_TutorialManager vtable)
     C_FastTravel*           m_pFastTravel;      // +0x28  (0x130, ctor sub_180BE9BA0)            VERIFIED
     C_RandomEventManager*   m_pRandomEventManager; // +0x30  (0x118, ctor sub_180BE83E8 stores C_RandomEventManager vtable)
@@ -69,7 +71,8 @@ public:
     void*                   m_sub48;            // +0x48  sub-manager (0x20,  intrusive list node)
     void*                   m_sub50;            // +0x50  sub-manager (0x50,  C_Signal-like)
     C_ActionHintManager*    m_pActionHintManager; // +0x58  (0x140, ctor sub_181748CFC stores C_ActionHintManager vtable)
-    C_ActionSets*           m_pActionSets;      // +0x60  (0x90,  ctor sub_180BE9E68; field holds obj+8 secondary base subobject)
+    I_ActionSets*           m_pActionSets;      // +0x60  = C_ActionSets+8, the I_ActionSets subobject
+                                                //        (obj 0x90, ctor sub_180BE9E68; VERIFIED disasm 0x180BE93DA)
     void*                   m_sub68;            // +0x68  sub-manager (0x20,  C_Signal-like)
     void*                   m_sub70;            // +0x70  sub-manager (0x10,  single-node list)
     C_PlayerManager*        m_pPlayerManager;   // +0x78  (0xD8,  ctor sub_180BE9868 stores C_PlayerManager vtable; registers name "C_PlayerManager")

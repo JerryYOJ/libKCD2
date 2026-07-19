@@ -12,7 +12,7 @@ bool C_SaveGameManager::CreateSaveGame(E_SaveGameType::Type type, int32_t index,
     // index < 0 with a non-checkpoint type resolves the slot by name; LevelSwitchSave(6)
     // takes the queued async-checkpoint branch instead of writing directly.
     using Fn = bool (__fastcall*)(C_SaveGameManager*, E_SaveGameType::Type, int32_t, const char*);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x794928) };
+    static REL::Relocation<Fn> fn{ REL::ID(22) };
     return fn(this, type, index, name);
 }
 

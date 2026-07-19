@@ -11,14 +11,14 @@ namespace wh::combatmodule {
 void C_CombatAutomationDefense::SetReactionWeights(const S_ReactionWeights& weights)
 {
     using Fn = void(__fastcall*)(C_CombatAutomationDefense*, const S_ReactionWeights*);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x194C270) };
+    static REL::Relocation<Fn> fn{ REL::ID(61) };
     fn(this, &weights);
 }
 
 void C_CombatAutomationDefense::ClearReactionWeights()
 {
     using Fn = void(__fastcall*)(C_CombatAutomationDefense*, const S_ReactionWeights*);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x194C270) };  // nullptr clears
+    static REL::Relocation<Fn> fn{ REL::ID(61) };  // nullptr clears
     fn(this, nullptr);
 }
 

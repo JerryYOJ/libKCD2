@@ -29,11 +29,13 @@ class I_Action;
 enum class E_ActionNotificationType : int32_t;
 
 // Director kind (ctor arg stored @+0x68 by sub_1809CDAD0). KCD2-verified domain:
-// C_CombatActorDirector ctor sub_180917E80 passes 0; C_ActorDirector passes 1.
-// (KCD1 additionally has minigame modes 2/3 — NOT observed in kd7u, not ported.)
+// C_CombatActorDirector ctor sub_180917E80 passes 0; C_ActorDirector passes 1;
+// playermodule::C_AlchemyActionDirector (embedded at C_Alchemy+0x78) passes 3 (minigame mode,
+// alchemy RE wave). Mode 2 remains unobserved in kd7u.
 enum class E_ActionDirectorMode : int32_t {
-    Combat = 0,
-    Actor  = 1,
+    Combat   = 0,
+    Actor    = 1,
+    Minigame = 3,   // observed: alchemy session director (sub_1816E9570 -> sub_1809CDAD0(this+0x78, 3))
 };
 
 class C_ActionDirector {

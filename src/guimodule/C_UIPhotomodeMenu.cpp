@@ -12,7 +12,7 @@ void C_UIPhotomodeMenu::BuildCvarWidgets()
     // sub_181F8E0F0 and wh_ui_photomodeLogoType sub_181F8DEE0). The page must already
     // be prepared -- C_UISettings::ShowRootPhotomodePage is the canonical caller.
     using Fn = void(__fastcall*)(C_UIPhotomodeMenu*);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x1F8DDA0) };
+    static REL::Relocation<Fn> fn{ REL::ID(76) };
     fn(this);
 }
 

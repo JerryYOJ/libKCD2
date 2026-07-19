@@ -1,6 +1,6 @@
 #pragma once
 #include <cstdint>
-#include "REL/Offset.h"
+#include "REL/ID.h"
 
 // -----------------------------------------------
 // SSystemGlobalEnvironment (gEnv) -- KCD2 binary layout
@@ -88,7 +88,7 @@ struct SSystemGlobalEnvironment {
 
     static SSystemGlobalEnvironment* GetInstance()
     {
-        return reinterpret_cast<SSystemGlobalEnvironment*>(REL::Offset(0x492D7F8).address());
+        return reinterpret_cast<SSystemGlobalEnvironment*>(REL::ID(1300).address());
     }
 };
 static_assert(sizeof(SSystemGlobalEnvironment) == 0x1C0);

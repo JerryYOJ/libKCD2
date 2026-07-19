@@ -12,7 +12,7 @@ CryStringT<char> C_LocalizedString::Resolve(const CryStringT<char>& label)
     // into the caller-provided return slot, which is exactly what this
     // signature compiles to.
     using Fn = CryStringT<char>(__fastcall*)(const CryStringT<char>&);
-    static REL::Relocation<Fn> fn{ REL::Offset(0x3C235C) };
+    static REL::Relocation<Fn> fn{ REL::ID(1) };
     return fn(label);
 }
 

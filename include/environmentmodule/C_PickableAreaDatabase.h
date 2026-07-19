@@ -30,7 +30,7 @@ public:
     // The global static instance (ctor stamps the vtable directly at this address).
     [[nodiscard]] static C_PickableAreaDatabase* GetInstance()
     {
-        return reinterpret_cast<C_PickableAreaDatabase*>(REL::Offset(0x5326030).address());
+        return reinterpret_cast<C_PickableAreaDatabase*>(REL::ID(2326).address());
     }
 };
 
