@@ -30,6 +30,8 @@ struct Item {
     double mn = 0, mx = 1, step = 1;
     double def = 0;                      // toggle 0/1, dropdown index, slider value
     double val = 0;
+    bool hasLiveValue = false;           // true if SetItemValue reported val THIS rebuild
+                                          // (ApplyValues must not clobber it with a stale snapshot)
 };
 
 struct Mod {
@@ -67,6 +69,24 @@ inline void AddItem(Mod& mod, Item&& it)
     mod.items.push_back(std::move(it));
 }
 
+// Overwrites an already-added item's DISPLAYED value, leaving its default
+// alone (build-callback only; the item must already exist -- call this right
+// after the matching Add* for the same id). For a setting whose live value
+// can differ from its schema default (e.g. it mirrors a CVar or other
+// externally-owned state), this is how a builder reports "this is what's
+// live right now" without losing the X-reset target. Returns false (does
+// nothing) if no such item exists yet.
+inline bool SetItemValue(Mod& mod, const std::string& id, double value)
+{
+    for (Item& it : mod.items)
+        if (it.kind != Item::Cat && it.id == id) {
+            it.val = value;
+            it.hasLiveValue = true;
+            return true;
+        }
+    return false;
+}
+
 // Session values keyed by (modId, settingId), carried across rebuilds.
 using ValueSnapshot = std::map<std::pair<std::string, std::string>, double>;
 
@@ -80,11 +100,15 @@ inline ValueSnapshot SnapshotValues()
     return snap;
 }
 
+// Restores in-menu edits across a rebuild for items nobody else re-asserted
+// a live value for THIS round (see SetItemValue) -- MCM is the only owner of
+// state for those, so without this every rebuild would reset them to their
+// Add* default.
 inline void ApplyValues(const ValueSnapshot& snap)
 {
     for (Mod& m : g_mods)
         for (Item& it : m.items) {
-            if (it.kind == Item::Cat)
+            if (it.kind == Item::Cat || it.hasLiveValue)
                 continue;
             auto f = snap.find({ m.id, it.id });
             if (f != snap.end())

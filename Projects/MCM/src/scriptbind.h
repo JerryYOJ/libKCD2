@@ -6,13 +6,20 @@
 //   MCM.AddToggle( modId, id, label, tooltip, default01 )           -- build-callback only
 //   MCM.AddDropdown( modId, id, label, tooltip, options, default )  -- build-callback only
 //   MCM.AddSlider( modId, id, label, tooltip, min, max, step, default, suffix )
+//   MCM.SetValue( modId, id, value )                                 -- build-callback only
 //   MCM.RegisterValueChangeListener( modId, function(settingId, value) ... end )
 //
 // Build listeners fire on every settings rebuild (each menu open) and
 // contribute settings by calling the MCM.Add* functions imperatively — those
 // are valid ONLY inside the callback (the model is cleared and rebuilt each
 // time, so re-adding is the contract, and session values are re-applied by id
-// afterwards). Value-change callbacks fire on every value change of their
+// afterwards). SetValue overwrites an already-added item's DISPLAYED value
+// without touching its default — call it right after the matching Add* when
+// your setting's live value can differ from its schema default (e.g. it
+// mirrors a CVar you own); an X-reset in the menu then restores the Add*
+// default, not whatever was live. Skip it for settings MCM itself is the
+// only owner of — those already carry session edits across rebuilds on
+// their own. Value-change callbacks fire on every value change of their
 // mod, at the same moment the KCSE ValueChanged broadcast goes out
 // (api/MCM_API.h is the C++ counterpart). Dot-call only - colon-call shifts
 // the args by one (self) and raises a param-type script error.
@@ -65,6 +72,8 @@ public:
                          functor(*this, &CScriptBind_MCM::AddDropdown));
         RegisterFunction("AddSlider", "modId, id, label, tooltip, min, max, step, default, suffix",
                          functor(*this, &CScriptBind_MCM::AddSlider));
+        RegisterFunction("SetValue", "modId, id, value",
+                         functor(*this, &CScriptBind_MCM::SetValue));
 
         m_pSS->SetGlobalAny("MCM", ScriptAnyValue(m_pMethodsTable));
         MCM_LOG("lua scriptbind ready (MCM.*)");
@@ -203,6 +212,19 @@ public:
         it.def    = it.val = def;
         it.suffix = suffix;
         AddItem(GetOrAddMod(modId, ""), std::move(it));
+        return pH->EndFunction();
+    }
+
+    //! MCM.SetValue( modId, id, value )
+    int SetValue(Offsets::IFunctionHandler* pH)
+    {
+        const char* modId = nullptr;
+        const char* id = nullptr;
+        double value = 0;
+        if (!Building(pH) || !pH->GetParams(modId, id, value) || !*modId || !*id)
+            return pH->EndFunction();
+        if (!SetItemValue(GetOrAddMod(modId, ""), id, value))
+            MCM_LOG("WARN: MCM.SetValue(%s.%s) - no such setting (call after its Add*)", modId, id);
         return pH->EndFunction();
     }
 
