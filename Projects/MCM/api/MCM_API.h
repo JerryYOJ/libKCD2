@@ -7,6 +7,7 @@
 //         MCM.AddMod("my_mod", "My Mod")
 //         MCM.AddToggle("my_mod", "enable", "Enable Mod", "tooltip", 1)
 //         MCM.AddSlider("my_mod", "speed", "Speed", "tooltip", 0, 10, 0.5, 1, "x")
+//         MCM.SetValue("my_mod", "speed", GetLiveSpeed())  -- optional: live != default
 //     end)
 //     MCM.RegisterValueChangeListener("my_mod", function(settingId, value) ... end)
 
@@ -19,8 +20,9 @@
 namespace MCM {
 
     // Broadcast by the MCM plugin (sender "MCM") on every setting mutation —
-    // manual edits and X resets alike; sliders fire live during drags.
-    // MCM keeps values in memory only: consuming plugins own persistence.
+    // manual edits and X resets alike; a slider drag fires once, on release
+    // (not live per-pixel). MCM keeps values in memory only: consuming
+    // plugins own persistence.
     constexpr uint32_t kMessage_ValueChanged = 0x4D434D01;   // 'MCM',1
 
     // msg->data for kMessage_ValueChanged. The pointers are only guaranteed
@@ -52,6 +54,15 @@ namespace MCM {
         virtual void AddSlider(const char* modId, const char* id, const char* label,
                                const char* tooltip, double mn, double mx, double step,
                                double defaultValue, const char* suffix) = 0;
+
+        // Overwrites the DISPLAYED value of an already-added item, leaving its
+        // default alone (call right after the matching Add* for the same id).
+        // Use when a setting's live value can differ from its schema default --
+        // e.g. it mirrors a CVar or other state you own -- so an X-reset in the
+        // menu restores the Add* default rather than whatever was live. Skip
+        // this call entirely for settings MCM itself is the only owner of;
+        // their in-menu edits already carry over across rebuilds on their own.
+        virtual void SetValue(const char* modId, const char* id, double value) = 0;
     };
 
     // Example of how a plugin would provide and consume its MCM settings:
@@ -61,6 +72,7 @@ namespace MCM {
     //                 auto* b = static_cast<MCM::ISettingsBuilder*>(msg->data);
     //                 b->AddMod("my_mod", "My Mod");
     //                 b->AddToggle("my_mod", "enable", "Enable Mod", "tip", true);
+    //                 b->SetValue("my_mod", "enable", g_liveEnabledFlag);
     //             } else if (msg->type == MCM::kMessage_ValueChanged) {
     //                 auto* v = static_cast<const MCM::ValueChanged*>(msg->data);
     //                 if (strcmp(v->modId, "my_mod") == 0)

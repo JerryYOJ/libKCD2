@@ -75,6 +75,14 @@ public:
         ::AddItem(GetOrAddMod(modId, ""), std::move(it));
     }
 
+    void SetValue(const char* modId, const char* id, double value) override
+    {
+        if (!modId || !*modId || !id || !*id)
+            return;
+        if (!SetItemValue(GetOrAddMod(modId, ""), id, value))
+            MCM_LOG("WARN: SetValue(%s.%s) - no such setting (call after its Add*)", modId, id);
+    }
+
 private:
     static bool Valid(const char* modId, const char* a, const char* b = "")
     {

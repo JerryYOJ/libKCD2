@@ -7,6 +7,7 @@
 //         MCM.AddMod("my_mod", "My Mod")
 //         MCM.AddToggle("my_mod", "enable", "Enable Mod", "tooltip", 1)
 //         MCM.AddSlider("my_mod", "speed", "Speed", "tooltip", 0, 10, 0.5, 1, "x")
+//         MCM.SetValue("my_mod", "speed", GetLiveSpeed())  -- optional: live != default
 //     end)
 //     MCM.RegisterValueChangeListener("my_mod", function(settingId, value) ... end)
 
@@ -52,6 +53,8 @@ namespace MCM {
         virtual void AddSlider(const char* modId, const char* id, const char* label,
                                const char* tooltip, double mn, double mx, double step,
                                double defaultValue, const char* suffix) = 0;
+
+        virtual void SetValue(const char* modId, const char* id, double value) = 0;
     };
 
     // Example of how a plugin would provide and consume its MCM settings:
@@ -61,6 +64,7 @@ namespace MCM {
     //                 auto* b = static_cast<MCM::ISettingsBuilder*>(msg->data);
     //                 b->AddMod("my_mod", "My Mod");
     //                 b->AddToggle("my_mod", "enable", "Enable Mod", "tip", true);
+    //                 b->SetValue("my_mod", "enable", g_liveEnabledFlag);
     //             } else if (msg->type == MCM::kMessage_ValueChanged) {
     //                 auto* v = static_cast<const MCM::ValueChanged*>(msg->data);
     //                 if (strcmp(v->modId, "my_mod") == 0)
