@@ -5,7 +5,8 @@
     "boost-container",
     "boost-smart-ptr",
     "minhook",
-    "pugixml"
+    "pugixml",
+    "xbyak"
   ],
   "overrides": []
 }

@@ -17,9 +17,12 @@
 //   gEnv->+0xNN  = returns *(m_env + 0xNN)  (m_env is the +0x20 SSystemGlobalEnvironment*)
 // Non-accessor names are marked "tentative".
 
+struct IXmlUtils;
 struct SSystemGlobalEnvironment;
 
 namespace Offsets {
+
+struct IXmlNode;
 
 struct ISystem {
     virtual void _vf0(char flags) = 0;                              // [0]   0x000  scalar-deleting dtor 0x182458548
@@ -152,9 +155,11 @@ struct ISystem {
     virtual void _vf127() = 0;                                      // [127] 0x3F8
     virtual void _vf128() = 0;                                      // [128] 0x400  141b
     virtual void _vf129() = 0;                                      // [129] 0x408  101b
-    virtual void _vf130() = 0;                                      // [130] 0x410  reads ptr [+0xA20]
-    virtual void _vf131() = 0;                                      // [131] 0x418  reads ptr [+0xA20]
-    virtual void* _vf132() = 0;                                     // [132] 0x420  ret [+0xA20] (subsystem, alloc 0x30)
+    virtual void LoadXmlFromBuffer(IXmlNode** out, const char* buffer,
+                                   uint64_t size, char a5, char a6) = 0;  // [130] 0x410  forwards to CXmlUtils [+0xA20]; consumer mod.manifest reader 0x18243F278: (this,&out,buf,size,0,1) -- arity VERIFIED, a5/a6 semantics UNVERIFIED
+    virtual void LoadXmlFromFile(IXmlNode** out, const char* path,
+                                 char a4, char a5, char a6) = 0;          // [131] 0x418  impl 0x180D1B0EC forwards to CXmlUtils vfunc[1] 0x1806E63CC (injects const 1 as its arg4, demotes a4 to tail); consumers 0x180C3D5B4 / C_Keybinds::LoadConfig / C_Game::LoadConfigXml_18173CB3C all pass (this,&out,path,0,1,1) -- arity VERIFIED, flag semantics UNVERIFIED, pass (0,1,1) like stock
+    virtual IXmlUtils* GetXmlUtils() = 0;                         // [132] 0x420  ret [+0xA20] (CXmlUtils, alloc 0x30)   VERIFIED
     virtual void* _vf133() = 0;                                     // [133] 0x428  ret [+0xA28]
     virtual void* _vf134() = 0;                                     // [134] 0x430  &m_ViewCamera [+0x288] (add rcx,0x288)
     virtual void* GetViewCamera() = 0;                             // [135] 0x438  lea &m_ViewCamera [+0x288]           VERIFIED

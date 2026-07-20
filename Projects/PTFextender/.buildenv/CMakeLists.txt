@@ -1,4 +1,4 @@
-project(Autobrew LANGUAGES CXX)
+project(PTFextender LANGUAGES CXX)
 
 find_package(minhook CONFIG REQUIRED)
 

@@ -123,6 +123,11 @@ struct IFunctionHandler {
     {
         return GetParams(p1, p2, p3, p4, p5, p6, p7, p8) && GetParam(9, p9);
     }
+    template <class P1, class P2, class P3, class P4, class P5, class P6, class P7, class P8, class P9, class P10>
+    bool GetParams(P1& p1, P2& p2, P3& p3, P4& p4, P5& p5, P6& p6, P7& p7, P8& p8, P9& p9, P10& p10)
+    {
+        return GetParams(p1, p2, p3, p4, p5, p6, p7, p8, p9) && GetParam(10, p10);
+    }
 };
 
 }  // namespace Offsets
