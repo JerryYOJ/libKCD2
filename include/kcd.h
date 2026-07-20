@@ -113,9 +113,15 @@
 #include "entitymodule/C_Player.h"
 
 // ---- Tranche 2: item / inventory ----
+#include "entitymodule/E_ItemType.h"
 #include "entitymodule/S_ItemClass.h"
 #include "entitymodule/S_PickableItemClass.h"
 #include "entitymodule/S_PlayerItemClass.h"
+#include "entitymodule/S_DivisibleItemClass.h"
+#include "entitymodule/S_TypedItemClass.h"
+#include "entitymodule/S_CraftingMaterialItemClass.h"
+#include "entitymodule/S_HerbItemClass.h"
+#include "entitymodule/C_ItemDatabase.h"
 #include "entitymodule/C_Item.h"
 #include "entitymodule/C_Inventory.h"
 #include "entitymodule/C_WorldInventory.h"

@@ -356,6 +356,7 @@ namespace Offsets {
     inline constexpr ::REL::ID RTTI_C_ItemBuffInitParams                                         { 1822 };  // 0x4CE6190 .?AVC_ItemBuffInitParams@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_ItemCollection                                             { 1539 };  // 0x4C38850 .?AVC_ItemCollection@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_C_ItemDamagedOnConsciousnessLossCause                        { 1982 };  // 0x4D5E450 .?AVC_ItemDamagedOnConsciousnessLossCause@rpgmodule@wh@@
+    inline constexpr ::REL::ID RTTI_C_ItemDatabase                                               { 1217214 };  // 0x4C64A88 .?AVC_ItemDatabase@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_C_ItemDestroyedEffect                                        { 1879 };  // 0x4D4E4A8 .?AVC_ItemDestroyedEffect@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_ItemEatCause                                               { 1983 };  // 0x4D5E550 .?AVC_ItemEatCause@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_ItemEffect                                                 { 1895 };  // 0x4D4E918 .?AVC_ItemEffect@rpgmodule@wh@@

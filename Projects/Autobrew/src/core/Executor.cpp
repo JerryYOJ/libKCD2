@@ -9,6 +9,9 @@
 #include "entitymodule/C_DocumentItem.h"
 #include "entitymodule/C_Inventory.h"
 #include "entitymodule/C_Item.h"
+#include "entitymodule/C_ItemDatabase.h"
+#include "entitymodule/E_ItemType.h"
+#include "entitymodule/S_HerbItemClass.h"
 #include "entitymodule/S_ItemClass.h"
 #include "framework/C_EEExpression.h"
 #include "framework/C_ExpressionEngine.h"
@@ -109,11 +112,25 @@ const C_AlchemyResource* Executor::FindPotBaseRecord() const
     return nullptr;
 }
 
+// The game's own one-hop brewing substitute (ingredient counter 0x18175A4BC / autocook retry
+// 0x181FFE040): a fresh herb class resolves to its item.xml DriedItemId, anything else to the
+// null guid.  Live off the item DB, so mod-added herbs resolve too.
+CryGUID Executor::FindDriedVariant(const CryGUID& classGuid)
+{
+    using namespace wh::entitymodule;
+    auto* classDef = C_ItemDatabase::GetInstance()->FindClassByGuid(classGuid);
+    if (!classDef || !classDef->IsType(E_ItemType::Herb))
+        return CryGUID{};
+    return classDef->GetAsHerbItemClass()->m_driedItemId;
+}
+
 E_AlchemyVerb::Type Executor::FindIngredientVerb(const CryGUID& guid) const
 {
     const auto& bs = m_pAlchemy->m_brewState;
+    const CryGUID dried = FindDriedVariant(guid);
+    const bool hasDried = dried != CryGUID{};
     for (int i = 0; i < 3; ++i)
-        if (bs.m_herbSlotKey[i] == guid)
+        if (bs.m_herbSlotKey[i] == guid || (hasDried && bs.m_herbSlotKey[i] == dried))
             return E_AlchemyVerb::Type(E_AlchemyVerb::TakeHerb1 + i);
     for (int i = 0; i < 3; ++i)
         if (bs.m_specialSlotKey[i] == guid)
@@ -139,6 +156,11 @@ bool Executor::StockStations(wh::playermodule::C_AlchemyRecipe* recipe)
     std::vector<wh::framework::WUID> stock;
     for (auto& row : recipe->m_ingredients) {
         auto* item = inventory->FindItemByClass(row.m_ingredientItemId);
+        if (!item) {
+            const CryGUID dried = FindDriedVariant(row.m_ingredientItemId);
+            if (dried != CryGUID{})
+                item = inventory->FindItemByClass(dried);
+        }
         if (!item)
             return false;   // ingredient missing after all -> refuse the brew
         stock.push_back(item->m_wuid);
@@ -200,6 +222,7 @@ bool Executor::BuildPlan(uint32_t recipeId)
     using S_Operand = wh::framework::C_EEExpression::S_Operand;
 
     bool distill = false;
+    bool resultMilled = false;
     std::vector<float> lits;   // pending literal operands (call args, comparands)
     for (auto& step : recipe->m_steps) {
         const auto* expr = step.m_pCompiledCondition;
@@ -247,8 +270,8 @@ bool Executor::BuildPlan(uint32_t recipeId)
                 if (args[0] == 1.0f)
                     distill = true;
             } else if (std::strcmp(name, "IsResultMilled") == 0 && argc == 1) {
-                if (args[0] == 1.0f)   // gunpowder-style result milling not drivable yet
-                    return false;
+                if (args[0] == 1.0f)
+                    resultMilled = true;
             } else {
                 return false;   // unknown builtin or unexpected arity
             }
@@ -340,10 +363,22 @@ bool Executor::BuildPlan(uint32_t recipeId)
     //  - distilled: the Distill leg IS the finish.  C_UseRetortAction runs its own state
     //    machine (mode := Distilling, N bellow-distillation montage loops, then
     //    OnFinishRetortPotion grades + Resets).  Arming's mode/verbBusy gate waits it out.
+    //  - result-milled (shot/gunpowder): UseMortar from Idle with the mortar EMPTY (every prep
+    //    grind above ends by dumping into the pot) and >= 2 records in the pot routes to
+    //    C_FinishRecipeFromMortarAction -- the whole pour-grind-sack montage;
+    //    completion grades the MORTAR bucket, where the finish grind's mill bit
+    //    satisfies IsResultMilled.  The pot must stay hanging: holding it leaves Idle and the
+    //    verb would re-route to the plain mill action.
     //  - otherwise: pour the pot into the phial (C_UsePotAction's finish montage).
-    plan.push_back({ S_PlanOp::EnsureHoldPot, E_AlchemyVerb::None, {} });
-    plan.push_back({ S_PlanOp::DoVerb,
-                     distill ? E_AlchemyVerb::Distill : E_AlchemyVerb::UsePot, {} });
+    if (distill && resultMilled)
+        return false;   // never shipped together; the finish flows are mutually exclusive
+    if (resultMilled) {
+        plan.push_back({ S_PlanOp::DoVerb, E_AlchemyVerb::UseMortar, {} });
+    } else {
+        plan.push_back({ S_PlanOp::EnsureHoldPot, E_AlchemyVerb::None, {} });
+        plan.push_back({ S_PlanOp::DoVerb,
+                         distill ? E_AlchemyVerb::Distill : E_AlchemyVerb::UsePot, {} });
+    }
 
     m_plan = std::move(plan);
     return true;
@@ -407,6 +442,19 @@ void Executor::ReturnToIdle()
     m_plan.clear();
     m_planCursor = 0;
     m_op = {};
+}
+
+// Every non-user-initiated teardown goes through here: a refusal with no trace reads as
+// "nothing happened" in the field (the shot-ball report), so say why, on screen and in the log.
+void Executor::AbortRun(const char* reason)
+{
+    if (auto* env = SSystemGlobalEnvironment::GetInstance(); env && env->pLog)
+        env->pLog->LogAlways("[Autobrew] stopped: %s (recipe %u, op %zu/%zu)",
+                             reason, m_pendingRecipeId, m_planCursor, m_plan.size());
+    char line[128];
+    std::snprintf(line, sizeof line, "Autobrew stopped: %s", reason);
+    ShowCenterToast(CryStringT<char>(line));
+    ReturnToIdle();
 }
 
 }  // namespace Autobrew

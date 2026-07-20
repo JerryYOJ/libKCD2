@@ -25,6 +25,7 @@
 // Base vtable 0x183A4EC78 (55 slots), ctor sub_180754CE4, copy sub_180D290F8, dtor sub_181AB90BC.
 namespace wh::entitymodule {
 
+class S_HerbItemClass;
 class S_PickableItemClass;
 class S_PlayerItemClass;
 
@@ -70,7 +71,11 @@ public:
     virtual S_ItemClass* GetAsUnk32();  virtual S_ItemClass* GetAsUnk33();
     virtual S_ItemClass* GetAsUnk34();  virtual S_ItemClass* GetAsUnk35();
     virtual S_ItemClass* GetAsUnk36();  virtual S_ItemClass* GetAsUnk37();
-    virtual S_ItemClass* GetAsUnk38();  virtual S_ItemClass* GetAsUnk39();
+    virtual S_ItemClass* GetAsUnk38();
+    // [39] certified: herb override = `return this` (ICF 0x1805F5DA0), default 0x182A44A00 =
+    // TLS-lazy static default herb 0x1855DE0D0 (null m_driedItemId) -- callers: the alchemy
+    // ingredient counter 0x18175A4BC + autocook substitute retry 0x181FFE040.
+    virtual S_HerbItemClass* GetAsHerbItemClass();
     virtual S_ItemClass* GetAsUnk40();  virtual S_ItemClass* GetAsUnk41();
     virtual S_ItemClass* GetAsUnk42();  virtual S_ItemClass* GetAsUnk43();
     virtual S_ItemClass* GetAsUnk44();  virtual S_ItemClass* GetAsUnk45();

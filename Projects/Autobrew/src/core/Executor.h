@@ -113,9 +113,12 @@ private:
     uint32_t GetOpenRecipeId() const;
     // The pot bucket's base-liquid record (poured first, present for every boil window).
     const wh::playermodule::C_AlchemyResource* FindPotBaseRecord() const;
-    // The take-verb for whichever station slot is keyed to the ingredient class -- herb slots
-    // (TakeHerb1+i) AND special slots (TakeSpecial1+i, crushable specials like pearl/salt/coal
-    // stock there) -- or None if no slot holds it.
+    // The dried-variant class guid for a fresh herb class (item.xml DriedItemId, live off the
+    // item DB -- the game's own one-hop brewing substitute); null guid for anything else.
+    static CryGUID FindDriedVariant(const CryGUID& classGuid);
+    // The take-verb for whichever station slot is keyed to the ingredient class OR its dried
+    // variant -- herb slots (TakeHerb1+i) AND special slots (TakeSpecial1+i, crushable specials
+    // like pearl/salt/coal stock there) -- or None if no slot holds it.
     wh::playermodule::E_AlchemyVerb::Type FindIngredientVerb(const CryGUID& guid) const;
     // Any station bucket non-empty (leftovers of a previous brew).
     bool IsWorkspaceDirty() const;
@@ -127,6 +130,7 @@ private:
     bool BuildPlan(uint32_t recipeId);
     void BeginCooking();   // Arming -> Cooking (shows the stop prompt)
     void ReturnToIdle();   // unified teardown: finish, cancel and stall-abort all land here
+    void AbortRun(const char* reason);   // loud ReturnToIdle: kcd.log line + center toast
 
     static constexpr int kStallAbortFrames = 600;   // ~10 s without progress -> abort the brew
 

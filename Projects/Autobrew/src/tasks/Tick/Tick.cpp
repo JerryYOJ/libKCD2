@@ -106,11 +106,19 @@ void Executor::Tick()
         auto* recipe = C_AlchemyRecipeDatabase::GetRecipeById(m_pendingRecipeId);
         auto* actor = alc->m_pPlayerActor;
         auto* inventory = actor ? actor->GetInventory() : nullptr;
-        if (recipe && inventory && recipe->CanBrewFrom(inventory)
-            && StockStations(recipe) && BuildPlan(m_pendingRecipeId))
-            BeginCooking();
+        const char* refusal = nullptr;
+        if (!recipe || !inventory)
+            refusal = "session lost the recipe or inventory";
+        else if (!recipe->CanBrewFrom(inventory))
+            refusal = "ingredients ran out";   // the normal end of a batch loop
+        else if (!StockStations(recipe))
+            refusal = "ingredient stocking failed";
+        else if (!BuildPlan(m_pendingRecipeId))
+            refusal = "recipe not auto-brewable";
+        if (refusal)
+            AbortRun(refusal);
         else
-            ReturnToIdle();   // unsupported recipe / ingredients ran out -> loop ends
+            BeginCooking();
         break;
     }
     case E_Phase::Cooking: {
@@ -130,7 +138,7 @@ void Executor::Tick()
         if (!brewing) {
             ++m_op.stallFrames;
             if (m_op.stallFrames > kStallAbortFrames)
-                ReturnToIdle();
+                AbortRun("brewing was interrupted");
             break;
         }
         {
@@ -247,7 +255,7 @@ void Executor::Tick()
             }
         }
         if (m_op.stallFrames > kStallAbortFrames)   // wedged (missing herb, blocked verb...)
-            ReturnToIdle();
+            AbortRun("stalled");                    // the 2 s snapshots above pin the op
         break;
     }
     }
