@@ -23,6 +23,86 @@
 #include "guimodule/ItemUiPresentation.h"
 #include "crysystem/SSystemGlobalEnvironment.h"
 
+#include <utility>
+
+namespace {
+
+// ---------------------------------------------------------------------------
+// Dried-herb autobrew fix.
+// Fresh<->dried herb equivalence, extracted from Libs/Tables/item/item.xml (KCD2 1.5.6):
+// every fresh herb class carries a DriedItemId, and alchemy recipes reference the FRESH class.
+// A bag holding only the dried variant therefore misses C_InventoryBase::FindItemByClass (which
+// matches the class GUID EXACTLY) even though the game's own CanBrewFrom accepts it -- so the
+// auto-brew silently aborts in Arming. These pairs let StockStations / FindIngredientVerb treat
+// a herb and its dried form as one and the same.
+// ---------------------------------------------------------------------------
+struct HerbPairStr { const char* a; const char* b; };
+static const HerbPairStr kHerbPairStr[] = {
+    { "0290b689-c01c-480f-b121-bed71ad1f5e0", "6073159c-6843-41f3-94a3-40e41617ea19" }, // eyewort
+    { "05bef17b-ddeb-426d-aa53-52ff6d4f521e", "9b750e23-86ff-4b8b-ac97-9498121800c1" }, // poppy
+    { "27b8a61f-36e4-4101-9be5-1b814d43bd8f", "0146b4e9-1698-4f02-a6c4-f50e2d659540" }, // valerian
+    { "2ddf6256-0662-44c4-99fe-f713b6d900ea", "60827d19-7234-4004-b7ae-a88e7f17cfd9" }, // paris
+    { "4d9e61aa-3f90-4e5d-b836-f9e158196438", "666ccc75-e92b-44ce-98eb-f0fa9118c70c" }, // wormwood
+    { "5e9b4fa1-aafa-4352-b5d6-58df2c263caa", "f6899d80-8ca4-4aa9-a7e0-20aa9e45f03a" }, // nettle
+    { "7259b9bc-dfae-487e-a8bb-c1f500894e0c", "a7460fa7-fe8b-4606-ab35-44379e35fe77" }, // chamomile
+    { "7da04bba-0564-42da-bcf1-9a2fc5faf025", "fb7c15ed-89ef-418e-b091-dbd813a962d0" }, // mint
+    { "9b771c16-c0b1-438c-aeda-8c4d3ce28465", "e075f9eb-4de6-4ade-9b22-7c9e5174054a" }, // st johns wort
+    { "a11cc7f6-b499-4003-aef1-938e87b30a2e", "5bf04beb-9527-4840-8cc1-229ed826e571" }, // dandelion
+    { "a314b580-bc97-4802-ae1f-8f4803e34503", "5ee103d4-0be6-4d5b-b5a1-4449a3ca5046" }, // belladonna
+    { "a364b800-c1ca-4bd1-92cb-ae1689bfa7ea", "3ba9bd0b-3c6f-4442-8d6c-57ee5ced85eb" }, // thistle
+    { "a695d6b3-541d-4c46-93a3-a1955d5bd919", "50d3be3d-eac7-4cb9-a2ef-8af0fc889199" }, // feverfew
+    { "b5587dd4-f7d8-4378-9903-7626a227ca0f", "c35230d7-008b-402d-8f17-4493dd78605e" }, // henbane
+    { "b9de1d84-a0c1-4b81-9f60-8d7fbb3cb9d4", "2bb1c148-8ee1-42bc-8a93-8c456a57eba5" }, // sage
+    { "bf7b7c2a-017b-4c7b-b9aa-0c4e29ce5913", "a412425e-b683-4a95-993c-7239aada9358" }, // marigold
+    { "de134f81-cfbe-422d-9105-df3e0b3b59b5", "d6335bbe-807a-4b4b-919d-4a8b5e7cc751" }, // comfrey
+};
+
+static const std::vector<std::pair<CryGUID, CryGUID>>& HerbPairs()
+{
+    static const std::vector<std::pair<CryGUID, CryGUID>> pairs = [] {
+        std::vector<std::pair<CryGUID, CryGUID>> v;
+        for (const auto& p : kHerbPairStr) {
+            CryGUID a, b;
+            if (wh::ParseGuid(p.a, a) && wh::ParseGuid(p.b, b))
+                v.emplace_back(a, b);
+        }
+        return v;
+    }();
+    return pairs;
+}
+
+// If `id` is one side of a fresh<->dried pair, write the other side and return true.
+static bool HerbPartner(const CryGUID& id, CryGUID& out)
+{
+    for (const auto& pr : HerbPairs()) {
+        if (pr.first == id)  { out = pr.second; return true; }
+        if (pr.second == id) { out = pr.first;  return true; }
+    }
+    return false;
+}
+
+// Same herb identity, whether the slot / recipe names the fresh or the dried class.
+static bool SameHerb(const CryGUID& x, const CryGUID& y)
+{
+    if (x == y) return true;
+    CryGUID p;
+    return HerbPartner(x, p) && p == y;
+}
+
+// Recipe ingredient class -> a concrete inventory item, accepting the dried variant.
+static wh::entitymodule::C_Item* ResolveIngredient(wh::entitymodule::C_Inventory* inventory,
+                                                   const CryGUID& recipeClassId)
+{
+    if (auto* item = inventory->FindItemByClass(recipeClassId))
+        return item;                              // fresh herb / non-herb ingredient
+    CryGUID partner;
+    if (HerbPartner(recipeClassId, partner))
+        return inventory->FindItemByClass(partner);   // dried variant of the recipe herb
+    return nullptr;
+}
+
+}  // namespace
+
 namespace Autobrew {
 
 using namespace wh::playermodule;
@@ -113,7 +193,7 @@ E_AlchemyVerb::Type Executor::FindIngredientVerb(const CryGUID& guid) const
 {
     const auto& bs = m_pAlchemy->m_brewState;
     for (int i = 0; i < 3; ++i)
-        if (bs.m_herbSlotKey[i] == guid)
+        if (SameHerb(bs.m_herbSlotKey[i], guid))   // fresh<->dried aware
             return E_AlchemyVerb::Type(E_AlchemyVerb::TakeHerb1 + i);
     for (int i = 0; i < 3; ++i)
         if (bs.m_specialSlotKey[i] == guid)
@@ -138,7 +218,7 @@ bool Executor::StockStations(wh::playermodule::C_AlchemyRecipe* recipe)
 
     std::vector<wh::framework::WUID> stock;
     for (auto& row : recipe->m_ingredients) {
-        auto* item = inventory->FindItemByClass(row.m_ingredientItemId);
+        auto* item = ResolveIngredient(inventory, row.m_ingredientItemId);
         if (!item)
             return false;   // ingredient missing after all -> refuse the brew
         stock.push_back(item->m_wuid);
