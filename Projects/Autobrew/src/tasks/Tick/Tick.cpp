@@ -12,6 +12,7 @@
 #include "playermodule/C_Alchemy.h"
 #include "playermodule/C_AlchemyRecipeDatabase.h"
 #include "playermodule/C_AlchemyResource.h"
+#include "rpgmodule/C_Soul.h"
 
 #include "core/Executor.h"
 #include "mcm.h"
@@ -55,8 +56,23 @@ void Executor::Tick()
     // ---- book prompt: lit only while pressing would work (vanilla read_* timing) ----
     // MCM main switch folds into visibility AND the light (all three row properties false/empty
     // = the helpbar uninstalls the row entirely).
-    bool lit = g_enableAutobrew && m_phase == E_Phase::Idle && inReading && bookLanded
-               && openRecipeId != 0;
+    // The Routine perk wall folds into VISIBILITY: without the perk the feature hides
+    // outright (no greyed teaser).  Possession = one sorted-map probe on the soul.
+    bool perkOk = true;
+    if (g_requirePerk) {
+        auto* actor = alc->m_pPlayerActor;
+        auto* soul = actor ? actor->m_pSoul : nullptr;
+        perkOk = soul && soul->HasAbility(kSoulAbilityAutobrewRoutine);
+    }
+    // The manual-brew wall GREYS per recipe (unlike the perk wall): the prompt stays visible
+    // on unbrewed pages but unlit, with a "brew it by hand once" reason -- same presentation
+    // as the vanilla missing-ingredients grey-out.  Flag = the game's own brewed record
+    // (see RecipeBrewedOnce).
+    bool brewedOk = true;
+    if (g_requireBrewed && openRecipeId != 0)
+        brewedOk = RecipeBrewedOnce(openRecipeId);
+    bool lit = g_enableAutobrew && perkOk && brewedOk && m_phase == E_Phase::Idle && inReading
+               && bookLanded && openRecipeId != 0;
     bool missingIngredients = false;
     if (lit) {
         // Availability folds into the light, exactly like vanilla greys read_select when
@@ -68,12 +84,20 @@ void Executor::Tick()
         missingIngredients = !lit;
     }
 
-    GetActionSets()->SetActionVisible("alchemy_reading", "alch_autobrew", g_enableAutobrew != 0, 1);
+    GetActionSets()->SetActionVisible("alchemy_reading", "alch_autobrew",
+                                      g_enableAutobrew && perkOk, 1);
 
     GetActionSets()->SetActionEnabled("alchemy_reading", "alch_autobrew", lit, 1);
 
+    const char* disableReason = "";
+    if (g_enableAutobrew && perkOk) {
+        if (!brewedOk)
+            disableReason = "ui_autobrew_needs_brew";       // shipped in the Autobrew loc paks
+        else if (missingIngredients)
+            disableReason = "dlg_alch_not_all_ingredients";
+    }
     GetActionSets()->SetActionDisableReason("alchemy_reading", "alch_autobrew",
-        g_enableAutobrew && missingIngredients ? "dlg_alch_not_all_ingredients" : "", 1);
+                                            disableReason, 1);
 
     // ---- stop cancels any phase (the row dispatches even while hidden) ----
     // The MCM main switch is a START gate only (folded into `lit`): flipping it off
@@ -111,10 +135,15 @@ void Executor::Tick()
             refusal = "session lost the recipe or inventory";
         else if (!recipe->CanBrewFrom(inventory))
             refusal = "ingredients ran out";   // the normal end of a batch loop
-        else if (!StockStations(recipe))
-            refusal = "ingredient stocking failed";
-        else if (!BuildPlan(m_pendingRecipeId))
-            refusal = "recipe not auto-brewable";
+        else {
+            // Arm the per-batch mistake rolls (skill snapshot + fresh RNG draws each batch):
+            // StockStations rolls the sloppy-dried pick, BuildPlan the rest.
+            m_mistakes.BeginBatch(actor->m_pSoul);
+            if (!StockStations(recipe))
+                refusal = "ingredient stocking failed";
+            else if (!BuildPlan(m_pendingRecipeId))
+                refusal = "recipe not auto-brewable";
+        }
         if (refusal)
             AbortRun(refusal);
         else

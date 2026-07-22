@@ -22,6 +22,7 @@
 #include "playermodule/C_Alchemy.h"
 #include "playermodule/C_AlchemyRecipeDatabase.h"
 #include "playermodule/C_AlchemyResource.h"
+#include "rpgmodule/C_Statistics.h"
 #include "rpgmodule/S_RpgParams.h"
 #include "guimodule/ItemUiPresentation.h"
 #include "crysystem/SSystemGlobalEnvironment.h"
@@ -104,6 +105,24 @@ uint32_t Executor::GetOpenRecipeId() const
     return book->m_lastOpenRecipeId;
 }
 
+// The game's own brewed-before record: the UniquePotionsBrewed statistic (type DistinctGuid)
+// keeps the save-persisted SET of every product guid ever brewed, so pre-mod brews count.  Per
+// PRODUCT guid (each quality tier has its own), hence any-tier.  Successful autobrews land in
+// the set too, but under the require-brewed gate none can run before the first manual brew.
+// NOT C_RPGMinigames::IsRecipeLearned (reading the recipe document sets that) and NOT its
+// vf+0x120 mark (a recipe-DOCUMENT knowledge query -- always 0 for potion guids).
+bool Executor::RecipeBrewedOnce(uint32_t recipeId)
+{
+    auto* recipe = C_AlchemyRecipeDatabase::GetRecipeById(recipeId);
+    auto* stats = wh::rpgmodule::C_Statistics::GetInstance();
+    if (!recipe || !stats)
+        return false;
+    for (const auto& product : recipe->m_products)
+        if (stats->HasDistinctGuid("UniquePotionsBrewed", product.m_productItemId))
+            return true;
+    return false;
+}
+
 const C_AlchemyResource* Executor::FindPotBaseRecord() const
 {
     for (auto* rec : m_pAlchemy->m_brewState.m_buckets[E_AlchemyStationKind::Pot])
@@ -156,7 +175,16 @@ bool Executor::StockStations(wh::playermodule::C_AlchemyRecipe* recipe)
     std::vector<wh::framework::WUID> stock;
     for (auto& row : recipe->m_ingredients) {
         auto* item = inventory->FindItemByClass(row.m_ingredientItemId);
-        if (!item) {
+        if (item) {
+            // Sloppy-dried slip: fresh is right there, but a careless brewer grabs the dried
+            // jar (quality 0.3 vs 1.0 -- drags the grade's ingredient term, fails no step).
+            // Rolled only when a dried stack actually exists.
+            const CryGUID dried = FindDriedVariant(row.m_ingredientItemId);
+            if (dried != CryGUID{})
+                if (auto* driedItem = inventory->FindItemByClass(dried))
+                    if (m_mistakes.RollSloppyDried(row.m_ingredientItemId))
+                        item = driedItem;
+        } else {
             const CryGUID dried = FindDriedVariant(row.m_ingredientItemId);
             if (dried != CryGUID{})
                 item = inventory->FindItemByClass(dried);
@@ -170,18 +198,6 @@ bool Executor::StockStations(wh::playermodule::C_AlchemyRecipe* recipe)
         m_pAlchemy->ApplyIngredient(wuid);
     return true;
 }
-
-namespace {
-
-struct S_IngredientPlan {
-    CryGUID  guid;
-    uint32_t qty;
-    bool     milled;
-    int      weakTurns;    // WeakBoilingTime target; -1 = no condition (any accrual tolerated)
-    int      strongTurns;  // StrongBoilingTime target; -1 = no condition
-};
-
-}  // namespace
 
 // Compile the recipe into a verb sequence, folding the requirements out of each step's
 // GAME-COMPILED Condition (C_AlchemyRecipeStep::m_pCompiledCondition) instead of parsing the
@@ -204,7 +220,8 @@ bool Executor::BuildPlan(uint32_t recipeId)
 
     std::vector<S_IngredientPlan> ing;
     for (auto& row : recipe->m_ingredients)
-        ing.push_back({ row.m_ingredientItemId, row.m_quantity ? row.m_quantity : 1u, false, -1, -1 });
+        ing.push_back({ row.m_ingredientItemId, row.m_quantity ? row.m_quantity : 1u,
+                        false, false, -1, -1 });
 
     auto find = [&](const CryGUID& g) -> S_IngredientPlan* {
         for (auto& e : ing)
@@ -256,6 +273,9 @@ bool Executor::BuildPlan(uint32_t recipeId)
                     return false;
                 if (args[1] == 1.0f)
                     e->milled = true;
+                else
+                    e->mustNotMill = true;   // explicit must-NOT-mill step: the wrong-grind
+                                             //   slip's only valid target (its own step fails)
             } else if (std::strcmp(name, "WeakBoilingTime") == 0 && argc == 2) {
                 auto* e = findByArg(args[0]);
                 if (!e)
@@ -318,6 +338,29 @@ bool Executor::BuildPlan(uint32_t recipeId)
         }
     }
 
+    // Deliberate mistakes, part 1 (see core/Mistakes.h; armed per batch in Tick's Arming leg):
+    // the discrete slips mutate the parsed rows BEFORE emission -- grind flags and quantities
+    // only, so the boil sort/feasibility above stay valid.  The boil-window jitter and the
+    // Hardcore majors apply inline in the emission below.  countAvailable guards the
+    // over-count slip: it needs a spare unit in the inventory or the extra take would run the
+    // station stack dry and wedge the driver into the stall abort.
+    {
+        auto* actor = m_pAlchemy->m_pPlayerActor;
+        auto* inventory = actor ? actor->GetInventory() : nullptr;
+        m_mistakes.RollSlips(ing, [&](const CryGUID& g) -> uint32_t {
+            if (!inventory)
+                return 0;
+            int32_t total = 0;
+            if (auto* item = inventory->FindItemByClass(g))
+                total += std::max(item->m_amount, 0);
+            const CryGUID dried = FindDriedVariant(g);
+            if (dried != CryGUID{})
+                if (auto* item = inventory->FindItemByClass(dried))
+                    total += std::max(item->m_amount, 0);
+            return static_cast<uint32_t>(total);
+        });
+    }
+
     // Turns -> SECONDS, once, here: one sandglass turn = the HourglassTimeout RPG param (10 s),
     // the exact divisor of the game's boil sensor (0x182E2C110 reads S_Constants base+0x5F4).
     // The executor then compares raw record accumulators -- no per-frame back-conversion.
@@ -343,16 +386,28 @@ bool Executor::BuildPlan(uint32_t recipeId)
         // This stage's boil windows.  Weak first: it self-sustains at the boil point with zero
         // strong bleed; then the bellows phase, and the lift the instant the strong target lands
         // (accrual halts on swing start, the leftover X drains harmlessly with the pot up).
-        const float wSec = (effW[i] - (i + 1 < ing.size() ? effW[i + 1] : 0.0f)) * unit;
-        const float sSec = (effS[i] - (i + 1 < ing.size() ? effS[i + 1] : 0.0f)) * unit;
+        // The mistake jitter perturbs the TRUE target before the stop-leads come off: the
+        // driver then honestly aims at the wrong time and the game's skill-lerped band judges
+        // it.  A window jittered to zero simply never opens (a full undershoot).
+        const float wSec = m_mistakes.PerturbWindowSeconds(
+            (effW[i] - (i + 1 < ing.size() ? effW[i + 1] : 0.0f)) * unit);
+        const float sSec = m_mistakes.PerturbWindowSeconds(
+            (effS[i] - (i + 1 < ing.size() ? effS[i + 1] : 0.0f)) * unit);
         if (wSec > 0.0f || sSec > 0.0f) {
+            // Hardcore temperature blunder: boil a single-mode window at the WRONG heat.  Only
+            // stages with exactly one mode are swappable -- a dual window's weak-then-strong
+            // lead choreography wouldn't survive the swap.
+            const bool tempSwap = ((wSec > 0.0f) != (sSec > 0.0f)) && m_mistakes.RollTempSwap();
             plan.push_back({ S_PlanOp::SetPotOnFire, E_AlchemyVerb::None, {} });
             if (wSec > 0.0f)
-                plan.push_back({ S_PlanOp::BoilWeak, E_AlchemyVerb::None, {},
-                                 wSec - (sSec > 0.0f ? kPreStrongWeakLeadSec : kStopLeadSec) });
+                plan.push_back({ tempSwap ? S_PlanOp::BoilStrong : S_PlanOp::BoilWeak,
+                                 E_AlchemyVerb::None, {},
+                                 std::max(0.0f, wSec - (sSec > 0.0f ? kPreStrongWeakLeadSec
+                                                                    : kStopLeadSec)) });
             if (sSec > 0.0f)
-                plan.push_back({ S_PlanOp::BoilStrong, E_AlchemyVerb::None, {},
-                                 sSec - kStopLeadSec });
+                plan.push_back({ tempSwap ? S_PlanOp::BoilWeak : S_PlanOp::BoilStrong,
+                                 E_AlchemyVerb::None, {},
+                                 std::max(0.0f, sSec - kStopLeadSec) });
             plan.push_back({ S_PlanOp::TakePotOffFire, E_AlchemyVerb::None, {} });
         }
     }
@@ -372,6 +427,13 @@ bool Executor::BuildPlan(uint32_t recipeId)
     //  - otherwise: pour the pot into the phial (C_UsePotAction's finish montage).
     if (distill && resultMilled)
         return false;   // never shipped together; the finish flows are mutually exclusive
+    // Hardcore finishing blunders: fall back to the plain phial finish, so the recipe's
+    // IsBaseDistilled / IsResultMilled step fails at the grade (barks 8 / 16).  Both finishes
+    // stay physically valid -- the phial pour only needs the held pot with >= 2 records.
+    if (distill && m_mistakes.RollSkipDistill())
+        distill = false;
+    if (resultMilled && m_mistakes.RollSkipPowderGrind())
+        resultMilled = false;
     if (resultMilled) {
         plan.push_back({ S_PlanOp::DoVerb, E_AlchemyVerb::UseMortar, {} });
     } else {
@@ -380,6 +442,7 @@ bool Executor::BuildPlan(uint32_t recipeId)
                          distill ? E_AlchemyVerb::Distill : E_AlchemyVerb::UsePot, {} });
     }
 
+    m_mistakes.FlushLog(recipeId);   // the one-line roll record; refusals above skip it
     m_plan = std::move(plan);
     return true;
 }

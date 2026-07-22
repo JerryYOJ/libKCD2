@@ -8,9 +8,10 @@
 // ===========================================================================
 // RTTI .?AVC_Perk@rpgmodule@wh@@ (TD 0x184D53EB0)  vtable 0x183A39248, 13 slots.
 // sizeof 0x30 (C_ScriptPerk allocs 0x30 with no extra members).
-// Typed subclasses: C_BuffPerk / C_MetaPerk / C_ScriptPerk (headers here) and C_CodexPerk /
-// C_CompanionPerk / C_CombatTechniquePerk / C_SoulAbilityPerk / C_RecipePerk /
-// C_RPGParamOverridePerk / C_BuffOverridePerk / C_ApplyOnLoadPerk (RTTI-listed, NOT yet RE'd).
+// Typed subclasses: C_BuffPerk / C_MetaPerk / C_ScriptPerk / C_ApplyOnLoadPerk (abstract,
+// introduces slot [13] ApplyEffects) / C_SoulAbilityPerk (headers here) and C_CodexPerk /
+// C_CompanionPerk / C_CombatTechniquePerk / C_RecipePerk / C_RPGParamOverridePerk /
+// C_BuffOverridePerk (RTTI-listed, NOT yet RE'd).
 // Type identity runs on 16-byte type-id constants, not dynamic_cast: [10] returns the class's
 // static type id and [11]/[12] compare-and-downcast against it (base id unk_1853309C0).
 //

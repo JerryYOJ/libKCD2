@@ -45,12 +45,30 @@ bool C_Soul::HasAbility(uint32_t abilityId) const
     using Fn = S_Result* (__fastcall*)(const void*, S_Result*, uint32_t);
     static REL::Relocation<Fn> fn{ REL::ID(26) };
     S_Result r{};
-    fn(reinterpret_cast<const uint8_t*>(this) + 0x320, &r, abilityId);
+    fn(&m_soulAbilities, &r, abilityId);
     if (abilityId == 0)
         return r.present && GetDerivedStat(E_DerivedStat::Atd) > 0.0f;
     if (abilityId == 73)
         return r.present && GetDerivedStat(E_DerivedStat::Ams) > 0.0f;
     return r.present;
+}
+
+float C_Soul::GetSkillFraction(uint32_t skillId, bool visitorFlag) const
+{
+    // sub_18046F81C (vtable +0x340): GetSkillLevel_18046F854 / maxLevel; the char flag is
+    // forwarded into the modifier-visitor arg pack (uninitialized on the game's own
+    // tolerance path -- see the header note).
+    using Fn = float (__fastcall*)(const C_Soul*, uint32_t, char);
+    static REL::Relocation<Fn> fn{ REL::ID(26997) };
+    return fn(this, skillId, visitorFlag);
+}
+
+float C_Soul::GetPerkStatModifier(E_PerkStat statId, float seed, void* ctx) const
+{
+    // sub_180649F1C (vtable +0x310): modifier fold over seed + id-specific clamp.
+    using Fn = float (__fastcall*)(const C_Soul*, int32_t, float, void*);
+    static REL::Relocation<Fn> fn{ REL::ID(35185) };
+    return fn(this, static_cast<int32_t>(statId), seed, ctx);
 }
 
 Offsets::IEntity* C_Soul::GetBoundEntity() const

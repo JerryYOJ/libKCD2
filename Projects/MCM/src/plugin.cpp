@@ -181,9 +181,16 @@ static void PushAllTask(int attempt)
     IUIElement* el = GetMcmElement();
     if (!el)
         return;
-    if (!PushAllOnce(el) && attempt < 3) {
+    if (PushAllOnce(el)) {
+        if (attempt > 0)
+            MCM_LOG("settings push recovered on attempt %d/3", attempt + 1);
+        return;
+    }
+    if (attempt < 3) {
         MCM_LOG("WARN: settings push incomplete - retrying (%d/3)", attempt + 1);
         KCSE::GetTaskInterface()->AddTask([attempt] { PushAllTask(attempt + 1); });
+    } else {
+        MCM_LOG("ERROR: settings push failed after 3 attempts - menu may be incomplete");
     }
 }
 
@@ -220,9 +227,10 @@ static void RebuildSettings()
 
 void OpenMCM()
 {
+    MCM_LOG("opening...");
     IUIElement* el = GetMcmElement();
     if (!el)
-        return;
+        return;                          // GetMcmElement already logged why
     RebuildSettings();
 
     el->AddEventListener(&g_mcmListener, "MCMPlugin");
@@ -233,7 +241,7 @@ void OpenMCM()
     PushAllTask(0);
     SetMenuBusy(true);
     g_mcmOpen = true;
-    //MCM_LOG("opened (%zu mods)", g_mods.size());
+    MCM_LOG("opened (%zu mods)", g_mods.size());
 }
 
 // -------------------------------------------------- value-change handling ---
@@ -277,19 +285,23 @@ void HandleValueChanged(int modIdx, int itemIdx, double v)
 static void InjectMenuButton(C_UIMenu* menu)
 {
     IUIElement* el = menu->m_pElement;
-    if (!el)
+    if (!el) {
+        MCM_LOG("WARN: RootIngame page has no element - button not injected");
         return;
+    }
 
     el->AddEventListener(&g_menuListener, "MCMPlugin");
-    
+
     SUIArguments a;
     a.AddArgument("mcm_open");                 // raw string id (no menu_buttons row)
     a.AddArgument(0);                          // containerIndex
     a.AddArgument("Mod Configuration");
     a.AddArgument("Configure installed mods");
     a.AddArgument(false);                      // disable
-    el->CallFunction("AddBasicButton", a, nullptr, nullptr);
+    if (!el->CallFunction("AddBasicButton", a, nullptr, nullptr))
+        MCM_LOG("WARN: AddBasicButton failed - pause menu button missing this open");
     menu->ShowPage();
+    MCM_LOG("menu button injected");
 }
 
 // ------------------------------------------------------------------ hooks ---

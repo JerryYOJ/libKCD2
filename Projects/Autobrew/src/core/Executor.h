@@ -7,6 +7,7 @@
 
 #include "CryEngine/CryCommon/CryExtension/CryGUID.h"
 #include "CryEngine/CryCommon/CryString.h"
+#include "core/Mistakes.h"
 #include "playermodule/E_AlchemyVerb.h"
 
 namespace wh::playermodule {
@@ -122,6 +123,9 @@ private:
     wh::playermodule::E_AlchemyVerb::Type FindIngredientVerb(const CryGUID& guid) const;
     // Any station bucket non-empty (leftovers of a previous brew).
     bool IsWorkspaceDirty() const;
+    // The game's own save-persisted brewed-before flag (C_RPGMinigames product brewed mark,
+    // any quality tier >= 1.0) -- the require-brewed MCM gate.  No bookkeeping of ours.
+    static bool RecipeBrewedOnce(uint32_t recipeId);
 
     // ---- workers (no world-state gating; Tick establishes the preconditions) ----
     // Stock the herb/special stations from the player's inventory (autocook's exact path).
@@ -133,6 +137,11 @@ private:
     void AbortRun(const char* reason);   // loud ReturnToIdle: kcd.log line + center toast
 
     static constexpr int kStallAbortFrames = 600;   // ~10 s without progress -> abort the brew
+
+    // soul_ability__autobrew.xml row, granted by the "Routine" perk (perk__autobrew.xml,
+    // alchemy tree).  Vanilla ability ids stop around ~130; >= 200 is mod space -- the
+    // grant/lookup chain is validation-free (see rpgmodule/C_Soul.h S_SoulAbilityMap).
+    static constexpr uint32_t kSoulAbilityAutobrewRoutine = 200;
 
     // Boil timing, in SECONDS.  Recipe turns are converted once in BuildPlan via the
     // HourglassTimeout RPG param (10 s -- the exact divisor of the game's boil sensor); progress
@@ -156,6 +165,8 @@ private:
     std::vector<S_PlanOp> m_plan;
     size_t      m_planCursor = 0;
     S_OpRuntime m_op;
+    MistakeEngine m_mistakes;   // Phase-2 balancing: per-batch skill-scaled mistake rolls
+                                //   (armed in Arming, consumed by StockStations + BuildPlan)
 };
 
 inline std::unique_ptr<Executor> g_executor;
