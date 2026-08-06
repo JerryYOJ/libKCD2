@@ -20,6 +20,8 @@
 // subobject: (*(pEntitySystem+232))(pEntitySystem, this+8, 20); registers cvar
 // wh_ai_LandSmartAreaTemplateName (default "sa_land").  Interior sub-object
 // regions typed as blobs [U interior].
+// No own E_WUIDTag found (same .text stamp-site scan as C_SmartObjectsManager);
+// GetValueForWuid sub_1832C3DAC is a pure lookup against the +0x88 map [U].
 
 namespace wh::xgenaimodule {
 

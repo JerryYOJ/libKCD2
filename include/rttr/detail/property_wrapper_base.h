@@ -2,6 +2,7 @@
 
 #include <cstddef>
 
+#include "rttr/argument.h"
 #include "rttr/instance.h"
 #include "rttr/string_view.h"
 #include "rttr/type.h"
@@ -20,7 +21,11 @@ public:
     virtual void unk_05() const {}               // [5]
     virtual type get_type() const = 0;            // [6]
     virtual variant get_metadata(const variant& key) const = 0;  // [7]
-    virtual void unk_08() const {}                // [8] set_value, deferred
+    // [8] this rttr fork orders the wrapper set as (argument, instance), not
+    // the public (instance, argument): override 0x1812FC488 converts arg first
+    // (rdx) then validates instance (r8); base stub 0x180838AE0 = read-only,
+    // returns false. Invoke through rttr::property::set_value.
+    virtual bool set_value(argument arg, instance object) const { return false; }
     virtual variant get_value(instance object) const = 0;        // [9]
 
     string_view m_name;       // +0x08

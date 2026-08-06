@@ -35,10 +35,9 @@
 //     C_UIMenuConfirmation) as an rttr property.
 //
 // m_text SEMANTICS: the authored localizable string -- a localization key / "@"-tag or the
-// literal text as tabled.  It is stored verbatim (the vtable never resolves it); the plain
-// display string is obtained through the rttr CryStringT converter / the localization
-// system at fetch time.  [Key-vs-already-resolved is NOT fully certified -- the converter
-// invoke fn was not decompiled; do not assume a runtime loc lookup without checking it.]
+// literal text as tabled. It is stored verbatim; Standardize prepares localization markup,
+// while Localize explicitly routes that markup through ILocalizationManager. Neither
+// operation is part of this class's vtable.
 
 namespace wh::framework {
 
@@ -49,8 +48,12 @@ public:
 
     CryStringT<char> m_text;               // +0x08  authored localizable string (key/text)
 
-    // Impl in src/framework/C_LocalizedString.cpp.
-    static CryStringT<char> Resolve(const CryStringT<char>& label);
+    // Normalizes localization markup and adds missing '@' token prefixes; does not translate.
+    static CryStringT<char> Standardize(const CryStringT<char>& text);
+
+    // Resolves markup through ILocalizationManager; output retains text when lookup fails.
+    static bool Localize(const CryStringT<char>& text, CryStringT<char>& output,
+                         bool english = false);
 };
 static_assert(sizeof(C_LocalizedString) == 0x10, "C_LocalizedString must be 0x10 (ctor sub_1803D28B4)");
 

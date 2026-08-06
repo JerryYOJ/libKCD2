@@ -18,11 +18,13 @@
 #include "entitymodule/C_ScriptBindItemManager.h"
 #include "playermodule/C_ScriptBindMinigame.h"
 #include "audio/AudioManager.h"
+#include "hooks/ActiveTriggerPortTrigger/ActiveTriggerPortTrigger.h"
 #include "scriptbind/ScriptBind_AudioManager.h"
 #include "scriptbind/ScriptBind_EquipmentManager.h"
 #include "scriptbind/ScriptBind_ItemManager.h"
 #include "scriptbind/ScriptBind_Minigame.h"
 #include "scriptbind/ScriptBind_RTTR.h"
+#include "scriptbind/ScriptBind_SKALD.h"
 
 // ------------------------------------------------------------------ hooks ---
 
@@ -69,12 +71,20 @@ namespace {
     } hkMinigameRegisterFunctions;
 
     bool g_audioTickQueued = false;
+    bool g_skaldTickQueued = false;
 
     void TickAudio()
     {
         luautils::audio::g_audioManager.Tick();
         if (auto* tasks = KCSE::GetTaskInterface())
             tasks->AddTask(&TickAudio);
+    }
+
+    void TickSkald()
+    {
+        luautils::skald::g_skaldRuntime.DeliverQueuedEvents();
+        if (auto* tasks = KCSE::GetTaskInterface())
+            tasks->AddTask(&TickSkald);
     }
 
 }  // namespace
@@ -86,10 +96,16 @@ static void InitScriptBinds()
     if (auto* env = SSystemGlobalEnvironment::GetInstance(); env && env->pScriptSystem) {
         if (!luautils::g_rttrBind.IsInitialized())
             luautils::g_rttrBind.Init(env->pScriptSystem);
+        if (!luautils::g_skaldBind.IsInitialized())
+            luautils::g_skaldBind.Init(env->pScriptSystem);
         if (!luautils::g_equipmentManagerBind.IsInitialized())
             luautils::g_equipmentManagerBind.Init(env->pScriptSystem);
         if (!luautils::g_audioManagerBind.IsInitialized())
             luautils::g_audioManagerBind.Init(env->pScriptSystem);
+
+        // KCD2 executes Scripts/Mods/luautils.lua from the mounted mod PAK
+        // after PreDataLoaded returns. That script owns the generated RTTR-first,
+        // SKALD-second module order.
     }
 }
 
@@ -103,6 +119,8 @@ KCSE_PLUGIN_LOAD(kcse)
         return false;
     if (!hkMinigameRegisterFunctions.Install())
         return false;
+    if (!luautils::hooks::ActiveTriggerPortTriggerHook::Install())
+        return false;
 
     kcse->GetMessagingInterface()->RegisterListener([](KCSE::Message* msg) {
         switch (msg->type) {
@@ -114,9 +132,16 @@ KCSE_PLUGIN_LOAD(kcse)
                     tasks->AddTask(&TickAudio);
                 }
             }
+            if (!g_skaldTickQueued) {
+                if (auto* tasks = KCSE::GetTaskInterface()) {
+                    g_skaldTickQueued = true;
+                    tasks->AddTask(&TickSkald);
+                }
+            }
             break;
         case KCSE::IMessagingInterface::kMessage_LoadGame:
         case KCSE::IMessagingInterface::kMessage_NewGame:
+            luautils::g_skaldBind.ClearRuntime();
             luautils::g_rttrBind.ClearHandles();
             break;
         default:

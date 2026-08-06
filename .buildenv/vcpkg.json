@@ -3,6 +3,7 @@
   "dependencies": [
     "spdlog",
     "boost-container",
+    "boost-optional",
     "boost-smart-ptr",
     "minhook",
     "pugixml",

@@ -25,7 +25,9 @@ struct IXmlNode {
     virtual void _vf0() = 0;  // [0] 0x1804597FC  dtor region
     virtual void _vf1() = 0;  // [1] 0x180459818
     virtual void _vf2() = 0;  // [2] 0x1804584C4
-    virtual void _vf3() = 0;  // [3] 0x181A72630  (AddRef by stock shape [conf LOW] -- do not call)
+    // [3] 0x181A72630 -- increment the intrusive reference count.  VERIFIED directly
+    // and through XmlNodeRef copy helper 0x18041EBF4.
+    virtual void AddRef() = 0;
     // [4] 0x1804597EC -- drop one reference, self-deletes at zero.  VERIFIED: the engine's
     // XmlNodeRef-release helper 0x1804FB980 is exactly `if (*p) (*p)->vf[+0x20]()`.
     virtual void Release() = 0;

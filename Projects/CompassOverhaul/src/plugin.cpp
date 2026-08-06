@@ -72,9 +72,10 @@ namespace {
 
             auto it = kKeySuffixOverride.find(name);
             std::string key = "ui_maplegend_" + (it != kKeySuffixOverride.end() ? it->second : std::string(name));
-            CryStringT<char> loc = wh::framework::C_LocalizedString::Resolve(key.c_str());
-            if (loc.empty() || key == loc.c_str()) continue;   // no loc entry -> hide
-            table[name] = loc.c_str();
+            CryStringT<char> standardized = wh::framework::C_LocalizedString::Standardize(key.c_str());
+            CryStringT<char> localized;
+            if (!wh::framework::C_LocalizedString::Localize(standardized, localized)) continue;
+            table[name] = localized.c_str();
         }
         PushTable(fp, "_root.compassOverlay.co_typeNames", table);
     }
@@ -103,14 +104,16 @@ namespace {
             orig(self, obj, quest);
 
             if (!compass || !obj) return;
-            CryStringT<char> name = wh::framework::C_LocalizedString::Resolve(obj->m_locText.m_text);
-            if (name.empty()) return;
+            CryStringT<char> standardizedName = wh::framework::C_LocalizedString::Standardize(obj->m_locText.m_text);
+            CryStringT<char> localizedName;
+            wh::framework::C_LocalizedString::Localize(standardizedName, localizedName);
+            if (localizedName.empty()) return;
             bool added = false;
             
             for (size_t i = before; i < compass->m_marks.size(); ++i) {
                 const auto& mark = compass->m_marks[i];
                 if (!mark) continue;
-                g_objectiveNames["marker" + std::string(mark->m_id.c_str())] = name.c_str();
+                g_objectiveNames["marker" + std::string(mark->m_id.c_str())] = localizedName.c_str();
                 added = true;
             }
             if (added) {

@@ -44,7 +44,7 @@ struct IScriptSystem {
     virtual bool ExecuteFile(const char* sFileName, bool bRaiseError,
                              bool bForceReload, IScriptTable* pEnv) = 0;           // [5]  0x028                                                             tentative
     virtual bool ExecuteBuffer(const char* sBuffer, size_t nSize,
-                               const char* sBufferDesc, IScriptTable* pEnv) = 0;   // [6]  0x030                                                             tentative
+                               const char* sBufferDesc, IScriptTable* pEnv) = 0;   // [6]  0x030  0x1804D4484: lua_load reader over {sBuffer,nSize}, sBufferDesc in the load-error log, pEnv via PushRef+setfenv  VERIFIED
     virtual void UnloadScript(const char* sFileName) = 0;                          // [7]  0x038                                                             tentative
     virtual void UnloadScripts() = 0;                                              // [8]  0x040                                                             tentative
     virtual bool ReloadScript(const char* sFileName, bool bRaiseError) = 0;        // [9]  0x048                                                             tentative

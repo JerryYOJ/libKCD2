@@ -8,6 +8,8 @@
 // Registered rttr enum (name string 0x183E39B68, reg sub_1800A5280) whose
 // enumerators are literally the six concrete port-class names.  Numeric values
 // PROVEN by decompiling every I_Port vslot-17 override (each a `mov al, N; ret`);
+// the AL-only write also PROVES the underlying type is byte-sized -- an int32
+// replica reads garbage in EAX[8..31] and never matches (live-diagnosed bug).
 // name<->value pairing follows the class of each override [LIKELY].  Edge rules
 // (Connect 0x1806986AC): CanBeEdgeSource (0x1806943A4) -> spec in {InterfaceDataPort,
 // OutputTriggerPort, InterfaceTriggerPort}; CanBeEdgeTarget (0x18069437C) -> spec in
@@ -16,7 +18,7 @@
 
 namespace wh::conceptmodule {
 
-enum class E_PortSpecification : int32_t {
+enum class E_PortSpecification : uint8_t {
     None                 = 0,   // abstract layers / C_PortRef / C_DebuggerPort (not a registered enumerator)
     InputDataPort        = 1,
     OutputDataPort       = 2,   // + C_ConstantPort, C_AssetPort

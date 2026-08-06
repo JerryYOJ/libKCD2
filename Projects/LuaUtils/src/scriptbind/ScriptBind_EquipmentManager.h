@@ -9,6 +9,7 @@
 //   EquipmentManager.GetEquipWeights(entityId)        -> { total, worn } | nil
 //   EquipmentManager.GetInventoryEx(entityId)         -> { itemTable, ... } | nil  (GetItemEx shape)
 //   EquipmentManager.GetInventoryId(entityId)         -> inventoryId | nil
+//   EquipmentManager.GetInventoryHandle(entityId)     -> rttrHandle | nil  (C_Inventory* object token for the RTTR/SKALD bridges)
 //   EquipmentManager.SetItemEquipped(entityId, itemId, equip) -> true | nil
 //   EquipmentManager.GetWeaponQuickSlots(entityId[, outfitId]) -> pair records | nil
 //   EquipmentManager.SetWeaponQuickSlot(entityId, quickSlot, itemId[, outfitId]) -> slotId | nil
@@ -52,6 +53,7 @@ public:
     int GetEquipWeights(Offsets::IFunctionHandler* pH);
     int GetInventoryEx(Offsets::IFunctionHandler* pH);
     int GetInventoryId(Offsets::IFunctionHandler* pH);
+    int GetInventoryHandle(Offsets::IFunctionHandler* pH);
     int SetItemEquipped(Offsets::IFunctionHandler* pH);
     int GetWeaponQuickSlots(Offsets::IFunctionHandler* pH);
     int SetWeaponQuickSlot(Offsets::IFunctionHandler* pH);

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "rttr/argument.h"
 #include "rttr/instance.h"
 #include "rttr/string_view.h"
 #include "rttr/type.h"
@@ -28,6 +29,7 @@ public:
     type get_type() const;
     type get_declaring_type() const;
     variant get_value(instance object) const;
+    bool set_value(instance object, argument arg) const;
 
     const detail::property_wrapper_base* m_wrapper;  // +0x00
 };

@@ -18,7 +18,10 @@
 // name (sub_1809AE704), instantiates a C_TrackViewCutscene and plays it
 // (sub_182B0F5D4 / sub_182B36DEC / sub_182B38358; logs "failed to initialize cutscene
 // '%s'" / "cutscene '%s' is not a valid trackview cutscene"); UNTRIGGER stops it and
-// releases m_pRunning/m_pConfig. Port display-names coined.
+// releases m_pRunning/m_pConfig. Port display-names RESOLVED 2026-08-05 (RTTR
+// registration 0x1810E06A8): m_onFinishedPort is registered "OnFinished" and is the
+// sole OUTPUT, fired when the running cutscene completes -- not an input trigger as
+// its former coined name implied.
 
 namespace wh::entitymodule { class C_CutsceneHolder; }
 
@@ -27,8 +30,8 @@ namespace wh::guimodule {
 class C_PlayTrackView : public wh::conceptmodule::C_Effect {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_PlayTrackView;
-    wh::conceptmodule::C_TypedPortRef<wh::entitymodule::C_CutsceneHolder*> m_cutscenePort;  // +0x88  (0x40)
-    wh::conceptmodule::C_TypedPortRef<wh::conceptmodule::S_Trigger>        m_triggerPort;   // +0xC8
+    wh::conceptmodule::C_TypedPortRef<wh::entitymodule::C_CutsceneHolder*> m_cutscenePort;  // +0x88  (0x40) In -- CutsceneHolder
+    wh::conceptmodule::C_TypedPortRef<wh::conceptmodule::S_Trigger>        m_onFinishedPort; // +0xC8  Out -- OnFinished
     uint8_t m_byte108;    // +0x108  ctor 0 [role UNVERIFIED]
     uint8_t _pad109[7];   // +0x109
     _smart_ptr<C_TrackViewCutscene> m_pRunning;   // +0x110  running instance (built on trigger, released by dtor sub_18052C7A8)

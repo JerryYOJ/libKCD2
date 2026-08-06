@@ -2,12 +2,14 @@
 #include <cstdint>
 #include <memory>
 #include <vector>
+
+#include <boost/optional.hpp>
+
 #include "C_FactionBase.h"
 #include "C_FactionAngriness.h"
 #include "C_FactionRelation.h"
 #include "S_LocationId.h"
 #include "S_FactionNeighbor.h"
-#include "../framework/S_BoostOptional.h"
 #include "../CryEngine/CryCommon/CryString.h"
 
 // -----------------------------------------------
@@ -57,7 +59,7 @@ public:
     int32_t  m_levelId;                    // +0xC0  RTTR "LevelId" (192; init -1)
     uint32_t _padC4;                       // +0xC4
     CryStringT<char> m_name;               // +0xC8  RTTR "Name" (200; database key)
-    wh::framework::S_BoostOptional<uint64_t> m_overrideMemberNumber;  // +0xD0  RTTR
+    boost::optional<uint64_t> m_overrideMemberNumber;  // +0xD0  RTTR
                                            //        "OverrideMemberNumber" (builder sub_180EAD2B0,
                                            //        208). Reader sub_1803F30C4: if set return it,
                                            //        else fall back to m_numChildsCache. CORRECTS

@@ -10,7 +10,7 @@ class C_EquipmentManager;
 class C_Inventory;
 class C_Item;
 }
-namespace wh::rpgmodule { class C_InventorySoul; }
+namespace wh::rpgmodule { class C_InventorySoul; class C_Soul; }
 
 namespace luautils {
 
@@ -19,6 +19,11 @@ wh::entitymodule::C_Item* ResolveItem(uint64_t itemId);
 
 // entityId -> C_Actor* via S_GameContext::GetActorById (CryAction actor map).
 wh::entitymodule::C_Actor* ResolveActor(uint64_t entityId);
+
+// soulWuid (WUID, tag 5) -> C_Soul* via C_SoulList::LookupByWUID. Distinct id
+// space from ResolveActor's CryEngine EntityId -- a Lua-side "soul WUID" (e.g.
+// player.soul) must come here, not through ResolveActor.
+wh::rpgmodule::C_Soul* ResolveSoulByWuid(uint64_t soulWuid);
 
 // actor -> &soul.m_inventorySoul (null when the soul is absent).
 wh::rpgmodule::C_InventorySoul* ResolveInventorySoul(wh::entitymodule::C_Actor* actor);

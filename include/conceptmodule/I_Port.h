@@ -50,4 +50,7 @@ public:
 };
 static_assert(sizeof(I_Port) == 0x30, "I_Port must be 0x30 (derived members start at +0x30)");
 
+// 0x1806986AC; behavior-derived name. Both smart-pointer arguments are consumed.
+void ConnectPorts(_smart_ptr<I_Port> source, _smart_ptr<I_Port> target);
+
 }  // namespace wh::conceptmodule

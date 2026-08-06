@@ -32,8 +32,8 @@ public:
     void GetPortDefinitions(std::function<void(std::shared_ptr<definition::I_PortDefinition> const&)> sink) override;  // [28] 0x180ACFCD0
     void OnExecute(S_NodeExecuteContext const& ctx) override;  // [33] 0x180DC3E10 watched-state change -> EmitEvent(OnChanged)
 
-    C_PortRef                 m_watchedState;  // +0x70  rttr "WatchedState" -- In (Template = TypeT)
-    C_TypedPortRef<bool>      m_isActive;      // +0xB0  rttr "IsActive" -- In gate
+    C_TypedPortRef<bool>      m_isActive;      // +0x70  rttr "IsActive" -- In gate (corrected 2026-08-05, was swapped with m_watchedState)
+    C_PortRef                 m_watchedState;  // +0xB0  rttr "WatchedState" -- In (Template = TypeT)
     C_TypedPortRef<S_Trigger> m_onChanged;     // +0xF0  rttr "OnChanged" -- Out trigger (value event-scoped)
 };
 static_assert(sizeof(C_StateWatch) == 0x130, "C_StateWatch must be 0x130");

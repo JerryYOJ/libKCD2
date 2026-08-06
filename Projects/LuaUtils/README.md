@@ -1,6 +1,6 @@
 # LuaUtils
 
-KCSE plugin for KCD2 that extends the vanilla `ItemManager` Lua table and publishes new `EquipmentManager` and `AudioManager` globals.
+KCSE plugin for KCD2 that extends the vanilla `ItemManager` and `Minigame` Lua tables and publishes new `EquipmentManager` and `AudioManager` globals.
 
 All functions use **dot-call syntax**:
 
@@ -42,6 +42,14 @@ Mutators return `true` on success and `nil` if resolution or the native operatio
 | `ItemManager.MoveItem(itemId, destinationInventoryId[, count])` | Split/merge-aware native move; `count` absent or `0` means the whole stack |
 
 `ownerId` and `stolenFromOwnerId` are WUIDs, not CryEngine entity IDs. Theft state is not reducible to a permanent `ownerId != stolenFromOwnerId` test: the native system also records when the owner mark was set and can age or fade that mark.
+
+## Minigame additions
+
+`userId` here (and throughout the vanilla `Minigame`/per-type scriptbind API) is a CryEngine entity ID, not a multiplayer account — KCD2 resolves it via `IActorSystem::GetActor`. In practice it's always the player's `entity.id`.
+
+| Function | Returns / behavior |
+| --- | --- |
+| `Minigame.RequestExit(userId)` | Finds the user's live minigame session (any type) and fires the same native exit path the "minigame_exit" key (Esc on keyboard, B/Circle on pad) drives. Not an immediate hard stop: cancels the in-flight action and transitions the session toward exit, deferring briefly if the current action can't be interrupted yet. Returns `true` if a live session was found, `nil` otherwise. |
 
 ## EquipmentManager
 
@@ -143,6 +151,9 @@ local outfitBConsumables = EquipmentManager.GetConsumableQuickSlots(player.id, 1
 local itemId = player.human:GetItemInHand(0)
 ItemManager.SetItemHealth(itemId, 1.0)
 ItemManager.WashItem(itemId)
+
+-- Kick the player out of whatever minigame they're currently in.
+Minigame.RequestExit(player.id)
 ```
 
 ## Resolution caveats
@@ -323,6 +334,182 @@ local event, playErr = AudioManager.PlayEvent(
 - `AudioManager` performs no obstruction, occlusion, environment, or ATL-proxy processing for direct instances.
 - The implementation is release-build verified. Live in-game CryPak bank/effect playback remains to be tested with a mounted test PAK and a compatible event-bearing bank.
 
+## RTTR bridge
+
+LuaUtils exposes KCD2's reflected (rttr) surface — the same registry used by SKALD — through generated source-facing wrappers under the public `wh` namespace. Everything below targets KCD2 Steam 1.5.6; the coverage ground truth is `KCD2/analysis/rttr/rttr_lua_manifest.json` and its report.
+
+### Native bootstrap API (exactly seven functions, dot-call)
+
+LuaUtils publishes an uppercase `RTTR` table during KCSE `PreDataLoaded`, before KCD2 executes the mod's PAK-owned Lua bootstrap:
+
+| Function | Behavior |
+| --- | --- |
+| `RTTR.CallGlobal(name, ...)` | Invoke a reflected global function by its exact registered name (`"wh::rpgmodule::GetGameMode"`). |
+| `RTTR.CallMethod(handle, declaringType, name, ...)` | Invoke a reflected member on a live object token. `declaringType` is the registered source type (`"wh::entitymodule::Inventory"`). |
+| `RTTR.GetProperty(handle, declaringType, name)` | Read a reflected read-only property. |
+| `RTTR.GetEnum(enumType, valueName)` | Look up a reflected enum value (`"E_GameMode"`, `"hardcore"`) and return a typed token. |
+| `RTTR.GetTypeName(handle)` | Return the exact reflected type name of a live token. |
+| `RTTR.Release(handle)` | Destroy one stored value; the token becomes permanently stale. |
+| `RTTR.Clear()` | Destroy every stored value (also happens automatically on LoadGame/NewGame). |
+
+Every generated chunk captures this table in a local upvalue. `generated/all.lua` verifies the complete public tree, while the uppercase `RTTR` bridge remains visible. Normal mod scripts should use `wh`; direct `RTTR` calls remain available for low-level diagnostics and native validation.
+
+All native failures return `nil, errorString`; a successful reflected `void` call returns `true`. Object, pointer, smart-pointer, reference-wrapper, and enum results are retained as plugin-owned `rttr::variant`s behind monotonic `ScriptHandle` tokens. Releasing or clearing a token permanently invalidates it. Lua's source-facing wrapper does not change the stored variant: for example, an exact `std::shared_ptr<wh::entitymodule::I_ItemDescriptor>` remains that exact native type while Lua sees `wh.entitymodule.ItemDescriptor`.
+
+Arguments convert against the **exact** reflected parameter type: booleans, 8/16/32-bit integers (range-checked), floats, `std::string` from Lua strings, `ScriptHandle` payloads for 64-bit arithmetic parameters, registry tokens for enum/class/pointer parameters, and reflected defaults for omitted trailing arguments. Releasing the source Lua wrapper does not change an already-cloned native argument variant. Containers, `wchar_t`, raw `const char*`, property writes, constructors, and SKALD node/TLS-dependent callables remain blocked with specific errors. SKALD-native functions such as `Inventory::GetMoney` are not RTTR methods and are intentionally absent from this layer.
+
+### Public generated wrappers
+
+The Python generators and their fixture tests are dev-time tooling, not shipped project sources: they live under `KCD2/analysis/luautils/tools/` and `KCD2/analysis/luautils/tests/`, outside this project directory. Only their output (`lua/`) and the native plugin (`src/`) ship with LuaUtils.
+
+`KCD2/analysis/luautils/tools/generate_rttr_lua.py` renders the certified manifest into `lua/rttr/`; `--check` verifies byte-for-byte freshness. The current tree contains 1,940 source-like class modules, 226 enum modules, and 24 global namespaces. Base classes and namespace-owning parent classes load before derived and nested types. Native transport records (`std`, `boost`, `rttr`, raw pointers, `_smart_ptr`, and reference wrappers) do not receive a public class tree.
+
+```lua
+-- typed enum values
+local hardcore = wh.game.E_GameMode.hardcore()
+
+-- reflected globals return source-class wrappers
+local timeOfDay = wh.rpgmodule.GetTimeOfDay()  -- wh.framework.TimeOfDay
+
+-- class wrappers use registered source names
+local Inventory = wh.entitymodule.Inventory
+local ItemDescriptor = wh.entitymodule.ItemDescriptor
+
+local mode, err = wh.rpgmodule.GetGameMode()
+if mode then mode:Release() end
+```
+
+Class modules carry LuaLS annotations (`---@class wh.entitymodule.Inventory : wh.entitymodule.C_ItemHolder`), retain the exact C++ identity and registered declaring type privately, unwrap wrapper arguments before native calls, wrap object results through the projected source type, inherit through metatables, and invalidate themselves after `:Release()`. Every represented source-like class receives a full module, including memberless classes. Objects enter this V1 wrapper layer only through reflected returns; it does not add constructors or object resolvers.
+
+Members whose signatures cannot cross the bridge stay visible and return their specific blocker. Same-name overloads generate only the proven name-first winner, with shadowed signatures documented. Compatible duplicate property registrations are merged deterministically. Incompatible same-name registrations are never guessed: 57 groups are emitted as blocked accessors and documented with exact types and anchors in `generated/ambiguous_properties.txt`.
+
+Regenerate after a manifest rebuild with `python KCD2/analysis/luautils/tools/generate_rttr_lua.py`; freshness check: `python KCD2/analysis/luautils/tools/generate_rttr_lua.py --check`. Smoke tests: `KCD2/analysis/luautils/tests/rttr_native_smoke.lua`, `KCD2/analysis/luautils/tests/rttr_wrappers_smoke.lua`, and the offline fixture `KCD2/analysis/luautils/tests/test_generate_rttr_lua.py`.
+
+## SKALD bridge
+
+SKALD is KCD2's native node-graph ("concept") system — the same runtime that drives quest logic, environment triggers, and supporting AI nodes. This bridge builds, wires, and drives SKALD node graphs directly from Lua: create a node, bind its outputs, pulse its inputs, tear it down — without an authored graph asset. Coverage ground truth is `KCD2/analysis/skald/skald_lua_manifest.json`; the full RE writeup is `KCD2/analysis/skald/skald_live_verification_2026-08-07.md`.
+
+### Native bootstrap API (eleven functions, dot-call)
+
+LuaUtils publishes an uppercase `SKALD` table during KCSE `PreDataLoaded`, alongside `RTTR`:
+
+| Function | Behavior |
+| --- | --- |
+| `SKALD.CreateNode(cppType, arguments)` | Construct a node from its registered factory tag plus a Lua table of creation arguments. Returns `(nodeHandle, rttrHandle)`, or `(nil, error)`. |
+| `SKALD.GetPortDefinitions(cppType[, typeParameter])` | Build a node, apply `TypeT` if given, read its live port list, then discard it without attaching or activating anything. Returns a dense array of `{name, valueType, direction, isTrigger}`. |
+| `SKALD.DestroyNode(nodeHandle)` | Destroy a live node and detach it from its host module. Destroying an active effect force-deactivates it (the native teardown's falling edge), so effects never leak past their node. |
+| `SKALD.QueueDestroy(nodeHandle)` | Enqueue a destroy for the next frame-tick drain. This is the generated GC finalizers' path — safe from any context because it never tears down inline. Mod scripts normally never call it. |
+| `SKALD.BindTriggerOutput(nodeHandle, outputName, callback)` | Subscribe a Lua function to a trigger output; fires whenever the native graph pulses it, including synchronously within the same call chain (e.g. one trigger cascading into another). Returns a connection handle. |
+| `SKALD.BindDataOutput(nodeHandle, outputName)` | Bind a data output and return `(bindingHandle, currentValue)`. The binding stays live until unbound. |
+| `SKALD.UnbindDataOutput(bindingHandle)` | Release a data-output binding. |
+| `SKALD.Disconnect(connectionHandle)` | Release a trigger-output connection. |
+| `SKALD.TriggerInput(nodeHandle, triggerName)` | Pulse an action-trigger input. Returns an updates table for any bound outputs the pulse changed. |
+| `SKALD.SetActivation(nodeHandle, active)` | Activate/deactivate an effect node: drives the native `OnEffectActivate`/`OnEffectDeactivate` edge directly (RTTI-verified against `C_Effect`). This is the **only** working activation lever — see below. Returns an updates table like `TriggerInput`. |
+| `SKALD.SetUpdateDispatcher(dispatcher)` | Wire the function that receives output updates the native graph pushes asynchronously — not only as a side effect of a Lua-driven call. LuaUtils calls this once during bootstrap; mod scripts never call it directly. |
+
+`cppType` here is the node's registered **factory tag** — the short authored-XML identifier the native factory resolves (`"If"`, `"BuffEffect"`, `"Length"`, ...), recovered and certified per node class, not necessarily the fully-qualified C++ type name. Every generated `Create()` below already passes the correct tag for its node. Normal mod scripts should use the `wh.<module>.<Node>` wrappers; direct `SKALD` calls remain available for low-level diagnostics — `SKALD.GetPortDefinitions` in particular is safe to call on a live game to introspect a node class without touching the running graph.
+
+### Public generated node wrappers
+
+Every supported node gets a `wh.<module>.<Node>` class alongside its RTTR wrapper:
+
+```lua
+-- Fixed-shape node: build a live wh.conceptmodule.If, react to both branches.
+local branch, err = wh.conceptmodule.If.Create{ Condition = true }
+if not branch then error(err) end
+
+local trueConn = branch:BindOutput("True", function()
+    System.LogAlways("condition was true")
+end)
+local falseConn = branch:BindOutput("False", function()
+    System.LogAlways("condition was false")
+end)
+branch:TriggerInput("Exec")   -- pulses whichever branch Condition selects
+
+trueConn:Disconnect()
+falseConn:Disconnect()
+branch:Destroy()
+```
+
+```lua
+-- Effect-style node: wh.rpgmodule.C_PauseWorldTime. Effects do NOTHING at
+-- creation -- the input pins are just values. Activate() applies the effect,
+-- Deactivate() reverts it (live-verified via IsWorldTimePaused()).
+local pause, err = wh.rpgmodule.C_PauseWorldTime.Create{ IsActive = true }
+if not pause then error(err) end
+pause:Activate()      -- world time is now frozen
+pause:Deactivate()    -- and running again
+pause:Destroy()
+```
+
+`Class.Create(args)` validates argument names (and required ones) against the certified port list before ever calling the native layer, unwraps `wh.*` object arguments to their raw handle, and marshals plain Lua array tables (see Arrays below). `Class.Outputs` lists bindable output names; `node:BindOutput(name[, callback])` returns a `Skald.OutputConnection` for trigger outputs (needs a callback) or a `Skald.OutputValue<T>` for data outputs. A connection exposes `:Disconnect()`; a value holder exposes `.value` (refreshes automatically — including asynchronously, whenever the native graph produces a new value for that output), `:Take()` (read and release ownership), and `:Release()`. `Class.Triggers` lists action-trigger names for `node:TriggerInput(name)`. `node:Destroy()` tears down the native node and invalidates every output/connection/binding it owns; `node:Release()` (inherited from the RTTR wrapper) redirects to `Destroy()` for live SKALD nodes.
+
+**Effect activation.** Every supported node deriving the native `C_Effect` base — 122 of the 154 — gets `node:Activate()` / `node:Deactivate()`, and they are the *only* way to switch the effect on and off. Passing `IsActive = true` at creation sets the pin value but applies nothing, and there is deliberately **no `Commit`**: the native `Set<X>` companion pulses are a live-proven no-op outside authored graphs (the effect latch only reacts to executes sourced from the pin itself — an attribution that requires real graph wiring), so the wrappers don't offer a lever that cannot work. `Activate`/`Deactivate` drive the same `OnEffectActivate`/`OnEffectDeactivate` virtuals a genuine graph edge would.
+
+**Node lifetime is GC-owned.** Every created node carries a finalizer: if the Lua wrapper is collected without an explicit `Destroy()`, the native node is queued for destruction and dies at the next frame tick — active effects included, which revert on teardown (verified: a collected, still-active `C_PauseWorldTime` unfroze world time). Keep a reference (a global, your mod's state table) for anything that must outlive the current scope; call `Destroy()` deliberately when done. Explicit `Destroy()` remains immediate and returns a verifiable result.
+
+`wh.conceptmodule.ObjectProperties` bridges a live object's reflected state onto SKALD outputs (`DeclaringType` + a **required** `Object` — reading its outputs with no object wired faults natively, so `Create` demands it up front, making that failure mode unreachable by construction).
+
+### Arrays
+
+`wh.conceptmodule.Length`, `ElementAt`, and `ContainsElement` take a plain Lua table directly on their `Array` input — no native array-builder node is needed:
+
+```lua
+local strings = { "aa", "bb", "cc" }
+local len = wh.conceptmodule.Length.Create{ Array = strings }        -- TypeT defaults to 'Strings'
+local size = len:BindOutput("Length").value                          -- 3
+
+local at1 = wh.conceptmodule.ElementAt.Create{ Array = strings, Index = 1 }
+local value = at1:BindOutput("Value").value                          -- "bb"
+
+local has = wh.conceptmodule.ContainsElement.Create{ Array = strings, Value = "bb" }
+local found = has:BindOutput("Result").value                         -- true
+```
+
+`TypeT` accepts either a certified string (`'Strings'`, `'wh::rpgmodule::Souls'`) or the element's generated RTTR class table (`wh.rpgmodule.I_Soul`/`wh.rpgmodule.C_Soul`, aliased to `Souls`); it defaults to `'Strings'`. Elements are RTTR handles/wrappers (unwrapped automatically) for object-typed arrays, or plain Lua strings for `Strings` arrays. The same plain-table marshalling backs fixed array-alias inputs on other nodes (e.g. `BuffEffect.Souls`, always `wh::rpgmodule::Souls` regardless of `TypeT`) — the annotation on each generated `CreateArgs` field says which form a given input takes.
+
+**`wh.conceptmodule.MakeArray` does not exist and should not be used.** The native factory refuses to construct it at all (a live-verified, unidentified-cause failure, not a Lua-side restriction); plain Lua tables on the inputs above supersede it entirely and are not limited to the 26-element cap that node's old variadic-pin design had.
+
+Regenerate after a manifest rebuild with `python KCD2/analysis/luautils/tools/generate_skald_manifest.py` (writes `skald_lua_manifest.json`; `--check` verifies freshness), then `python KCD2/analysis/luautils/tools/generate_skald_lua.py` (writes `lua/skald/`; `--check` verifies freshness). The current manifest covers 154 of 195 swept native node classes; unsupported nodes stay listed with their specific blocker rather than being dropped silently — see `generated/coverage.txt`. Fixture test: `KCD2/analysis/luautils/tests/test_generate_skald_manifest.py` and `KCD2/analysis/luautils/tests/test_generate_skald_lua.py`.
+
+## Game-native Lua packaging
+
+Generated Lua is not loaded from loose files beside the plugin DLL. KCD2 mounts `Data/luautils.pak` and automatically executes `Scripts/Mods/luautils.lua`, selected by `<modid>luautils</modid>` in `mod.manifest`.
+
+KCSE publishes the native bridges before that entry point runs:
+
+```text
+KCSE PreDataLoaded
+  -> publish RTTR and SKALD
+KCD2 CompleteInit
+  -> Scripts/main.lua
+  -> Scripts/Mods/luautils.lua
+       -> ordered RTTR modules
+       -> ordered SKALD modules
+```
+
+The bootstrap uses explicit `Script.ReloadScript` calls generated from the two `generated/files.txt` manifests. It does not use `ScriptLoader.LoadFolder`, whose directory enumeration order is not certified for RTTR's base-before-derived requirement.
+
+Build or verify the PAK explicitly; CMake does not invoke Python or package assets:
+
+```text
+python KCD2/analysis/luautils/tools/build_scripts_pak.py --output KCD2/RE/.buildenv/build-release/LuaUtils/luautils.pak
+python KCD2/analysis/luautils/tools/build_scripts_pak.py --output KCD2/RE/.buildenv/build-release/LuaUtils/luautils.pak --check
+python KCD2/analysis/luautils/tests/test_build_scripts_pak.py
+```
+
+Deployment layout:
+
+```text
+mods/LuaUtils/
+  mod.manifest
+  Data/luautils.pak
+  KCSE/Plugins/LuaUtils.dll
+  KCSE/Plugins/LuaUtils.pdb
+```
+
+The DLL/PDB remain loose because KCSE loads physical plugin DLLs with `LoadLibraryA`. The RTTR and SKALD Lua trees exist only inside `Data/luautils.pak`; do not deploy `KCSE/Plugins/LuaUtils/rttr` or `KCSE/Plugins/LuaUtils/skald` directories.
+
 ## Build
 
-LuaUtils is part of the KCD2 RE workspace. Build the `release` preset from `KCD2/RE/.buildenv`; the DLL is emitted under `build-release/LuaUtils/LuaUtils.dll` and deploys like other KCSE plugins.
+LuaUtils is part of the KCD2 RE workspace. CMake compiles and links native code only. Build the `release` preset from `KCD2/RE/.buildenv`; the DLL and PDB are emitted under `build-release/LuaUtils/`. Run the standalone packaging command above afterward to create `luautils.pak`.

@@ -23,6 +23,9 @@
 // C_SmartObjectHelpersManager (+0xB8, new 80) and C_GeneratedSmartObjectsManager
 // (+0xC0, new 264, ctor sub_180AF2864).  Interior sub-object regions typed as
 // blobs [U interior].
+// No own E_WUIDTag found: a .text-wide scan for `mov r64, tag<<56` produced no stamp
+// site in this class.  GetValueForWuid sub_1832EFF54 is a pure map lookup, so smart
+// objects appear to be keyed by WUIDs minted elsewhere (puppet 0x08 / view 0x04) [U].
 
 namespace wh::xgenaimodule {
 

@@ -23,6 +23,7 @@ struct SSystemGlobalEnvironment;
 namespace Offsets {
 
 struct IXmlNode;
+class ILocalizationManager;
 
 struct ISystem {
     virtual void _vf0(char flags) = 0;                              // [0]   0x000  scalar-deleting dtor 0x182458548
@@ -200,7 +201,7 @@ struct ISystem {
     virtual void _vf170(int) = 0;                                  // [170] 0x550  uses ptr [+0xDF0]
     virtual void _vf171() = 0;                                      // [171] 0x558  97b
     virtual bool _vf172() const = 0;                               // [172] 0x560  ret byte [+0x2A2C]
-    virtual void* _vf173() = 0;                                     // [173] 0x568  ret [+0xD50]
+    virtual ILocalizationManager* GetLocalizationManager() = 0;     // [173] 0x568  0x1803D3300 ret [+0xD50]  VERIFIED
     virtual void _vf174() = 0;                                      // [174] 0x570  checks dword_18549D370
     virtual void _vf175() = 0;                                      // [175] 0x578
     virtual void _vf176() = 0;                                      // [176] 0x580  checks byte [+0x5C1]

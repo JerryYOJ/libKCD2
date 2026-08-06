@@ -35,6 +35,9 @@ public:
     virtual void Activate();                // [4]  nodes: COMDAT-shared 0x180E544B4 -- one-shot (Flag_Activated) rttr port wiring, body sub_1804F4BB0 [root/port impls unsampled]
     RTTR_ENABLE()                           // [5..7]  get_ptr = the shared 0x1805F5DA0
 
+    void AddRef();                          // 0x181E38F20: first ref registers the resource, then increments m_refCount
+    void Release();                         // 0x181E39320: last ref unregisters and invokes the scalar-deleting dtor
+
     uint32_t m_resourceId;   // +0x08  registry id (allocated in ctor, re-registered on first AddRef)
     int16_t  m_refCount;     // +0x0C  _InterlockedIncrement16 / _InterlockedExchangeAdd16
     uint16_t m_flags;        // +0x0E  E_Flag bits

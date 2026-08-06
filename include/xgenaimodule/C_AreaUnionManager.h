@@ -15,6 +15,8 @@
 // C_InventoryManager-proven model).  DISCREPANCY [U]: modeled as the 3 iface
 // slots + one appended own virtual; the slot->body mapping here is NOT
 // resolved -- do not call through raw indices.
+// WUID tag E_WUIDTag::AreaUnion (0x14) -- stamped sub_1811A4DF4 from the m_18 counter;
+// creates a 0x108 area-union object and indexes it into m_hashSet30 / m_sub70.
 
 namespace wh::xgenaimodule {
 

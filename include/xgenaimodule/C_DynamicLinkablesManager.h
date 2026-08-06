@@ -26,6 +26,8 @@
 //          slot may be folded/absent in this subobject [U].
 // Dynamic objects register in q_1854961A0 (C_DynamicLinkableObject ctor
 // sub_18047BCFC).  Members past +0x78 unresolved.
+// WUID tag E_WUIDTag::DynamicLinkableObject (0x0A) -- stamped sub_180A2F418 from the
+// counter at q_1854961A0+0x78; GetValueForWuid sub_1832A96F0 resolves via q_185496338.
 
 namespace wh::xgenaimodule {
 

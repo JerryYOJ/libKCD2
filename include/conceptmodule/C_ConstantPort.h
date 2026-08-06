@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 #include "C_OutputDataPort.h"
 
 // -----------------------------------------------
@@ -24,5 +25,8 @@ public:
     rttr::variant m_value;   // +0x30  the literal (std::string policy until converted)
 };
 static_assert(sizeof(C_ConstantPort) == 0x48, "C_ConstantPort must be 0x48");
+
+_smart_ptr<C_ConstantPort> CreateConstantPort(
+    CryStringT<char> const& name, std::string const& value);
 
 }  // namespace wh::conceptmodule

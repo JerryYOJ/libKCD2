@@ -34,6 +34,10 @@
 //    api/MCM_API.h), and Lua MCM.RegisterBuildSettingsListener callbacks
 //    driving MCM.Add* (scriptbind.h).
 
+// Flash text fields resolve registered @keys through the process-global CryGFxTranslator;
+// native consumers can use C_LocalizedString::Localize through ISystem's localization manager.
+
+
 #include <MinHook.h>
 
 #include "KCSE/KCSEAPI.h"
@@ -47,6 +51,7 @@
 #include "listener/MenuElementListener.h"
 #include "REL.h"
 #include "crysystem/SSystemGlobalEnvironment.h"
+#include "framework/C_LocalizedString.h"
 #include "Offsets/vtables/IFlashUI.h"
 #include "Offsets/vtables/IUIElement.h"
 #include "guimodule/SUITypes.h"
@@ -220,8 +225,16 @@ static void RebuildSettings()
     }
     NotifyLuaBuildSettings();                            // 3. lua build listeners
     ApplyValues(values);
-    std::sort(g_mods.begin(), g_mods.end(),
-              [](const Mod& a, const Mod& b) { return a.name < b.name; });
+    for (Mod& m : g_mods) {
+        CryStringT<char> localized;
+        wh::framework::C_LocalizedString::Localize(m.name.c_str(), localized);
+        m.sortName = localized.c_str();
+    }
+    std::sort(g_mods.begin(), g_mods.end(), [](const Mod& a, const Mod& b) {
+        if (a.sortName != b.sortName)
+            return a.sortName < b.sortName;
+        return a.id < b.id;
+    });
     MCM_LOG("settings rebuilt: %zu mod(s)", g_mods.size());
 }
 

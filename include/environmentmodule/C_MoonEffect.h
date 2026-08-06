@@ -10,17 +10,19 @@
 // Own vtable 0x18471ED68 (late section -- normal); ctor sub_182AD6A0C. BYTE-IDENTICAL layout
 // to C_SunEffect (same base chain and the same four ports at +0x88/+0xC8/+0x108/+0x148);
 // only the vtable differs. Kept as a sibling (RTTI: both derive conceptmodule::C_Effect
-// directly). See C_SunEffect.h for the field caveats.
+// directly). Port roles RESOLVED 2026-08-05 (RTTR registration 0x180E23730): UseLongitude/
+// Longitude/UseLatitude/Latitude, each gating the corresponding celestial param write in
+// OnEffectActivate 0x182AD7080. See C_SunEffect.h for the field caveats.
 
 namespace wh::environmentmodule {
 
 class C_MoonEffect : public conceptmodule::C_Effect {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_MoonEffect;
-    conceptmodule::C_TypedPortRef<bool>  m_port88;    // +0x88   [role UNVERIFIED]
-    conceptmodule::C_TypedPortRef<float> m_portC8;    // +0xC8   [role UNVERIFIED]
-    conceptmodule::C_TypedPortRef<bool>  m_port108;   // +0x108  [role UNVERIFIED]
-    conceptmodule::C_TypedPortRef<float> m_port148;   // +0x148  [role UNVERIFIED]
+    conceptmodule::C_TypedPortRef<bool>  m_useLongitudePort;  // +0x88   In -- UseLongitude
+    conceptmodule::C_TypedPortRef<float> m_longitudePort;     // +0xC8   In -- Longitude
+    conceptmodule::C_TypedPortRef<bool>  m_useLatitudePort;   // +0x108  In -- UseLatitude
+    conceptmodule::C_TypedPortRef<float> m_latitudePort;      // +0x148  In -- Latitude
     uint8_t  m_flag188;    // +0x188  ctor 0
     uint8_t  _pad189[3];   // +0x189
     float    m_savedParamA; // +0x18C  saved orig moon celestial param (system vtbl[104]) restored on deactivate; setter 0x182AD7080, reader 0x182AD724C

@@ -62,7 +62,8 @@ public:
     uint8_t   _gapA40[0x2A8];                         // +0xA40  m_env-forwarding accessors' backing (0xCC0/0xCC8 ...)
 
     // ---- Embedded subsystems (own vtables set in ctor) ---------------------
-    uint8_t   m_FrameProfileSystem[0x70];            // +0xCE8  CFrameProfileSystem vtable (GetIProfileSystem slot 62; incl ptr@0xD48 alloc 0x9F8 slot 156)  /* size tentative */
+    uint8_t   m_FrameProfileSystem[0x68];            // +0xCE8  CFrameProfileSystem vtable (GetIProfileSystem slot 62; incl ptr@0xD48 alloc 0x9F8 slot 156)  /* size tentative */
+    Offsets::ILocalizationManager* m_pLocalizationManager; // +0xD50  GetLocalizationManager slot 173; allocated as CLocalizedStringsManager
     uint8_t   m_nameTable[0xC8];                     // +0xD58  CNameTable vtable (folds fields 0xDF0/0xE08/0xE10)  /* size tentative */
     uint8_t   m_ProfilingSystem[0x1C08];             // +0xE20  CProfilingSystem (GetIProfilingSystem slot 84) + folded state up to 0x2A28  /* size tentative */
 
@@ -79,3 +80,4 @@ public:
     uint8_t   _gap2BD4[0x24];                         // +0x2BD4  0x2BD8 ptr, 0x2BE1 flag, 0x2BE8 CryString  -> end
 };
 static_assert(sizeof(CSystem) == 0x2BF8);
+static_assert(offsetof(CSystem, m_pLocalizationManager) == 0xD50);

@@ -36,6 +36,7 @@ struct Item {
 
 struct Mod {
     std::string id, name;
+    std::string sortName;              // localized name used only for display ordering
     std::vector<Item> items;
 };
 

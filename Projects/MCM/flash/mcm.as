@@ -221,12 +221,27 @@ var titleTf = mkText(ui, "titleTf", 2, TITLE_X, TITLE_Y, TITLE_W, 60, 34, COL_DA
 titleTf.text = "Mod Configuration";
 
 // -------------------------------------------------------- settings cache ---
-// modCache[i] = {id, name, mc, items[]}; item = {kind, id, label, tip, value,
-// def, options, min, max, step, suffix}. The panel is BUILT from the current
-// mod's items; edits write back into the items, so switching away and back
-// preserves state without any engine traffic.
+// modCache[i] = {id, name, mc, items[]}; item = {kind, id, label, tip,
+// matchLabel, matchTip, value, def, options, min, max, step, suffix}. The panel
+// is BUILT from the current mod's items; edits write back into the items, so
+// switching away and back preserves state without any engine traffic.
 var modCache = [];
 var currentModId = "";
+
+// Stock hud.gfx resolves strings for logic by assigning them to an offstage
+// TextField and reading .text back. Reuse one field for the whole pushed cache.
+var locTf = _root.createTextField("mcmLocTf", _root.getNextHighestDepth(), -1000, -1000, 100, 100);
+locTf.html = false;
+
+function localizedText(raw) {
+    locTf.text = String(raw);
+    return locTf.text;
+}
+
+function cacheSearchText(it) {
+    it.matchLabel = localizedText(it.label).toLowerCase();
+    it.matchTip = localizedText(it.tip).toLowerCase();
+}
 
 function findMod(id) {
     for (var i = 0; i < modCache.length; i++) {
@@ -985,8 +1000,8 @@ function applyFilter() {
         var catHas = new Object();
         for (i = 0; i < rows.length; i++) {
             r = rows[i];
-            r.selfMatch = (r.it.label.toLowerCase().indexOf(q) >= 0 ||
-                           r.it.tip.toLowerCase().indexOf(q) >= 0);
+            r.selfMatch = (r.it.matchLabel.indexOf(q) >= 0 ||
+                           r.it.matchTip.indexOf(q) >= 0);
             if (r.kind != "cat" && r.selfMatch) {
                 catHas[r.cat] = true;
             }
@@ -1135,6 +1150,7 @@ function fc_addCategory(modId, label, tip) {
     it.id = "";
     it.label = label;
     it.tip = tip;
+    cacheSearchText(it);
     it.idx = m.items.length;   // == index in the plugin's items vector
     m.items.push(it);
 }
@@ -1149,6 +1165,7 @@ function fc_addToggle(modId, id, label, tip, value, def) {
     it.id = id;
     it.label = label;
     it.tip = tip;
+    cacheSearchText(it);
     it.value = toBool(value);
     it.def = toBool(def);
     it.idx = m.items.length;
@@ -1165,6 +1182,7 @@ function fc_addDropdown(modId, id, label, tip, optionsPipe, index, defIndex) {
     it.id = id;
     it.label = label;
     it.tip = tip;
+    cacheSearchText(it);
     it.options = String(optionsPipe).split("|");
     it.value = Number(index);
     it.def = Number(defIndex);
@@ -1182,6 +1200,7 @@ function fc_addSlider(modId, id, label, tip, minV, maxV, step, value, def, suffi
     it.id = id;
     it.label = label;
     it.tip = tip;
+    cacheSearchText(it);
     it.min = num3(minV);
     it.max = num3(maxV);
     it.step = num3(step);

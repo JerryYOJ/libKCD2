@@ -8,6 +8,7 @@
 #include "framework/WUID.h"
 #include "game/S_GameContext.h"
 #include "rpgmodule/C_Soul.h"
+#include "rpgmodule/C_SoulList.h"
 
 namespace luautils {
 
@@ -24,6 +25,14 @@ wh::entitymodule::C_Actor* ResolveActor(uint64_t entityId)
 {
     auto* ctx = wh::game::S_GameContext::GetInstance();
     return ctx ? ctx->GetActorById((EntityId)entityId) : nullptr;
+}
+
+wh::rpgmodule::C_Soul* ResolveSoulByWuid(uint64_t soulWuid)
+{
+    auto* soulList = wh::rpgmodule::C_SoulList::GetInstance();
+    if (!soulList)
+        return nullptr;
+    return soulList->LookupByWUID(wh::framework::WUID{ soulWuid });
 }
 
 wh::rpgmodule::C_InventorySoul* ResolveInventorySoul(wh::entitymodule::C_Actor* actor)

@@ -3,7 +3,10 @@
 #include <cstdint>
 
 #include "LuaHelpers.h"
+#include "REL.h"
 #include "ResolveHelpers.h"
+#include "rttr/RttrRuntime.h"
+#include "rttr/variant.h"
 
 #include "Offsets/vtables/IFunctionHandler.h"
 #include "Offsets/vtables/IScriptSystem.h"
@@ -39,6 +42,7 @@ void CScriptBind_EquipmentManager::Init(Offsets::IScriptSystem* pSS)
     RegisterFunction("GetEquipWeights", "entityId", functor(*this, &CScriptBind_EquipmentManager::GetEquipWeights));
     RegisterFunction("GetInventoryEx", "entityId", functor(*this, &CScriptBind_EquipmentManager::GetInventoryEx));
     RegisterFunction("GetInventoryId", "entityId", functor(*this, &CScriptBind_EquipmentManager::GetInventoryId));
+    RegisterFunction("GetInventoryHandle", "entityId", functor(*this, &CScriptBind_EquipmentManager::GetInventoryHandle));
     RegisterFunction("SetItemEquipped", "entityId, itemId, equip", functor(*this, &CScriptBind_EquipmentManager::SetItemEquipped));
     RegisterFunction("GetWeaponQuickSlots", "entityId, [outfitId]", functor(*this, &CScriptBind_EquipmentManager::GetWeaponQuickSlots));
     RegisterFunction("SetWeaponQuickSlot", "entityId, quickSlot, itemId, [outfitId]", functor(*this, &CScriptBind_EquipmentManager::SetWeaponQuickSlot));
@@ -216,6 +220,30 @@ int CScriptBind_EquipmentManager::GetInventoryId(Offsets::IFunctionHandler* pH)
     if (!inv)
         return pH->EndFunction();
     return pH->EndFunctionAny(HandleValue(inv->m_wuid.m_value));
+}
+
+int CScriptBind_EquipmentManager::GetInventoryHandle(Offsets::IFunctionHandler* pH)
+{
+    C_Actor* actor = GetActorParam(pH);
+    C_Inventory* inv = ResolveInventory(actor);
+    if (!inv)
+        return pH->EndFunction();
+
+    // Mint the registry variant with the game's own C_Inventory* pointer
+    // policy (the one its property getters stamp, e.g. I_Soul::Inventory at
+    // 0x18082554D): m_data[0] holds the pointer value, clone is a shallow
+    // copy and destroy is a no-op, so registry ownership is safe.
+    static REL::Relocation<rttr::variant::policy_func> policy{ REL::ID(44780) };  // 0x18082569C
+    rttr::detail::variant_data data{};
+    data.m_storage[0] = inv;
+    rttr::variant value = rttr::variant::from_policy(data, policy.get());
+    try {
+        const RttrHandleRegistry::Handle handle =
+            g_rttrRuntime.Registry().Store(std::move(value));
+        return pH->EndFunctionAny(HandleValue(handle));
+    } catch (...) {
+        return pH->EndFunction();
+    }
 }
 
 int CScriptBind_EquipmentManager::GetWeaponQuickSlots(Offsets::IFunctionHandler* pH)

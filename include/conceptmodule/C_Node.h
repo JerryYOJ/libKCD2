@@ -2,8 +2,11 @@
 #include <cstdint>
 #include <memory>
 #include "C_SharedResource.h"
+#include "E_NodeHibernateReason.h"
 #include "E_NodeRuntimeState.h"
+#include "E_NodeWakeReason.h"
 #include "S_NodeExecuteContext.h"
+#include "S_ResourceRef.h"
 #include "rttr/variant.h"
 
 class XmlNodeRef;
@@ -48,11 +51,13 @@ public:
     virtual void unk14();                                  // [14] 0x18270A924 posts _smart_ptr<this> to a queue with tag 5 (PostSelfMessage candidate) [U sig]
     virtual void DispatchLifecycleEvent(int32_t event, int32_t expectedPhase);  // [15] 0x1806B0AFC: skip if suppressed [36] while Hibernating; deliver [34] if [35] phase matches
     virtual void unk16();                                  // [16] nullsub [U]
-    virtual void Shutdown();                               // [17] 0x18069557C: [37] + port unsubscribe walk (sub_181E34DC0, sub_181E34C50) [name LIKELY]
+    virtual void ActivateNode();                           // [17] 0x18069557C: Reset + port subscription walk; name proven by C_ModuleBase profiler literal
     virtual void Rebind(void* arg);                        // [18] 0x181E34CA0: [37] + port walk + per-target lambda (vt 0x183E38910) [name LIKELY, sig U]
-    virtual void unk19();                                  // [19] 0x180695328 Detach candidate: smart self -> sub_181E318A0 -> [38] [U]
-    virtual void Hibernate(std::vector<_smart_ptr<C_Node>>& changed);  // [20] 0x180ACFEE4: -> Hibernating, appends self to `changed` if it flipped
-    virtual void WakeUp(std::vector<_smart_ptr<C_Node>>& changed);     // [21] 0x180695248: -> Awake, appends self to `changed` if it flipped
+    virtual void DetachOrDeactivate();                     // [19] 0x180695328: unregister/detach + [38]; descriptive name
+    virtual void Hibernate(std::vector<_smart_ptr<C_Node>>& changed,
+                           E_NodeHibernateReason reason);  // [20] 0x180ACFEE4
+    virtual void Wake(std::vector<_smart_ptr<C_Node>>& changed,
+                      E_NodeWakeReason reason);            // [21] 0x180695248
     virtual bool unk22();                                  // [22] return false (0x180838AE0) [U]
     virtual bool unk23();                                  // [23] return false (0x180838AE0) [U]
     virtual bool IsAutoTriggerable() const;                // [24] base false; C_AutoTriggerable+ true (0x18041A6A0)
@@ -75,16 +80,20 @@ public:
 
     _smart_ptr<I_Port> FindPortByName(CryStringT<char> const& name);    // 0x180699818
     _smart_ptr<I_Port> GetOrCreatePort(CryStringT<char> const& name);   // 0x180699630: existing, else definition direction+type -> concrete C_*Port + AddPort
-    bool AddPort(_smart_ptr<I_Port> const& port);                       // 0x180697390: dup check, bind (0x180697E78 plants owner ref + definition weak_ptr), insert (0x181E33520)
+    bool AddPort(_smart_ptr<I_Port> port);                              // 0x180697390: consumes port; dup check, bind, insert
     std::map<std::string, _smart_ptr<I_Port>> GetPortsView();           // 0x18270A4D8 -- rttr getter "PortsView"
 
     CryStringT<char>   m_name;           // +0x10  rttr "Name"
     E_NodeRuntimeState m_runtimeState;   // +0x18  rttr "RuntimeState" (read-only); ctor Hibernating
-    int32_t            m_unk1C;          // +0x1C  ctor -1 [role UNVERIFIED -- index/handle sentinel]
-    bool               m_unk20;          // +0x20  ctor false [role UNVERIFIED]
-    uint8_t            _pad21[7];        // +0x21
-    std::vector<_smart_ptr<I_Port>> m_ports;  // +0x28  rttr "Ports"; populated/repaired by Activate; elements Released on destruction (sub_1806B43A4)
+    S_ResourceRef      m_parentRef;      // +0x1C  weak parent C_ModuleBase reference
+    uint8_t            _pad24[4];        // +0x24
+    std::vector<_smart_ptr<I_Port>> m_ports;  // +0x28  rttr "Ports"; populated/repaired by Activate
 };
 static_assert(sizeof(C_Node) == 0x40, "C_Node must be 0x40 (derived members start at +0x40)");
+static_assert(offsetof(C_Node, m_parentRef) == 0x1C, "C_Node parent ref offset");
+static_assert(offsetof(C_Node, m_ports) == 0x28, "C_Node ports offset");
+
+void WakeGraph(C_Node* root, E_NodeWakeReason reason);            // 0x18069515C, REL::ID(36528)
+void HibernateGraph(C_Node* root, E_NodeHibernateReason reason);  // 0x180ACEFC0, REL::ID(58513)
 
 }  // namespace wh::conceptmodule

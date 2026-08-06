@@ -88,6 +88,17 @@ type variant::get_type() const
     return result;
 }
 
+bool variant::convert_to(const type& target, variant& out) const
+{
+    // The full untyped conversion: same-type copy, wrapper (un)wrap,
+    // arithmetic/string fast paths, pointer upcasts, enums, and the
+    // registered-converter registry (lookup 0x1804F9FB0) -- the same
+    // machinery that types authored SKALD constants.
+    using Fn = bool(__fastcall*)(const variant*, const type*, variant*);
+    static REL::Relocation<Fn> fn{ REL::ID(29730) };  // 0x1804F9640
+    return fn(this, &target, &out);
+}
+
 void* variant::get_policy_pointer(detail::variant_policy_operation operation) const
 {
     void* result = nullptr;

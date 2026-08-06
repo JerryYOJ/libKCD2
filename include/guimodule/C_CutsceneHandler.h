@@ -16,8 +16,11 @@
 //
 // Concept-graph node bridging cutscene lifecycle -> trigger outputs: OnCutsceneChanged
 // (0x182B12028) fires the S_Trigger output ports per changeType (dispatch at
-// handler+392/+520/+584 via port vf[+0x78]). Port roles coined from that dispatch;
-// display-names UNVERIFIED (registrar not isolated).
+// handler+392/+520/+584 via port vf[+0x78]). Port display-names RESOLVED 2026-08-05
+// (RTTR registration 0x181169818, all 10 property sites walked): EnqueueCutscene/
+// PlayCutscene/FinishCutscene inputs gated by a state machine at +0x2C8 (0=ready,
+// requires 2 to Play, requires 4 to Finish); AutoPlay/AutoFinish bools; outputs
+// OnQueued/BeforePlay/AfterPlay/OnFinished in that order.
 
 namespace wh::entitymodule { class C_CutsceneHolder; }
 
@@ -29,24 +32,24 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_CutsceneHandler;
     void OnCutsceneChanged(I_Cutscene* pCutscene, int changeType) override;   // 0x182B12028
 
-    wh::conceptmodule::C_TypedPortRef<wh::conceptmodule::S_Trigger> m_port48;        // +0x48  in [role UNVERIFIED]
-    wh::conceptmodule::C_TypedPortRef<wh::conceptmodule::S_Trigger> m_port88;        // +0x88  [role UNVERIFIED]
-    wh::conceptmodule::C_TypedPortRef<wh::conceptmodule::S_Trigger> m_portC8;        // +0xC8  [role UNVERIFIED]
-    wh::conceptmodule::C_TypedPortRef<wh::entitymodule::C_CutsceneHolder*> m_cutscenePort;  // +0x108
-    wh::conceptmodule::C_TypedPortRef<bool> m_bool148;                                // +0x148 [role UNVERIFIED]
-    wh::conceptmodule::C_TypedPortRef<bool> m_bool188;                                // +0x188 [role UNVERIFIED]
-    wh::conceptmodule::C_TypedPortRef<wh::conceptmodule::S_Trigger> m_out1C8;        // +0x1C8 out [role UNVERIFIED]
-    wh::conceptmodule::C_TypedPortRef<wh::conceptmodule::S_Trigger> m_outStarted;    // +0x208 out (Started? coined)
-    wh::conceptmodule::C_TypedPortRef<wh::conceptmodule::S_Trigger> m_outStopped;    // +0x248 out (Stopped? coined)
-    wh::conceptmodule::C_TypedPortRef<wh::conceptmodule::S_Trigger> m_outSkipped;    // +0x288 out (Skipped? coined)
-    int32_t  m_int2C8;              // +0x2C8  ctor 0 [role UNVERIFIED]
-    uint8_t  m_byte2CC;             // +0x2CC  ctor 0 [role UNVERIFIED]
+    wh::conceptmodule::C_TypedPortRef<wh::conceptmodule::S_Trigger> m_enqueueCutscenePort;  // +0x48  In -- EnqueueCutscene
+    wh::conceptmodule::C_TypedPortRef<wh::conceptmodule::S_Trigger> m_playCutscenePort;     // +0x88  In -- PlayCutscene (requires state +0x2C8==2)
+    wh::conceptmodule::C_TypedPortRef<wh::conceptmodule::S_Trigger> m_finishCutscenePort;   // +0xC8  In -- FinishCutscene (requires state +0x2C8==4)
+    wh::conceptmodule::C_TypedPortRef<wh::entitymodule::C_CutsceneHolder*> m_cutscenePort;  // +0x108 In -- CutsceneHolder
+    wh::conceptmodule::C_TypedPortRef<bool> m_autoPlayPort;                                  // +0x148 In -- AutoPlay
+    wh::conceptmodule::C_TypedPortRef<bool> m_autoFinishPort;                                // +0x188 In -- AutoFinish
+    wh::conceptmodule::C_TypedPortRef<wh::conceptmodule::S_Trigger> m_onQueuedPort;         // +0x1C8 Out -- OnQueued (changeType 0)
+    wh::conceptmodule::C_TypedPortRef<wh::conceptmodule::S_Trigger> m_beforePlayPort;       // +0x208 Out -- BeforePlay (changeType 1)
+    wh::conceptmodule::C_TypedPortRef<wh::conceptmodule::S_Trigger> m_afterPlayPort;        // +0x248 Out -- AfterPlay (changeType 2)
+    wh::conceptmodule::C_TypedPortRef<wh::conceptmodule::S_Trigger> m_onFinishedPort;       // +0x288 Out -- OnFinished (changeType 3, teardown)
+    int32_t  m_int2C8;              // +0x2C8  ctor 0; cutscene state machine (0=ready, 2=queued/played gate, 4=finish gate)
+    uint8_t  m_byte2CC;             // +0x2CC  ctor 0; cutscene-listener-registered guard flag (set by EnqueueCutscene's subscribe, tested by teardown)
     uint8_t  _pad2CD[3];            // +0x2CD
     I_Cutscene* m_pTrackedCutscene; // +0x2D0  currently-tracked cutscene; OnCutsceneChanged 0x182B1203F returns early unless (this == changed cutscene); +0x2D8 = its _smart_ptr control
     volatile int32_t* m_pRefCount;  // +0x2D8  smart-ptr control [ctor 0]
 };
 static_assert(sizeof(C_CutsceneHandler) == 0x2E0, "C_CutsceneHandler must be 0x2E0 (creator sub_181152200)");
-static_assert(offsetof(C_CutsceneHandler, m_port48) == 0x48, "first port at 0x48");
-static_assert(offsetof(C_CutsceneHandler, m_outSkipped) == 0x288, "last output port at 0x288");
+static_assert(offsetof(C_CutsceneHandler, m_enqueueCutscenePort) == 0x48, "first port at 0x48");
+static_assert(offsetof(C_CutsceneHandler, m_onFinishedPort) == 0x288, "last output port at 0x288");
 
 }  // namespace wh::guimodule

@@ -62,6 +62,7 @@
 #include "Offsets/vtables/IScriptSystem.h"
 #include "Offsets/vtables/IConsole.h"
 #include "Offsets/vtables/ILog.h"
+#include "Offsets/vtables/ILocalizationManager.h"
 #include "Offsets/vtables/ISystem.h"
 #include "Offsets/vtables/IEntity.h"
 #include "Offsets/vtables/IGameFramework.h"
@@ -248,7 +249,6 @@
 // faction stack
 #include "rpgmodule/I_FactionManager.h"
 #include "rpgmodule/S_FactionDefinitionID.h"
-#include "framework/S_BoostOptional.h"
 #include "rpgmodule/S_LocationId.h"
 #include "rpgmodule/S_FactionNeighbor.h"
 #include "rpgmodule/C_FactionAngriness.h"
@@ -462,6 +462,11 @@
 #include "rpgmodule/S_SoulArchetype.h"
 
 // ---- Tranche 7: conceptmodule node graph + tree databases + mapping-table rows ----
+#include "shared/E_DLC.h"
+#include "conceptmodule/E_HibernateMode.h"
+#include "conceptmodule/E_NodeHibernateReason.h"
+#include "conceptmodule/E_NodeWakeReason.h"
+#include "conceptmodule/S_ProjectEdgeRecord.h"
 #include "conceptmodule/C_ActiveTriggerPort.h"
 #include "conceptmodule/C_Assert.h"
 #include "conceptmodule/C_AssetInterfacePort.h"
@@ -497,6 +502,8 @@
 #include "conceptmodule/C_MakeArray.h"
 #include "conceptmodule/C_MemberFunction.h"
 #include "conceptmodule/C_Node.h"
+#include "conceptmodule/C_ModuleBase.h"
+#include "conceptmodule/C_Project.h"
 #include "conceptmodule/C_OutputDataPort.h"
 #include "conceptmodule/C_OutputTriggerPort.h"
 #include "conceptmodule/C_PortRef.h"

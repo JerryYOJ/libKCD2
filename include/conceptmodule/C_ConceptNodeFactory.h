@@ -6,8 +6,11 @@
 
 // -----------------------------------------------
 // wh::conceptmodule::C_ConceptNodeFactory -- XML tag -> node object
-// (KCD2 WHGame.dll Steam 1.5.6, e4cp).  sizeof 0x88 [LIKELY], vtable 0x183A80510
-// (11 slots).  Ctor 0x180BC3708(owner) -- embedded BY VALUE at
+// (KCD2 WHGame.dll Steam 1.5.6, e4cp).  sizeof 0x88 [certified: decompiled ctor
+// 0x180BC3708 and Init() 0x180BC2F64 write only [0,0x88); independently confirmed
+// by C_ConceptGraphDeserializer's own layout, where the embedded m_factory at
+// +0xD8 is followed by the next member at +0x160, a 0x88 span], vtable
+// 0x183A80510 (11 slots).  Ctor 0x180BC3708(owner) -- embedded BY VALUE at
 // C_ConceptGraphDeserializer+0xD8.
 // -----------------------------------------------
 // NOT a registry of its own: a thin adapter over the rttr type registry.
@@ -28,7 +31,9 @@
 //     (last "::" component, 0x180621A54); filter to types derived from C_Resource/
 //     C_SharedResource (0x1804F4B14, fallback to unfiltered); require EXACTLY ONE.
 //  6. construct 0x18069C708: default-ctor constructor_wrapper (class_data +0x80)
-//     -> rttr::variant holding _smart_ptr<node> (as_wh_smart_ptr).
+//     -> rttr::variant holding _smart_ptr<node> (as_wh_smart_ptr). Decompiled and
+//     confirmed: this step allocates the new node separately and never writes to
+//     "this" (the factory) beyond m_definitions at +0x20.
 // Tag->class truth is the rttr REGISTRATION name "wh::<module>::<Tag>" -- NOT
 // always class-minus-C_ (State -> C_StateVariable, Watch -> C_StateWatch,
 // Layer -> entitymodule::C_ProfileEffect).
@@ -45,6 +50,17 @@ public:
 
     bool RegisterDefinition(CryStringT<char> const& name, XmlNodeRef node);  // 0x1809797D0: refused if already present or an rttr type owns the name
 
+    // The native ctor/dtor must operate on raw storage, never through a real
+    // C++ constructor/destructor: a user-declared special member for a type
+    // with non-trivial base/member subobjects (CryStringT, std::map) still
+    // runs the compiler's own base/member construction or destruction before/
+    // after the body executes, regardless of what the body does -- routing
+    // the real native ctor/dtor through one would double-construct or
+    // double-release every such field. Ctor() owns the allocation; only ever
+    // release it through Dtor(), never `delete`.
+    static C_ConceptNodeFactory* Ctor(C_ConceptGraphDeserializer* owner);  // 0x180BC3708, REL::ID(63053)
+    static void Dtor(C_ConceptNodeFactory* factory);                     // 0x180BC1C2C, REL::ID(63000)
+
     std::map<CryStringT<char>, XmlNodeRef> m_definitions;  // +0x20  composite <Definition> types: scoped name -> definition doc root (REVERSE-lexicographic order -- suffix scans)
     C_ConceptGraphDeserializer* m_pOwner;   // +0x30  the embedding deserializer
     CryStringT<char> m_levelName;           // +0x38  set while instantiating a <Level> definition (read by the prune gate)
@@ -59,6 +75,6 @@ public:
     CryStringT<char> m_nameAssetInterfacePort;      // +0x78  ... of C_AssetInterfacePort           (<AssetPort Type=...>)
     CryStringT<char> m_nameStaticInstancePlaceholder;  // +0x80  ... of C_StaticInstancePlaceholder (InstanceType="Static")
 };
-static_assert(sizeof(C_ConceptNodeFactory) == 0x88, "C_ConceptNodeFactory must be 0x88 (last member at +0x80; extent LIKELY)");
+static_assert(sizeof(C_ConceptNodeFactory) == 0x88, "C_ConceptNodeFactory must be 0x88");
 
 }  // namespace wh::conceptmodule
