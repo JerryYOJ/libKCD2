@@ -11,6 +11,7 @@
 #include "conceptmodule/E_PortDirection.h"
 #include "conceptmodule/I_Port.h"
 #include "crysystem/SSystemGlobalEnvironment.h"
+#include "rttr/RttrLuaConverter.h"
 #include "rttr/instance.h"
 #include "rttr/type.h"
 
@@ -58,6 +59,48 @@ bool CreateXmlTaggedNode(
         return false;
     }
     return true;
+}
+
+// Re-tags a handle-backed constant to the type its port actually declares.
+// A registry variant carries the type it was minted with -- for LuaUtils
+// object handles that is the OBJECT type `T` (e.g. wh::rpgmodule::I_Soul) --
+// while ports overwhelmingly declare the POINTER type `T*`. Nothing
+// downstream catches the difference: the game's port resolver (0x1816D456C)
+// asks the variant to convert, then IGNORES the "conversion failed" answer
+// and returns an UNINITIALIZED stack slot, which its caller dereferences
+// blind -- C_UseItemTrigger::OnEffectActivate (0x180AAF594) faulted on
+// whatever residue happened to be in that slot. So the match is made here,
+// before the value can reach native code, and a genuine mismatch is reported
+// as a clean error instead of becoming a crash whose address is luck.
+bool MatchObjectToPortType(const rttr::type& portType,
+                           std::string_view portName,
+                           rttr::variant& object,
+                           std::string& error)
+{
+    // Templated pins report an INVALID definition type -- the resolved type
+    // lives on the live port only -- so there is nothing to match against and
+    // the value rides through unchanged, converted by the consumer on read.
+    if (!portType.is_valid() || object.get_type() == portType)
+        return true;
+
+    // rttr's own upcast decides: an identical raw type passes straight
+    // through, a base of the object's most-derived type gets that base's cast
+    // thunk applied, and anything unrelated comes back null. Minting rejects
+    // a null pointee or a non-pointer port type, so one check covers both.
+    const rttr::instance box(object);
+    rttr::variant typed = RttrLuaConverter::MakeTypedPointerVariant(
+        rttr::type::apply_offset(box.m_rawPtr, box.m_rawType, portType),
+        portType);
+    if (typed.is_valid()) {
+        object = std::move(typed);
+        return true;
+    }
+
+    error = "SKALD input '" + std::string(portName) + "' expects '" +
+            RttrLuaConverter::GetTypeName(portType) +
+            "' but the handle holds '" +
+            RttrLuaConverter::GetTypeName(object.get_type()) + "'";
+    return false;
 }
 
 }  // namespace
@@ -410,6 +453,12 @@ bool SkaldNodeHost::InstallConstants(
             }
             if (!install)
                 return;
+            if (isObject &&
+                !MatchObjectToPortType(valueType, name, object,
+                                       failureMessage)) {
+                failed = true;
+                return;
+            }
 
             _smart_ptr<wh::conceptmodule::C_ConstantPort> constant =
                 wh::conceptmodule::CreateConstantPort(nativeName, literal);
@@ -421,9 +470,8 @@ bool SkaldNodeHost::InstallConstants(
             }
             if (isObject) {
                 // Handle-backed constants: the literal machinery only
-                // carries raw text, so overwrite m_value with the
-                // already-typed registry variant. Consumers convert lazily
-                // on read exactly as they do for string literals.
+                // carries raw text, so overwrite m_value with the registry
+                // variant, re-tagged above to the port's own declared type.
                 constant->m_value = std::move(object);
             }
 

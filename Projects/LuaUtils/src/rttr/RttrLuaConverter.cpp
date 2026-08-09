@@ -393,9 +393,43 @@ rttr::variant ConstructEmptyContainer(rttr::type containerType)
     return rttr::variant::from_policy(data, policy);
 }
 
+// Identity compare shared by the two pointer-shaped policies. Reached via the
+// compare helper 0x1804F86E4, which always dispatches to the LEFT variant's
+// policy with {uint8* equal_out, variant* other, variant* self}. Compares
+// against the other side's address container: its m_rawPtr is the
+// fully-dereferenced object pointer under every observed policy shape --
+// heap-container and inline-value policies store it directly, and the
+// sequential view's element-reference policy (0x180825C0C) double-derefs its
+// slot pointer there while its get_value/get_ptr/get_raw_ptr return storage
+// addresses instead. Both the out byte and the return value carry equality --
+// C_ContainsElement breaks its element loop on the return value.
+bool ComparePointeeIdentity(void* pointee, void* argument)
+{
+    using Operation = rttr::detail::variant_policy_operation;
+    if (!argument)
+        return false;
+    void** args = static_cast<void**>(argument);
+    auto* equalOut = static_cast<std::uint8_t*>(args[0]);
+    const auto* other = static_cast<const rttr::variant*>(args[1]);
+    if (!equalOut || !other || !other->m_policy)
+        return false;
+    rttr::instance box{};
+    if (!other->m_policy(
+            static_cast<std::uint8_t>(Operation::get_address_container),
+            const_cast<rttr::detail::variant_data*>(&other->m_data),
+            &box))
+        return false;
+    const bool equal = box.m_rawPtr == pointee;
+    *equalOut = equal ? 1 : 0;
+    return equal;
+}
+
 // Non-owning: storage[0] IS the pointer itself (not "address of", unlike
 // ScalarPolicy's inline scalar), and destroy is a no-op -- the pointee is
 // natively owned elsewhere (e.g. a C_Soul* resolved via C_SoulList).
+// The stored type is the OBJECT type `T`; for a port declaring the pointer
+// type `T*` use TypedPointerPolicy instead -- see its comment for why the
+// two cannot share one accessor shape.
 bool ObjectPointerPolicy(std::uint8_t operation,
                          rttr::detail::variant_data* data,
                          void* argument)
@@ -425,35 +459,78 @@ bool ObjectPointerPolicy(std::uint8_t operation,
         return true;
     case Operation::get_address_container:
         return FillAddressContainer(data, argument, data->m_storage[0]);
-    case Operation::compare_equal: {
-        // Reached via the compare helper 0x1804F86E4, which always dispatches
-        // to the LEFT variant's policy with {uint8* equal_out, variant*
-        // other, variant* self}. Identity compare via the other side's
-        // address container: its m_rawPtr is the fully-dereferenced object
-        // pointer under every observed policy shape -- heap-container and
-        // inline-value policies store it directly, and the sequential view's
-        // element-reference policy (0x180825C0C) double-derefs its slot
-        // pointer there while its get_value/get_ptr/get_raw_ptr return
-        // storage addresses instead. Both the out byte and the return value
-        // carry equality -- C_ContainsElement breaks its element loop on the
-        // return value.
+    case Operation::compare_equal:
+        return ComparePointeeIdentity(data->m_storage[0], argument);
+    case Operation::is_valid:
+        return data->m_storage[0] && StoredType(data).is_valid();
+    case Operation::is_nullptr:
+        return data->m_storage[0] == nullptr;
+    default:
+        return false;
+    }
+}
+
+// A variant whose stored TYPE is a pointer type `T*` -- what a port declaring
+// `T*` reads back. storage[0] is still the pointee address, but the two
+// pointer accessors must now answer DIFFERENTLY, and both consumers matter:
+//   get_value / get_ptr -> &storage[0], because the game's exact-type read
+//       (0x1823C8F84, policy opcode 5) does `*(void**)get_value(...)` and has
+//       to land on the pointer VALUE;
+//   get_raw_ptr, and instance.m_rawPtr -> storage[0], the fully dereferenced
+//       object, which is what every instance-based reflected call reads.
+// Neither existing policy can serve: ObjectPointerPolicy collapses both onto
+// storage[0] (correct for an object-typed variant) and ScalarPolicy collapses
+// both onto &storage[0] (correct for an inline scalar). get_raw_type reports
+// the pointee class, matching how the game types `T*` (raw_type_data of the
+// `T*` type_data is the `T` type_data -- measured).
+bool TypedPointerPolicy(std::uint8_t operation,
+                        rttr::detail::variant_data* data,
+                        void* argument)
+{
+    using Operation = rttr::detail::variant_policy_operation;
+    switch (static_cast<Operation>(operation)) {
+    case Operation::destroy:
+        return true;
+    case Operation::clone:
+    case Operation::swap:
         if (!argument)
             return false;
-        void** args = static_cast<void**>(argument);
-        auto* equalOut = static_cast<std::uint8_t*>(args[0]);
-        const auto* other = static_cast<const rttr::variant*>(args[1]);
-        if (!equalOut || !other || !other->m_policy)
+        *static_cast<rttr::detail::variant_data*>(argument) = *data;
+        return true;
+    case Operation::get_value:
+    case Operation::get_ptr:
+        if (!argument)
             return false;
-        rttr::instance box{};
-        if (!other->m_policy(
-                static_cast<std::uint8_t>(Operation::get_address_container),
-                const_cast<rttr::detail::variant_data*>(&other->m_data),
-                &box))
+        *static_cast<void**>(argument) = ScalarAddress(data);
+        return true;
+    case Operation::get_raw_ptr:
+        if (!argument)
             return false;
-        const bool equal = box.m_rawPtr == data->m_storage[0];
-        *equalOut = equal ? 1 : 0;
-        return equal;
+        *static_cast<void**>(argument) = data->m_storage[0];
+        return true;
+    case Operation::get_type:
+        if (!argument)
+            return false;
+        *static_cast<rttr::type*>(argument) = StoredType(data);
+        return true;
+    case Operation::get_raw_type:
+        if (!argument)
+            return false;
+        *static_cast<rttr::type*>(argument) = StoredType(data).get_raw_type();
+        return true;
+    case Operation::get_address_container: {
+        if (!argument)
+            return false;
+        const rttr::type pointerType = StoredType(data);
+        auto* container = static_cast<rttr::instance*>(argument);
+        container->m_type = pointerType;
+        container->m_rawType = pointerType.get_raw_type();
+        container->m_ptr = ScalarAddress(data);
+        container->m_rawPtr = data->m_storage[0];
+        return true;
     }
+    case Operation::compare_equal:
+        return ComparePointeeIdentity(data->m_storage[0], argument);
     case Operation::is_valid:
         return data->m_storage[0] && StoredType(data).is_valid();
     case Operation::is_nullptr:
@@ -817,6 +894,17 @@ rttr::variant RttrLuaConverter::MakeObjectPointerVariant(void* pointer,
     data.m_storage[0] = pointer;
     data.m_storage[1] = valueType.m_type_data;
     return rttr::variant::from_policy(data, &ObjectPointerPolicy);
+}
+
+rttr::variant RttrLuaConverter::MakeTypedPointerVariant(void* pointee,
+                                                        rttr::type pointerType)
+{
+    if (!pointee || !pointerType.is_valid() || !pointerType.is_pointer())
+        return rttr::variant{};
+    rttr::detail::variant_data data{};
+    data.m_storage[0] = pointee;
+    data.m_storage[1] = pointerType.m_type_data;
+    return rttr::variant::from_policy(data, &TypedPointerPolicy);
 }
 
 rttr::variant RttrLuaConverter::MakeArrayVariant(

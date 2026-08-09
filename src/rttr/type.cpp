@@ -27,6 +27,15 @@ type type::get_pointer_type() const
     return fn(*this);
 }
 
+void* type::apply_offset(void* pointer, const type& source, const type& target)
+{
+    if (!pointer || !source.is_valid() || !target.is_valid())
+        return nullptr;
+    using Fn = void*(__fastcall*)(void*, const type*, const type*);
+    static REL::Relocation<Fn> fn{ REL::ID(36690) };  // 0x18069A498
+    return fn(pointer, &source, &target);
+}
+
 property type::get_property(string_view name) const
 {
     if (!is_valid())

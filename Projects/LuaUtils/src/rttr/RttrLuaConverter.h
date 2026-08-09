@@ -40,6 +40,13 @@ public:
     // handles produced this way, not by a native rttr call.
     static rttr::variant MakeObjectPointerVariant(void* pointer,
                                                   rttr::type valueType);
+    // Same non-owning pointee, but tagged with the POINTER type `T*` rather
+    // than the object type `T`, for consumers that read a `T*`-declared slot
+    // (SKALD ports). Separate from MakeObjectPointerVariant because rttr
+    // requires get_ptr and get_raw_ptr to differ once the stored type is a
+    // pointer -- see TypedPointerPolicy.
+    static rttr::variant MakeTypedPointerVariant(void* pointee,
+                                                 rttr::type pointerType);
     // One captured array element: a raw, natively-owned object pointer
     // (resolved from an RTTR handle) or literal text from a Lua string.
     struct ArrayElement

@@ -72,6 +72,13 @@ public:
 
     static type get_by_name(string_view name);
     static method get_global_method(string_view name);
+    // Adjusts `pointer` -- an instance of `source` -- to `target`, applying
+    // the base-cast thunk for the matching base, so multiple inheritance is
+    // handled rather than assumed away. Null when `target` is not a base of
+    // the object's most-derived type. Compares RAW types, so `T` and `T*`
+    // are interchangeable as either argument.
+    static void* apply_offset(void* pointer, const type& source,
+                              const type& target);
 
     detail::type_data* m_type_data;  // +0x00
 
