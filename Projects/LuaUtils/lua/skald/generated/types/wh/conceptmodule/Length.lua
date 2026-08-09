@@ -58,7 +58,7 @@ end
 local __outputValues = { Length = "Length" }
 Class.Outputs = readonly(__outputValues, "wh.conceptmodule.Length.Outputs")
 local __outputSpecs = {
-    ["Length"] = { kind = "data", name = "Length", wrap = wh.int.__from_handle },
+    ["Length"] = { kind = "data", name = "Length", wrap = nil },
 }
 
 local __createInputs = {
@@ -161,7 +161,7 @@ function Class.Create(args)
     return object
 end
 
----@overload fun(self: wh.conceptmodule.Length, output: "Length"): Skald.OutputValue<wh.int>?, string?
+---@overload fun(self: wh.conceptmodule.Length, output: "Length"): Skald.OutputValue<any>?, string?
 if rawget(Class, "BindOutput") ~= nil then
     error("[LuaUtils] public symbol collision at wh.conceptmodule.Length.BindOutput")
 end

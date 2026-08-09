@@ -78,11 +78,11 @@ end
 local __outputValues = { IsDead = "IsDead", IsUnconscious = "IsUnconscious", IsMounted = "IsMounted", IsBleeding = "IsBleeding", IsDrunk = "IsDrunk", Inventory = "Inventory", CombatSoul = "CombatSoul", CompanionManager = "CompanionManager", EquipmentManager = "EquipmentManager", FactionNode = "FactionNode", SkillTeacher = "SkillTeacher" }
 Class.Outputs = readonly(__outputValues, "wh.conceptmodule.ObjectProperties.Outputs")
 local __outputSpecs = {
-    ["IsDead"] = { kind = "data", name = "IsDead", wrap = wh.bool.__from_handle },
-    ["IsUnconscious"] = { kind = "data", name = "IsUnconscious", wrap = wh.bool.__from_handle },
-    ["IsMounted"] = { kind = "data", name = "IsMounted", wrap = wh.bool.__from_handle },
-    ["IsBleeding"] = { kind = "data", name = "IsBleeding", wrap = wh.bool.__from_handle },
-    ["IsDrunk"] = { kind = "data", name = "IsDrunk", wrap = wh.bool.__from_handle },
+    ["IsDead"] = { kind = "data", name = "IsDead", wrap = nil },
+    ["IsUnconscious"] = { kind = "data", name = "IsUnconscious", wrap = nil },
+    ["IsMounted"] = { kind = "data", name = "IsMounted", wrap = nil },
+    ["IsBleeding"] = { kind = "data", name = "IsBleeding", wrap = nil },
+    ["IsDrunk"] = { kind = "data", name = "IsDrunk", wrap = nil },
     ["Inventory"] = { kind = "data", name = "Inventory", wrap = wh.entitymodule.Inventory.__from_handle },
     ["CombatSoul"] = { kind = "data", name = "CombatSoul", wrap = nil },
     ["CompanionManager"] = { kind = "data", name = "CompanionManager", wrap = wh.rpgmodule.CompanionManager.__from_handle },
@@ -190,11 +190,11 @@ function Class.Create(args)
     return object
 end
 
----@overload fun(self: wh.conceptmodule.ObjectProperties, output: "IsDead"): Skald.OutputValue<wh.bool>?, string?
----@overload fun(self: wh.conceptmodule.ObjectProperties, output: "IsUnconscious"): Skald.OutputValue<wh.bool>?, string?
----@overload fun(self: wh.conceptmodule.ObjectProperties, output: "IsMounted"): Skald.OutputValue<wh.bool>?, string?
----@overload fun(self: wh.conceptmodule.ObjectProperties, output: "IsBleeding"): Skald.OutputValue<wh.bool>?, string?
----@overload fun(self: wh.conceptmodule.ObjectProperties, output: "IsDrunk"): Skald.OutputValue<wh.bool>?, string?
+---@overload fun(self: wh.conceptmodule.ObjectProperties, output: "IsDead"): Skald.OutputValue<any>?, string?
+---@overload fun(self: wh.conceptmodule.ObjectProperties, output: "IsUnconscious"): Skald.OutputValue<any>?, string?
+---@overload fun(self: wh.conceptmodule.ObjectProperties, output: "IsMounted"): Skald.OutputValue<any>?, string?
+---@overload fun(self: wh.conceptmodule.ObjectProperties, output: "IsBleeding"): Skald.OutputValue<any>?, string?
+---@overload fun(self: wh.conceptmodule.ObjectProperties, output: "IsDrunk"): Skald.OutputValue<any>?, string?
 ---@overload fun(self: wh.conceptmodule.ObjectProperties, output: "Inventory"): Skald.OutputValue<wh.entitymodule.Inventory>?, string?
 ---@overload fun(self: wh.conceptmodule.ObjectProperties, output: "CombatSoul"): Skald.OutputValue<any>?, string?
 ---@overload fun(self: wh.conceptmodule.ObjectProperties, output: "CompanionManager"): Skald.OutputValue<wh.rpgmodule.CompanionManager>?, string?

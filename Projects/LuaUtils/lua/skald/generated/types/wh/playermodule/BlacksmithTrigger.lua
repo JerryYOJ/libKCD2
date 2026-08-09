@@ -83,7 +83,7 @@ local __outputSpecs = {
     ["Recipe"] = { kind = "data", name = "Recipe", wrap = nil },
     ["ProductItemClass"] = { kind = "data", name = "ProductItemClass", wrap = nil },
     ["ProductQuality"] = { kind = "data", name = "ProductQuality", wrap = nil },
-    ["ProductCondition"] = { kind = "data", name = "ProductCondition", wrap = wh.float.__from_handle },
+    ["ProductCondition"] = { kind = "data", name = "ProductCondition", wrap = nil },
     ["ProductOnEquipBuff"] = { kind = "data", name = "ProductOnEquipBuff", wrap = nil },
 }
 
@@ -170,7 +170,7 @@ end
 ---@overload fun(self: wh.playermodule.BlacksmithTrigger, output: "Recipe"): Skald.OutputValue<any>?, string?
 ---@overload fun(self: wh.playermodule.BlacksmithTrigger, output: "ProductItemClass"): Skald.OutputValue<any>?, string?
 ---@overload fun(self: wh.playermodule.BlacksmithTrigger, output: "ProductQuality"): Skald.OutputValue<any>?, string?
----@overload fun(self: wh.playermodule.BlacksmithTrigger, output: "ProductCondition"): Skald.OutputValue<wh.float>?, string?
+---@overload fun(self: wh.playermodule.BlacksmithTrigger, output: "ProductCondition"): Skald.OutputValue<any>?, string?
 ---@overload fun(self: wh.playermodule.BlacksmithTrigger, output: "ProductOnEquipBuff"): Skald.OutputValue<any>?, string?
 if rawget(Class, "BindOutput") ~= nil then
     error("[LuaUtils] public symbol collision at wh.playermodule.BlacksmithTrigger.BindOutput")

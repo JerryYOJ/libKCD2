@@ -68,7 +68,7 @@ Class.Outputs = readonly(__outputValues, "wh.playermodule.MinigameTutorialNode.O
 local __outputSpecs = {
     ["OnTutorialEnd"] = { kind = "trigger", name = "OnTutorialEnd", wrap = nil },
     ["OnPhaseStart"] = { kind = "trigger", name = "OnPhaseStart", wrap = nil },
-    ["Phase"] = { kind = "data", name = "Phase", wrap = wh.int.__from_handle },
+    ["Phase"] = { kind = "data", name = "Phase", wrap = nil },
     ["Tracker"] = { kind = "data", name = "Tracker", wrap = wh.questmodule.nodes.Tracker.__from_handle },
 }
 
@@ -152,7 +152,7 @@ end
 
 ---@overload fun(self: wh.playermodule.MinigameTutorialNode, output: "OnTutorialEnd", callback: fun()): Skald.OutputConnection?, string?
 ---@overload fun(self: wh.playermodule.MinigameTutorialNode, output: "OnPhaseStart", callback: fun()): Skald.OutputConnection?, string?
----@overload fun(self: wh.playermodule.MinigameTutorialNode, output: "Phase"): Skald.OutputValue<wh.int>?, string?
+---@overload fun(self: wh.playermodule.MinigameTutorialNode, output: "Phase"): Skald.OutputValue<any>?, string?
 ---@overload fun(self: wh.playermodule.MinigameTutorialNode, output: "Tracker"): Skald.OutputValue<wh.questmodule.nodes.Tracker>?, string?
 if rawget(Class, "BindOutput") ~= nil then
     error("[LuaUtils] public symbol collision at wh.playermodule.MinigameTutorialNode.BindOutput")

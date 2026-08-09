@@ -59,7 +59,7 @@ local __outputValues = { OnStart = "OnStart", IsDebug = "IsDebug" }
 Class.Outputs = readonly(__outputValues, "wh.conceptmodule.GameStart.Outputs")
 local __outputSpecs = {
     ["OnStart"] = { kind = "trigger", name = "OnStart", wrap = nil },
-    ["IsDebug"] = { kind = "data", name = "IsDebug", wrap = wh.bool.__from_handle },
+    ["IsDebug"] = { kind = "data", name = "IsDebug", wrap = nil },
 }
 
 local __createInputs = {
@@ -137,7 +137,7 @@ function Class.Create(args)
 end
 
 ---@overload fun(self: wh.conceptmodule.GameStart, output: "OnStart", callback: fun()): Skald.OutputConnection?, string?
----@overload fun(self: wh.conceptmodule.GameStart, output: "IsDebug"): Skald.OutputValue<wh.bool>?, string?
+---@overload fun(self: wh.conceptmodule.GameStart, output: "IsDebug"): Skald.OutputValue<any>?, string?
 if rawget(Class, "BindOutput") ~= nil then
     error("[LuaUtils] public symbol collision at wh.conceptmodule.GameStart.BindOutput")
 end

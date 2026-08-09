@@ -60,7 +60,7 @@ end
 local __outputValues = { IsPressed = "IsPressed", OnExec = "OnExec" }
 Class.Outputs = readonly(__outputValues, "wh.conceptmodule.InfiniteHoldInteractionTrigger.Outputs")
 local __outputSpecs = {
-    ["IsPressed"] = { kind = "data", name = "IsPressed", wrap = wh.bool.__from_handle },
+    ["IsPressed"] = { kind = "data", name = "IsPressed", wrap = nil },
     ["OnExec"] = { kind = "trigger", name = "OnExec", wrap = nil },
 }
 
@@ -140,7 +140,7 @@ function Class.Create(args)
     return object
 end
 
----@overload fun(self: wh.conceptmodule.InfiniteHoldInteractionTrigger, output: "IsPressed"): Skald.OutputValue<wh.bool>?, string?
+---@overload fun(self: wh.conceptmodule.InfiniteHoldInteractionTrigger, output: "IsPressed"): Skald.OutputValue<any>?, string?
 ---@overload fun(self: wh.conceptmodule.InfiniteHoldInteractionTrigger, output: "OnExec", callback: fun()): Skald.OutputConnection?, string?
 if rawget(Class, "BindOutput") ~= nil then
     error("[LuaUtils] public symbol collision at wh.conceptmodule.InfiniteHoldInteractionTrigger.BindOutput")

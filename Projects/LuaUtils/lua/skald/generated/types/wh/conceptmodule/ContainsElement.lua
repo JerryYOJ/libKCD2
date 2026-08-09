@@ -59,7 +59,7 @@ end
 local __outputValues = { Result = "Result" }
 Class.Outputs = readonly(__outputValues, "wh.conceptmodule.ContainsElement.Outputs")
 local __outputSpecs = {
-    ["Result"] = { kind = "data", name = "Result", wrap = wh.bool.__from_handle },
+    ["Result"] = { kind = "data", name = "Result", wrap = nil },
 }
 
 local __createInputs = {
@@ -163,7 +163,7 @@ function Class.Create(args)
     return object
 end
 
----@overload fun(self: wh.conceptmodule.ContainsElement, output: "Result"): Skald.OutputValue<wh.bool>?, string?
+---@overload fun(self: wh.conceptmodule.ContainsElement, output: "Result"): Skald.OutputValue<any>?, string?
 if rawget(Class, "BindOutput") ~= nil then
     error("[LuaUtils] public symbol collision at wh.conceptmodule.ContainsElement.BindOutput")
 end

@@ -76,9 +76,9 @@ local __outputValues = { Who = "Who", Label = "Label", PerceivedWuid = "Perceive
 Class.Outputs = readonly(__outputValues, "wh.xgenaimodule.InformationDiffTrigger.Outputs")
 local __outputSpecs = {
     ["Who"] = { kind = "data", name = "Who", wrap = wh.rpgmodule.I_Soul.__from_handle },
-    ["Label"] = { kind = "data", name = "Label", wrap = wh["CryStringT<char>"].__from_handle },
+    ["Label"] = { kind = "data", name = "Label", wrap = nil },
     ["PerceivedWuid"] = { kind = "data", name = "PerceivedWuid", wrap = wh.xgenaimodule.LinkableObject.__from_handle },
-    ["IsCrime"] = { kind = "data", name = "IsCrime", wrap = wh.bool.__from_handle },
+    ["IsCrime"] = { kind = "data", name = "IsCrime", wrap = nil },
     ["Status"] = { kind = "data", name = "Status", wrap = wh.xgenaimodule.E_InformationMessageStatus.__from_handle },
     ["OnNotification"] = { kind = "trigger", name = "OnNotification", wrap = nil },
     ["CrimeLevel"] = { kind = "data", name = "CrimeLevel", wrap = nil },
@@ -166,9 +166,9 @@ function Class.Create(args)
 end
 
 ---@overload fun(self: wh.xgenaimodule.InformationDiffTrigger, output: "Who"): Skald.OutputValue<wh.rpgmodule.I_Soul>?, string?
----@overload fun(self: wh.xgenaimodule.InformationDiffTrigger, output: "Label"): Skald.OutputValue<wh_native.wh_CryStringT_char_650ec48b>?, string?
+---@overload fun(self: wh.xgenaimodule.InformationDiffTrigger, output: "Label"): Skald.OutputValue<any>?, string?
 ---@overload fun(self: wh.xgenaimodule.InformationDiffTrigger, output: "PerceivedWuid"): Skald.OutputValue<wh.xgenaimodule.LinkableObject>?, string?
----@overload fun(self: wh.xgenaimodule.InformationDiffTrigger, output: "IsCrime"): Skald.OutputValue<wh.bool>?, string?
+---@overload fun(self: wh.xgenaimodule.InformationDiffTrigger, output: "IsCrime"): Skald.OutputValue<any>?, string?
 ---@overload fun(self: wh.xgenaimodule.InformationDiffTrigger, output: "Status"): Skald.OutputValue<wh.xgenaimodule.E_InformationMessageStatus>?, string?
 ---@overload fun(self: wh.xgenaimodule.InformationDiffTrigger, output: "OnNotification", callback: fun()): Skald.OutputConnection?, string?
 ---@overload fun(self: wh.xgenaimodule.InformationDiffTrigger, output: "CrimeLevel"): Skald.OutputValue<any>?, string?

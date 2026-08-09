@@ -105,28 +105,28 @@ Class.Outputs = readonly(__outputValues, "wh.conceptmodule.ModuleVersionState.Ou
 local __outputSpecs = {
     ["Version"] = { kind = "data", name = "Version", wrap = wh.framework.E_GameReleaseVersion.__from_handle },
     ["OnExec"] = { kind = "trigger", name = "OnExec", wrap = nil },
-    ["Invalid"] = { kind = "data", name = "Invalid", wrap = wh.bool.__from_handle },
-    ["ver_01_00"] = { kind = "data", name = "ver_01_00", wrap = wh.bool.__from_handle },
-    ["ver_01_01"] = { kind = "data", name = "ver_01_01", wrap = wh.bool.__from_handle },
-    ["ver_01_01_01"] = { kind = "data", name = "ver_01_01_01", wrap = wh.bool.__from_handle },
-    ["ver_01_01_02"] = { kind = "data", name = "ver_01_01_02", wrap = wh.bool.__from_handle },
-    ["ver_01_02"] = { kind = "data", name = "ver_01_02", wrap = wh.bool.__from_handle },
-    ["ver_01_02_01"] = { kind = "data", name = "ver_01_02_01", wrap = wh.bool.__from_handle },
-    ["ver_01_02_02"] = { kind = "data", name = "ver_01_02_02", wrap = wh.bool.__from_handle },
-    ["ver_01_02_03"] = { kind = "data", name = "ver_01_02_03", wrap = wh.bool.__from_handle },
-    ["ver_01_02_04"] = { kind = "data", name = "ver_01_02_04", wrap = wh.bool.__from_handle },
-    ["ver_01_03"] = { kind = "data", name = "ver_01_03", wrap = wh.bool.__from_handle },
-    ["ver_01_03_01"] = { kind = "data", name = "ver_01_03_01", wrap = wh.bool.__from_handle },
-    ["ver_01_03_02"] = { kind = "data", name = "ver_01_03_02", wrap = wh.bool.__from_handle },
-    ["ver_01_04"] = { kind = "data", name = "ver_01_04", wrap = wh.bool.__from_handle },
-    ["ver_01_04_01"] = { kind = "data", name = "ver_01_04_01", wrap = wh.bool.__from_handle },
-    ["ver_01_04_02"] = { kind = "data", name = "ver_01_04_02", wrap = wh.bool.__from_handle },
-    ["ver_01_05"] = { kind = "data", name = "ver_01_05", wrap = wh.bool.__from_handle },
-    ["ver_01_05_01"] = { kind = "data", name = "ver_01_05_01", wrap = wh.bool.__from_handle },
-    ["ver_01_05_02"] = { kind = "data", name = "ver_01_05_02", wrap = wh.bool.__from_handle },
-    ["ver_01_05_03"] = { kind = "data", name = "ver_01_05_03", wrap = wh.bool.__from_handle },
-    ["ver_01_05_05"] = { kind = "data", name = "ver_01_05_05", wrap = wh.bool.__from_handle },
-    ["ver_01_05_06"] = { kind = "data", name = "ver_01_05_06", wrap = wh.bool.__from_handle },
+    ["Invalid"] = { kind = "data", name = "Invalid", wrap = nil },
+    ["ver_01_00"] = { kind = "data", name = "ver_01_00", wrap = nil },
+    ["ver_01_01"] = { kind = "data", name = "ver_01_01", wrap = nil },
+    ["ver_01_01_01"] = { kind = "data", name = "ver_01_01_01", wrap = nil },
+    ["ver_01_01_02"] = { kind = "data", name = "ver_01_01_02", wrap = nil },
+    ["ver_01_02"] = { kind = "data", name = "ver_01_02", wrap = nil },
+    ["ver_01_02_01"] = { kind = "data", name = "ver_01_02_01", wrap = nil },
+    ["ver_01_02_02"] = { kind = "data", name = "ver_01_02_02", wrap = nil },
+    ["ver_01_02_03"] = { kind = "data", name = "ver_01_02_03", wrap = nil },
+    ["ver_01_02_04"] = { kind = "data", name = "ver_01_02_04", wrap = nil },
+    ["ver_01_03"] = { kind = "data", name = "ver_01_03", wrap = nil },
+    ["ver_01_03_01"] = { kind = "data", name = "ver_01_03_01", wrap = nil },
+    ["ver_01_03_02"] = { kind = "data", name = "ver_01_03_02", wrap = nil },
+    ["ver_01_04"] = { kind = "data", name = "ver_01_04", wrap = nil },
+    ["ver_01_04_01"] = { kind = "data", name = "ver_01_04_01", wrap = nil },
+    ["ver_01_04_02"] = { kind = "data", name = "ver_01_04_02", wrap = nil },
+    ["ver_01_05"] = { kind = "data", name = "ver_01_05", wrap = nil },
+    ["ver_01_05_01"] = { kind = "data", name = "ver_01_05_01", wrap = nil },
+    ["ver_01_05_02"] = { kind = "data", name = "ver_01_05_02", wrap = nil },
+    ["ver_01_05_03"] = { kind = "data", name = "ver_01_05_03", wrap = nil },
+    ["ver_01_05_05"] = { kind = "data", name = "ver_01_05_05", wrap = nil },
+    ["ver_01_05_06"] = { kind = "data", name = "ver_01_05_06", wrap = nil },
 }
 
 local __createInputs = {
@@ -221,28 +221,28 @@ end
 
 ---@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "Version"): Skald.OutputValue<wh.framework.E_GameReleaseVersion>?, string?
 ---@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "OnExec", callback: fun()): Skald.OutputConnection?, string?
----@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "Invalid"): Skald.OutputValue<wh.bool>?, string?
----@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "ver_01_00"): Skald.OutputValue<wh.bool>?, string?
----@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "ver_01_01"): Skald.OutputValue<wh.bool>?, string?
----@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "ver_01_01_01"): Skald.OutputValue<wh.bool>?, string?
----@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "ver_01_01_02"): Skald.OutputValue<wh.bool>?, string?
----@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "ver_01_02"): Skald.OutputValue<wh.bool>?, string?
----@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "ver_01_02_01"): Skald.OutputValue<wh.bool>?, string?
----@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "ver_01_02_02"): Skald.OutputValue<wh.bool>?, string?
----@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "ver_01_02_03"): Skald.OutputValue<wh.bool>?, string?
----@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "ver_01_02_04"): Skald.OutputValue<wh.bool>?, string?
----@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "ver_01_03"): Skald.OutputValue<wh.bool>?, string?
----@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "ver_01_03_01"): Skald.OutputValue<wh.bool>?, string?
----@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "ver_01_03_02"): Skald.OutputValue<wh.bool>?, string?
----@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "ver_01_04"): Skald.OutputValue<wh.bool>?, string?
----@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "ver_01_04_01"): Skald.OutputValue<wh.bool>?, string?
----@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "ver_01_04_02"): Skald.OutputValue<wh.bool>?, string?
----@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "ver_01_05"): Skald.OutputValue<wh.bool>?, string?
----@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "ver_01_05_01"): Skald.OutputValue<wh.bool>?, string?
----@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "ver_01_05_02"): Skald.OutputValue<wh.bool>?, string?
----@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "ver_01_05_03"): Skald.OutputValue<wh.bool>?, string?
----@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "ver_01_05_05"): Skald.OutputValue<wh.bool>?, string?
----@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "ver_01_05_06"): Skald.OutputValue<wh.bool>?, string?
+---@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "Invalid"): Skald.OutputValue<any>?, string?
+---@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "ver_01_00"): Skald.OutputValue<any>?, string?
+---@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "ver_01_01"): Skald.OutputValue<any>?, string?
+---@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "ver_01_01_01"): Skald.OutputValue<any>?, string?
+---@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "ver_01_01_02"): Skald.OutputValue<any>?, string?
+---@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "ver_01_02"): Skald.OutputValue<any>?, string?
+---@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "ver_01_02_01"): Skald.OutputValue<any>?, string?
+---@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "ver_01_02_02"): Skald.OutputValue<any>?, string?
+---@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "ver_01_02_03"): Skald.OutputValue<any>?, string?
+---@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "ver_01_02_04"): Skald.OutputValue<any>?, string?
+---@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "ver_01_03"): Skald.OutputValue<any>?, string?
+---@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "ver_01_03_01"): Skald.OutputValue<any>?, string?
+---@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "ver_01_03_02"): Skald.OutputValue<any>?, string?
+---@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "ver_01_04"): Skald.OutputValue<any>?, string?
+---@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "ver_01_04_01"): Skald.OutputValue<any>?, string?
+---@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "ver_01_04_02"): Skald.OutputValue<any>?, string?
+---@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "ver_01_05"): Skald.OutputValue<any>?, string?
+---@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "ver_01_05_01"): Skald.OutputValue<any>?, string?
+---@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "ver_01_05_02"): Skald.OutputValue<any>?, string?
+---@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "ver_01_05_03"): Skald.OutputValue<any>?, string?
+---@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "ver_01_05_05"): Skald.OutputValue<any>?, string?
+---@overload fun(self: wh.conceptmodule.ModuleVersionState, output: "ver_01_05_06"): Skald.OutputValue<any>?, string?
 if rawget(Class, "BindOutput") ~= nil then
     error("[LuaUtils] public symbol collision at wh.conceptmodule.ModuleVersionState.BindOutput")
 end
