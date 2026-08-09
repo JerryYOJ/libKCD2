@@ -336,7 +336,7 @@ local event, playErr = AudioManager.PlayEvent(
 
 ## RTTR bridge
 
-LuaUtils exposes KCD2's reflected (rttr) surface — the same registry used by SKALD — through generated source-facing wrappers under the public `wh` namespace. Everything below targets KCD2 Steam 1.5.6; the coverage ground truth is `KCD2/analysis/rttr/rttr_lua_manifest.json` and its report.
+LuaUtils exposes KCD2's reflected (rttr) surface — the same registry used by SKALD — through generated source-facing wrappers under the public `wh` namespace. Everything below targets KCD2 Steam 1.5.6, certified against the full RTTR manifest.
 
 ### Native bootstrap API (exactly seven functions, dot-call)
 
@@ -360,9 +360,9 @@ Arguments convert against the **exact** reflected parameter type: booleans, 8/16
 
 ### Public generated wrappers
 
-The Python generators and their fixture tests are dev-time tooling, not shipped project sources: they live under `KCD2/analysis/luautils/tools/` and `KCD2/analysis/luautils/tests/`, outside this project directory. Only their output (`lua/`) and the native plugin (`src/`) ship with LuaUtils.
+The Python generators and their fixture tests are dev-time tooling, not shipped project sources, and live outside this project directory. Only their output (`lua/`) and the native plugin (`src/`) ship with LuaUtils.
 
-`KCD2/analysis/luautils/tools/generate_rttr_lua.py` renders the certified manifest into `lua/rttr/`; `--check` verifies byte-for-byte freshness. The current tree contains 1,940 source-like class modules, 226 enum modules, and 24 global namespaces. Base classes and namespace-owning parent classes load before derived and nested types. Native transport records (`std`, `boost`, `rttr`, raw pointers, `_smart_ptr`, and reference wrappers) do not receive a public class tree.
+`generate_rttr_lua.py` renders the certified manifest into `lua/rttr/`; `--check` verifies byte-for-byte freshness. The current tree contains 1,940 source-like class modules, 226 enum modules, and 24 global namespaces. Base classes and namespace-owning parent classes load before derived and nested types. Native transport records (`std`, `boost`, `rttr`, raw pointers, `_smart_ptr`, and reference wrappers) do not receive a public class tree.
 
 ```lua
 -- typed enum values
@@ -383,11 +383,11 @@ Class modules carry LuaLS annotations (`---@class wh.entitymodule.Inventory : wh
 
 Members whose signatures cannot cross the bridge stay visible and return their specific blocker. Same-name overloads generate only the proven name-first winner, with shadowed signatures documented. Compatible duplicate property registrations are merged deterministically. Incompatible same-name registrations are never guessed: 57 groups are emitted as blocked accessors and documented with exact types and anchors in `generated/ambiguous_properties.txt`.
 
-Regenerate after a manifest rebuild with `python KCD2/analysis/luautils/tools/generate_rttr_lua.py`; freshness check: `python KCD2/analysis/luautils/tools/generate_rttr_lua.py --check`. Smoke tests: `KCD2/analysis/luautils/tests/rttr_native_smoke.lua`, `KCD2/analysis/luautils/tests/rttr_wrappers_smoke.lua`, and the offline fixture `KCD2/analysis/luautils/tests/test_generate_rttr_lua.py`.
+Regenerate after a manifest rebuild with `python generate_rttr_lua.py`; freshness check: `python generate_rttr_lua.py --check`. Smoke tests: `rttr_native_smoke.lua`, `rttr_wrappers_smoke.lua`, and the offline fixture `test_generate_rttr_lua.py` (dev tooling, outside this project directory).
 
 ## SKALD bridge
 
-SKALD is KCD2's native node-graph ("concept") system — the same runtime that drives quest logic, environment triggers, and supporting AI nodes. This bridge builds, wires, and drives SKALD node graphs directly from Lua: create a node, bind its outputs, pulse its inputs, tear it down — without an authored graph asset. Coverage ground truth is `KCD2/analysis/skald/skald_lua_manifest.json`; the full RE writeup is `KCD2/analysis/skald/skald_live_verification_2026-08-07.md`.
+SKALD is KCD2's native node-graph ("concept") system — the same runtime that drives quest logic, environment triggers, and supporting AI nodes. This bridge builds, wires, and drives SKALD node graphs directly from Lua: create a node, bind its outputs, pulse its inputs, tear it down — without an authored graph asset.
 
 ### Native bootstrap API (eleven functions, dot-call)
 
@@ -442,7 +442,7 @@ pause:Deactivate()    -- and running again
 pause:Destroy()
 ```
 
-`Class.Create(args)` validates argument names (and required ones) against the certified port list before ever calling the native layer, unwraps `wh.*` object arguments to their raw handle, and marshals plain Lua array tables (see Arrays below). `Class.Outputs` lists bindable output names; `node:BindOutput(name[, callback])` returns a `Skald.OutputConnection` for trigger outputs (needs a callback) or a `Skald.OutputValue<T>` for data outputs. A connection exposes `:Disconnect()`; a value holder exposes `.value` (refreshes automatically — including asynchronously, whenever the native graph produces a new value for that output), `:Take()` (read and release ownership), and `:Release()`. `Class.Triggers` lists action-trigger names for `node:TriggerInput(name)`. `node:Destroy()` tears down the native node and invalidates every output/connection/binding it owns; `node:Release()` (inherited from the RTTR wrapper) redirects to `Destroy()` for live SKALD nodes.
+`Class.Create(args)` validates argument names (and required ones) against the certified port list before ever calling the native layer, unwraps `wh.*` object arguments to their raw handle, and marshals plain Lua array tables (see Arrays below). `Class.Outputs` lists bindable output names; `node:BindOutput(name[, callback])` returns a `Skald.OutputConnection` for trigger outputs (needs a callback) or a `Skald.OutputValue<T>` for data outputs. A connection exposes `:Disconnect()`; a value holder exposes `.value` (refreshes automatically — including asynchronously, whenever the native graph produces a new value for that output), `:Take()` (read and release ownership), and `:Release()`. `.value` is typed by the port: primitive outputs (`bool`, the int/float families, strings) deliver **raw Lua values**, object/enum outputs deliver `wh.*` wrappers owning their registry handle. `Class.Triggers` lists action-trigger names for `node:TriggerInput(name)`. `node:Destroy()` tears down the native node and invalidates every output/connection/binding it owns; `node:Release()` (inherited from the RTTR wrapper) redirects to `Destroy()` for live SKALD nodes.
 
 **Effect activation.** Every supported node deriving the native `C_Effect` base — 122 of the 154 — gets `node:Activate()` / `node:Deactivate()`, and they are the *only* way to switch the effect on and off. Passing `IsActive = true` at creation sets the pin value but applies nothing, and there is deliberately **no `Commit`**: the native `Set<X>` companion pulses are a live-proven no-op outside authored graphs (the effect latch only reacts to executes sourced from the pin itself — an attribution that requires real graph wiring), so the wrappers don't offer a lever that cannot work. `Activate`/`Deactivate` drive the same `OnEffectActivate`/`OnEffectDeactivate` virtuals a genuine graph edge would.
 
@@ -470,7 +470,7 @@ local found = has:BindOutput("Result").value                         -- true
 
 **`wh.conceptmodule.MakeArray` does not exist and should not be used.** The native factory refuses to construct it at all (a live-verified, unidentified-cause failure, not a Lua-side restriction); plain Lua tables on the inputs above supersede it entirely and are not limited to the 26-element cap that node's old variadic-pin design had.
 
-Regenerate after a manifest rebuild with `python KCD2/analysis/luautils/tools/generate_skald_manifest.py` (writes `skald_lua_manifest.json`; `--check` verifies freshness), then `python KCD2/analysis/luautils/tools/generate_skald_lua.py` (writes `lua/skald/`; `--check` verifies freshness). The current manifest covers 154 of 195 swept native node classes; unsupported nodes stay listed with their specific blocker rather than being dropped silently — see `generated/coverage.txt`. Fixture test: `KCD2/analysis/luautils/tests/test_generate_skald_manifest.py` and `KCD2/analysis/luautils/tests/test_generate_skald_lua.py`.
+Regenerate after a manifest rebuild with `python generate_skald_manifest.py` (writes `skald_lua_manifest.json`; `--check` verifies freshness), then `python generate_skald_lua.py` (writes `lua/skald/`; `--check` verifies freshness). The current manifest covers 154 of 195 swept native node classes; unsupported nodes stay listed with their specific blocker rather than being dropped silently — see `generated/coverage.txt`. Fixture test: `test_generate_skald_manifest.py` and `test_generate_skald_lua.py` (dev tooling, outside this project directory).
 
 ## Game-native Lua packaging
 
@@ -493,10 +493,12 @@ The bootstrap uses explicit `Script.ReloadScript` calls generated from the two `
 Build or verify the PAK explicitly; CMake does not invoke Python or package assets:
 
 ```text
-python KCD2/analysis/luautils/tools/build_scripts_pak.py --output KCD2/RE/.buildenv/build-release/LuaUtils/luautils.pak
-python KCD2/analysis/luautils/tools/build_scripts_pak.py --output KCD2/RE/.buildenv/build-release/LuaUtils/luautils.pak --check
-python KCD2/analysis/luautils/tests/test_build_scripts_pak.py
+python build_scripts_pak.py --output KCD2/RE/.buildenv/build-release/LuaUtils/luautils.pak
+python build_scripts_pak.py --output KCD2/RE/.buildenv/build-release/LuaUtils/luautils.pak --check
+python test_build_scripts_pak.py
 ```
+
+(`build_scripts_pak.py` and its fixture test are dev tooling, outside this project directory.)
 
 Deployment layout:
 
