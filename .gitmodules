@@ -1,3 +1,6 @@
 [submodule "Projects/KCSE"]
 	path = Projects/KCSE
 	url = git@github.com:JerryYOJ/KCSE-for-kcd2.git
+[submodule "Projects/LuaUtils"]
+	path = Projects/LuaUtils
+	url = git@github.com:JerryYOJ/KCD2-LuaUtils.git
