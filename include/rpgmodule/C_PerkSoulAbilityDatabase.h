@@ -25,7 +25,6 @@ class C_PerkSoulAbilityDatabase
 {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_PerkSoulAbilityDatabase;
-    // Global static instance @RVA 0x532E440. Impl in src/databasemodule/databasemodule.cpp.
     static C_PerkSoulAbilityDatabase* GetInstance();
 };
 static_assert(sizeof(C_PerkSoulAbilityDatabase) == 0xB0, "C_PerkSoulAbilityDatabase must be 0xB0 (ctor write extent)");

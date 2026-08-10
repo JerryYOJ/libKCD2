@@ -10,8 +10,7 @@
 // Own vtable 0x183C3B0D8; GLOBAL STATIC object @0x185326130 (RVA 0x5326130); ctor
 // sub_181936D4C; table keys "item" / "pickable_area_material". Stack:
 // C_ObjectDatabaseIdIndexed<C_ObjectTableDatabase<S_PickableAreaMaterial,
-// S_PickableAreaMaterialDBData>, int>. Same modeling caveats as C_PickableAreaDatabase
-// (id-type arg dropped; concrete footprint UNVERIFIED -> no sizeof assert; row layouts
+// S_PickableAreaMaterialDBData>, int>. Concrete footprint remains UNVERIFIED; row layouts
 // pending the generated-tables pass).
 
 namespace wh::environmentmodule::data {
@@ -24,7 +23,8 @@ namespace wh::environmentmodule {
 class C_PickableAreaMaterialDatabase
     : public databasemodule::C_ObjectDatabaseIdIndexed<
           databasemodule::C_ObjectTableDatabase<data::S_PickableAreaMaterial,
-                                                data::S_PickableAreaMaterialDBData>> {
+                                                data::S_PickableAreaMaterialDBData>,
+          int> {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_PickableAreaMaterialDatabase;
     [[nodiscard]] static C_PickableAreaMaterialDatabase* GetInstance()

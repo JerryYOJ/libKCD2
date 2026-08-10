@@ -27,7 +27,6 @@ class C_SoulStateEffectContextDatabase
 {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_SoulStateEffectContextDatabase;
-    // Global static instance @RVA 0x5330430. Impl in src/databasemodule/databasemodule.cpp.
     static C_SoulStateEffectContextDatabase* GetInstance();
 };
 

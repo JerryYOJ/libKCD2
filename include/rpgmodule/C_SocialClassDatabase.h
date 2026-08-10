@@ -13,7 +13,7 @@
 // RTTI .?AVC_SocialClassDatabase@rpgmodule@wh@@ (TD 0x184D413E8)  vtables: primary 0x183C398D8,
 // I_DynamicEnum @+0xB8 0x183C397F0 (enum view over the 0x48 S_SocialClass rows; value @row+0x00,
 // name @row+0x08 -- non-polymorphic rows).
-// Stack: C_ObjectDatabaseIdIndexed<C_ObjectTableDatabase<S_SocialClass, S_SocialClassDBData>>
+// Stack: C_ObjectDatabaseIdIndexed<C_ObjectTableDatabase<S_SocialClass, S_SocialClassDBData>, int>
 // + I_DynamicEnum declared HERE (ctor sub_18192F920 writes the +0xB8 vfptr; no concrete tail).
 // GLOBAL STATIC instance @0x185330030 (table "social_class", group "rpg").
 
@@ -24,13 +24,18 @@ struct S_SocialClassDBData;
 
 class C_SocialClassDatabase
     : public wh::databasemodule::C_ObjectDatabaseIdIndexed<
-          wh::databasemodule::C_ObjectTableDatabase<S_SocialClass, S_SocialClassDBData>>
+          wh::databasemodule::C_ObjectTableDatabase<S_SocialClass, S_SocialClassDBData>,
+          int>
     , public wh::databasemodule::I_DynamicEnum   // +0xB8
 {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_SocialClassDatabase;
-    // Returns the global static instance @RVA 0x5330030. Impl in src/databasemodule/databasemodule.cpp.
     static C_SocialClassDatabase* GetInstance();
+    uint32_t GetCount() const override;
+    uint32_t GetValue(uint32_t index) const override;
+    const char* GetName(uint32_t index) const override;
+    uint32_t GetValueByName(const char* name) const override;
+    const char* GetNameByValue(uint32_t value) const override;
 };
 static_assert(sizeof(C_SocialClassDatabase) == 0xC0,
               "C_SocialClassDatabase must be 0xC0 (ctor sub_18192F920 write extent)");

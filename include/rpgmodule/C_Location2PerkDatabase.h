@@ -24,7 +24,6 @@ class C_Location2PerkDatabase
 {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_Location2PerkDatabase;
-    // Global static instance @RVA 0x532D490. Impl in src/databasemodule/databasemodule.cpp.
     static C_Location2PerkDatabase* GetInstance();
 };
 static_assert(sizeof(C_Location2PerkDatabase) == 0xB0, "C_Location2PerkDatabase must be 0xB0 (ctor write extent)");

@@ -24,7 +24,6 @@ class C_PerkCompanionDatabase
 {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_PerkCompanionDatabase;
-    // Global static instance @RVA 0x532E0A0. Impl in src/databasemodule/databasemodule.cpp.
     static C_PerkCompanionDatabase* GetInstance();
 };
 static_assert(sizeof(C_PerkCompanionDatabase) == 0xB0, "C_PerkCompanionDatabase must be 0xB0 (ctor write extent)");

@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include "../databasemodule/C_ObjectTableDatabase.h"
+#include "../databasemodule/C_ObjectDatabaseDefaultKeyExtractor.h"
 #include "../databasemodule/C_ObjectDatabaseKeyIndexed.h"
 
 // -----------------------------------------------
@@ -11,7 +12,8 @@
 // -----------------------------------------------
 // RTTI TD rva 0x4D37B98; vtable 0x3ACDF58; COL(??_R4) 0x18412BB08.  Stack:
 // C_ObjectDatabaseKeyIndexed< C_ObjectTableDatabase<C_NamedInterval,
-// S_NamedIntervalDBData>, Key > -> C_ObjectDatabase -> C_ObjectDatabaseBase ->
+// S_NamedIntervalDBData>, C_ObjectDatabaseDefaultKeyExtractor<C_NamedInterval> >
+// -> C_ObjectDatabase -> C_ObjectDatabaseBase ->
 // I_ObjectDatabase (all mdisp 0).  GLOBAL STATIC @ 0x18532DA40 (ctor
 // sub_180EF54C8(&global, "nervousness_flag") from static-init sub_1801B02A0;
 // base ctor sub_180EF4F30; table name @0x183F06428, group "rpg" @DB+0x70; row
@@ -28,7 +30,10 @@ struct S_NamedIntervalDBData;     // per-row DB payload -- not RE'd
 
 class C_NamedIntervalDatabase
     : public wh::databasemodule::C_ObjectDatabaseKeyIndexed<
-          wh::databasemodule::C_ObjectTableDatabase<C_NamedInterval, S_NamedIntervalDBData>, uint32_t /*Key [U exact]*/>
+          wh::databasemodule::C_ObjectTableDatabase<
+              C_NamedInterval, S_NamedIntervalDBData>,
+          wh::databasemodule::C_ObjectDatabaseDefaultKeyExtractor<
+              C_NamedInterval>>
 {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_NamedIntervalDatabase;

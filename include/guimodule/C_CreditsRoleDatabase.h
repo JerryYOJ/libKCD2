@@ -22,7 +22,8 @@ namespace wh::guimodule {
 
 class C_CreditsRoleDatabase
     : public wh::databasemodule::C_ObjectDatabaseIdIndexed<
-          wh::databasemodule::C_ObjectTableDatabase<S_CreditsRole, S_CreditsRoleDBData>>
+          wh::databasemodule::C_ObjectTableDatabase<S_CreditsRole, S_CreditsRoleDBData>,
+          int>
 {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_CreditsRoleDatabase;

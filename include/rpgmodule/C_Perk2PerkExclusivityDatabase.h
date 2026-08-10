@@ -28,9 +28,7 @@ class C_Perk2PerkExclusivityDatabase
 {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_Perk2PerkExclusivityDatabase;
-    // Global static instance @RVA 0x532DCF0. Impl in src/databasemodule/databasemodule.cpp.
     static C_Perk2PerkExclusivityDatabase* GetInstance();
-
     std::vector<void*> m_index98;   // +0x98  sorted 32-byte-entry index (searched by C_Perk [4])
 };
 static_assert(sizeof(C_Perk2PerkExclusivityDatabase) == 0xB0,

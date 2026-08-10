@@ -37,7 +37,7 @@ namespace wh::environmentmodule{ class C_EnvironmentModule; }
 namespace wh::dialogmodule     { class C_DialogModule; }
 namespace wh::xgenaimodule     { class C_XGenAIModule; }
 namespace wh::utilsmodule      { class C_UtilsModule; }
-namespace wh::databasemodule   { class C_DatabaseModule; }
+namespace wh::databasemodule   { class I_DatabaseModule; }
 
 namespace wh::game {
 
@@ -62,7 +62,7 @@ struct S_GameContext {
     rpgmodule::C_RPGModule*                 m_pRPGModule;         // +0x130                                     VERIFIED
     environmentmodule::C_EnvironmentModule* m_pEnvironmentModule; // +0x138                                     VERIFIED
     utilsmodule::C_UtilsModule*             m_pUtilsModule;       // +0x140 registrar v2[40] vftable C_UtilsModule  VERIFIED
-    databasemodule::C_DatabaseModule*       m_pDatabaseModule;    // +0x148 registrar v2[41]=sub_18192BBB4()+0x10 subobj  VERIFIED
+    databasemodule::I_DatabaseModule*       m_pDatabaseModule;    // +0x148 stores C_DatabaseModule's +0x10 interface subobject
     dialogmodule::C_DialogModule*           m_pDialogModule;      // +0x150                                     VERIFIED
     xbehaviormodule::C_XBehaviorModule*     m_pXBehaviorModule;   // +0x158 registrar v2[43] vftable C_XBehaviorModule  VERIFIED
     xgenaimodule::C_XGenAIModule*           m_pXGenAIModule;      // +0x160                                     VERIFIED

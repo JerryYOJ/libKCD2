@@ -26,7 +26,6 @@ class C_PerkRPGParamOverrideDatabase
 {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_PerkRPGParamOverrideDatabase;
-    // Global static instance @RVA 0x532E230. Impl in src/databasemodule/databasemodule.cpp.
     static C_PerkRPGParamOverrideDatabase* GetInstance();
 };
 static_assert(sizeof(C_PerkRPGParamOverrideDatabase) == 0xB0,

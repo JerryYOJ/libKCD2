@@ -29,9 +29,7 @@ class C_PerkCombatTechniqueDatabase
 {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_PerkCombatTechniqueDatabase;
-    // Global static instance @RVA 0x532DFB0. Impl in src/databasemodule/databasemodule.cpp.
     static C_PerkCombatTechniqueDatabase* GetInstance();
-
     // +0xB0  id -> row lookup [key/value typing INFERRED]
     std::unordered_map<CryGUID, uint64_t, wh::shared::S_DefaultHash<CryGUID>> m_idIndex;
 };

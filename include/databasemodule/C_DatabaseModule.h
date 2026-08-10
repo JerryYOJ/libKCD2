@@ -1,60 +1,125 @@
 #pragma once
+#include <cstddef>
 #include <cstdint>
 #include <vector>
-#include "I_DatabaseModule.h"
 #include "C_DynamicEnumManager.h"
+#include "I_DatabaseModule.h"
+#include "S_DatabaseLoadContext.h"
+#include "S_DatabaseModuleSelfCell.h"
+#include "S_DatabaseTableRecord.h"
+#include "S_TableLayoutCacheEntry.h"
 #include "../framework/C_BaseModule.h"
-#include "../CryEngine/CryCommon/CryString.h"
 
-// -----------------------------------------------
-// wh::databasemodule::C_DatabaseModule -- the database module (KCD2 WHGame.dll 1.5.6, kd7u).
-// -----------------------------------------------
-// RTTI TD 0x184AEF568.  Vtables: primary 0x183C38C80 (C_BaseModule/I_ModuleMessageListener),
-// +0x10 0x183C38CC0 (the 31-slot I_DatabaseModule impl).  sizeof 0xF8 (PROVEN: module
-// bootstrap sub_180C9DA44 raw-allocs 248 then ctor sub_18192BBB4).  The bootstrap stores
-// this+0x10 (the I_DatabaseModule subobject) into module-registry+0x148 (slot [41]); the ctor
-// also publishes the undisplaced instance to global qword_185168B48.  Dtor sub_182740A88
-// confirms the container roles annotated below.
+// wh::databasemodule::C_DatabaseModule -- concrete database module.
+// sizeof 0xF8; primary vtable 0x183C38C80 (7 slots), I_DatabaseModule at +0x10.
 
 namespace wh::databasemodule {
 
-struct S_DatabaseTableRecord;    // 88B table registration record (name SYNTHETIC; layout in comment below)
-struct S_TableLayoutCacheEntry;  // 24B {CryStringT name, void* type, void* layout} memo entry (name SYNTHETIC)
+class C_DatabaseStringPool;
+class C_ScriptBindDatabase;
+class I_TableSerializer;
+struct S_SerializationStringPoolBuilder;
 
 class C_DatabaseModule
-    : public wh::framework::C_BaseModule   // +0x00
-    , public I_DatabaseModule              // +0x10
+    : public wh::framework::C_BaseModule
+    , public I_DatabaseModule
 {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_DatabaseModule;
 
-    // +0x18  std::vector<S_DatabaseTableRecord*>; RegisterTable (slot7 0x180D17E54) news an 88B
-    // record (ctor 0x180D17F20: name/path CryStrings @+0x28/+0x30, type @+0x38, schema @+0x40,
-    // flags @+0x50) and push_backs its ptr; dtor 0x182740AF1 destroys each via sub_180D182CC.
-    std::vector<S_DatabaseTableRecord*> m_tableRecords;   // +0x18
-    // +0x30  std::vector of OWNED polymorphic objects (dtor 0x182740B23 deleting-dtors each:
-    // (**vtbl)(elem,1)); LoadTable 0x180D18444 returns false when empty. Element class unresolved.
-    std::vector<void*> m_vec30;   // +0x30
-    CryStringT<char> m_str48;   // +0x48  [role UNVERIFIED]
-    uint64_t m_unk50;           // +0x50  ctor 0; NOT an owning std::vector (dtor never frees 0x50/0x58/0x60)
-    uint64_t m_unk58;           // +0x58  ctor 0; role unresolved (no writer found in ctor/dtor/impl cluster)
-    uint64_t m_unk60;           // +0x60  ctor 0
-    // +0x68  std::vector<S_TableLayoutCacheEntry*> memo cache keyed by (reflected table type, name)
-    // -> built layout; builder 0x180D17458 allocs 24B {CryStringT<char> name@0, void* type@8,
-    // void* layout@16}; dtor 0x182740B44 decrefs name (sub_1804FD898) then frees the block.
-    std::vector<S_TableLayoutCacheEntry*> m_layoutCache;   // +0x68
-    // +0x80  std::vector<char*> of formatted path buffers; builder 0x180D17458 allocs a char buf
-    // and sprintf's a "...%s..." template (sub_180466874) then pushes; dtor 0x182740B77 frees each raw.
-    std::vector<char*> m_pathBuffers;   // +0x80
-    C_DynamicEnumManager m_dynamicEnums;   // +0x98..0xDF
-    void*    m_pSelfHandleE0;   // +0xE0  -> ctor-alloc'd 8B heap block { C_DatabaseModule* self }; freed raw in dtor (self back-ref handle)
-    uint64_t m_unkE8;           // +0xE8  never written by ctor or dtor; role unresolved
-    void*    m_pSelfHandleF0;   // +0xF0  -> ctor-alloc'd 16B load-context { C_DatabaseModule* self@0, int32 loadErrorCount@8 }; sub_180D18490 does ++[+8] on load error
+    ~C_DatabaseModule() override;                       // primary [0] 0x182740CCC
+    void OnModuleMessage(void* message) override;       // primary [1] 0x1803B6E80
+    bool Init(void* context) override;                  // primary [2] 0x180EF5D54
+    void Deinit() override;                             // primary [3] 0x182740ED0
+    void Update() override;                             // primary [4] 0x1803B6E80
+    int GetModuleId() const override;                   // primary [5] 0x181A72470
+    const char* GetModuleName() const override;         // primary [6] 0x181A71AE0
 
-    // Reads the undisplaced instance global qword_185168B48 (RVA 0x5168B48).
-    // Impl in src/databasemodule/databasemodule.cpp.
+    bool ConfigureSerializers(const char* names) override;  // secondary [1]
+    const char* GetConfiguredSerializers() const override;  // secondary [2]
+    I_TableSerializer* FindSerializer(const char* name) override;  // secondary [3]
+    I_TableSerializer* GetSerializer(uint32_t index) override;  // secondary [4]
+    void SetAutoPatchDB(bool enabled) override;  // secondary [5]
+    bool IsAutoPatchDBEnabled() const override;  // secondary [6]
+    bool RegisterTable(const char* name, S_TableLayout* layout,
+                       const char* path, uint32_t flags) override;  // secondary [7]
+    bool RegisterGeneratedTable(const char* name,
+                                const S_TableLayout* layoutTemplate,
+                                const char* substitution,
+                                const char* path,
+                                uint32_t flags) override;  // secondary [8]
+    bool LoadTable(const char* name, bool reload) override;  // secondary [9]
+    bool LoadTablesByName(const S_DatabaseNameRange& names,
+                          bool reload) override;  // secondary [10]
+    bool LoadTableRecords(const std::vector<S_DatabaseTableRecord*>& records,
+                          bool reload) override;  // secondary [11]
+    S_DatabaseTableRecord* FindTableChecked(const char* name,
+                                             int32_t rowStride) override;  // secondary [12]
+    S_DatabaseTableRecord* GetTableRecord(const char* name) override;  // secondary [13]
+    S_DatabaseTableRecord* FindTableRecord(const char* name) override;  // secondary [14]
+    bool UnloadTable(const char* name) override;  // secondary [15]
+    bool UnloadTablesByName(const S_DatabaseNameRange& names) override;  // secondary [16]
+    void UnloadTableRecords(
+        const std::vector<S_DatabaseTableRecord*>& records) override;  // secondary [17]
+    void AssignInternedString(const char** target,
+                              const char* value) override;  // secondary [18]
+    const char* InternString(const char* value) override;  // secondary [19]
+    uint32_t GetInternedStringCount() const override;  // secondary [20]
+    uint32_t GetInternedStringBytes() const override;  // secondary [21]
+    C_DynamicEnumManager* GetDynamicEnumManager() override;  // secondary [22]
+    C_ObjectDatabaseManager* GetObjectDatabaseManager() override;  // secondary [23]
+    S_SerializationStringPoolBuilder*
+        GetSerializationStringPoolBuilder() override;  // secondary [24]
+    uint32_t GetLoadErrorCount() const override;  // secondary [25]
+    S_DatabaseModuleSelfCell* GetSelfCell() override;  // secondary [26]
+    bool IsPatchingAllowed() const override;  // secondary [27]
+    RTTR_ENABLE()  // secondary [28..30]
+
     static C_DatabaseModule* GetInstance();
+
+    std::vector<S_DatabaseTableRecord*> m_tableRecords;    // +0x18, owned
+    std::vector<I_TableSerializer*> m_serializers;          // +0x30, owned
+    CryStringT<char> m_configuredSerializers;               // +0x48
+    C_ScriptBindDatabase* m_scriptBind;                      // +0x50, owned by Init/Deinit
+    C_DatabaseStringPool* m_internPool;                      // +0x58, owned by Init/Deinit
+    S_SerializationStringPoolBuilder* m_serializationStringPoolBuilder; // +0x60
+    std::vector<S_TableLayoutCacheEntry*> m_layoutCache;     // +0x68
+    std::vector<char*> m_formattedColumnNames;               // +0x80, owned buffers
+    C_DynamicEnumManager m_dynamicEnums;                     // +0x98
+    bool m_autoPatchDB;                                      // +0xD8
+    uint8_t _padD9[7];                                       // +0xD9
+    S_DatabaseModuleSelfCell* m_selfCell;                    // +0xE0, owned
+    int32_t m_allowPatching;                                 // +0xE8, wh_db_AllowPatching storage
+    uint32_t _padEC;                                         // +0xEC
+    S_DatabaseLoadContext* m_loadContext;                    // +0xF0, owned
 };
-static_assert(sizeof(C_DatabaseModule) == 0xF8, "C_DatabaseModule must be 0xF8 (bootstrap alloc(248))");
+static_assert(sizeof(C_DatabaseModule) == 0xF8,
+              "C_DatabaseModule must be 0xF8");
+static_assert(offsetof(C_DatabaseModule, m_tableRecords) == 0x18,
+              "table-record vector at 0x18");
+static_assert(offsetof(C_DatabaseModule, m_serializers) == 0x30,
+              "serializer vector at 0x30");
+static_assert(offsetof(C_DatabaseModule, m_configuredSerializers) == 0x48,
+              "configured serializer string at 0x48");
+static_assert(offsetof(C_DatabaseModule, m_scriptBind) == 0x50,
+              "ScriptBind pointer at 0x50");
+static_assert(offsetof(C_DatabaseModule, m_internPool) == 0x58,
+              "intern pool at 0x58");
+static_assert(offsetof(C_DatabaseModule, m_serializationStringPoolBuilder) == 0x60,
+              "serialization string-pool builder at 0x60");
+static_assert(offsetof(C_DatabaseModule, m_layoutCache) == 0x68,
+              "layout cache at 0x68");
+static_assert(offsetof(C_DatabaseModule, m_formattedColumnNames) == 0x80,
+              "formatted column names at 0x80");
+static_assert(offsetof(C_DatabaseModule, m_dynamicEnums) == 0x98,
+              "dynamic-enum manager at 0x98");
+static_assert(offsetof(C_DatabaseModule, m_autoPatchDB) == 0xD8,
+              "auto-patch policy byte at 0xD8");
+static_assert(offsetof(C_DatabaseModule, m_selfCell) == 0xE0,
+              "self cell at 0xE0");
+static_assert(offsetof(C_DatabaseModule, m_allowPatching) == 0xE8,
+              "allow-patching CVar storage at 0xE8");
+static_assert(offsetof(C_DatabaseModule, m_loadContext) == 0xF0,
+              "load context at 0xF0");
 
 }  // namespace wh::databasemodule

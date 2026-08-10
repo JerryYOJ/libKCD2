@@ -2,29 +2,24 @@
 #include <cstdint>
 #include <unordered_map>
 #include "I_SmartEntityDatabase.h"
+#include "S_SmartEntityTemplate.h"
 #include "../databasemodule/C_ObjectTreeDatabaseList.h"
 
 // -----------------------------------------------
 // wh::xgenaimodule::C_SmartEntityDatabase : I_SmartEntityDatabase (@+0x0) +
 // databasemodule::C_ObjectTreeDatabase<S_SmartEntityTemplate, std::list>
-// (@+0x08, list variant 0x70 -- mirrored via C_ObjectTreeDatabaseList) --
+// (@+0x08, list variant 0x70; C_ObjectTreeDatabaseList is a compatibility alias) --
 // smart-entity template DB, HEAP singleton (KCD2 WHGame.dll 1.5.6, kd7u).
 // sizeof 0xC0 (create-site proven: sub_18109764C: operator new(192) -> ctor
 // sub_181541050).  tablepath "ai/smartEntity", typename "SmartEntity", ns
 // "wh::xgenaimodule::".
 // -----------------------------------------------
 // RTTI TD rva 0x4F51C08; primary COL 0x40DF370, vtable rva 0x3BB0710 (6
-// slots); base COL 0x40DF398, vtable rva 0x3BB0A60.  Row = S_SmartEntityTemplate
-// sizeof 200 (std::list node 216 = 0x10 + 200); row fields [U].  +0x78 column
+// slots); base COL 0x40DF398, vtable rva 0x3BB0A60. Row = S_SmartEntityTemplate
+// sizeof 200 (std::list node 216 = 0x10 + 200); see its dedicated header. +0x78 column
 // handle "brain" (registered size 24); +0x80 index map key/value types [U].
 
 namespace wh::xgenaimodule {
-
-struct S_SmartEntityTemplate {
-    inline static constexpr auto RTTI = Offsets::RTTI_S_SmartEntityTemplate;
-    uint8_t _raw[200];   // sizeof proven (list node 216); fields [U]
-};
-static_assert(sizeof(S_SmartEntityTemplate) == 200, "S_SmartEntityTemplate must be 200");
 
 class C_SmartEntityDatabase
     : public I_SmartEntityDatabase,

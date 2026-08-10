@@ -8,7 +8,7 @@
 // (KCD2 WHGame.dll 1.5.6, kd7u).  sizeof 0xB8.
 // -----------------------------------------------
 // RTTI TD 0x184D37580  vtable 0x183C3AC58.  Stack: C_ObjectDatabaseIdIndexed<
-// C_ObjectTableDatabase<S_ReputationCondition, S_ReputationConditionDBData>> -- IdIndexed but
+// C_ObjectTableDatabase<S_ReputationCondition, S_ReputationConditionDBData>, int> -- IdIndexed but
 // WITHOUT the I_DynamicEnum base the archetype/social-class databases add (single vtable).
 // GLOBAL STATIC @0x18532F8B0 (ctor sub_1819369B0: table "reputation_condition", group "rpg").
 
@@ -19,11 +19,11 @@ struct S_ReputationConditionDBData;   // per-row DB payload -- not RE'd
 
 class C_ReputationConditionDatabase
     : public wh::databasemodule::C_ObjectDatabaseIdIndexed<
-          wh::databasemodule::C_ObjectTableDatabase<S_ReputationCondition, S_ReputationConditionDBData>>
+          wh::databasemodule::C_ObjectTableDatabase<S_ReputationCondition, S_ReputationConditionDBData>,
+          int>
 {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_ReputationConditionDatabase;
-    // Global static instance @RVA 0x532F8B0. Impl in src/databasemodule/databasemodule.cpp.
     static C_ReputationConditionDatabase* GetInstance();
 };
 static_assert(sizeof(C_ReputationConditionDatabase) == 0xB8,
