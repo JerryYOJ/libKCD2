@@ -8,7 +8,7 @@
 // Do not edit by hand. One entry per RE'd polymorphic class, matched to the binary
 // by exact mangled name. Consumed by Offsets/RTTI.h (kcd_cast) and the
 // `static constexpr auto RTTI` member on each class.
-// Target: WHGame.dll 1.5.6. Count: 1240 classes.
+// Target: WHGame.dll 1.5.6. Count: 1249 classes.
 
 namespace Offsets {
 
@@ -130,7 +130,10 @@ namespace Offsets {
     inline constexpr ::REL::ID RTTI_C_CameraCommand                                              { 1488 };  // 0x4B533B8 .?AVC_CameraCommand@data@dialogmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_CaptionObjectUsedCause                                     { 1956 };  // 0x4D5D5A0 .?AVC_CaptionObjectUsedCause@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_CarryItemPile                                              { 1243271 };  // 0x505CDA8 .?AVC_CarryItemPile@entitymodule@wh@@
+    inline constexpr ::REL::ID RTTI_C_Cart                                                       { 1212983 };  // 0x4BA66B0 .?AVC_Cart@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_C_CartStash                                                  { 1243331 };  // 0x505E338 .?AVC_CartStash@entitymodule@wh@@
+    inline constexpr ::REL::ID RTTI_C_CatHolder                                                  { 1213063 };  // 0x4BA92D0 .?AVC_CatHolder@entitymodule@wh@@
+    inline constexpr ::REL::ID RTTI_C_CatWaypoint                                                { 1213065 };  // 0x4BA93C8 .?AVC_CatWaypoint@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_C_CauseVisitor                                               { 1223271 };  // 0x4D5FF60 .?AVC_CauseVisitor@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_CheckpointMark                                             { 1605 };  // 0x4C92430 .?AVC_CheckpointMark@guimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_ClothingWashedCause                                        { 1955 };  // 0x4D5D4F8 .?AVC_ClothingWashedCause@rpgmodule@wh@@
@@ -284,6 +287,7 @@ namespace Offsets {
     inline constexpr ::REL::ID RTTI_C_DmgREffect                                                 { 1878 };  // 0x4D4E478 .?AVC_DmgREffect@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_DocumentItem                                               { 1217197 };  // 0x4C645C0 .?AVC_DocumentItem@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_C_DocumentRewardPerkDatabase                                 { 1853 };  // 0x4D398A0 .?AVC_DocumentRewardPerkDatabase@rpgmodule@wh@@
+    inline constexpr ::REL::ID RTTI_C_Dog                                                        { 1215387 };  // 0x4C15100 .?AVC_Dog@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_C_DogCompanionSubbrain                                       { 2099 };  // 0x4EFDE78 .?AVC_DogCompanionSubbrain@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_DogFoundEventCause                                         { 1995 };  // 0x4D5F720 .?AVC_DogFoundEventCause@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_DogPointDatabase                                           { 2169 };  // 0x4F4C960 .?AVC_DogPointDatabase@xgenaimodule@wh@@
@@ -511,6 +515,7 @@ namespace Offsets {
     inline constexpr ::REL::ID RTTI_C_MovementActionCause                                        { 1931 };  // 0x4D5C628 .?AVC_MovementActionCause@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_MusicModule                                                { 2062 };  // 0x4E2B330 .?AVC_MusicModule@musicmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_NPC                                                        { 2251 };  // 0x4F6E678 .?AVC_NPC@xgenaimodule@wh@@
+    inline constexpr ::REL::ID RTTI_C_NPCActor                                                   { 1217551 };  // 0x4C723B0 .?AVC_NPCActor@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_C_NPCFactionNode                                             { 1880 };  // 0x4D4E540 .?AVC_NPCFactionNode@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_NPCManager                                                 { 2249 };  // 0x4F6E458 .?AVC_NPCManager@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_NPCMessageDispatcher                                       { 2237 };  // 0x4F5D548 .?AVC_NPCMessageDispatcher@xgenaimodule@wh@@
@@ -541,6 +546,7 @@ namespace Offsets {
     inline constexpr ::REL::ID RTTI_C_POI                                                        { 1917 };  // 0x4D53FD8 .?AVC_POI@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_POIDiscoveredCause                                         { 1864 };  // 0x4D4DE48 .?AVC_POIDiscoveredCause@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_POIType2PerkDatabase                                       { 1852 };  // 0x4D39428 .?AVC_POIType2PerkDatabase@rpgmodule@wh@@
+    inline constexpr ::REL::ID RTTI_C_POITypeDatabase                                            { 1222316 };  // 0x4D39468 .?AVC_POITypeDatabase@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_ParallelModuleUpdater                                      { 1318 };  // 0x4A688A0 .?AVC_ParallelModuleUpdater@framework@wh@@
     inline constexpr ::REL::ID RTTI_C_ParticleEffect                                             { 1235016 };  // 0x4F49E08 .?AVC_ParticleEffect@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_ParticleEffectManager                                      { 1235015 };  // 0x4F49DC8 .?AVC_ParticleEffectManager@xgenaimodule@wh@@
@@ -1020,6 +1026,7 @@ namespace Offsets {
     inline constexpr ::REL::ID RTTI_I_BindableObject                                             { 1548 };  // 0x4C64BF0 .?AVI_BindableObject@framework@wh@@
     inline constexpr ::REL::ID RTTI_I_BuffInitParams                                             { 1524 };  // 0x4B7F230 .?AVI_BuffInitParams@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_I_BuffManager                                                { 1819 };  // 0x4CE4E60 .?AVI_BuffManager@rpgmodule@wh@@
+    inline constexpr ::REL::ID RTTI_I_Cart                                                       { 1212974 };  // 0x4BA6478 .?AVI_Cart@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_I_CastableIface                                              { 2067 };  // 0x4E414A0 .?AVI_CastableIface@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_I_Cause                                                      { 1812 };  // 0x4CE4C58 .?AVI_Cause@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_I_ColumnDescriptor                                           { 1205469 };  // 0x4A68498 .?AVI_ColumnDescriptor@databasemodule@wh@@
@@ -1202,6 +1209,8 @@ namespace Offsets {
     inline constexpr ::REL::ID RTTI_S_AlchemyRecipeName                                          { 1225751 };  // 0x4DCE1D0 .?AUS_AlchemyRecipeName@playermodule@wh@@
     inline constexpr ::REL::ID RTTI_S_AnimalCrimeDescription                                     { 2125 };  // 0x4F44418 .?AUS_AnimalCrimeDescription@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_S_BehaviorTreeSubBrainTemplate                               { 1233427 };  // 0x4EFE640 .?AUS_BehaviorTreeSubBrainTemplate@xgenaimodule@wh@@
+    inline constexpr ::REL::ID RTTI_S_CatWaypointDefinition                                      { 1213066 };  // 0x4BA9400 .?AUS_CatWaypointDefinition@entitymodule@wh@@
+    inline constexpr ::REL::ID RTTI_S_CatWaypointRecord                                          { 1213060 };  // 0x4BA91B0 .?AUS_CatWaypointRecord@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_S_CombatActionAttackQueryData                                { 1356 };  // 0x4AFA900 .?AUS_CombatActionAttackQueryData@combatmodule@wh@@
     inline constexpr ::REL::ID RTTI_S_CombatActorActionAttackParams                              { 1357 };  // 0x4AFA980 .?AUS_CombatActorActionAttackParams@combatmodule@wh@@
     inline constexpr ::REL::ID RTTI_S_CombatActorActionBlockParams                               { 1353 };  // 0x4AFA610 .?AUS_CombatActorActionBlockParams@combatmodule@wh@@

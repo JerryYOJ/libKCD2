@@ -19,9 +19,8 @@
 // State (m_state @C_POI+0x9C): 0 = none, 2 = discovered (1 = revealed-but-undiscovered [INFERRED
 // from SetDiscoveredGated's transitions]).
 //
-// "def" below = the POI-TYPE registry row for m_typeId (global sorted array xmmword_18532DC80,
-// 56-byte rows): {+0x00 S_LocationId typeId, +0x18 int32 markType, +0x20 char* label,
-// +0x2D uint8 availabilityMode, +0x30 int32} [row typing partial]. Resolved via sub_18094EFB4.
+// "def" below = S_POIType* for m_typeId (C_POITypeDatabase::m_objects @xmmword_18532DC80,
+// 0x38-byte rows). Resolved via FindPOIType / sub_18094EFB4.
 // ===========================================================================
 
 namespace wh::rpgmodule {
@@ -58,8 +57,8 @@ public:
     virtual bool IsBed() = 0;                                // [21] 0xA8  flags & 0x08 (0x181385EC8)
     virtual bool IsUnloaded() = 0;                           // [22] 0xB0  flags & 0x20 (0x1805679DC)
     virtual bool HasMappableMarkType() = 0;                  // [23] 0xB8  !def || def->markType >= 0 [name INFERRED] (0x18094ECCC)
-    // [24] 0xC0  shown-on-map gate: !unloaded && discoverable && !notDiscoverableByLocation, then
-    //      fast-travel => true, else the type-registry row's availability byte (+0x2D)
+    // [24] 0xC0  !unloaded && discoverable && !flag 0x40, then FT => true, else
+    //      S_POIType::m_discoverableByLocation (+0x2D)
     virtual bool IsDiscoverableOnMap() = 0;                  // 0x182CC7E50  [name INFERRED]
     virtual void* _vf25_typeTrackingOp() = 0;                // [25] 0xC8  manager slot [16] on the +0xB8 per-type map with m_typeId [UNVERIFIED] (0x180C4CDE4)
     virtual Vec3* GetPosition(Vec3& out) = 0;                // [26] 0xD0  shape->GetPosition; (0,0,0) if no shape (0x1815B9D30)
@@ -79,7 +78,7 @@ public:
     //      multimap unk_18532D6A0 keyed by typeId) [semantics partially traced]
     virtual bool _vf35_shouldShowOnMap() = 0;                // 0x180C4C9C4
     virtual const char* GetFastTravelConfirmText() = 0;      // [36] 0x120  m_ftConfirmText (C_POI+0x68) or "ui_dlg_fasttravel_confirm" (0x182CC7D3C)
-    virtual int32_t GetDefPriority() = 0;                    // [37] 0x128  def ? def+0x30 : INT_MAX [field name INFERRED] (0x1815B9D4C)
+    virtual int32_t GetDefPriority() = 0;                    // [37] 0x128  def ? S_POIType::m_uiOrder : INT_MAX (0x1815B9D4C)
     // [38] 0x130  gated discover/undiscover: blocked while manager IsSuspended or (unless force)
     //      when !discoverable or unloaded; discover: state 0 -> 1, undiscover: state < 2 -> 2 [sic --
     //      transition semantics kept verbatim from the binary; naming NOT settled]

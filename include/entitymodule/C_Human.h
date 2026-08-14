@@ -36,6 +36,16 @@ class C_HumanHandHelper;
 class C_Human : public C_Actor {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_Human;
+
+    virtual bool _vf275() const;                        // [275] 0x18082B3F0
+    virtual bool _vf276(void* argument);               // [276] 0x182A00F1C
+    virtual bool _vf277(void* argument);               // [277] 0x182A00F28
+    virtual bool _vf278(const std::uint64_t* value);    // [278] 0x1829FE620
+    virtual void _vf279();                              // [279] 0x182A01474, hidden-sret signature OPEN
+    virtual void _vf280();                              // [280] 0x1829FE63C, hidden-sret signature OPEN
+    virtual void _vf281();                              // [281] 0x180E797A4
+    virtual void _vf282();                              // [282] 0x182A00580
+
     wh::shared::C_Signal<> m_signal9C0;                // +0x9C0  VERIFIED C_Signal (shared default sentinel unk_185665430,
                                                        //         teardown sub_1808E19EC); args/purpose UNRESOLVED
     void*    m_pHandItemController;                    // +0x9D0  raw NON-owning; pointee back-refs C_Human @+56 and iterates

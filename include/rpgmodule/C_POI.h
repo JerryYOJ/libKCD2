@@ -53,7 +53,7 @@ public:
     uint32_t m_initialState;            // +0x94  I_POI [6]/[7]
     uint16_t m_flags;                   // +0x98  bit table in I_POI.h (engine bit names)
     uint16_t _pad9A;                    // +0x9A
-    uint32_t m_state;                   // +0x9C  0 = none, 2 = discovered
+    uint32_t m_state;                   // +0x9C  E_LocationMarkStates (0/1/2)
 };
 static_assert(sizeof(C_POI) == 0xA0, "C_POI must be 0xA0 (operator new(0xA0) in AddPOI)");
 static_assert(offsetof(C_POI, m_id) == 0x18, "id at 0x18");

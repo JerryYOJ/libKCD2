@@ -242,8 +242,14 @@ inline constexpr std::array<::REL::ID, 1> VTABLE_C_CameraCommand{ ::REL::ID(433)
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_CaptionObjectUsedCause{ ::REL::ID(1079) /* 0x3F27378 */ };
 // .?AVC_CarryItemPile@entitymodule@wh@@ -- 2 subobject vtable(s) @ +0x0, +0x40
 inline constexpr std::array<::REL::ID, 2> VTABLE_C_CarryItemPile{ ::REL::ID(464155) /* 0x3A844E8 */, ::REL::ID(464153) /* 0x3A844A0 */ };
+// .?AVC_Cart@entitymodule@wh@@ -- 1 subobject vtable(s) @ +0x0
+inline constexpr std::array<::REL::ID, 1> VTABLE_C_Cart{ ::REL::ID(457867) /* 0x3A3C5B0 */ };
 // .?AVC_CartStash@entitymodule@wh@@ -- 3 subobject vtable(s) @ +0x0, +0x70, +0x78
 inline constexpr std::array<::REL::ID, 3> VTABLE_C_CartStash{ ::REL::ID(488830) /* 0x3BD8F50 */, ::REL::ID(488826) /* 0x3BD8EF8 */, ::REL::ID(488828) /* 0x3BD8F08 */ };
+// .?AVC_CatHolder@entitymodule@wh@@ -- 1 subobject vtable(s) @ +0x0
+inline constexpr std::array<::REL::ID, 1> VTABLE_C_CatHolder{ ::REL::ID(480234) /* 0x3B56870 */ };
+// .?AVC_CatWaypoint@entitymodule@wh@@ -- 1 subobject vtable(s) @ +0x0
+inline constexpr std::array<::REL::ID, 1> VTABLE_C_CatWaypoint{ ::REL::ID(550774) /* 0x3E83BD0 */ };
 // .?AVC_CheckpointMark@guimodule@wh@@ -- 3 subobject vtable(s) @ +0x0, +0x8, +0x10
 inline constexpr std::array<::REL::ID, 3> VTABLE_C_CheckpointMark{ ::REL::ID(1269) /* 0x47200E8 */, ::REL::ID(1267) /* 0x47200A0 */, ::REL::ID(1268) /* 0x47200B0 */ };
 // .?AVC_ClothingWashedCause@rpgmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
@@ -528,6 +534,8 @@ inline constexpr std::array<::REL::ID, 1> VTABLE_C_DmgREffect{ ::REL::ID(1052) /
 inline constexpr std::array<::REL::ID, 2> VTABLE_C_DocumentItem{ ::REL::ID(478859) /* 0x3B466F0 */, ::REL::ID(478857) /* 0x3B466B8 */ };
 // .?AVC_DocumentRewardPerkDatabase@rpgmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_DocumentRewardPerkDatabase{ ::REL::ID(669) /* 0x3BAFFE0 */ };
+// .?AVC_Dog@entitymodule@wh@@ -- 3 subobject vtable(s) @ +0x0, +0x40, +0x48
+inline constexpr std::array<::REL::ID, 3> VTABLE_C_Dog{ ::REL::ID(482114) /* 0x3B71668 */, ::REL::ID(482110) /* 0x3B71610 */, ::REL::ID(482112) /* 0x3B71630 */ };
 // .?AVC_DogCompanionSubbrain@xgenaimodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_DogCompanionSubbrain{ ::REL::ID(561) /* 0x3B1F100 */ };
 // .?AVC_DogFoundEventCause@rpgmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
@@ -972,6 +980,8 @@ inline constexpr std::array<::REL::ID, 1> VTABLE_C_MovementActionCause{ ::REL::I
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_MusicModule{ ::REL::ID(1126) /* 0x3F85578 */ };
 // .?AVC_NPC@xgenaimodule@wh@@ -- 3 subobject vtable(s) @ +0x0, +0x20, +0xA8
 inline constexpr std::array<::REL::ID, 3> VTABLE_C_NPC{ ::REL::ID(1212) /* 0x3FF1B18 */, ::REL::ID(1213) /* 0x3FF1F18 */, ::REL::ID(1211) /* 0x3FF1B00 */ };
+// .?AVC_NPCActor@entitymodule@wh@@ -- 3 subobject vtable(s) @ +0x0, +0x40, +0x48
+inline constexpr std::array<::REL::ID, 3> VTABLE_C_NPCActor{ ::REL::ID(457862) /* 0x3A3BC90 */, ::REL::ID(457840) /* 0x3A3B138 */, ::REL::ID(457842) /* 0x3A3B158 */ };
 // .?AVC_NPCFactionNode@rpgmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_NPCFactionNode{ ::REL::ID(457473) /* 0x3A33630 */ };
 // .?AVC_NPCManager@xgenaimodule@wh@@ -- 5 subobject vtable(s) @ +0x0, +0x8, +0x10, +0x18, +0x20
@@ -1028,6 +1038,8 @@ inline constexpr std::array<::REL::ID, 2> VTABLE_C_POI{ ::REL::ID(268) /* 0x3A64
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_POIDiscoveredCause{ ::REL::ID(348) /* 0x3A7B2B0 */ };
 // .?AVC_POIType2PerkDatabase@rpgmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_POIType2PerkDatabase{ ::REL::ID(796) /* 0x3C3BE70 */ };
+// .?AVC_POITypeDatabase@rpgmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
+inline constexpr std::array<::REL::ID, 1> VTABLE_C_POITypeDatabase{ ::REL::ID(496515) /* 0x3C3E030 */ };
 // .?AVC_ParallelModuleUpdater@framework@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_ParallelModuleUpdater{ ::REL::ID(395) /* 0x3A83F98 */ };
 // .?AVC_ParticleEffect@xgenaimodule@wh@@ -- 2 subobject vtable(s) @ +0x0, +0x20
@@ -2106,6 +2118,10 @@ inline constexpr std::array<::REL::ID, 1> VTABLE_S_AlchemyRecipeName{ ::REL::ID(
 inline constexpr std::array<::REL::ID, 1> VTABLE_S_AnimalCrimeDescription{ ::REL::ID(1292) /* 0x4765748 */ };
 // .?AUS_BehaviorTreeSubBrainTemplate@xgenaimodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_S_BehaviorTreeSubBrainTemplate{ ::REL::ID(465067) /* 0x3A8CD08 */ };
+// .?AUS_CatWaypointDefinition@entitymodule@wh@@ -- 1 subobject vtable(s) @ +0x0
+inline constexpr std::array<::REL::ID, 1> VTABLE_S_CatWaypointDefinition{ ::REL::ID(472371) /* 0x3AEFED8 */ };
+// .?AUS_CatWaypointRecord@entitymodule@wh@@ -- 1 subobject vtable(s) @ +0x0
+inline constexpr std::array<::REL::ID, 1> VTABLE_S_CatWaypointRecord{ ::REL::ID(550776) /* 0x3E83CC0 */ };
 // .?AUS_CombatActionAttackQueryData@combatmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_S_CombatActionAttackQueryData{ ::REL::ID(185) /* 0x3A45488 */ };
 // .?AUS_CombatActorActionAttackParams@combatmodule@wh@@ -- 1 subobject vtable(s) @ +0x0

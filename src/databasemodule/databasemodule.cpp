@@ -15,6 +15,7 @@
 #include "rpgmodule/C_ReputationConditionDatabase.h"
 #include "rpgmodule/C_ReputationNotificationDatabase.h"
 #include "rpgmodule/C_Location2PerkDatabase.h"
+#include "rpgmodule/C_POITypeDatabase.h"
 #include "rpgmodule/C_POIType2PerkDatabase.h"
 #include "rpgmodule/C_PerkBuffOverrideDatabase.h"
 #include "rpgmodule/C_PerkRPGParamOverrideDatabase.h"
@@ -150,6 +151,12 @@ C_ReputationNotificationDatabase* C_ReputationNotificationDatabase::GetInstance(
 C_Location2PerkDatabase* C_Location2PerkDatabase::GetInstance()
 {
     static REL::Relocation<C_Location2PerkDatabase*> instance{ REL::ID(2330) };
+    return instance.get();
+}
+
+C_POITypeDatabase* C_POITypeDatabase::GetInstance()
+{
+    static REL::Relocation<C_POITypeDatabase*> instance{ REL::ID(1249869) };
     return instance.get();
 }
 

@@ -3,6 +3,7 @@
 #include <functional>
 #include <vector>
 #include "S_LocationId.h"
+#include "S_POIType.h"
 #include "../framework/WUID.h"
 
 // ===========================================================================
@@ -14,10 +15,9 @@
 // All 50 slots decompiled; leaf semantics marked [INFERRED] where naming is judgment.
 // NOT interfuscated (wh:: type -> canonical order).
 //
-// [FUNDAMENTAL vs KCD1] Slot 0 is NO LONGER the destructor -- it is Reset() (no virtual dtor in
-// this vtable at all). Keys moved from CryGUID/WUID to the 16-byte S_LocationId; POI queries hand
-// out I_POI* (KCD1 handed out I_Location*); a global POI-TYPE registry (56-byte rows
-// @xmmword_18532DC80, see I_POI.h) is exposed through slots [43]..[46].
+// [FUNDAMENTAL vs KCD1] Slot 0 is Reset() (no virtual dtor). Keys are S_LocationId.
+// POI queries hand out I_POI*. Slots [43]..[46] return S_POIType* from
+// C_POITypeDatabase::m_objects (xmmword_18532DC80).
 // "manager+0x.." member references below are C_RPGLocationManager offsets.
 // ===========================================================================
 
@@ -117,13 +117,13 @@ public:
     virtual void RemoveListener(I_LocationListener* l) = 0;   // [40] 0x140  l->OnUnregistered(this); deferred-null removal  (0x1806136AC)
     virtual void _vf41_setOp(void* a2) = 0;                   // [41] 0x148  sub_1812C4194(this, a2, true)  [UNVERIFIED]
     virtual void _vf42_clearOp(void* a2) = 0;                 // [42] 0x150  sub_1812C4194(this, a2, false)  [UNVERIFIED]
-    // [43] 0x158  POI-type registry row whose markType (+0x18) == arg.  (0x181FC0B70)
-    virtual const void* FindPOITypeByMarkType(int markType) = 0;
-    // [44] 0x160  POI-type registry row by type id (binary search of xmmword_18532DC80).  (0x18094FB58)
-    virtual const void* FindPOIType(const S_LocationId& typeId) = 0;
+    // [43] 0x158  S_POIType whose m_markType == arg.  (0x181FC0B70)
+    virtual const S_POIType* FindPOITypeByMarkType(int markType) = 0;
+    // [44] 0x160  S_POIType by type id (binary search of C_POITypeDatabase::m_objects).  (0x18094FB58)
+    virtual const S_POIType* FindPOIType(const S_LocationId& typeId) = 0;
     // [45] 0x168  [44] with the static type id TLS-built from guid
-    //      "7eac0ae7-b90f-45ce-b97c-c176a7ac8271".  (0x182CAE1B0)  [role INFERRED]
-    virtual const void* GetDefaultPOIType() = 0;
+    //      "7eac0ae7-b90f-45ce-b97c-c176a7ac8271".  (0x182CAE1B0)
+    virtual const S_POIType* GetDefaultPOIType() = 0;
     // [46] 0x170  registry row by label strcmp -> its type id (invalid id when not found).  (0x182CADA04)
     virtual S_LocationId* GetPOITypeIdByName(S_LocationId& out, const char* name) = 0;
     virtual bool AnyListedLocations() = 0;                    // [47] 0x178  [7] with a flag-setting lambda  (0x180B573CC)  [INFERRED]

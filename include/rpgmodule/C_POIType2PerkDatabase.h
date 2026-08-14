@@ -12,7 +12,7 @@
 // RTTI TD 0x184D39428  vtable 0x183C3BE70.  Stack: C_ObjectDatabaseSortedIdIndexed<
 // C_ObjectTableDatabase<S_POIType2Perk, S_POIType2PerkDBData>, CryGUID> [key INFERRED].
 // GLOBAL STATIC @0x18532DBA0 (ctor sub_181937820: table "poi_type2perk", group "rpg").
-// (POI types = the 56-byte registry rows exposed by I_RPGLocationManager slots [43]..[46].)
+// POI types themselves live in C_POITypeDatabase (0x38-byte S_POIType rows).
 
 namespace wh::rpgmodule {
 

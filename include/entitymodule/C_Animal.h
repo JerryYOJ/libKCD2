@@ -16,6 +16,13 @@ namespace wh::entitymodule {
 class C_Animal : public C_Actor {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_Animal;
+
+    virtual void _vf275(void* argument);                 // [275] 0x180526174
+    virtual void _vf276();                               // [276] nullsub
+    virtual std::uint32_t GetCollisionClass() const;     // [277] 0x180AE5200
+    virtual bool _vf278();                               // [278] 0x180ABEFF8
+    virtual void _vf279();                               // [279] nullsub
+
     int32_t  m_animalId;                               // +0x9C0  init -1 (character/skeleton system id)
     int32_t  m_unk9C4;                                 // +0x9C4  (ctor 0)
     int32_t  m_unk9C8;                                 // +0x9C8  (ctor 0)

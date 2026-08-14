@@ -155,7 +155,7 @@ public:
     virtual void  _vf151() = 0;
     virtual void  _vf152() = 0;
     virtual void  _vf153() = 0;                              // [153] or byte[this+0x9B3],1 (set flag)
-    virtual void  _vf154() = 0;
+    virtual void  _vf154(bool enabled) = 0;                    // [154] inherited actor enable/update hook
     virtual void  _vf155() = 0;
     virtual void  _vf156() = 0;
     virtual bool  _vf157() = 0;
@@ -193,7 +193,7 @@ public:
     virtual void  _vf189() = 0;
     virtual void  _vf190() = 0;
     virtual int   _vf191() = 0;
-    virtual void  _vf192() = 0;
+    virtual void* _vf192() = 0;
     virtual void* GetCombatActor() = 0;                      // [193] return *(this+0x1A0)          VERIFIED
     virtual void* _vf194() = 0;                              // [194] return *(this+0x1B0)          VERIFIED
     virtual void  _vf195() = 0;
@@ -239,15 +239,15 @@ public:
     virtual void  _vf235() = 0;                              // [235] uses obj@0x990
     virtual int   _vf236() = 0;                              // [236] return 0x65
     virtual void  _vf237() = 0;                              // [237] uses ptr@0x68
-    virtual void  _vf238() = 0;
+    virtual void  _vf238(std::uint32_t openerEntityId) = 0;
     virtual void  _vf239() = 0;
     virtual void  _vf240() = 0;
     virtual void  _vf241() = 0;
     virtual void  _vf242() = 0;
-    virtual int  _vf243() = 0;
+    virtual int   _vf243() = 0;
     virtual void  _vf244() = 0;
-    virtual void  _vf245() = 0;
-    virtual void  _vf246() = 0;
+    virtual void  _vf245(std::int32_t amount) = 0;
+    virtual void  _vf246(std::int32_t amount) = 0;
     virtual void  _vf247() = 0;
     virtual void  _vf248() = 0;
     virtual void  _vf249() = 0;
@@ -273,7 +273,7 @@ public:
     virtual void  _vf269() = 0;
     virtual void  _vf270() = 0;
     virtual void  _vf271() = 0;
-    virtual void  _vf272() = 0;                              // [272] __purecall
+    virtual void  _vf272(bool enabled) = 0;                 // [272] collision-class toggle hook
     virtual void  _vf273() = 0;
     virtual void  _vf274() = 0;
 };
