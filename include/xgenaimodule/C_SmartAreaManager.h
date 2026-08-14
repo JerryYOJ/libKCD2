@@ -32,8 +32,12 @@ class C_SmartAreaManager
       public framework::I_WUIDMappingProvider {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_SmartAreaManager;
+
+    static C_SmartAreaManager* GetInstance();
+
     // I_SmartAreaManager impls (19) [U roles]
-    void SamVf0() override;  void SamVf1() override;  void SamVf2() override;
+    void SamVf0() override;  void SamVf1() override;
+    C_SmartArea* FindByWuid(const framework::WUID& wuid) override;
     void SamVf3() override;  void SamVf4() override;  void SamVf5() override;
     void SamVf6() override;  void SamVf7() override;  void SamVf8() override;
     void SamVf9() override;  void SamVf10() override; void SamVf11() override;
@@ -43,8 +47,8 @@ public:
     // I_DebugDraw impl
     void DebugDraw() override;   // [1] nullsub
     // framework::I_WUIDMappingProvider impls
-    void* GetValueForWuid(const void* wuid) override;          // [0] 0x32C3DAC
-    void  GetWuidForKey(void* out, const void* key) override;  // [1] 0x32C3D64
+    framework::WUID GetWuidForKey(const CryGUID& key) const override; // [0] sub_1832C3DAC
+    CryGUID GetValueForWuid(framework::WUID wuid) const override;     // [1] sub_1832C3D64
 
     float    m_scale20;         // +0x20  ctor: 1.0f [U role]
     uint8_t  _pad24[4];         // +0x24

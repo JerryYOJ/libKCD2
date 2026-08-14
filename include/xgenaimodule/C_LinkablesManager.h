@@ -2,10 +2,11 @@
 #include <cstdint>
 #include "C_ObjectManagerProxyStorage.h"
 #include "C_LinkModificationManager.h"
+#include "../framework/WUID.h"
 
 // -----------------------------------------------
-// wh::xgenaimodule::C_LinkablesManager -- registry of all static C_LinkableObject
-// instances + the embedded link-modification arbiter (KCD2 WHGame.dll 1.5.6, kd7u).
+// wh::xgenaimodule::C_LinkablesManager -- linkable capability proxy, notifications,
+// live count, and embedded link-modification arbiter (KCD2 WHGame.dll 1.5.6, kd7u).
 // sizeof 0x178 (create-site proven: alloc 376 in the lazy-init getter sub_1819E016C
 // -> qword_1854961B0).
 // -----------------------------------------------
@@ -16,8 +17,8 @@
 // +0x78 sub_180BEC7D4 (track-sequencing/callback dispatch, to +0x140), +0x140
 // embedded C_LinkModificationManager; also writes the static default link limits
 // xmmword_18533ADF0[1] = xmmword_18533AE28[1] = 1000.
-// NOTE: qword_1854961B0 IS the G2 "linkable-object registration list" -- every
-// C_LinkableObject ctor registers here (++m_liveCount @+0x60).
+// C_LinkableObject construction registers the inherited root WUID here and increments
+// m_liveCount. FindByWuid resolves through C_AIObjectManager, then capability-casts.
 
 namespace wh::xgenaimodule {
 
@@ -28,6 +29,10 @@ class C_LinkablesManager
     : public C_ObjectManagerProxyStorage<C_LinkableObject, C_LinkablesManager, C_AIObjectManager> {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_LinkablesManager;
+
+    static C_LinkablesManager* GetInstance();
+    C_LinkableObject* FindByWuid(const framework::WUID& wuid);
+
     ~C_LinkablesManager() override;   // [0] deleting dtor sub_1834421F8
     void _vf2() override;             // [2] sub_18047B884 -- remove/unregister object (cf. C_AIObjectManager [2] sub_18047B810) [U role]
 

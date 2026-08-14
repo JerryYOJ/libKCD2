@@ -8,8 +8,8 @@
 // -----------------------------------------------
 // sizeof 0x88 (PROVEN: factory sub_182D226AC tracked-alloc 144 = 8+136; copies 8x _OWORD
 // @+0x08..+0x7F then qword @+0x88). Factory returns the raw cause via *a1; caller sub_182D19080
-// wraps it in C_Event. Field breakdown below UNVERIFIED this session (applied from an external
-// proposal without independent IDA re-derivation) -- only the size/wrap mechanism above is proven.
+// wraps it in C_Event. Most field semantics below remain from the earlier proposal; the projectile
+// collision paths independently verify m_origMaterialId at +0x50 and m_damageScale at +0x84.
 
 namespace wh::rpgmodule {
 

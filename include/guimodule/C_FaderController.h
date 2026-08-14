@@ -2,11 +2,13 @@
 #include <cstdint>
 #include <memory>
 #include "guimodule/I_FaderController.h"
+#include "guimodule/C_BasicFader.h"
 #include "Offsets/vtables/IMovieListener.h"
 #include "framework/C_Signal.h"
 
 // -----------------------------------------------
-// wh::guimodule::C_FaderController -- KCD2 WHGame.dll 1.5.6 (kd7u).  sizeof 0x220 (ALLOC-PROVEN).
+// wh::guimodule::C_FaderController -- KCD2 WHGame.dll 1.5.6 (kd7u). sizeof 0x210;
+// make_shared allocation 0x220 includes the 0x10 control-block prefix.
 // -----------------------------------------------
 // RTTI TD 0x184CB09C8; COLs +0x00/0x41390F0, +0x08/0x4139118. vtables: primary
 // (I_FaderController) 0x183A97220 / IMovieListener@+0x08 0x183A96D88.
@@ -56,7 +58,8 @@ public:
     uint8_t  _pad174[4];                 // +0x174
     int64_t  m_timerSentinels[3];        // +0x178  ctor -100000 x3
     uint8_t  m_cvarBlock190[0x40];       // +0x190..+0x1D0  ICVar*/bound floats (+0x19C..+0x1C8) + +0x1B4 default duration [layout UNVERIFIED]
-    uint8_t  m_placeholderFader[0x30];   // +0x1D0  "Placeholder" fader obj (sub_1808DD5C0) [type UNVERIFIED]
+    C_BasicFader<C_FaderController> m_placeholderFader; // +0x1D0  "Placeholder" worker (sub_1808DD5C0)
+    uint8_t  _unk1F0[0x10];             // +0x1F0  trailing controller state [roles OPEN]
     uint64_t _unk200;                    // +0x200
     CryStringT<char> m_name;             // +0x208  ctor "fader"
     // +0x210: NOT a member. C_FaderController ends at +0x210 (last member m_name @+0x208).
@@ -65,6 +68,8 @@ public:
 };
 static_assert(sizeof(C_FaderController) == 0x210, "C_FaderController object is 0x210; the 0x220 make_shared block = 0x10 _Ref_count_obj2 control prefix + 0x210 object (creator sub_1818ACD14, ctor at alloc+0x10)");
 static_assert(offsetof(C_FaderController, m_timerSentinels) == 0x178, "timer sentinels at 0x178");
+static_assert(offsetof(C_FaderController, m_placeholderFader) == 0x1D0,
+              "placeholder fader must be at +0x1D0");
 static_assert(offsetof(C_FaderController, m_name) == 0x208, "name at 0x208");
 
 }  // namespace wh::guimodule

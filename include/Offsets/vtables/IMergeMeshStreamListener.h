@@ -1,17 +1,23 @@
 #pragma once
 
 // -----------------------------------------------
-// IMergeMeshStreamListener -- Cry3DEngine merged-mesh streaming callback (KCD2 1.5.6, kd7u).
+// IMergeMeshStreamListener -- Cry3DEngine merged-mesh streaming callback
+// (KCD2 WHGame.dll 1.5.6, kd7u). sizeof 0x08, two slots, no destructor.
 // -----------------------------------------------
-// Second base of wh::environmentmodule::C_RespawnManager (RTTI mdisp 0x08). Vptr-only layout
-// stub: the virtual set is not enumerated (interfuscator-shuffled SDK side); only the vptr
-// matters for the host layout. Do NOT call through this stub.
+// CMergedMeshesManager broadcasts slot [0] after a node reaches StreamedIn and
+// slot [1] before stream-out resources are released. C_RespawnManager is the
+// confirmed implementation at secondary-base offset +0x08.
+
+class CMergedMeshRenderNode;
 
 namespace Offsets {
 
-struct IMergeMeshStreamListener {
-    virtual void _vf0() = 0;   // slots not enumerated
+class IMergeMeshStreamListener {
+public:
+    virtual void OnMergedMeshStreamedIn(CMergedMeshRenderNode* pNode) = 0;  // [0]
+    virtual void OnMergedMeshStreamedOut(CMergedMeshRenderNode* pNode) = 0; // [1]
 };
-static_assert(sizeof(IMergeMeshStreamListener) == 0x08, "vptr-only interface");
+static_assert(sizeof(IMergeMeshStreamListener) == 0x08,
+              "IMergeMeshStreamListener is a vptr-only two-slot interface");
 
 }  // namespace Offsets

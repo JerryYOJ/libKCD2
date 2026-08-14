@@ -42,6 +42,8 @@ public:
     void _vf4() override;
     void _vf5() override;
     void _vf6() override;
+    void InventoryListenerUnk0(wh::entitymodule::C_Item* item,
+                               std::uint32_t amount) override; // inventory [0] 0x180E7ACD8
     void OnRegistered(I_RPGLocationManager* mgr) override;
     void OnUnregistered(I_RPGLocationManager* mgr) override;
     void OnLocationOccupied(I_RPGLocationManager* mgr, I_Location* loc) override;

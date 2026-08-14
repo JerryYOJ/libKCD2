@@ -6,8 +6,8 @@
 
 // -----------------------------------------------
 // wh::xgenaimodule::C_DynamicLinkablesManager -- registry of all
-// C_DynamicLinkableObject instances (KCD2 WHGame.dll 1.5.6, kd7u).  sizeof >= 0x78,
-// NOT create-site proven -> no size assert [U].
+// C_DynamicLinkableObject instances (KCD2 WHGame.dll 1.5.6, kd7u).  sizeof 0xB0
+// (MSVC layout-dump certified; create site not pinned).
 // -----------------------------------------------
 // RTTI TD rva 0x4FF5840; THREE COLs.  Primary vtable 0x184014058, 3 slots
 // ([0] deleting dtor sub_18341F834, [1] nullsub_1, [2] sub_18047B660).  MI bases:
@@ -19,15 +19,14 @@
 //          shuffled + extra slot => layout-only base; pures intentionally NOT
 //          overridden here (class stays abstract in this mirror, pointer-only use),
 //          same policy as C_NPCManager.
-//   +0x70  framework::I_WUIDMappingProvider -- subobject vtable 0x184014078 has
-//          only 2 SLOTS ([0] sub_1832A96F0 GetValueForWuid, [1] sub_1834432F0
-//          GetWuidForKey) vs the 3-slot declaration in the existing header (dtor
-//          last) -- DISCREPANCY flagged; the 2 data slots match, the trailing dtor
-//          slot may be folded/absent in this subobject [U].
+//   +0x70  framework::I_WUIDMappingProvider -- exactly 2 slots, no destructor:
+//          [0] sub_1832A96F0 GetWuidForKey, [1] sub_1834432F0 GetValueForWuid.
 // Dynamic objects register in q_1854961A0 (C_DynamicLinkableObject ctor
-// sub_18047BCFC).  Members past +0x78 unresolved.
-// WUID tag E_WUIDTag::DynamicLinkableObject (0x0A) -- stamped sub_180A2F418 from the
-// counter at q_1854961A0+0x78; GetValueForWuid sub_1832A96F0 resolves via q_185496338.
+// sub_18047BCFC). Identity generation uses +0x78/+0x80/+0x88; the remaining
+// +0x89..+0xAF tail stays OPEN.
+// WUID tag E_WUIDTag::DynamicLinkableObject (0x0A) -- stamped sub_180A2F418 from
+// the counter at q_1854961A0+0x78. FindByWuid uses the DynamicLinkable capability
+// gate over C_AIObjectManager's broad WUID map.
 
 namespace wh::xgenaimodule {
 
@@ -40,13 +39,28 @@ class C_DynamicLinkablesManager
       public framework::I_WUIDMappingProvider {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_DynamicLinkablesManager;
+
+    static C_DynamicLinkablesManager* GetInstance();
+    C_DynamicLinkableObject* FindByWuid(const framework::WUID& wuid);
+
     ~C_DynamicLinkablesManager() override;   // [0] deleting dtor sub_18341F834
     void _vf2() override;                    // [2] sub_18047B660 -- remove/unregister object [U role]
     // framework::I_WUIDMappingProvider impls
-    void* GetValueForWuid(const void* wuid) override;          // sink vt [0] sub_1832A96F0
-    void  GetWuidForKey(void* out, const void* key) override;  // sink vt [1] sub_1834432F0
+    framework::WUID GetWuidForKey(const CryGUID& key) const override; // [0] sub_1832A96F0
+    CryGUID GetValueForWuid(framework::WUID wuid) const override;     // [1] sub_1834432F0
     // IEntitySystemSink pures NOT overridden (see banner) -- abstract mirror.
+
+    std::uint64_t m_currentIdentity;  // +0x78, incremented for generated dynamic WUIDs
+    std::uint64_t m_reservedIdentity; // +0x80, exact role OPEN
+    bool m_skipReservedIdentity;      // +0x88, skips m_reservedIdentity when set
+    std::uint8_t _unknown89[0x27];    // +0x89
 };
-// sizeof >= 0x78 (base 0x68 + two MI vptrs); total size not create-site proven -> no static_assert [U]
+static_assert(sizeof(C_DynamicLinkablesManager) == 0xB0, "C_DynamicLinkablesManager must be 0xB0");
+static_assert(offsetof(C_DynamicLinkablesManager, m_currentIdentity) == 0x78,
+              "current dynamic identity must be at 0x78");
+static_assert(offsetof(C_DynamicLinkablesManager, m_reservedIdentity) == 0x80,
+              "reserved dynamic identity must be at 0x80");
+static_assert(offsetof(C_DynamicLinkablesManager, m_skipReservedIdentity) == 0x88,
+              "reserved-identity gate must be at 0x88");
 
 }  // namespace wh::xgenaimodule

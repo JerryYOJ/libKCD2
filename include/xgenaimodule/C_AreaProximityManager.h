@@ -1,6 +1,6 @@
 #pragma once
 #include <cstdint>
-#include "../framework/C_BaseModule.h"   // declares framework::I_ModuleMessageListener
+#include "../framework/I_ModuleMessageListener.h"
 
 // -----------------------------------------------
 // wh::xgenaimodule::C_AreaProximityManager : framework::I_ModuleMessageListener

@@ -22,7 +22,16 @@ History:
 #ifndef __CRY_LISTENERSET_H__
 #define __CRY_LISTENERSET_H__
 
-#include <CrySizer.h>
+class ICrySizer;
+
+namespace CryListenerSetDetail
+{
+	template <typename Sizer, typename Container>
+	inline void AddContainerMemory(Sizer* pSizer, const Container& container)
+	{
+		pSizer->AddContainer(container);
+	}
+}
 /************************************************************************
 
 Core elements:
@@ -101,9 +110,9 @@ Example:
 
 *************************************************************************/
 
-#ifndef _RELEASE
-	#define CRY_LISTENERSET_DEBUG
-#endif
+// KCD2 retail objects always use the compact listener-record layout. Define
+// CRY_LISTENERSET_DEBUG explicitly only for source-side diagnostic containers;
+// never infer it from this project's non-retail build configuration.
 
 // Forward decl.
 template <typename T>
@@ -151,9 +160,9 @@ public:
 
 	void GetMemoryUsage( ICrySizer *pSizer ) const
 	{
-		pSizer->AddContainer(m_listeners);
+		CryListenerSetDetail::AddContainerMemory(pSizer, m_listeners);
 #if defined(CRY_LISTENERSET_DEBUG)
-		pSizer->AddContainer(m_allocatedNames);
+		CryListenerSetDetail::AddContainerMemory(pSizer, m_allocatedNames);
 #endif
 	}
 private:	// DO NOT REMOVE - following methods only to be accessed only via CNotifier

@@ -7,15 +7,14 @@
 #include "../framework/I_WUIDMappingProvider.h"
 #include "../framework/S_WuidSlot.h"
 #include "../framework/C_Signal.h"
-#include "../framework/HashPrimitives.h"
 #include "../CryEngine/CryCommon/CryExtension/CryGUID.h"
 
 // -----------------------------------------------
 // wh::entitymodule::C_InventoryManager -- KCD2 WHGame.dll 1.5.6 (kd7u).  sizeof 0x100280 (1 MB).
 // -----------------------------------------------
-// RTTI .?AVC_InventoryManager@entitymodule@wh@@  primary vtable 0x183EB6610 (3 slots)  ctor sub_180BEAA38
-// Bases (combined single vtable, both mdisp 0): I_WUIDMappingProvider (polymorphic identity here) and
-// I_InventoryListener. Singleton: global qword_185487A58 (also C_EntityModule+0xE8). Dominated by the
+// RTTI .?AVC_InventoryManager@entitymodule@wh@@  provider vtable 0x183EB6610 (2 slots)  ctor sub_180BEAA38
+// I_WUIDMappingProvider is the polymorphic identity at +0x00. Singleton: global
+// qword_185487A58 (also C_EntityModule+0xE8). Dominated by the
 // 1 MB inline WUID slot table m_slots. Registers by CryGUID -> C_Inventory* and broadcasts
 // create/remove via two C_Signals.
 
@@ -40,6 +39,9 @@ public:
     // (WUID bits 16..31) + the inventory's stored WUID.
     C_Inventory* LookupByWUID(const wh::framework::WUID& wuid);
 
+    wh::framework::WUID GetWuidForKey(const CryGUID& key) const override;
+    CryGUID GetValueForWuid(wh::framework::WUID wuid) const override;
+
     wh::shared::C_Signal<const CryGUID&, C_Inventory*> m_onInventoryCreated;   // +0x08  emitted on create
     wh::shared::C_Signal<const CryGUID&, C_Inventory*> m_onInventoryRemoved;   // +0x18  emitted on remove
     // --- bespoke C_Inventory object pool (+0x28..+0x50) ---
@@ -55,9 +57,8 @@ public:
     uint32_t m_liveCount;                              // +0x100068  ++ on acquire / -- on release
     uint8_t  _pad10006C[4];                            // +0x10006C
     C_WorldInventory m_worldInventory;                 // +0x100070  embedded (0x1A8)
-    // Registry: CryGUID(16B) -> owning C_Inventory*. Real hasher is FNV-1a per 8-byte half XOR'd;
-    // S_DefaultHash<CryGUID> (FNV-1a over 16B) is the size-equivalent transparent hasher.
-    std::unordered_map<CryGUID, C_Inventory*, wh::shared::S_DefaultHash<CryGUID>> m_guidToInventory;  // +0x100218 (0x40)
+    // Registry: CryGUID(16B) -> owning C_Inventory*.
+    std::unordered_map<CryGUID, C_Inventory*> m_guidToInventory;  // +0x100218 (0x40)
     // Safe-iteration listener list (vector + reentrancy depth guard + compaction flag).
     std::vector<I_InventoryListener*> m_listeners;     // +0x100258
     uint64_t m_notifyDepth;                            // +0x100270  dispatch reentrancy counter

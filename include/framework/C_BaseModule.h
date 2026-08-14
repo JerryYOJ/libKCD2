@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include "I_ModuleMessageListener.h"
 
 // -----------------------------------------------
 // wh::framework -- C_BaseModule / I_ModuleMessageListener  (KCD2 WHGame.dll 1.5.6, kd7u)
@@ -28,15 +29,6 @@
 //   [6] GetModuleName                     "PostInit" reading of [3] was wrong)
 
 namespace wh::framework {
-
-// I_ModuleMessageListener -- framework message sink. Shares C_BaseModule's
-// primary vtable in KCD2 (single-inheritance, subobject at +0x00).
-class I_ModuleMessageListener {
-public:
-    inline static constexpr auto RTTI = Offsets::RTTI_I_ModuleMessageListener;
-    virtual ~I_ModuleMessageListener() = default;         // [0]
-    virtual void OnModuleMessage(void* msg) = 0;          // [1]
-};
 
 class C_BaseModule : public I_ModuleMessageListener {
 public:

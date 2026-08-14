@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 #include "playermodule/I_UIActionHintManager.h"
-#include "Offsets/vtables/IGame.h"   // Offsets::IInputEventListener (4 slots, no virtual dtor)
+#include "Offsets/vtables/IInputEventListener.h"
 #include "framework/C_Signal.h"
 
 // -----------------------------------------------

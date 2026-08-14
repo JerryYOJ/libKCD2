@@ -34,10 +34,11 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_SmartAreaSubBrain;
     void* TypeQuery0() override;            // [0]  cast thunk sub_1811D12B0
     void* CastQuery2() override;            // [2]  cast thunk sub_1811D12B8
-    void  Init(void* owner) override;       // [5]
+    void  Init(C_AIBrain* brain) override;  // [5]
     void  Step() override;                  // [22] sub_1804120A4
     bool  IsRunning() override;             // [23]
-    void* GetSubbrainType() override;       // [27]
+    bool  Configure(const S_SubBrainTemplate* descriptor) override; // [24] sub_1814B73DC
+    E_SubBrainType::Type GetSubbrainType() override; // [27]
     void  Serialize(void* stream) override; // [29]
     void  _vf31() override;                 // [31]
     void  RequestOwnerTick() override;      // [35]
@@ -56,7 +57,7 @@ public:
     int32_t             m_reqSlot198;      // +0x198  -1 default sentinel (result of sub_18320D0C0; index/enum) [U meaning]
     uint32_t            _pad19C;           // +0x19C  (never written)
     int64_t             m_req1A0;          // +0x1A0  0 default [U role]
-    uint64_t            m_reqHandle1A8;    // +0x1A8  8-byte handle; default -1 (qword_1853381E0 invalid sentinel) [WUID? INFERRED]
+    uint64_t            m_reqHandle1A8;    // +0x1A8 8-byte handle-like field; ctor default -1, exact type/invalid semantics unverified
     CryStringT<char>    m_reqName1B0;      // +0x1B0  request name; default empty (Str); assign sub_1804F3344, dtor sub_1804FC624
     int64_t             m_1B8;             // +0x1B8  0 [U role]
     int64_t             m_1C0;             // +0x1C0  0 [U role]

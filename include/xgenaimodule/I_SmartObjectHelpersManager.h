@@ -1,27 +1,25 @@
 #pragma once
-
-// -----------------------------------------------
-// wh::xgenaimodule::I_SmartObjectHelpersManager -- smart-object helpers manager
-// interface; base of C_SmartObjectHelpersManager (KCD2 WHGame.dll 1.5.6, kd7u).
-// sizeof 0x08.
-// -----------------------------------------------
-// RTTI mangled .?AVI_SmartObjectHelpersManager@xgenaimodule@wh@@.  Shape
-// (5 slots) read from the sole implementor C_SmartObjectHelpersManager (vtable
-// rva 0x3FECED8: [0]0x32EE060 [1]0x1096C08 [2]0x32EF8C0 [3]0x67CAB8
-// [4]0x1096CA4).  Slot semantics NOT decompiled [U] -- modeled as 5 pure slots
-// (no dtor claim).
+#include <cstddef>
+#include "../CryEngine/CryCommon/CryString.h"
 
 namespace wh::xgenaimodule {
+
+class C_SmartHelper;
+struct S_SmartHelperClassDefinition;
 
 class I_SmartObjectHelpersManager {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_I_SmartObjectHelpersManager;
-    virtual void SohVf0() = 0;   // [0] [U role]
-    virtual void SohVf1() = 0;   // [1] [U role]
-    virtual void SohVf2() = 0;   // [2] [U role]
-    virtual void SohVf3() = 0;   // [3] [U role]
-    virtual void SohVf4() = 0;   // [4] [U role]
+    virtual ~I_SmartObjectHelpersManager() = default; // [0]
+    virtual bool LoadDefinitions(const CryStringT<char>& path) = 0; // [1]
+    virtual C_SmartHelper* FindHelper(
+        const CryStringT<char>& className,
+        const CryStringT<char>& helperName) = 0; // [2]
+    virtual S_SmartHelperClassDefinition* FindClassDefinition(
+        const CryStringT<char>& className) = 0; // [3]
+    virtual void Activate() = 0; // [4]
 };
-static_assert(sizeof(I_SmartObjectHelpersManager) == 0x08, "interface: vtable pointer only");
+static_assert(sizeof(I_SmartObjectHelpersManager) == 0x08,
+              "I_SmartObjectHelpersManager must be 0x08");
 
 }  // namespace wh::xgenaimodule

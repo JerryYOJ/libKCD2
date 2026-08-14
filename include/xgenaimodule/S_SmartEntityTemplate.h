@@ -16,10 +16,11 @@ namespace wh::xgenaimodule {
 struct S_SmartBehaviorTemplate;
 struct S_SmartResource;
 
-struct S_SmartEntityTemplate
-    : S_DatabaseIDTemplate
-    , wh::databasemodule::C_ObjectTreeDBMultipartBase
+class S_SmartEntityTemplate
+    : public S_DatabaseIDTemplate
+    , public wh::databasemodule::C_ObjectTreeDBMultipartBase
 {
+public:
     inline static constexpr auto RTTI = Offsets::RTTI_S_SmartEntityTemplate;
 
     ~S_SmartEntityTemplate() override;  // [0] 0x1832C28E0

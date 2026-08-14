@@ -3,6 +3,10 @@
 #include <cstdint>
 #include "REL/ID.h"
 #include "../Offsets/vtables/IGame.h"
+#include "../Offsets/vtables/IGameFrameworkListener.h"
+#include "../Offsets/vtables/ILevelSystemListener.h"
+#include "../Offsets/vtables/IInputEventListener.h"
+#include "../framework/I_ModuleMessageListener.h"
 
 // -----------------------------------------------
 // C_Game — Warhorse KCD2 game module (CryEngine IGame implementation)
@@ -48,7 +52,7 @@ class C_Game : public Offsets::IGame,                    // +0x00
                public Offsets::IGameFrameworkListener,   // +0x08
                public Offsets::ILevelSystemListener,     // +0x10
                public Offsets::IInputEventListener,      // +0x18
-               public Offsets::I_ModuleMessageListener   // +0x20
+               public wh::framework::I_ModuleMessageListener // +0x20
 {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_Game;

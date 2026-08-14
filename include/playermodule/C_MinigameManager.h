@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <map>
 #include "E_MinigameType.h"
+#include "S_MinigameHandleSlot.h"
 
 // -----------------------------------------------
 // wh::playermodule::C_MinigameManager -- the minigame-session + scriptbind owner
@@ -40,21 +41,14 @@ class C_FastTravelScriptBind;
 
 class C_MinigameManager {
 public:
-    // 12-byte {static-sentinel ptr, idx, gen} handle head (init sub_180EF7360) [role UNRESOLVED]
-    struct S_HandleSlot {
-        void*   m_pSentinel;   // &unk_1856681D0
-        int16_t m_idx;         // -1
-        int16_t m_gen;         // -1
-    };
-
     // Find the live session of `type` for a user; when absent and `create`, build it through the
     // typed factory (sub_1809F0234).  includeFinished=false skips sessions whose I_Minigame
     // slot [7] reports finished.  (src/playermodule/C_MinigameManager.cpp)
     I_Minigame* FindOrCreateSession(uint32_t userId, E_MinigameType::Type type,
                                     bool create, bool includeFinished);   // 0x182024240
 
-    S_HandleSlot m_slot00;                             // +0x00  [role UNRESOLVED]
-    S_HandleSlot m_slot10;                             // +0x10  [role UNRESOLVED]
+    S_MinigameHandleSlot m_slot00;                    // +0x00  [role UNRESOLVED]
+    S_MinigameHandleSlot m_slot10;                    // +0x10  [role UNRESOLVED]
     std::multimap<uint32_t, I_Minigame*> m_sessions;   // +0x20  userId -> live sessions (one per type)
     C_ScriptBind_Alchemy*         m_pScriptBindAlchemy;         // +0x30  Lua "Alchemy"   (ctor 0x180EF737C)
     C_ScriptBind_Sharpening*      m_pScriptBindSharpening;      // +0x38  Lua "Sharpening" (0x180EF7400)
@@ -74,6 +68,8 @@ public:
     uint64_t m_callbackA8;                             // +0xA8  callback head (sub_180515D90) [role UNRESOLVED]
 };
 static_assert(sizeof(C_MinigameManager) == 0xB0, "C_MinigameManager must be 0xB0");
+static_assert(offsetof(C_MinigameManager, m_slot10) == 0x10,
+              "second sentinel-backed slot must be at +0x10");
 static_assert(offsetof(C_MinigameManager, m_sessions) == 0x20, "session multimap at 0x20");
 static_assert(offsetof(C_MinigameManager, m_pScriptBindAlchemy) == 0x30, "Alchemy scriptbind at 0x30");
 static_assert(sizeof(std::multimap<uint32_t, I_Minigame*>) == 0x10,

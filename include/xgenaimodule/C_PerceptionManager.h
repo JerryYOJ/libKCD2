@@ -25,6 +25,9 @@ class C_PerceptionItemListener;
 class C_PerceptionManager {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_PerceptionManager;
+
+    static C_PerceptionManager* GetInstance();
+
     virtual ~C_PerceptionManager();   // [0] sub_1831CA2E4 [U -- single slot; dtor role presumed]
 
     uint8_t  m_perceptorDispatch[0x90];   // +0x008..+0x097  9 x {handler_table*, i16 = -1, i16 = -1} stride-16 perceptor-category dispatch entries (&unk_18566B860 x6, &unk_185669B18, &unk_18566B870, &unk_18566B880) [U interior]

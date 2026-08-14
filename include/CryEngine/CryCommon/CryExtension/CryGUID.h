@@ -16,6 +16,8 @@
 
 #pragma once
 
+#include <cstddef>
+#include <functional>
 
 struct CryGUID
 {
@@ -40,6 +42,27 @@ struct CryGUID
 	bool operator !=(const CryGUID& rhs) const {return hipart != rhs.hipart || lopart != rhs.lopart;}
 	bool operator <(const CryGUID& rhs) const {return hipart == rhs.hipart ? lopart < rhs.lopart : hipart < rhs.hipart;}
 };
+
+namespace std
+{
+	template <>
+	struct hash<CryGUID>
+	{
+		std::size_t operator ()(const CryGUID& value) const noexcept
+		{
+			const auto fnv1a = [](const uint64& part)
+			{
+				std::size_t hash = 0xCBF29CE484222325ULL;
+				const auto* bytes = reinterpret_cast<const unsigned char*>(&part);
+				for (std::size_t i = 0; i < sizeof(part); ++i)
+					hash = (hash ^ bytes[i]) * 0x100000001B3ULL;
+				return hash;
+			};
+
+			return fnv1a(value.hipart) ^ fnv1a(value.lopart);
+		}
+	};
+}
 
 
 #define MAKE_CRYGUID(high, low) CryGUID::Construct((uint64) high##LL, (uint64) low##LL)

@@ -56,13 +56,15 @@ public:
     static C_SoulList* GetInstance();                          // C_RPGModule::GetInstance()->m_pSoulList
     C_Soul* LookupByWUID(const wh::framework::WUID& wuid);     // sub_181F985D0(&m_soulTable, &wuid)
 
+    wh::framework::WUID GetWuidForKey(const CryGUID& key) const override;
+    CryGUID GetValueForWuid(wh::framework::WUID wuid) const override;
+
     wh::shared::C_Signal<> m_onSoulAdded;    // +0x18  (purpose inferred from context; dtor sub_182D2532C)
     wh::shared::C_Signal<> m_onSoulRemoved;  // +0x28  (purpose inferred; dtor sub_182D25384)
     S_SoulWuidTable m_soulTable;             // +0x38  slots @abs +0x60 (lookup base = this+0x38)
-    // Two CryGUID-keyed hash maps (FNV-1a over the 16-byte key, sub_18047AAC4; node 0x28).
-    // WHICH guid each keys on (instance vs template) is unresolved.
-    std::unordered_map<CryGUID, C_Soul*, wh::shared::S_DefaultHash<CryGUID>> m_soulsByGuid;   // +0x100080
-    std::unordered_map<CryGUID, C_Soul*, wh::shared::S_DefaultHash<CryGUID>> m_soulsByGuid2;  // +0x1000C0
+    // Two CryGUID-keyed hash maps; which GUID each indexes remains OPEN.
+    std::unordered_map<CryGUID, C_Soul*> m_soulsByGuid;   // +0x100080
+    std::unordered_map<CryGUID, C_Soul*> m_soulsByGuid2;  // +0x1000C0
     uint32_t m_unk100100;                    // +0x100100  flag/count (unresolved)
     uint32_t _pad100104;                     // +0x100104
     C_Soul*  m_pNullSoul;                    // +0x100108  ctor-time cached copy of the global fallback

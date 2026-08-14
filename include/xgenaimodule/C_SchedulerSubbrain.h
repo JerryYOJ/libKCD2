@@ -41,7 +41,7 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_SchedulerSubbrain;
     void  Step() override;                  // [22] sub_180760D00
     bool  IsRunning() override;             // [23] sub_18041A6A0 (return 1)
-    void* GetSubbrainType() override;       // [27] sub_181A74270
+    E_SubBrainType::Type GetSubbrainType() override; // [27] sub_181A74270
     void  Serialize(void* stream) override; // [29]
     void  _vf32() override;                 // [32] live here
     void  _vf33() override;                 // [33] live here

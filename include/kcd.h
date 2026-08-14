@@ -24,6 +24,7 @@
 #include "CryEngine/CryCommon/Cry_Math.h"    // Vec3 / Vec2 / Quat / QuatT / Matrix34 (self-includes platform.h)
 #include "CryEngine/CryCommon/Cry_Geo.h"     // AABB (self-includes Cry_Math.h)
 #include "CryEngine/CryCommon/CryArray.h"    // DynArray
+#include "CryEngine/CryCommon/SRainParams.h" // KCD2 0x120 scene-rain parameter revision
 
 // ---- Offsets / RTTI infrastructure (must precede class headers) ----
 #include "Offsets/Offsets.h"
@@ -65,8 +66,15 @@
 #include "Offsets/vtables/ILocalizationManager.h"
 #include "Offsets/vtables/ISystem.h"
 #include "Offsets/vtables/IEntity.h"
-#include "Offsets/vtables/IGameFramework.h"
+#include "Offsets/vtables/IComponent.h"
+#include "Offsets/vtables/IGameObjectExtension.h"
+#include "Offsets/vtables/IGameObjectView.h"
+#include "Offsets/vtables/IGameObjectProfileManager.h"
+#include "Offsets/vtables/CGameObjectExtensionHelper.h"
 #include "Offsets/vtables/IActor.h"
+#include "Offsets/vtables/IItem.h"
+#include "Offsets/vtables/IGameFramework.h"
+#include "Offsets/vtables/ILevelSystemListener.h"
 #include "Offsets/vtables/IGame.h"
 #include "Offsets/vtables/IGameStartup.h"
 #include "Offsets/vtables/ITimer.h"
@@ -87,6 +95,7 @@
 #include "Offsets/vtables/IExternalInterfaceHandler.h"
 #include "Offsets/vtables/IVirtualKeyboardEvents.h"
 #include "CryEngine/CryCommon/CFlashUIElement.h"
+#include "CryEngine/CryCommon/CFlashUI.h"
 #include "Scaleform/GRefCountImplCore.h"
 #include "Scaleform/GFxStateBag.h"
 #include "Scaleform/GASString.h"
@@ -99,6 +108,8 @@
 #include "Offsets/vtables/IUIAction.h"
 #include "Offsets/vtables/IServiceListener.h"
 #include "Offsets/vtables/IActionListener.h"
+#include "Offsets/vtables/IHardwareMouseEventListener.h"
+#include "Offsets/vtables/ILoadtimeCallback.h"
 
 // ---- RE'd concrete engine classes (real members; use SDK/std types). These are OUR
 //      reverse-engineered definitions, kept in crysystem/ (NOT the stock CryCommon SDK folder). ----
@@ -130,13 +141,17 @@
 #include "framework/C_Signal.h"
 #include "framework/S_WuidSlot.h"       // generation-counted registry slot (0x10)
 #include "framework/HashPrimitives.h"   // FNV-1a/FNV-1 + S_DefaultHash for std:: unordered keys
+#include "CryEngine/CryCommon/CryExtension/CryGUID.h" // includes KCD2 std::hash<CryGUID>
 #include "framework/InplaceVector.h"    // std::vector with inline small-buffer storage
 #include "framework/C_Listeners.h"      // C_Listeners<L,N> / C_DependentListeners<L,K,N> registries
+#include "framework/S_MulticastDelegateStorage.h"
 #include "framework/C_ModuleMessage.h"
+#include "framework/I_ModuleMessageListener.h"
 #include "framework/CryDeferrable.h"
 #include "entitymodule/I_ItemAttachmentListener.h"
 #include "entitymodule/I_EquipmentManagerListener.h"
 #include "entitymodule/C_Actor.h"
+#include "entitymodule/S_TrackedFloat.h"
 #include "entitymodule/C_Human.h"
 #include "entitymodule/C_Animal.h"
 #include "entitymodule/C_Horse.h"
@@ -145,6 +160,8 @@
 // ---- Tranche 2: item / inventory ----
 #include "entitymodule/E_ItemType.h"
 #include "entitymodule/E_WeaponEquipSlot.h"
+#include "entitymodule/E_ItemHolderType.h"
+#include "entitymodule/E_ItemHolderChangeFlags.h"
 #include "entitymodule/S_EquipmentSlotIdWrapper.h"
 #include "entitymodule/S_ItemClass.h"
 #include "entitymodule/S_PickableItemClass.h"
@@ -155,7 +172,13 @@
 #include "entitymodule/S_CraftingMaterialItemClass.h"
 #include "entitymodule/S_HerbItemClass.h"
 #include "entitymodule/C_ItemDatabase.h"
+#include "entitymodule/I_InventoryListener.h"
+#include "entitymodule/I_ItemCollectionListener.h"
+#include "entitymodule/C_ItemHolder.h"
 #include "entitymodule/C_Item.h"
+#include "entitymodule/C_ItemWrapper.h"
+#include "entitymodule/C_InventoryBase.h"
+#include "entitymodule/C_ItemCollection.h"
 #include "entitymodule/C_Inventory.h"
 #include "entitymodule/C_WorldInventory.h"
 #include "entitymodule/C_EquipmentManager.h"
@@ -165,11 +188,16 @@
 // ---- Tranche 3: combat subsystems (model-property family + per-actor combat state) ----
 #include "framework/ModelPropertyTraits.h"
 #include "combatmodule/CombatModelTraits.h"
+#include "framework/S_ItemFlagInfo.h"
 #include "framework/C_ModelProperty.h"
 #include "framework/C_ModelRefProperty.h"
 #include "framework/C_ModelContextProperty.h"
 #include "framework/C_ModelSetProperty.h"
 #include "framework/C_ModelArrayProperty.h"
+#include "entitymodule/I_Interactor.h"
+#include "entitymodule/C_InteractionType.h"
+#include "entitymodule/C_PlayerInteraction.h"
+#include "entitymodule/C_PlayerInteractor.h"
 #include "combatmodule/S_CombatActorState.h"
 #include "combatmodule/C_CombatActorObject.h"
 #include "combatmodule/C_CombatActorUpdatedObject.h"
@@ -236,6 +264,7 @@
 #include "rpgmodule/C_SoulRPGStats.h"
 #include "rpgmodule/S_SoulRegistry.h"
 #include "rpgmodule/C_SoulBuffList.h"
+#include "rpgmodule/S_SoulMailboxSub.h"
 #include "rpgmodule/C_Soul.h"
 #include "rpgmodule/C_StormProgram.h"
 #include "rpgmodule/C_SoulList.h"
@@ -1056,6 +1085,7 @@
 #include "guimodule/C_CutsceneEvent.h"
 #include "guimodule/S_CutsceneProfile.h"
 #include "guimodule/C_CutsceneHandler.h"
+#include "guimodule/C_BasicFader.h"
 #include "guimodule/C_FaderController.h"
 #include "guimodule/C_FaderSuspend.h"
 // trigger nodes
@@ -1069,10 +1099,9 @@
 
 // ---- Tranche 19: small-modules wave -- environmentmodule (23) + questmodule (14) +
 //      wh::shared streams (8) + the conceptmodule bases they stand on (composed from
-//      analysis/small_modules_port/env_quest_shared.md). The three env databases' data-ns
-//      row structs (C_PickableAreaData/S_PickableAreaRow, S_PickableAreaMaterial(+DBData),
-//      S_WeatherProfileData) are forward-declared only -- layouts come with the
-//      generated-tables pass. ----
+//      analysis/small_modules_port/env_quest_shared.md). The pickable-area raw rows,
+//      parsed definitions, runtime records, and concrete indexes are recovered below;
+//      S_WeatherProfileData remains outside this tranche. ----
 // engine-interface stubs + framework support
 #include "Offsets/vtables/CFlowBaseNode.h"
 #include "Offsets/vtables/IMergeMeshStreamListener.h"
@@ -1110,10 +1139,19 @@
 #include "environmentmodule/C_MoonEffect.h"
 #include "environmentmodule/C_Rain.h"
 #include "environmentmodule/C_ScriptBindEnvironment.h"
-#include "environmentmodule/C_RespawnManager.h"
-#include "environmentmodule/C_WeatherSystem.h"
+#include "environmentmodule/S_PickableAreaRow.h"
+#include "environmentmodule/C_PickableAreaData.h"
+#include "environmentmodule/S_PickableAreaMaterialDBData.h"
+#include "environmentmodule/S_PickableAreaMaterial.h"
+#include "environmentmodule/S_PickableAreaInstance.h"
+#include "environmentmodule/C_PickableAreaInstanceGrid.h"
+#include "environmentmodule/S_PickableAreaRespawnRecord.h"
+#include "environmentmodule/S_PickableAreaRespawnRecordHash.h"
+#include "environmentmodule/S_PickableAreaRespawnRecordEqual.h"
 #include "environmentmodule/C_PickableAreaDatabase.h"
 #include "environmentmodule/C_PickableAreaMaterialDatabase.h"
+#include "environmentmodule/C_RespawnManager.h"
+#include "environmentmodule/C_WeatherSystem.h"
 #include "environmentmodule/C_WeatherProfileDatabase.h"
 #include "environmentmodule/C_EnvironmentModule.h"
 // questmodule
@@ -1277,12 +1315,16 @@
 #include "xgenaimodule/C_AIObject.h"
 #include "xgenaimodule/C_LinkableObject.h"
 #include "xgenaimodule/C_MessageCapableObject.h"
+#include "xgenaimodule/S_IntelligentObjectEntry.h"
 #include "xgenaimodule/C_IntelligentObject.h"
 #include "xgenaimodule/I_NPC.h"
+#include "xgenaimodule/S_NPCWuidState.h"
 #include "xgenaimodule/C_NPC.h"
 // message system
 #include "xgenaimodule/I_MessageDispatcher.h"
 #include "xgenaimodule/C_NPCMessageDispatcher.h"
+#include "xgenaimodule/S_MessageHandle.h"
+#include "xgenaimodule/S_MessageInboxEntry.h"
 #include "xgenaimodule/C_MessageInbox.h"
 // managers
 #include "xgenaimodule/I_DebugDraw.h"
@@ -1320,6 +1362,8 @@
 #include "xgenaimodule/I_LinkableObjectHolder.h"
 #include "xgenaimodule/C_LinkableObjectHolder.h"
 #include "xgenaimodule/C_LinkableObjectExtension.h"
+#include "xgenaimodule/S_AnimalSpawnState.h"
+#include "xgenaimodule/C_AnimalSpawner.h"
 // perception objects
 #include "xgenaimodule/C_PerceptionObject.h"
 #include "xgenaimodule/C_PerceptibleObject.h"
@@ -1419,6 +1463,11 @@
 #include "xgenaimodule/I_BehaviorToMonsterLODPostponer.h"
 #include "xgenaimodule/I_SmartEntityListener.h"
 #include "xgenaimodule/I_SmartAreaListener.h"
+#include "xgenaimodule/E_SubBrainType.h"
+#include "xgenaimodule/S_SubBrainTemplate.h"
+#include "xgenaimodule/S_BehaviorTreeSubBrainTemplate.h"
+#include "xgenaimodule/S_SwitchingSubBrainTemplate.h"
+#include "xgenaimodule/S_SUBBStateListener.h"
 #include "xgenaimodule/C_SUBBBase.h"
 #include "xgenaimodule/C_EmptySUBB.h"
 #include "xgenaimodule/C_SmartEntitySubbrain.h"
@@ -1471,6 +1520,9 @@
 #include "xgenaimodule/I_SmartAreaManager.h"
 #include "xgenaimodule/I_SmartObjectHelpersManager.h"
 #include "xgenaimodule/I_SmartObjectsManagerListener.h"
+#include "xgenaimodule/S_SmartHelperLink.h"
+#include "xgenaimodule/S_SmartHelperCategory.h"
+#include "xgenaimodule/S_SmartHelperClassDefinition.h"
 #include "xgenaimodule/C_SmartEntity.h"
 #include "xgenaimodule/C_InteractiveSmartEntity.h"
 #include "xgenaimodule/C_SmartObject.h"
@@ -1503,6 +1555,7 @@
 #include "xgenaimodule/C_AreaProximityManager.h"
 #include "xgenaimodule/C_TriggerArea.h"
 #include "xgenaimodule/C_AreaUnion.h"
+#include "xgenaimodule/C_AreaUnionExtension.h"
 #include "xgenaimodule/C_AreaCallbackDispatch.h"
 #include "xgenaimodule/E_AddRemove.h"
 #include "xgenaimodule/C_AreaLabelManager.h"
@@ -1529,6 +1582,22 @@
 #include "xgenaimodule/C_AIKeyAccessManager.h"
 #include "xgenaimodule/I_LinkEditorValidator.h"
 #include "xgenaimodule/C_LinkEditorValidator.h"
+
+// WUID object registries and typed lookup surfaces
+#include "entitymodule/C_ItemIndexer.h"
+#include "entitymodule/C_EntityModule.h"
+#include "shopmodule/C_ShopRegistry.h"
+#include "shopmodule/C_ShopModule.h"
+#include "xgenaimodule/C_ParticleEffect.h"
+#include "xgenaimodule/C_ParticleEffectManager.h"
+#include "xgenaimodule/C_TriggerAreaManager.h"
+#include "xgenaimodule/navigation/C_Navigation.h"
+#include "xgenaimodule/navigation/C_PathManager.h"
+#include "xgenaimodule/navigation/C_PredefinedPathManager.h"
+#include "xgenaimodule/navigation/C_ReplanMoveArea.h"
+#include "xgenaimodule/navigation/S_ReplanMoveAreaRegistryEntry.h"
+#include "xgenaimodule/navigation/C_ReplanMoveAreaRegistry.h"
+#include "xgenaimodule/movement/C_FormationManager.h"
 
 // ---- Tranche 26: xgenaimodule database family (Family A: template tree DBs;
 //      Family B: hand-written mailbox/SE-condition DBs)
@@ -1790,13 +1859,18 @@
 #include "playermodule/E_AlchemyState.h"
 #include "playermodule/E_AlchemyVerb.h"
 #include "playermodule/E_AlchemyDirectorSlot.h"
+#include "Offsets/SmartScriptTable.h"
+#include "cry3dengine/I_MaterialInstance.h"
 #include "framework/C_EEExpression.h"
 #include "framework/C_ExpressionEngine.h"
 #include "framework/GuidUtils.h"
+#include "entitymodule/S_DocumentContentImage.h"
+#include "entitymodule/S_DocumentContent.h"
 #include "playermodule/S_AlchemyRecipeName.h"
 #include "playermodule/C_AlchemyRecipeIngredient.h"
 #include "playermodule/C_AlchemyRecipeProduct.h"
 #include "playermodule/C_AlchemyRecipeStepType.h"
+#include "playermodule/I_AlchemyRecipeStep.h"
 #include "playermodule/C_AlchemyRecipeStep.h"
 #include "playermodule/C_AlchemyRecipe.h"
 #include "playermodule/C_AlchemyPotionBase.h"
@@ -1809,7 +1883,9 @@
 #include "playermodule/I_Minigame.h"
 #include "playermodule/I_MinigameCamera.h"
 #include "playermodule/C_Minigame.h"
+#include "playermodule/S_MinigameHandleSlot.h"
 #include "playermodule/C_MinigameManager.h"
+#include "playermodule/C_HerbGathering.h"
 #include "playermodule/I_ActionSets.h"
 #include "playermodule/C_ActionSets.h"
 #include "playermodule/S_AlchemyEmptyParams.h"
@@ -1859,10 +1935,54 @@
 #include "playermodule/C_FunctionHeatingTimeRange.h"
 #include "playermodule/C_Alchemy.h"
 #include "entitymodule/C_AlchemyTable.h"
+#include "framework/I_UIBook.h"
+#include "entitymodule/I_DocumentActionListener.h"
+#include "entitymodule/C_PickableItem.h"
+#include "entitymodule/E_DocumentBookKind.h"
 #include "entitymodule/C_DocumentItem.h"
 #include "entitymodule/C_DisableAlchemyTable.h"
 
-// ---- Tranche 26: cry3dengine mesh/brush engine -- IRenderNode hierarchy (IShadowCaster ->
+// ---- Tranche 31: high-evidence game-object extension families ----
+// CarryItemPile extension and database records
+#include "entitymodule/S_CIPilePhase.h"
+#include "entitymodule/S_CarryItemPileGeom.h"
+#include "entitymodule/C_CarryItemPile.h"
+// lock/door/stash family
+#include "entitymodule/S_StashValueWatcher.h"
+#include "entitymodule/C_LockBase.h"
+#include "entitymodule/C_AnimDoor.h"
+#include "entitymodule/C_LockpickableEntity.h"
+#include "entitymodule/C_Stash.h"
+#include "entitymodule/C_CartStash.h"
+#include "entitymodule/C_DestroStash.h"
+#include "entitymodule/C_Nest.h"
+#include "entitymodule/C_StashCorpse.h"
+// interaction-trigger interface and data-empty registration leaves
+#include "entitymodule/E_InteractionType.h"
+#include "entitymodule/I_InteractionTrigger.h"
+#include "entitymodule/C_InteractionTrigger.h"
+#include "entitymodule/C_ActionTrigger.h"
+#include "entitymodule/C_BedTrigger.h"
+#include "entitymodule/C_FoodProcessingTrigger.h"
+#include "entitymodule/C_KettleActionTrigger.h"
+#include "entitymodule/C_SequenceTrigger.h"
+#include "entitymodule/C_SmartObjectTrigger.h"
+#include "entitymodule/C_WaterTubeActionTrigger.h"
+// entity-side cutscene extensions + corrected non-polymorphic GUI configuration
+#include "entitymodule/C_CutsceneData.h"
+#include "entitymodule/C_FastTravelCutsceneData.h"
+#include "entitymodule/C_IngameCutsceneData.h"
+#include "entitymodule/C_SkipTimeCutsceneData.h"
+#include "entitymodule/C_CutsceneHolder.h"
+#include "guimodule/C_CutsceneConfiguration.h"
+// entity-side Hole extension
+#include "entitymodule/C_Hole.h"
+// Battlement extension and its recursively recovered owned slot family
+#include "playermodule/I_BattlementSlot.h"
+#include "playermodule/C_BattlementSlot.h"
+#include "playermodule/C_Battlement.h"
+
+// ---- Tranche 32: cry3dengine mesh/brush engine -- IRenderNode hierarchy (IShadowCaster ->
 //      IRenderNode -> IBrush/IVegetation), CStatObj + its bases, and the merged-mesh (MMRM)
 //      system (manager + sector node). PARALLEL RE headers, not the stock SDK: interfaces in
 //      Offsets/vtables (KCD2 binary slot order, e4cp -- interfuscator-shuffled vs stock),
@@ -1898,3 +2018,19 @@
 #include "cry3dengine/CStatObj.h"
 #include "cry3dengine/CMergedMeshRenderNode.h"
 #include "cry3dengine/CMergedMeshesManager.h"
+
+// ---- Tranche 33: projectile and missile-weapon extension family ----
+#include "CryEngine/CryAction/IHitListener.h"
+#include "CryEngine/CryCommon/StackAllocator.h"
+#include "CryEngine/CryCommon/StdStackContainer.h"
+#include "CryEngine/CryCommon/StackVector.h"
+#include "EntityEffects/TAttachedEffectId.h"
+#include "EntityEffects/SEffectInfo.h"
+#include "EntityEffects/CEffectsController.h"
+#include "entitymodule/ProjectileFlags.h"
+#include "entitymodule/SProjectileDesc.h"
+#include "entitymodule/S_DeferredArrowCollision.h"
+#include "entitymodule/CProjectile.h"
+#include "entitymodule/CArrow.h"
+#include "entitymodule/C_Decoy.h"
+#include "entitymodule/C_MissileWeaponItem.h"

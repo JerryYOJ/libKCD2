@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include "IGameObjectExtension.h"
 
 // -----------------------------------------------
 // IActor - KCD2 binary vtable order (Warhorse merged actor interface)
@@ -24,62 +25,11 @@
 // Common stubs seen: 0x1803b6e80 = retn 0, 0x18066cd10 = xor eax/retn,
 //                    0x180838ae0 = ret false, 0x18041a6a0 = ret true.
 
-struct IEntity;
-struct IComponentEventDistributer;   // RTTI .?AUIComponentEventDistributer@@ (global ns, IComponent.h)
-
 namespace Offsets {
 
-struct IGameObject;
-
-// IGameObjectExtension - SDK base of IActor, flattening the extension chain
-//   IComponent (empty root; its virtuals are folded onto IActor in this interfuscated build)
-//   + std::enable_shared_from_this<IComponent> (the weak_ptr subobject at +0x08)
-//   + IGameObjectExtension's own data (+0x18..+0x3F).
-// Only the data survives here (virtuals live on IActor). First member sits at +0x08 so the
-// derived IActor's vptr occupies +0x00; sizeof 0x38 so IActor rounds to 0x40.
-struct IGameObjectExtension {
-    uint64_t        m_weakPtr[2];              // +0x08  std::enable_shared_from_this<IComponent> weak_ptr
-    IComponentEventDistributer* m_pDistributer;  // +0x18  non-owning back-ptr to CEntitySystem's event-distributer singleton (IComponent::SetDistributer)
-    uint32_t        m_componentEntityId;       // +0x20
-    uint32_t        m_componentFlags;          // +0x24
-    IGameObject*    m_pGameObject;             // +0x28
-    uint32_t        m_entityId;                // +0x30  EntityId
-    uint32_t        _pad34;                    // +0x34
-    IEntity*        m_pEntity;                 // +0x38  VERIFIED (slot 5 returns this)
-};
-static_assert(sizeof(IGameObjectExtension) == 0x38);
-
-struct IActor : IGameObjectExtension {
-    virtual void  Dtor(char flags) = 0;                     // [0]   0x18285a354  scalar deleting dtor, delete 0x9C0
-    virtual void  ProcessEvent(void* pEvent) = 0;           // [1]   0x1804a8ea8  SEntityEvent&
-    virtual int   GetEventFlags() = 0;                      // [2]   0x1804a97d0
-    virtual int   GetEventPriority(int id) = 0;             // [3]   0x18083d2e4
-    virtual void  _vf04() = 0;                              // [4]   retn 0
-    virtual IEntity* GetEntity() = 0;                       // [5]   return *(this+0x38)          VERIFIED
-    virtual void  _vf06() = 0;                              // [6]   retn 0
-    virtual bool  Init(IGameObject* pGO) = 0;               // [7]   0x180ae86e0  (1153 bytes)
-    virtual void  PostInit(IGameObject* pGO) = 0;           // [8]   0x1808cfe9c
-    virtual void  _vf09() = 0;                              // [9]   retn 0
-    virtual void  _vf10() = 0;                              // [10]  retn 0
-    virtual void  _vf11() = 0;                              // [11]  0x1828604a4  InitClient (tentative)
-    virtual void  _vf12() = 0;                              // [12]  0x18285fddc  ReloadExtension (tentative)
-    virtual void  _vf13() = 0;                              // [13]  0x18285d928
-    virtual void  FullSerialize(void* pSer) = 0;            // [14]  0x1808dfc50  checks byte@0x9B4
-    virtual void  _vf15() = 0;                              // [15]  0x18285d264
-    virtual bool  _vf16() = 0;                              // [16]  ret false
-    virtual bool  _vf17() = 0;                              // [17]  ret true
-    virtual int   _vf18() = 0;                              // [18]  ret -1
-    virtual void  PostSerialize() = 0;                      // [19]  0x18285feac  (tentative)
-    virtual void  _vf20() = 0;                              // [20]  retn 0
-    virtual void* _vf21() = 0;                              // [21]  *(rdx)=0; ret rdx
-    virtual void  Update(void* ctx, int slot) = 0;          // [22]  0x18064450c  (tentative)
-    virtual void  HandleEvent(void* pEvent) = 0;            // [23]  0x180706190  (tentative)
-    virtual void  _vf24() = 0;                              // [24]  retn 0
-    virtual void  _vf25() = 0;                              // [25]  retn 0
-    virtual void* _vf26() = 0;                              // [26]  lea rax, unk_1855968B8
-    virtual void  _vf27() = 0;                              // [27]  0x180644b14  SetHealth (tentative)
-    virtual void  _vf28() = 0;                              // [28]  retn 0
-    virtual void  _vf29() = 0;                              // [29]  0x1815cdc8c
+class IActor : public IGameObjectExtension {
+public:
+    virtual void  _vf29() = 0;                              // [29]  0x1815CDC8C
     virtual float GetHealth() = 0;                          // [30]  soul@0x668 else float@0x164 VERIFIED
     virtual void  _vf31() = 0;                              // [31]  0x18285d9c8
     virtual void  SetMaxHealth(float v) = 0;                // [32]  movss [this+0x168],xmm1      VERIFIED
@@ -327,25 +277,6 @@ struct IActor : IGameObjectExtension {
     virtual void  _vf273() = 0;
     virtual void  _vf274() = 0;
 };
-static_assert(sizeof(IActor) == 0x40);
-
-// Secondary bases (each contributes a single vtable pointer to C_Actor at
-// +0x40 / +0x48). Their own virtual sets are opaque / not yet recovered; only
-// the vptr matters for the C_Actor layout.
-struct IGameObjectView {
-    virtual void _vf0() = 0;                                 // secondary vtable {for IGameObjectView}
-};
-static_assert(sizeof(IGameObjectView) == 0x08);
-
-struct IGameObjectProfileManager {
-    virtual void _vf0() = 0;                                 // secondary vtable {for IGameObjectProfileManager}
-};
-static_assert(sizeof(IGameObjectProfileManager) == 0x08);
-
-// CGameObjectExtensionHelper<T, I, N> - CryEngine game-object-extension helper (CRTP over T).
-// Thin: derives the interface I (=IActor) and adds NO data -- it only provides the static N-slot
-// RMI dispatch. It is C_Actor's direct primary base; sizeof == sizeof(I) so the layout is IActor's.
-template<typename T, typename I, int N>
-struct CGameObjectExtensionHelper : I {};
+static_assert(sizeof(IActor) == 0x40, "IActor must be 0x40");
 
 }  // namespace Offsets

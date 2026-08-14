@@ -2,7 +2,9 @@
 #include <cstdint>
 #include "C_Signal.h"
 #include "ModelPropertyTraits.h"
+#include "S_ItemFlagInfo.h"
 #include "../combatmodule/CombatModelTraits.h"
+#include "../CryEngine/CryCommon/Cry_Math.h"
 
 // -----------------------------------------------
 // wh::shared::C_ModelProperty<T,Def,Sig,Trace,Save,Own> -- KCD2 1.5.6 (kd7u).  sizeof 0x30.
@@ -47,9 +49,10 @@ static_assert(sizeof(C_ModelProperty<bool>) == 0x30, "C_ModelProperty must be 0x
 static_assert(sizeof(C_ModelProperty<int, traits::C_CustomDefaultValueTrait<int>>) == 0x30,
               "C_ModelProperty (custom default) must be 0x30");
 
-// GENERIC form under traits::C_OwnershipEmpty -- the owner slot is ELIDED: value @+0x08, C_Signal
-// @+0x10, stride 0x20, no default slot (proven from the C_Player state-property vtables:
-// GetValue -> *(u8*)(this+8), GetSignal -> this+0x10, deleting dtor touches only vtable+signal).
+// GENERIC form under traits::C_OwnershipEmpty -- only the owner POINTER is elided. The policy
+// objects remain real members in source order. Their one-byte identities align m_signal to +0x10
+// for scalar values, +0x18 for Vec2, and +0x38 for S_ItemFlagInfo; deleting destructors prove the
+// corresponding complete sizes 0x28, 0x30, and 0x50.
 template<class T, class Def, class Sig, class Trace, class Save>
 class C_ModelProperty<T, Def, Sig, Trace, Save, traits::C_OwnershipEmpty>
     : public I_ReadonlyModelProperty<T, Sig> {
@@ -58,12 +61,26 @@ public:
     const char* ToDbgStr() const override { return ""; }
     const void* GetSignal() const override { return &m_signal; }
 
-    T                       m_value;     // +0x08
-    wh::shared::C_Signal<T> m_signal;    // +0x10  change-notify (0x10)
+    T                    m_value;       // +0x08
+    Def                  m_default;     // empty Standard trait still has object identity
+    typename Sig::Signal m_signal;      // aligned after m_default
+    Trace                m_trace;       // empty policy object
+    Save                 m_saveLoad;    // empty policy object
+    traits::C_OwnershipEmpty m_ownership; // empty policy object; no owner pointer
 };
 static_assert(sizeof(C_ModelProperty<bool, traits::C_StandardDefaultValueTrait<bool>,
                                      traits::C_SignalWithNewValueTrait<bool>, traits::C_DebugNoTrace,
-                                     traits::C_NoSaveLoad, traits::C_OwnershipEmpty>) == 0x20,
-              "generic C_ModelProperty (OwnershipEmpty) must be 0x20");
+                                     traits::C_NoSaveLoad, traits::C_OwnershipEmpty>) == 0x28,
+              "generic bool C_ModelProperty (OwnershipEmpty) must be 0x28");
+static_assert(sizeof(C_ModelProperty<Vec2_tpl<float>, traits::C_StandardDefaultValueTrait<Vec2_tpl<float>>,
+                                     traits::C_SignalWithNewValueTrait<Vec2_tpl<float>>, traits::C_DebugNoTrace,
+                                     traits::C_NoSaveLoad, traits::C_OwnershipEmpty>) == 0x30,
+              "generic Vec2 C_ModelProperty (OwnershipEmpty) must be 0x30");
+static_assert(sizeof(C_ModelProperty<wh::framework::S_ItemFlagInfo,
+                                     traits::C_StandardDefaultValueTrait<wh::framework::S_ItemFlagInfo>,
+                                     traits::C_SignalWithNewValueTrait<wh::framework::S_ItemFlagInfo>,
+                                     traits::C_DebugNoTrace, traits::C_NoSaveLoad,
+                                     traits::C_OwnershipEmpty>) == 0x50,
+              "generic S_ItemFlagInfo C_ModelProperty (OwnershipEmpty) must be 0x50");
 
 }  // namespace wh::shared

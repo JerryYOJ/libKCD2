@@ -17,7 +17,7 @@ namespace wh::xgenaimodule {
 class C_SwitchingSubbrain : public C_BehaviorTreeSUBB {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_SwitchingSubbrain;
-    void* GetSubbrainType() override;   // [27] sub_181A72480
+    E_SubBrainType::Type GetSubbrainType() override; // [27] sub_181A72480
     bool  _vf38() override;             // [38] sub_181A72470
 };
 static_assert(sizeof(C_SwitchingSubbrain) == 0x120, "C_SwitchingSubbrain must be 0x120 (operator new(288))");

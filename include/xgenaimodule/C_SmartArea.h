@@ -49,7 +49,8 @@ public:
     void _vf39() override;                  // [39] 0x1A72470
     // I_Area impls (17)
     bool Overlaps(const Vec3& pos) override;  // [0] 0x5CD1DC
-    void ArVf1() override;  void ArVf2() override;  void ArVf3() override;
+    void ArVf1() override;  void ArVf2() override;
+    AABB GetAABB() override;                  // [3] sub_180467FD4
     void ArVf4() override;  void ArVf5() override;  void ArVf6() override;
     void ArVf7() override;  void ArVf8() override;  void ArVf9() override;
     void ArVf10() override; void ArVf11() override; void ArVf12() override;

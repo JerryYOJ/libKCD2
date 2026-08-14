@@ -2,6 +2,9 @@
 #include <cstdint>
 #include <vector>
 #include "../Offsets/vtables/IActor.h"
+#include "../Offsets/vtables/IGameObjectView.h"
+#include "../Offsets/vtables/IGameObjectProfileManager.h"
+#include "../Offsets/vtables/CGameObjectExtensionHelper.h"
 #include "../framework/C_Signal.h"
 #include "../framework/CryDeferrable.h"
 #include "../framework/CStateMachine.h"

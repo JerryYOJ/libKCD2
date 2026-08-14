@@ -20,13 +20,16 @@
 
 namespace wh::xgenaimodule {
 
+class C_IntelligentObject;
+class C_SUBBBase;
+
 class C_AIBrain : public I_Intellect {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_AIBrain;
     // [0] dtor declared on I_Intellect (impl sub_183208590 -> body sub_1804137F8)
-    virtual void _vf1();        // [1]  sub_1813030D8 [U role]
-    virtual void _vf2();        // [2]  sub_1816235F4 [U role]
-    virtual void _vf3();        // [3]  sub_18070DC14 [U role]
+    virtual void Attach(C_IntelligentObject* owner); // [1]  sub_1813030D8
+    virtual void Detach();                          // [2]  sub_1816235F4
+    virtual bool CanReceiveMessages();              // [3]  sub_18070DC14
     virtual void _vf4();        // [4]  sub_181A73160 [U role]
     virtual void _vf5();        // [5]  sub_18041B0C4 [U role]
     virtual void _vf6();        // [6]  sub_18041B0FC [U role]
@@ -49,7 +52,7 @@ public:
     virtual void _vf23() = 0;   // [23] PURE
     virtual void _vf24() = 0;   // [24] PURE
     virtual void _vf25();       // [25] sub_18041A65C [U role]
-    virtual void _vf26() = 0;   // [26] PURE
+    virtual bool AddSubbrain(C_SUBBBase* subbrain) = 0; // [26] PURE
     virtual void _vf27() = 0;   // [27] PURE
     virtual void _vf28() = 0;   // [28] PURE
     virtual void _vf29() = 0;   // [29] PURE
@@ -59,7 +62,7 @@ public:
     virtual void _vf33();       // [33] sub_181180180 [U role]
     virtual void _vf34();       // [34] nullsub_1 (no-op)
 
-    C_NPC*           m_pOwner;               // +0x08  owning NPC (ctor a2); a2->vf[8]() supplies the C_VariableIndex root passed to sub_1805B66DC(this+0xC8,...)
+    C_IntelligentObject* m_pOwner;            // +0x08  attached intelligent-object back-pointer
     CryStringT<char> m_name;                 // +0x10  = emptyHdr+12; released via sub_1804FC624 [U name]
     bool             m_flag18;               // +0x18  ctor: 1 [U name/meaning]
     uint8_t          _pad19[7];              // +0x19

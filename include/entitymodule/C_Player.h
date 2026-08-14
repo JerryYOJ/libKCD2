@@ -8,7 +8,7 @@
 #include "C_MissileWeaponPlayerController.h"
 #include "../framework/C_Signal.h"
 #include "../framework/C_ModelProperty.h"
-#include "../Offsets/vtables/IGame.h"   // Offsets::IGameFrameworkListener
+#include "../Offsets/vtables/IGameFrameworkListener.h"
 
 // -----------------------------------------------
 // wh::entitymodule::C_Player : C_Human, I_EquipmentManagerListener, IGameFrameworkListener
@@ -72,16 +72,15 @@ public:
     C_LevelBarrierInteractor* m_pLevelBarrierInteractor; // +0xB10  C_Ptr (0x28)  VERIFIED
     uint32_t m_unkB18;                                 // +0xB18  (ctor 0)
     uint32_t _padB1C;                                  // +0xB1C
-    // --- state-property block +0xB20..+0xB80 (ctor helper sub_180BC735C). GENERIC 0x20-stride
-    //     model properties (owner elided under C_OwnershipEmpty). ---
+    // --- state-property block +0xB20..+0xB88 (ctor helper sub_180BC735C). GENERIC
+    //     ownerless model properties retain their empty policy members and are 0x28 each. ---
     bool     m_stateFlagB20;                           // +0xB20  (ctor 0; role unresolved)
     uint8_t  _padB21[7];                               // +0xB21
     wh::shared::C_ModelProperty<wh::xgenaimodule::BehaviorTree::E_TrespassLevel::Type,
         wh::shared::traits::C_StandardDefaultValueTrait<wh::xgenaimodule::BehaviorTree::E_TrespassLevel::Type>,
         wh::shared::traits::C_SignalWithNewValueTrait<wh::xgenaimodule::BehaviorTree::E_TrespassLevel::Type>,
         wh::shared::traits::C_DebugNoTrace, wh::shared::traits::C_NoSaveLoad,
-        wh::shared::traits::C_OwnershipEmpty> m_trespassLevel;   // +0xB28  (0x20; vtable 0x183A80F28)
-    void*    m_deferredB48;                            // +0xB48  never ctor-written (deferred-init or reserved; unresolved)
+        wh::shared::traits::C_OwnershipEmpty> m_trespassLevel;   // +0xB28  (0x28; signal +0xB38)
     bool     m_stateFlagB50;                           // +0xB50  (ctor 0)
     uint8_t  _padB51[3];                               // +0xB51
     uint32_t m_stateB54;                               // +0xB54  (4-aligned qword-zero pair with +0xB58 -- NOT a pointer)
@@ -91,8 +90,7 @@ public:
         wh::shared::traits::C_StandardDefaultValueTrait<E_CombatState::Type>,
         wh::shared::traits::C_SignalWithNewValueTrait<E_CombatState::Type>,
         wh::shared::traits::C_DebugNoTrace, wh::shared::traits::C_NoSaveLoad,
-        wh::shared::traits::C_OwnershipEmpty> m_combatState;     // +0xB60  (0x20; vtable 0x183A80F50)
-    void*    m_deferredB80;                            // +0xB80  independent deferred-init member (parent ctor skips it)
+        wh::shared::traits::C_OwnershipEmpty> m_combatState;     // +0xB60  (0x28; signal +0xB70)
     C_PlayerInput* m_pPlayerInput;                     // +0xB88  C_Ptr (0x2D8)  VERIFIED (pointee name from alloc site; slot name tentative)
     void*    m_unkB90;                                 // +0xB90  owning smart-ptr (ctor 0; member dtor sub_180DA753C: *this -> Release sub_1804B2F14); pointee class UNRESOLVED
     uint64_t m_unkB98;                                 // +0xB98  (ctor 0)

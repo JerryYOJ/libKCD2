@@ -18,6 +18,7 @@ History:
 
 
 #include "IGameObject.h"
+#include "IHitListener.h"
 #include "IParticles.h"
 
 // Summary
@@ -493,32 +494,6 @@ struct ExplosionInfo
 			ser.EndGroup();
 		}
   };
-};
-
-// Summary
-//   Interface to implement an hit listener
-// See Also
-//   IGameRules, IGameRules::AddHitListener, IGameRules::RemoveHitListener
-struct IHitListener
-{
-	virtual ~IHitListener(){}
-	// Summary
-	//   Function called when the GameRules process an hit
-	// See Also
-	//   IGameRules
-	virtual void OnHit(const HitInfo&) = 0;
-
-	// Summary
-	//   Function called when the GameRules process an explosion (client side)
-	// See Also
-	//   IGameRules
-	virtual void OnExplosion(const ExplosionInfo&) = 0;
-
-	// Summary 
-	//	Function called when the GameRules process an explosion (server side)
-	// See Also
-	//	IGameRules
-	virtual void OnServerExplosion(const ExplosionInfo&)  = 0;
 };
 
 // Summary

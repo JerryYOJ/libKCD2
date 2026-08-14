@@ -24,8 +24,8 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_I_AIPuppet;
     virtual ~I_AIPuppet();                     // [0]  deleting dtor sub_1832A0ADC
     virtual void _vf1() = 0;                   // [1]  [U role]
-    virtual void _vf2() = 0;                   // [2]  [U role]
-    virtual void* _vf3() = 0;                  // [3]  returns per-entity host record (record->vf[2]() = host id, keys the puppet registry q_185496338) [U name]
+    virtual void* _vf2() = 0;                  // [2] host pointer; concrete type varies
+    virtual void* _vf3() = 0;                  // [3] host pointer; concrete type varies
     virtual void _vf4() = 0;                   // [4]  [U role]
     virtual void UpdateCachedTransform() = 0;  // [5]  C_AIPuppet impl caches host pos/rot; C_AIObject slot [2] forwards here [V]
     virtual void _vf6() = 0;                   // [6]  [U role]

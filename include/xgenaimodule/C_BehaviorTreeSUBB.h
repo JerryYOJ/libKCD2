@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include "C_SUBBBase.h"
+#include "S_BehaviorTreeSubBrainTemplate.h"
 
 // -----------------------------------------------
 // wh::xgenaimodule::C_BehaviorTreeSUBB : C_SUBBBase -- subbrain executing a
@@ -23,8 +24,8 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_BehaviorTreeSUBB;
     void  Step() override;                    // [22] sub_180760A44 -- per-state STEP processor
     bool  IsRunning() override;               // [23] sub_18041A688
-    void  Configure(void* desc) override;     // [24] sub_1804175F0
-    void* GetSubbrainType() override;         // [27]
+    bool Configure(const S_SubBrainTemplate* descriptor) override; // [24] sub_1804175F0
+    E_SubBrainType::Type GetSubbrainType() override;                // [27]
     void  Serialize(void* stream) override;   // [29]
     void  RequestOwnerTick() override;        // [35]
     void  CancelOwnerTick() override;         // [36]
@@ -32,8 +33,8 @@ public:
     virtual bool  _vf38();                    // [38] NEW sub_181A72470 (return 1) [U role]
     virtual void  _vf39();                    // [39] NEW nullsub_1 [U role]
 
-    CryStringT<char> m_btName1;   // +0xC8  refcounted string (ctor = shared empty static; Configure copies from desc+0x48)
-    CryStringT<char> m_btName2;   // +0xD0  refcounted string (ctor = shared empty static; Configure copies from desc+0x50)
+    CryStringT<char> m_fileName;  // +0xC8  copied from descriptor +0x30
+    CryStringT<char> m_treeName;  // +0xD0  copied from descriptor +0x38
     BehaviorTree::C_BehaviorTree* m_behaviorTree;  // +0xD8  BT instance (setter sub_180412884; created via sub_1804176D8)
     uint32_t m_e0;             // +0xE0  init 2 [U role -- also read by [37]]
     uint8_t  _padE4[4];        // +0xE4

@@ -1,26 +1,23 @@
 #pragma once
+#include <cstddef>
 #include <cstdint>
 #include "C_DynamicLinkableObject.h"
-
-// -----------------------------------------------
-// wh::xgenaimodule::C_DynamicLinkableObjectWithOwnership : C_DynamicLinkableObject
-// -- dynamic linkable with a real (non-empty) ownership provider (KCD2 WHGame.dll
-// 1.5.6, kd7u).  sizeof NOT create-site proven -> no size assert [U].
-// -----------------------------------------------
-// RTTI TD rva 0x4FF5A20; primary vtable 0x183A654F8, 20 slots; I_RWLocked
-// subobject vtable @+0x20 = 0x183A654D8.  Distinguishing override: slot [11]
-// GetOwnership = sub_181A7FAD0 (ownership-backed, vs the spine's lazy static
-// C_EmptyOwnership default sub_18047AFF4).  [19] stays the shared stub.
+#include "C_Ownership.h"
 
 namespace wh::xgenaimodule {
 
 class C_DynamicLinkableObjectWithOwnership : public C_DynamicLinkableObject {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_DynamicLinkableObjectWithOwnership;
-    ~C_DynamicLinkableObjectWithOwnership() override;  // [0]  deleting dtor sub_18096D6FC
-    uint32_t GetTypeMask() override;                   // [1]  sub_1812F7A10
-    I_Ownership* GetOwnership() override;              // [11] sub_181A7FAD0 -- ownership-backed [U backing member]
+    ~C_DynamicLinkableObjectWithOwnership() override; // [0] 0x18096D6FC
+    std::uint32_t GetTypeMask() override;              // [1] 0x1812F7A10
+    I_Ownership* GetOwnership() override;              // [11] 0x181A7FAD0
+
+    C_Ownership m_ownership; // +0x60
 };
-// sizeof not create-site proven -> no static_assert [U]
+static_assert(sizeof(C_DynamicLinkableObjectWithOwnership) == 0x90,
+              "C_DynamicLinkableObjectWithOwnership must be 0x90");
+static_assert(offsetof(C_DynamicLinkableObjectWithOwnership, m_ownership) == 0x60,
+              "ownership component must be at 0x60");
 
 }  // namespace wh::xgenaimodule

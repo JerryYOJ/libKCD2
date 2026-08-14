@@ -29,7 +29,8 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_SituationSubBrain;
     void  Step() override;                  // [22] sub_18320D56C
     bool  IsRunning() override;             // [23] sub_18041A688
-    void* GetSubbrainType() override;       // [27] sub_181A72470
+    bool  Configure(const S_SubBrainTemplate* descriptor) override; // [24] sub_18320C108
+    E_SubBrainType::Type GetSubbrainType() override; // [27] sub_181A72470
     void  RequestOwnerTick() override;      // [35]
     void  CancelOwnerTick() override;       // [36]
     // I_BehaviorHost impls ([0][4][5] share bodies with Scheduler's) [U roles]

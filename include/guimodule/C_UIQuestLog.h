@@ -49,6 +49,12 @@ class C_UIQuestLog : public C_UIBase,
                      public wh::entitymodule::I_ItemCollectionListener {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_UIQuestLog;
+
+    void ItemCollectionListenerUnk0(wh::entitymodule::C_Item* splitItem) override; // item-coll [0] 0x180DC51B4
+    void ItemCollectionListenerUnk2(wh::entitymodule::S_ItemClass* itemClass,
+                                    std::uint32_t amount,
+                                    wh::framework::WUID itemWuid) override; // item-coll [2] 0x180DC5758
+
     // Per-tab list state written by the ctor helper sub_181F455D0(addr, count, "")
     // with counts {3,3,6,1}; internal layout UNVERIFIED (G4 scope).
     struct S_ListState { uint8_t _raw[0x18]; };

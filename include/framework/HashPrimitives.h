@@ -9,7 +9,7 @@
 // _Hash header: float _Max_load_factor @0, std::list{head,size} @8, bucket std::vector @0x18,
 // size_t _Mask @0x30, size_t _Maxidx @0x38). There are NO custom replica containers -- callers use
 // the real std:: types directly. What lives here are only the hash FUNCTIONS the engine keys hash
-// with, so a struct key (WUID, CryGUID) can be given a matching transparent hasher:
+// with, so a struct key without its own std::hash specialization can use a matching hasher:
 //
 //   FNV-1a 64  -- MSVC std::hash's algorithm for trivially-copyable keys; the explicit hasher for
 //                 16-byte GUID / 8-byte WUID keys. Seen in C_InventoryManager::GetValueForWuid
@@ -42,10 +42,8 @@ inline uint64_t hash_combine(uint64_t seed, uint64_t value) {
     return seed;
 }
 
-// Default hasher (FNV-1a over sizeof(K) raw bytes) for struct keys whose std::hash the project does
-// not specialize (WUID, CryGUID). Pass as the Hash arg:
-//   std::unordered_map<WUID, V, wh::shared::S_DefaultHash<WUID>>
-// Matches MSVC std::hash for trivially-copyable K.
+// Default hasher (FNV-1a over sizeof(K) raw bytes) for struct keys without a recovered
+// std::hash specialization. CryGUID is excluded: KCD2 hashes its two qwords separately and XORs them.
 template<typename K>
 struct S_DefaultHash {
     uint64_t operator()(const K& key) const { return fnv1a(&key, sizeof(K)); }

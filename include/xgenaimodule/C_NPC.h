@@ -2,6 +2,7 @@
 #include <cstdint>
 #include "I_NPC.h"
 #include "C_NoOwnerOwnership.h"
+#include "S_NPCWuidState.h"
 
 // -----------------------------------------------
 // wh::xgenaimodule::C_NPC : I_NPC -- the concrete NPC, bottom of the AI object-model
@@ -12,12 +13,10 @@
 // none). Subobject vtables: I_RWLocked @+0x20 -> 0x183FF1F18, I_XGenAINPC @+0xA8 ->
 // 0x183FF1B00 ([1] sub_1804DFADC). Real ctor
 // sub_180BDC5F8(this, IGameObject* host, const WUID* wuid, C_AIPuppet* puppet); dtor
-// sub_180BDB910 (via slot-0 deleting dtor sub_180BDAB28). Factories: dispatcher
-// sub_180417DF0 -> sub_1804184F8 / sub_180D48678 (restore variant); on inbox failure
-// the factory unregisters the WUID from C_AIObjectManager and deletes the NPC, else
-// attaches the inbox via slot [21] (vf +0xA8).
-// Interior member map (ctor helper per region, G2_supplement §3.7 -- interiors [U],
-// brain pointer NOT pinned; candidates: m_messageGate (+0x70), +0x1C0, +0x790):
+// sub_180BDB910 (via slot-0 deleting dtor sub_180BDAB28). Factories
+// sub_1804184F8 / sub_180D48678 construct the NPC, resolve the Soul brain GUID,
+// build a C_AIBrainMultiSubb, and install it through slot [21] SetBrain.
+// Interior member map (ctor helper per region, G2_supplement §3.7 -- interiors [U]):
 //   +0xB0 sub_180BDCB00 | +0xD0 sub_180BDCF10(this) | +0x1C0 sub_180BDD268(this)
 //   +0x478 sub_180BDCB50(this) | +0x490 unknown_libname_15 | +0x4C8 sub_180BDCB38
 //   +0x530 sub_1823D3D70 | +0x558 sub_180BDCC2C | +0x5C0 sub_180901FD4(this)
@@ -43,7 +42,7 @@ public:
     void* GetStaticTypeToken() override;            // [7]  sub_1808B0390
     I_Ownership* GetOwnership() override;           // [11] sub_180708E50 -> &m_ownership (+0x4A8) [V]
     void _vf20() override;                          // [20] sub_1803EF4D8
-    void SetMessageInbox(C_MessageInbox*) override; // [21] sub_180D47DE8 [V-usage]
+    void SetBrain(C_AIBrain* brain) override;       // [21] sub_180D47DE8
     void _vf22() override;                          // [22] sub_18041A6A0 (return 1)
     void _vf24() override;                          // [24] sub_18209CC00
     void _vf25() override;                          // [25] sub_18332215C
@@ -95,8 +94,8 @@ public:
     uint8_t            _pad11D[3];          // +0x11D
     C_NPC*             m_self120;           // +0x120  self back-ref (after sub_180BDCFA4 init)
     uint8_t            _block128[0x70];     // +0x128..+0x197  member blocks
-    framework::WUID    m_npcWuid;           // +0x198  third WUID copy (NPC level, after sub_180BDCAC4)
-    uint8_t            _block1A0[0x308];    // +0x1A0..+0x4A7  incl. big member +0x1C0 (sub_180BDD268)
+    S_NPCWuidState     m_wuidState;         // +0x198  separate WUID-bearing subobject; exact role OPEN
+    uint8_t            _block1C0[0x2E8];    // +0x1C0..+0x4A7  incl. big member +0x1C0 (sub_180BDD268)
     C_NoOwnerOwnership m_ownership;         // +0x4A8  embedded; returned by GetOwnership slot [11] [V]
     uint8_t            _block4C8[0xBB8];    // +0x4C8..+0x107F member blocks (see header comment)
     C_SituationSubsystem* m_situationSubsystem;  // +0x1080 optional heap C_SituationSubsystem (new 0x88, ctor sub_180BDBFDC, back-refs this NPC @obj+0x18); gated by entity bool property (unk_1853386E0)
@@ -106,7 +105,7 @@ public:
     uint8_t            m_infoFlags;         // +0x1778 ctor &= 0x21; bit5 = entity bool property "bCanHoldInformation" [V] -- crime/information gate
     uint8_t            m_flags1779;         // +0x1779 ctor &= 0x80 [U roles]
     uint8_t            _pad177A[6];         // +0x177A word zeroed + pad
-    framework::WUID    m_wuid1780;          // +0x1780 = qword_18533A2C0 (runtime-init sentinel WUID)
+    framework::WUID    m_unknownWuid1780;   // +0x1780  initialized to the runtime invalid-WUID sentinel; role OPEN
     uint8_t            _block1788[0x10];    // +0x1788 dword/word/dword zeros; word @+0x1794 = 1
     uint8_t            m_tail1798[0x18];    // +0x1798 last member (sub_180BDCAE4) -> object end 0x17B0
 };

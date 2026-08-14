@@ -24,6 +24,7 @@ namespace wh::entitymodule {
 class  S_ItemClass;
 class  I_ItemRuntimeData;
 class  C_InventoryBase;
+class  C_ItemHolder;
 
 class C_Item
     : public wh::framework::I_BindableObject               // +0x00  (primary vtable)
@@ -109,11 +110,9 @@ public:
                                                        //        = dst on placement; DeleteItem validates == the entity
                                                        //        inventory; notified via the listener trio (vf+0x40/
                                                        //        +0x50/+0x60)  [CORRECTED from "m_pItemManager (tentative)"]
-    C_InventoryBase* m_pHolder98;                      // +0x98  secondary/source holder: non-null = alternate-held
+    C_ItemHolder* m_pHolder98;                         // +0x98  secondary/source holder: non-null = alternate-held
                                                        //        state (stack-merge compare vs dst; own notify reason
-                                                       //        codes; ZEROED on completed move). Pointee identity
-                                                       //        beyond the shared holder vtable shape UNVERIFIED
-                                                       //        [CORRECTED from "m_pInventory (tentative)"]
+                                                       //        codes; ZEROED on completed move)
     uint32_t m_param0xA0;                              // +0xA0  init 42 (no reader isolated; UNVERIFIED)
     uint32_t _padA4;                                   // +0xA4
 };

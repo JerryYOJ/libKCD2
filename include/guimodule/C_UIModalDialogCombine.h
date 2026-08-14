@@ -34,6 +34,13 @@ class C_UIModalDialogCombine : public C_UIFlashBase,
                                public IHardwareMouseEventListener {                // +0x68
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_UIModalDialogCombine;
+
+    void ItemCollectionListenerUnk0(wh::entitymodule::C_Item* splitItem) override; // item-coll [0] 0x182B14224
+    void ItemCollectionListenerUnk1(wh::entitymodule::C_Item* consumedItem) override; // item-coll [1] 0x182B13814
+    void ItemCollectionListenerUnk3(wh::entitymodule::C_Item* item,
+                                    std::int32_t amountDelta,
+                                    std::uint32_t changeMask) override; // item-coll [3] 0x182B142E0
+
     virtual void _vf14();   // [14] 0x182B12D40  own slot; role UNVERIFIED
 
     // I_UIItemContext (pure) -- implemented via vtable 0x183EDE7E8.

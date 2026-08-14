@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 #include <functional>
-#include "../Offsets/vtables/IGame.h"   // Offsets::IGameFrameworkListener
+#include "../Offsets/vtables/IGameFrameworkListener.h"
 
 // -----------------------------------------------
 // wh::framework::C_ParallelModuleUpdater -- KCD2 WHGame.dll 1.5.6 (kd7u).  sizeof 0x70.

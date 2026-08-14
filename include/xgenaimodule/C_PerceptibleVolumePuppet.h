@@ -29,7 +29,7 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_PerceptibleVolumePuppet;
     ~C_PerceptibleVolumePuppet() override;
     void _vf1() override;
-    void _vf2() override;
+    void* _vf2() override;
     void* _vf3() override;
     void _vf4() override;
     void UpdateCachedTransform() override;   // [5] sub_181206350 -- this impl just returns &m_volume->m_pos (volume pos IS the transform)

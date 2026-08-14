@@ -84,9 +84,13 @@ public:
     playermodule::C_PlayerInventorySoul* GetPlayerInventorySoul() override; // [50] sub_181A74CD0 -> +0x110
     std::uint32_t InventorySoulUnk51(const entitymodule::C_Item* item) override; // [51] sub_1808F769C
 
-    void InventoryListenerUnk0(entitymodule::C_Item* item) override;       // I_InventoryListener [0] sub_18068B84C
-    void InventoryListenerUnk1(void* value) override;                      // I_InventoryListener [1] sub_1814BC32C
-    void InventoryListenerUnk2(void* value) override;                      // I_InventoryListener [2] sub_18068BE38
+    void InventoryListenerUnk0(entitymodule::C_Item* item,
+                               std::uint32_t amount) override;             // I_InventoryListener [0] sub_18068B84C
+    void InventoryListenerUnk1(entitymodule::C_Item* item,
+                               std::uint32_t amount) override;             // I_InventoryListener [1] sub_1814BC32C
+    void InventoryListenerUnk2(entitymodule::S_ItemClass* itemClass,
+                               std::uint32_t amount,
+                               framework::WUID itemWuid) override;         // I_InventoryListener [2] sub_18068BE38
     ~C_InventorySoul() override;                                           // I_InventoryListener [7] sub_18213AA1C
 
     void ScheduleUpdate(std::int32_t value) override;                      // I_ScheduleUpdatable [0] sub_1808F2E88

@@ -43,8 +43,9 @@ public:
         return game::S_GameContext::GetInstance()->m_pEnvironmentModule;
     }
 
-    // Mirrors the concrete-vtable accessor sub_180535E94 (see header note).
+    // Mirrors the concrete accessors sub_180535E94 / sub_181A73360.
     [[nodiscard]] C_WeatherSystem* GetWeatherSystem() const { return m_pWeatherSystem; }
+    [[nodiscard]] C_RespawnManager* GetRespawnManager() const { return m_pRespawnManager; }
 };
 static_assert(sizeof(C_EnvironmentModule) == 0xB0, "C_EnvironmentModule must be 0xB0 (alloc 176)");
 static_assert(offsetof(C_EnvironmentModule, m_pWeatherSystem) == 0x98, "weather system at +0x98 (sub_180535E94)");

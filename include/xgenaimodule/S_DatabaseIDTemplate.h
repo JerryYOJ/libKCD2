@@ -7,7 +7,8 @@
 
 namespace wh::xgenaimodule {
 
-struct S_DatabaseIDTemplate {
+class S_DatabaseIDTemplate {
+public:
     inline static constexpr auto RTTI = Offsets::RTTI_S_DatabaseIDTemplate;
 
     virtual ~S_DatabaseIDTemplate();  // [0] 0x1832088B8

@@ -1,9 +1,10 @@
 #pragma once
 #include <cstdint>
+#include "../framework/WUID.h"
 
 // -----------------------------------------------
-// wh::xgenaimodule::C_IntelligentObjectManager -- per-level intelligent-object
-// registry SINGLETON at qword_1854930D0 (KCD2 WHGame.dll 1.5.6, kd7u).  sizeof
+// wh::xgenaimodule::C_IntelligentObjectManager -- intelligent-object capability
+// WUID view SINGLETON at qword_1854930D0 (KCD2 WHGame.dll 1.5.6, kd7u).  sizeof
 // 0xB0 (inlined create sub_18197934C @0x181979374: qword_18549D378(176,&v5),
 // += 0xB0, body init sub_180BEC184).
 // -----------------------------------------------
@@ -17,9 +18,15 @@
 
 namespace wh::xgenaimodule {
 
+class C_IntelligentObject;
+
 class C_IntelligentObjectManager {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_IntelligentObjectManager;
+
+    static C_IntelligentObjectManager* GetInstance();
+    C_IntelligentObject* FindByWuid(const framework::WUID& wuid);
+
     virtual ~C_IntelligentObjectManager();   // [0] sub_183208724
     virtual void _vf1();                     // [1] nullsub [U role]
     virtual void _vf2();                     // [2] sub_1810D772C [U role]

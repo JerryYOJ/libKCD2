@@ -1,7 +1,6 @@
 #pragma once
 #include <cstdint>
 #include "C_SmartEntity.h"
-#include "../framework/WUID.h"
 
 // -----------------------------------------------
 // wh::xgenaimodule::C_InteractiveSmartEntity : C_SmartEntity -- interactive
@@ -25,8 +24,8 @@ public:
     uint32_t GetTypeMask() override;       // [1]  0x1AABDD0
     void _vf29() override;                 // [29] 0xA2C160
 
-    framework::WUID m_wuid188;   // +0x188  fresh WUID (sub_1804FD80C+3)
-    int32_t         m_190;       // +0x190  ctor: -1 [U role]
+    CryStringT<char> m_helperClassName; // +0x188, soclass_SmartObjectHelpers selector
+    int32_t          m_190;             // +0x190  ctor: -1 [U role]
     int32_t         m_194;       // +0x194  ctor: -1 [U role]
     uint8_t         m_flags198;  // +0x198  bits from ctor args a4/a5 [U meaning]
     uint8_t         _pad199[7];  // +0x199

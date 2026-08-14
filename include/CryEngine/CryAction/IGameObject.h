@@ -11,6 +11,7 @@
 #include <IComponent.h>
 
 #include "SerializeFwd.h"
+#include "GameObjectTypes.h"
 #include "IActionMapManager.h"
 #include "PoolAllocator.h"
 
@@ -24,6 +25,7 @@ struct IGameObjectExtension;
 struct IGameObjectProfileManager;
 struct IWorldQuery;
 
+#ifndef KCD_EENTITYASPECTS_DEFINED
 enum EEntityAspects
 {
 	eEA_All								= NET_ASPECT_ALL,
@@ -64,6 +66,7 @@ enum EEntityAspects
 	eEA_Aspect31					= 0x80000000u, // aspect 31
 #endif
 };
+#endif
 
 enum EEntityPhysicsEvents
 {

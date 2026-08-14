@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include "../Offsets/vtables/IEntity.h"
 #include "../framework/C_Signal.h"
 #include "../framework/C_ModelProperty.h"
 #include "../framework/ModelPropertyTraits.h"
@@ -20,10 +21,10 @@ namespace wh::combatmodule {
 class I_CombatActor;
 namespace E_ApproachingMode { enum Type : uint8_t; }   // (values not recovered)
 
-// Battlement configuration value (8B; reset writes {0, -1}). Field names tentative.
+// Battlement manager identity pair: {local slot index, hosting Battlement EntityId}.
 struct S_BattlementConfiguration {
-    int32_t a;   // +0x00  init 0
-    int32_t b;   // +0x04  init -1
+    std::uint32_t m_slotIndex;       // +0x00, reset 0
+    EntityId m_battlementEntityId;   // +0x04, reset 0xFFFFFFFF
 };
 static_assert(sizeof(S_BattlementConfiguration) == 8, "S_BattlementConfiguration must be 8");
 

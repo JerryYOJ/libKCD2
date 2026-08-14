@@ -26,6 +26,10 @@ class C_EquipmentManager : public I_ItemCollectionListener {   // +0x00  (vtable
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_EquipmentManager;
 
+    void ItemCollectionListenerUnk1(C_Item* consumedItem) override; // [1] 0x1808F7870
+    void ItemCollectionListenerUnk3(C_Item* item, std::int32_t amountDelta,
+                                    std::uint32_t changeMask) override; // [3] 0x18087DC24
+
     // Native C++ RTTI names this C_EquipmentManager::E_QuickSlotSpec::Type. Public RTTR flattens
     // the reflected names to wh::entitymodule::E_QuickSlotSpec and E_QuickSlotSpecWrapper.
     // This selects the equip-to-QAM destination; it is not stored QAM state or an EquipmentSlotId.

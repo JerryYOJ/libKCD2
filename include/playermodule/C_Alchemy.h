@@ -25,7 +25,7 @@ namespace wh::entitymodule { class C_Actor; class C_Item; }
 // E_MinigameType::Alchemy (3); one per user, owned by the player action subsystem:
 //   S_GameContext (*0x18549D388, Instance sub_1809155C8) +0x128 -> C_PlayerModule +0x18 -> owner
 //   +0x20 hash(userId) -> session list.  FindOrCreateAction = sub_182024240(owner, userId, 3,
-//   create, 0).  Start = sub_180897E1C(this, tableEntityId); Teardown = I_Minigame slot [5]
+//   create, 0).  Start = sub_180897E1C(this, tableEntityId); destructor = I_Minigame slot [5]
 //   (sub_1809F1A8C).
 //
 // There is NO single C_Alchemy::Update -- the session is event/input-driven: per frame
@@ -39,7 +39,7 @@ namespace wh::entitymodule { class C_Actor; class C_Item; }
 // m_brewState.m_buckets to time boils (skill window = GetBrewTolerance()).
 //
 // INPUT BINDINGS (alchemy_action_bindings.md): the ctor registers the 6 "alchemy"-context input
-// delegates ONCE into I_ActionSets (*(C_PlayerModule+0x60), slot [9]); Teardown (I_Minigame [5],
+// delegates ONCE into I_ActionSets (*(C_PlayerModule+0x60), slot [9]); The destructor (I_Minigame [5],
 // 0x1809F1A8C) unregisters them and pops the "Alchemy" control-reason token.  Context switching
 // (Start/book) only toggles IActionMapManager::EnableActionMap -- registration is NEVER per-frame.
 
@@ -47,11 +47,15 @@ namespace wh::playermodule {
 
 class I_AlchemyAction;
 
-class C_Alchemy
-    : public C_Minigame                 // +0x00 I_Minigame / +0x08 I_MinigameCamera
-    , public Offsets::IActionListener { // +0x10 action-map input listener
+class C_Alchemy : public C_Minigame {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_Alchemy;
+
+    E_MinigameType::Type GetMinigameType() const override; // [0] returns Alchemy
+    ~C_Alchemy() override;                                 // [5] sub_1809F1A8C
+    bool IsFinished() const override;                      // [7] sub_180737914
+    void Update(float deltaTime) override;                 // [19] sub_180737920
+    void Reset() override;                                 // [21] sub_1806C4F1C
 
     // ---- engine-function forwarders (src/playermodule/C_Alchemy.cpp) ----
     // Get (create=false) or find-or-create (create=true) the alchemy session for a user: typed
@@ -89,16 +93,8 @@ public:
     void ClearIngredientSlots();                                                // 0x180A95760
 
     // ---- data ----
-    entitymodule::C_Actor* m_pPlayerActor; // +0x18  the brewing player's actor: the autocook gate
-                                         //        resolves the SAME pointer via IActorSystem::
-                                         //        GetActor(session vf[22]) and both it and the
-                                         //        in-session reset call sub_1808D285C on it
-                                         //        (skill obj at its +0x668; the grader's
-                                         //        alias of the +0x1B8 cache -- finish_grading_site.md §7)
-    uint8_t  _pad20[0x10];               // +0x20
-    CryStringT<char> m_currentContext;   // +0x30  current action-map context ("alchemy"/"alchemy_reading");
-                                         //        swapped by SetActionMapContext (vtbl slot [34], 0x18085A3EC)
-    uint8_t  _pad38[0x30];               // +0x38
+    // +0x18..+0x67 is C_Minigame-owned shared session state. m_pPlayerActor and
+    // m_currentContext remain directly accessible through the base.
     // +0x68  the brew-verdict signal, emitted at grade time (GradeBrew 0x182E16680) iff
     //        m_presentResult: (code, potion, count) with code 1 = no recipe matched (null item),
     //        0/4 = grant miss (null item), 3 = brewed a known recipe, 5 = first-ever brew of it.

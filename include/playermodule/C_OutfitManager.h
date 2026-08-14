@@ -64,11 +64,11 @@ public:
     void OutfitManagerUnk42() override;                                             // [42] [U signature]
     void OutfitManagerUnk43() override;                                             // [43] [U signature]
 
-    void ItemCollectionListenerUnk0() override;                                     // secondary [0] [U signature]
-    void ItemCollectionListenerUnk1() override;                                     // secondary [1] [U signature]
-    void ItemCollectionListenerUnk2() override;                                     // secondary [2] [U signature]
-    void ItemCollectionListenerUnk3() override;                                     // secondary [3] [U signature]
-    void ItemCollectionListenerUnk4() override;                                     // secondary [4] [U signature]
+    void ItemCollectionListenerUnk1(entitymodule::C_Item* consumedItem) override; // secondary [1] 0x1808F77A8
+    void ItemCollectionListenerUnk3(entitymodule::C_Item* item,
+                                    std::int32_t amountDelta,
+                                    std::uint32_t changeMask) override; // secondary [3] 0x181390518
+    void ItemCollectionListenerUnk4(entitymodule::C_ItemCollection* collection) override; // secondary [4] 0x182EADDC8
 
     std::uint8_t m_unknown10[0x70]; // +0x10
 

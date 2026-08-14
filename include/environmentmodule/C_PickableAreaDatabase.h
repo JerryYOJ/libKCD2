@@ -1,37 +1,40 @@
 #pragma once
+#include <cstddef>
+#include <cstdint>
+#include <unordered_map>
+#include "C_PickableAreaData.h"
+#include "S_PickableAreaRow.h"
 #include "../databasemodule/C_ObjectDatabaseIdIndexed.h"
 #include "../databasemodule/C_ObjectTableDatabase.h"
 #include "../REL/Relocation.h"
 
 // -----------------------------------------------
-// wh::environmentmodule::C_PickableAreaDatabase -- "pickable_area" table database
-// (KCD2 1.5.6, kd7u).
+// wh::environmentmodule::C_PickableAreaDatabase -- "pickable_area_desc" database
+// (KCD2 WHGame.dll 1.5.6, kd7u). sizeof 0xF8.
 // -----------------------------------------------
-// Own vtable 0x183ECF3D8; GLOBAL STATIC object @0x185326030 (RVA 0x5326030); ctor
-// sub_1811106B8. Stack: C_ObjectDatabaseIdIndexed<C_ObjectTableDatabase<C_PickableAreaData,
-// S_PickableAreaRow>, unsigned char>. Template-stack extent 0xB8;
-// the concrete global's full footprint (possible trailing I_DynamicEnum base like other
-// id-indexed DBs) is UNVERIFIED, so no sizeof assert here.
-// Row types are declared forward-only: their layouts come with the generated-tables pass.
-
-namespace wh::environmentmodule::data {
-class C_PickableAreaData;    // row object  [layout pending generated-tables pass]
-struct S_PickableAreaRow;    // raw table row [ditto]
-}  // namespace wh::environmentmodule::data
+// Global object @0x185326030; ctor sub_1811106B8. Dense byte-ID base extent
+// 0xB8 plus the concrete MSVC unordered_map at +0xB8. Rebuild sub_181F2A5A0
+// inserts every case-folded material-path CRC with its parsed definition pointer.
 
 namespace wh::environmentmodule {
 
 class C_PickableAreaDatabase
     : public databasemodule::C_ObjectDatabaseIdIndexed<
-          databasemodule::C_ObjectTableDatabase<data::C_PickableAreaData, data::S_PickableAreaRow>,
-          unsigned char> {
+          databasemodule::C_ObjectTableDatabase<C_PickableAreaData, S_PickableAreaRow>,
+          uint8_t> {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_PickableAreaDatabase;
-    // The global static instance (ctor stamps the vtable directly at this address).
+
     [[nodiscard]] static C_PickableAreaDatabase* GetInstance()
     {
         return reinterpret_cast<C_PickableAreaDatabase*>(REL::ID(2326).address());
     }
+
+    std::unordered_map<uint32_t, const C_PickableAreaData*> m_materialIndex; // +0xB8
 };
+static_assert(sizeof(C_PickableAreaDatabase) == 0xF8,
+              "C_PickableAreaDatabase is the 0xB8 dense-ID base plus a 0x40 hash index");
+static_assert(offsetof(C_PickableAreaDatabase, m_materialIndex) == 0xB8,
+              "material CRC index must begin at +0xB8");
 
 }  // namespace wh::environmentmodule

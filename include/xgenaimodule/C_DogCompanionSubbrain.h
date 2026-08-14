@@ -23,9 +23,9 @@ namespace activitysystem { class C_DogCompanion; }   // RTTI .?AVC_DogCompanion@
 class C_DogCompanionSubbrain : public C_BehaviorTreeSUBB {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_DogCompanionSubbrain;
-    void  Init(void* owner) override;         // [5]  sub_180BC9B00
+    void  Init(C_AIBrain* brain) override;    // [5]  sub_180BC9B00
     void  Deinit() override;                  // [6]  sub_183208A38
-    void* GetSubbrainType() override;         // [27] sub_181A74260
+    E_SubBrainType::Type GetSubbrainType() override; // [27] sub_181A74260
     void  Serialize(void* stream) override;   // [29] sub_18320A21C
     void  Serialize2(void* stream) override;  // [30] sub_1832098C0
     bool  _vf38() override;                   // [38] sub_18066CD10 (return 0)

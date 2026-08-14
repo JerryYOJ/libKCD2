@@ -17,7 +17,7 @@ namespace wh::xgenaimodule {
 class C_DialogSubbrain : public C_BehaviorTreeSUBB {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_DialogSubbrain;
-    void* GetSubbrainType() override;   // [27] sub_181A72CF0
+    E_SubBrainType::Type GetSubbrainType() override; // [27] sub_181A72CF0
     bool  _vf38() override;             // [38] sub_18066CD10 (return 0)
 };
 static_assert(sizeof(C_DialogSubbrain) == 0x120, "C_DialogSubbrain must be 0x120 (operator new(288))");

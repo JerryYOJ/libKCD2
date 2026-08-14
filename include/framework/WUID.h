@@ -3,63 +3,64 @@
 #include <functional>
 
 // -----------------------------------------------
-// wh::framework::WUID -- Warhorse unique id (KCD2 WHGame.dll 1.5.6, kd7u).  8 bytes.
+// wh::framework::WUID -- Warhorse unique id (KCD2 WHGame.dll 1.5.6, kd7u). 8 bytes.
 // -----------------------------------------------
-// A tagged 64-bit handle: (slot | gen<<18 | tag<<56). The high byte is the object-kind tag
-// (e.g. 0x02 == Item, 0x03 == Inventory, 0x05 == Soul). A default/invalid WUID is 0. Used
-// pervasively as the registry key for bindable objects and as the element/key of the game's
-// std::unordered_set<WUID> / std::unordered_map<WUID,V> (which hash it with std::hash<WUID>).
+// The high byte identifies the owning object domain. The remaining 56 bits are encoded by that
+// domain's registry; Item, Inventory, and Soul use different slot/generation partitions.
 
 namespace wh::framework {
 
-// Object-kind tag in the top byte; each tag has its own registry, reached via a class
-// implementing I_WUIDMappingProvider. Recovered by scanning .text for `mov r64, tag<<56`
-// stamp sites and naming the object each builds -- not an exhaustive 0..255 sweep.
-// Unrelated to the RTTR enum wh::xgenaimodule::E_ConceptAIWuidType (different values).
-enum class E_WUIDTag : uint8_t {
-    BuffDefinition        = 0x01,  // default buff-definition id, C_BuffInstanceBase+0x08
-    Item                  = 0x02,  // C_ItemManager
-    Inventory             = 0x03,  // C_InventoryManager, acquire sub_1823D154C
-    LinkableObjectHolder  = 0x04,  // VIEW: re-tags another WUID's slot (sub_18096DBDC)
-    Soul                  = 0x05,  // C_SoulList
-    ItemIndexerOrGroup    = 0x06,  // C_ItemIndexer/C_InventoryGroup, sub_180C47464 [U which]
-    Unnamed07             = 0x07,  // sub_180D9B474, counter @mgr+0x430 [U leaf]
-    GeneratedSOPuppet     = 0x08,  // puppet registry q_185496338
-    Situation             = 0x09,  // C_Situation
-    DynamicLinkableObject = 0x0A,  // C_DynamicLinkablesManager, registry q_1854961A0
-    PerceptibleVolume     = 0x0D,  // C_PerceptibleVolumeCylinder ctor 0x180D45BCC
-    Unnamed0F             = 0x0F,  // sub_180A2C970, alloc 0x128 [U leaf]
-    Unnamed10             = 0x10,  // sub_180FA53C4, counter @+0x48 [U leaf]
-    Formation             = 0x11,  // C_FormationManager -> C_Formation (sub_1807D36DC)
-    FormationAIObject     = 0x12,  // C_FormationManager -> C_AIObject (sub_1832A245C)
-    FormationSpinePoint   = 0x13,  // C_FormationSpinePointPuppet
-    AreaUnion             = 0x14,  // C_AreaUnionManager (sub_1811A4DF4)
-    Unnamed15             = 0x15,  // sub_1820B3900, alloc 0xA0 [U leaf]
+enum class E_WUIDTag : std::uint8_t {
+    Invalid               = 0x00,
+    SoulBuffInstance      = 0x01,
+    Item                  = 0x02,
+    Inventory             = 0x03,
+    Shop                  = 0x04,
+    Soul                  = 0x05,
+    ItemIndexer           = 0x06,
+    SmartArea             = 0x07,
+    SmartObject           = 0x08,
+    Situation             = 0x09,
+    DynamicLinkableObject = 0x0A,
+    Quest                 = 0x0B,
+    PredefinedPath        = 0x0C,
+    PerceptibleVolume     = 0x0D,
+    // 0x0E is invalid/unassigned.
+    TriggerArea           = 0x0F,
+    ParticleEffect        = 0x10,
+    Formation             = 0x11,
+    FormationAnchor       = 0x12,
+    FormationSpinePoint   = 0x13,
+    AreaUnion             = 0x14,
+    ReplanMoveArea        = 0x15,
 };
 
 struct WUID {
-    uint64_t m_value;   // (slot | gen<<18 | tag<<56)
+    std::uint64_t m_value;
 
-    constexpr uint32_t slot()       const { return (uint32_t)(m_value & 0x1FFFF); }
-    constexpr uint16_t generation() const { return (uint16_t)(m_value >> 0x11); }
-    constexpr uint8_t  tag()        const { return (uint8_t)(m_value >> 56); }
-    constexpr E_WUIDTag tagEnum()   const { return (E_WUIDTag)tag(); }
+    constexpr std::uint8_t tagValue() const noexcept {
+        return static_cast<std::uint8_t>(m_value >> 56);
+    }
+    constexpr E_WUIDTag tag() const noexcept {
+        return static_cast<E_WUIDTag>(tagValue());
+    }
+    constexpr explicit operator bool() const noexcept { return m_value != 0; }
 
-    constexpr bool operator==(const WUID& o) const { return m_value == o.m_value; }
-    constexpr bool operator!=(const WUID& o) const { return m_value != o.m_value; }
-    constexpr bool operator<(const WUID& o) const { return m_value < o.m_value; }   // std::map/std::set ordering
+    constexpr bool operator==(const WUID& other) const noexcept { return m_value == other.m_value; }
+    constexpr bool operator!=(const WUID& other) const noexcept { return m_value != other.m_value; }
+    constexpr bool operator<(const WUID& other) const noexcept { return m_value < other.m_value; }
 };
-static_assert(sizeof(WUID) == 8);
+static_assert(sizeof(WUID) == 0x08);
 
 }  // namespace wh::framework
 
-// The binary's std::unordered_set<WUID> / std::unordered_map<WUID,V> use std::hash<WUID> (FNV-1a of
-// the 8-byte handle, matching MSVC std::hash for a trivially-copyable key) and std::equal_to<WUID>.
+// The game's unordered WUID registries use FNV-1a over the raw eight-byte handle.
 template<>
 struct std::hash<wh::framework::WUID> {
-    size_t operator()(const wh::framework::WUID& w) const noexcept {
-        uint64_t h = 0xCBF29CE484222325ULL;
-        for (int i = 0; i < 8; ++i) h = (h ^ ((w.m_value >> (i * 8)) & 0xFF)) * 0x100000001B3ULL;
-        return (size_t)h;
+    std::size_t operator()(const wh::framework::WUID& wuid) const noexcept {
+        std::uint64_t hash = 0xCBF29CE484222325ULL;
+        for (int i = 0; i < 8; ++i)
+            hash = (hash ^ ((wuid.m_value >> (i * 8)) & 0xFF)) * 0x100000001B3ULL;
+        return static_cast<std::size_t>(hash);
     }
 };

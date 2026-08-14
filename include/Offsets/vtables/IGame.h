@@ -1,8 +1,5 @@
 #pragma once
 #include <cstdint>
-#include "IGameFrameworkListener.h"   // Offsets::IGameFrameworkListener (moved to its own header,
-                                      // slot order re-verified from the CCryAction broadcast sites)
-#include "IInputEventListener.h"      // Offsets::IInputEventListener (extracted to its own header)
 
 // -----------------------------------------------
 // IGame + game-framework listener interfaces — KCD2 binary vtable order
@@ -79,31 +76,5 @@ struct IGame {
 // (IGameFrameworkListener lives in IGameFrameworkListener.h; C_Game implements it at +0x08 --
 //  its [0] is a thunk `sub rcx,8` into the C_Game scalar deleting dtor, [1] OnPostUpdate
 //  0x180FC45FC sends C_ModuleMessage 0x24, [5] OnActionEvent 0x180668FF0.)
-
-// ---------------------------------------------------------------------------
-// ILevelSystemListener — level load/unload listener (10 slots; classic SDK is 7,
-// KCD2 adds a virtual dtor at [0] + two extra slots). this-adjust: C_Game+0x10.
-// ---------------------------------------------------------------------------
-struct ILevelSystemListener {
-    virtual void _vf0(char flags) = 0;                        // [0] thunk (sub rcx,0x10) -> C_Game scalar deleting dtor
-    virtual void OnLevelNotFound(const char* levelName) = 0;  // [1] 0x1839D928C  level-state @+0x30 (5->6)   tentative
-    virtual void OnLoadingStart(void* pLevelInfo) = 0;        // [2] 0x180DA815C  forwards manager @+0xA0      tentative
-    virtual void OnLoadingLevelEntitiesStart(void* pLevelInfo) = 0; // [3] 0x1839D929C  sends C_ModuleMessage 0x12  tentative
-    virtual void OnLoadingComplete(void* pLevel) = 0;         // [4] ret 0                                    tentative
-    virtual void OnLoadingError(void* pLevelInfo, const char* error) = 0; // [5] 0x1819CAF64  sends C_ModuleMessage  tentative
-    virtual void OnLoadingProgress(void* pLevelInfo, int progressAmount) = 0; // [6] 0x1839D928C            tentative
-    virtual void OnUnloadComplete(void* pLevel) = 0;          // [7] ret 0                                    tentative
-    virtual void _vf8() = 0;                                  // [8] 0x180FC4194
-    virtual void _vf9() = 0;                                  // [9] 0x180FC4248
-};
-
-// ---------------------------------------------------------------------------
-// wh::framework::I_ModuleMessageListener — Warhorse module message bus (2 slots).
-// this-adjust: C_Game+0x20.
-// ---------------------------------------------------------------------------
-struct I_ModuleMessageListener {
-    virtual void _vf0(char flags) = 0;                        // [0] thunk (sub rcx,0x20) -> C_Game scalar deleting dtor
-    virtual void OnModuleMessage(void* message) = 0;          // [1] 0x18047A034  wh::framework::C_ModuleMessage&  tentative
-};
 
 }  // namespace Offsets

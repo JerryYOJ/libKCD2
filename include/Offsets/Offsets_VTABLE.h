@@ -10,14 +10,20 @@
 
 namespace Offsets {
 
+// .?AVCArrow@entitymodule@wh@@ -- 3 subobject vtable(s) @ +0x0, +0x40, +0x48
+inline constexpr std::array<::REL::ID, 3> VTABLE_CArrow{ ::REL::ID(558615) /* 0x3ECE6F0 */, ::REL::ID(558611) /* 0x3ECE690 */, ::REL::ID(558613) /* 0x3ECE6B8 */ };
 // .?AVCBrush@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_CBrush{ ::REL::ID(591001) /* 0x401FE70 */ };
+// .?AVCFlashUI@@ -- 7 subobject vtable(s) @ +0x0, +0x8, +0x10, +0x18, +0x20, +0x28, +0x30
+inline constexpr std::array<::REL::ID, 7> VTABLE_CFlashUI{ ::REL::ID(594639) /* 0x404A7D8 */, ::REL::ID(594637) /* 0x404A7C0 */, ::REL::ID(594635) /* 0x404A798 */, ::REL::ID(594648) /* 0x404AA08 */, ::REL::ID(594646) /* 0x404A9B0 */, ::REL::ID(594644) /* 0x404A990 */, ::REL::ID(594642) /* 0x404A970 */ };
 // .?AVCMergedMeshRenderNode@@ -- 3 subobject vtable(s) @ +0x0, +0x50, +0x58
 inline constexpr std::array<::REL::ID, 3> VTABLE_CMergedMeshRenderNode{ ::REL::ID(591943) /* 0x402A508 */, ::REL::ID(591947) /* 0x402A780 */, ::REL::ID(591945) /* 0x402A758 */ };
 // .?AVCMergedMeshesManager@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_CMergedMeshesManager{ ::REL::ID(494490) /* 0x3C24CB8 */ };
 // .?AVCOwnedBrush@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_COwnedBrush{ ::REL::ID(462418) /* 0x3A6F148 */ };
+// .?AVCProjectile@entitymodule@wh@@ -- 3 subobject vtable(s) @ +0x0, +0x40, +0x48
+inline constexpr std::array<::REL::ID, 3> VTABLE_CProjectile{ ::REL::ID(1057200) /* 0x471D020 */, ::REL::ID(1057202) /* 0x471D1C0 */, ::REL::ID(1057198) /* 0x471CFE8 */ };
 // .?AUCStatObj@@ -- 4 subobject vtable(s) @ +0x0, +0x8, +0x30, +0x38
 inline constexpr std::array<::REL::ID, 4> VTABLE_CStatObj{ ::REL::ID(457258) /* 0x3A2F888 */, ::REL::ID(457254) /* 0x3A2F7C8 */, ::REL::ID(457250) /* 0x3A2F760 */, ::REL::ID(457248) /* 0x3A2F748 */ };
 // .?AVCVegetation@@ -- 1 subobject vtable(s) @ +0x0
@@ -58,6 +64,8 @@ inline constexpr std::array<::REL::ID, 1> VTABLE_C_ActStaminaValueEffect{ ::REL:
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_ActionDirector{ ::REL::ID(290) /* 0x3A67DE0 */ };
 // .?AVC_ActionSets@playermodule@wh@@ -- 2 subobject vtable(s) @ +0x0, +0x8
 inline constexpr std::array<::REL::ID, 2> VTABLE_C_ActionSets{ ::REL::ID(574215) /* 0x3F60D18 */, ::REL::ID(574213) /* 0x3F60C88 */ };
+// .?AVC_ActionTrigger@entitymodule@wh@@ -- 1 subobject vtable(s) @ +0x0
+inline constexpr std::array<::REL::ID, 1> VTABLE_C_ActionTrigger{ ::REL::ID(459194) /* 0x3A49CB8 */ };
 // .?AVC_ActiveTriggerPort@conceptmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_ActiveTriggerPort{ ::REL::ID(541071) /* 0x3E255A0 */ };
 // .?AVC_ActivityCollection@questmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
@@ -128,8 +136,12 @@ inline constexpr std::array<::REL::ID, 1> VTABLE_C_AlchemyTable{ ::REL::ID(48903
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_AlcoholismValueEffect{ ::REL::ID(1041) /* 0x3F05A88 */ };
 // .?AVC_AmmoRuntimeData@entitymodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_AmmoRuntimeData{ ::REL::ID(911) /* 0x3EB5E68 */ };
+// .?AVC_AnimDoor@entitymodule@wh@@ -- 1 subobject vtable(s) @ +0x0
+inline constexpr std::array<::REL::ID, 1> VTABLE_C_AnimDoor{ ::REL::ID(602086) /* 0x40953E0 */ };
 // .?AVC_Animal@entitymodule@wh@@ -- 3 subobject vtable(s) @ +0x0, +0x40, +0x48
 inline constexpr std::array<::REL::ID, 3> VTABLE_C_Animal{ ::REL::ID(157) /* 0x3A3A7C0 */, ::REL::ID(158) /* 0x3A3B088 */, ::REL::ID(159) /* 0x3A3B0A8 */ };
+// .?AVC_AnimalSpawner@xgenaimodule@wh@@ -- 2 subobject vtable(s) @ +0x0, +0x58
+inline constexpr std::array<::REL::ID, 2> VTABLE_C_AnimalSpawner{ ::REL::ID(461514) /* 0x3A652D8 */, ::REL::ID(461510) /* 0x3A65190 */ };
 // .?AVC_AnimatedCamera@dialogmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_AnimatedCamera{ ::REL::ID(703) /* 0x3BFC2C0 */ };
 // .?AVC_AnimationCommand@data@dialogmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
@@ -150,6 +162,8 @@ inline constexpr std::array<::REL::ID, 1> VTABLE_C_AreaLabelManager{ ::REL::ID(1
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_AreaProximityManager{ ::REL::ID(1181) /* 0x3FE8720 */ };
 // .?AVC_AreaUnion@xgenaimodule@wh@@ -- 3 subobject vtable(s) @ +0x0, +0x20, +0x60
 inline constexpr std::array<::REL::ID, 3> VTABLE_C_AreaUnion{ ::REL::ID(571) /* 0x3B27AD0 */, ::REL::ID(569) /* 0x3B27A20 */, ::REL::ID(570) /* 0x3B27A40 */ };
+// .?AVC_AreaUnionExtension@xgenaimodule@wh@@ -- 1 subobject vtable(s) @ +0x0
+inline constexpr std::array<::REL::ID, 1> VTABLE_C_AreaUnionExtension{ ::REL::ID(483804) /* 0x3B86788 */ };
 // .?AVC_AreaUnionManager@xgenaimodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_AreaUnionManager{ ::REL::ID(1159) /* 0x3FE4088 */ };
 // .?AVC_ArmorRuntimeData@entitymodule@wh@@ -- 1 subobject vtable(s) @ +0x0
@@ -176,6 +190,12 @@ inline constexpr std::array<::REL::ID, 1> VTABLE_C_BarberExtensionController{ ::
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_BarberServiceUsedCause{ ::REL::ID(1121) /* 0x3F45848 */ };
 // .?AVC_BaseModule@framework@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_BaseModule{ ::REL::ID(394) /* 0x3A83EA8 */ };
+// .?AVC_Battlement@playermodule@wh@@ -- 1 subobject vtable(s) @ +0x0
+inline constexpr std::array<::REL::ID, 1> VTABLE_C_Battlement{ ::REL::ID(478932) /* 0x3B48000 */ };
+// .?AVC_BattlementSlot@playermodule@wh@@ -- 1 subobject vtable(s) @ +0x0
+inline constexpr std::array<::REL::ID, 1> VTABLE_C_BattlementSlot{ ::REL::ID(467594) /* 0x3AB1C38 */ };
+// .?AVC_BedTrigger@entitymodule@wh@@ -- 1 subobject vtable(s) @ +0x0
+inline constexpr std::array<::REL::ID, 1> VTABLE_C_BedTrigger{ ::REL::ID(475045) /* 0x3B13DD8 */ };
 // .?AVC_BehaviorTreeSUBB@xgenaimodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_BehaviorTreeSUBB{ ::REL::ID(130) /* 0x3A34270 */ };
 // .?AVC_BlacksmithingFinishedCause@rpgmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
@@ -220,6 +240,10 @@ inline constexpr std::array<::REL::ID, 1> VTABLE_C_CallbackAction{ ::REL::ID(458
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_CameraCommand{ ::REL::ID(433) /* 0x3A93408 */ };
 // .?AVC_CaptionObjectUsedCause@rpgmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_CaptionObjectUsedCause{ ::REL::ID(1079) /* 0x3F27378 */ };
+// .?AVC_CarryItemPile@entitymodule@wh@@ -- 2 subobject vtable(s) @ +0x0, +0x40
+inline constexpr std::array<::REL::ID, 2> VTABLE_C_CarryItemPile{ ::REL::ID(464155) /* 0x3A844E8 */, ::REL::ID(464153) /* 0x3A844A0 */ };
+// .?AVC_CartStash@entitymodule@wh@@ -- 3 subobject vtable(s) @ +0x0, +0x70, +0x78
+inline constexpr std::array<::REL::ID, 3> VTABLE_C_CartStash{ ::REL::ID(488830) /* 0x3BD8F50 */, ::REL::ID(488826) /* 0x3BD8EF8 */, ::REL::ID(488828) /* 0x3BD8F08 */ };
 // .?AVC_CheckpointMark@guimodule@wh@@ -- 3 subobject vtable(s) @ +0x0, +0x8, +0x10
 inline constexpr std::array<::REL::ID, 3> VTABLE_C_CheckpointMark{ ::REL::ID(1269) /* 0x47200E8 */, ::REL::ID(1267) /* 0x47200A0 */, ::REL::ID(1268) /* 0x47200B0 */ };
 // .?AVC_ClothingWashedCause@rpgmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
@@ -416,6 +440,8 @@ inline constexpr std::array<::REL::ID, 1> VTABLE_C_CutsceneEndedCause{ ::REL::ID
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_CutsceneEvent{ ::REL::ID(1032) /* 0x3EF7D18 */ };
 // .?AVC_CutsceneHandler@guimodule@wh@@ -- 2 subobject vtable(s) @ +0x0, +0x40
 inline constexpr std::array<::REL::ID, 2> VTABLE_C_CutsceneHandler{ ::REL::ID(556) /* 0x3B1C288 */, ::REL::ID(555) /* 0x3B1C1B0 */ };
+// .?AVC_CutsceneHolder@entitymodule@wh@@ -- 1 subobject vtable(s) @ +0x0
+inline constexpr std::array<::REL::ID, 1> VTABLE_C_CutsceneHolder{ ::REL::ID(476162) /* 0x3B273C0 */ };
 // .?AVC_CutscenePlayer@guimodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_CutscenePlayer{ ::REL::ID(968) /* 0x3EE1F90 */ };
 // .?AVC_CutsceneStartedCause@rpgmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
@@ -432,8 +458,12 @@ inline constexpr std::array<::REL::ID, 1> VTABLE_C_DebuggerPort{ ::REL::ID(54106
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_Decision{ ::REL::ID(192) /* 0x3A47228 */ };
 // .?AVC_DecisionLabelDatabase@xgenaimodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_DecisionLabelDatabase{ ::REL::ID(673) /* 0x3BB09A8 */ };
+// .?AVC_Decoy@entitymodule@wh@@ -- 3 subobject vtable(s) @ +0x0, +0x40, +0x48
+inline constexpr std::array<::REL::ID, 3> VTABLE_C_Decoy{ ::REL::ID(1056247) /* 0x4711C10 */, ::REL::ID(1056249) /* 0x4711DB0 */, ::REL::ID(1056251) /* 0x4711DD8 */ };
 // .?AVC_DespawnItemEventImplementation@xgenaimodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_DespawnItemEventImplementation{ ::REL::ID(1230) /* 0x4011258 */ };
+// .?AVC_DestroStash@entitymodule@wh@@ -- 3 subobject vtable(s) @ +0x0, +0x70, +0x78
+inline constexpr std::array<::REL::ID, 3> VTABLE_C_DestroStash{ ::REL::ID(492319) /* 0x3C0BB58 */, ::REL::ID(492315) /* 0x3C0BB00 */, ::REL::ID(492317) /* 0x3C0BB10 */ };
 // .?AVC_DetachEventImplementation@xgenaimodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_DetachEventImplementation{ ::REL::ID(1229) /* 0x40111E8 */ };
 // .?AVC_DialogCamera@dialogmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
@@ -530,6 +560,8 @@ inline constexpr std::array<::REL::ID, 1> VTABLE_C_EmptyOwnership{ ::REL::ID(116
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_EmptySUBB{ ::REL::ID(1139) /* 0x3FD7710 */ };
 // .?AVC_EncumberanceWalkDistanceReachedCause@rpgmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_EncumberanceWalkDistanceReachedCause{ ::REL::ID(1118) /* 0x3F45648 */ };
+// .?AVC_EntityModule@entitymodule@wh@@ -- 1 subobject vtable(s) @ +0x0
+inline constexpr std::array<::REL::ID, 1> VTABLE_C_EntityModule{ ::REL::ID(554629) /* 0x3EAA180 */ };
 // .?AVC_EnumDatabase@xgenaimodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_EnumDatabase{ ::REL::ID(512) /* 0x3AD8720 */ };
 // .?AVC_EnumLog@questmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
@@ -586,6 +618,8 @@ inline constexpr std::array<::REL::ID, 1> VTABLE_C_FallDamageCause{ ::REL::ID(19
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_FastTravel{ ::REL::ID(400) /* 0x3A84288 */ };
 // .?AVC_FastTravelCutscene@guimodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_FastTravelCutscene{ ::REL::ID(574) /* 0x3B2DED0 */ };
+// .?AVC_FastTravelCutsceneData@entitymodule@wh@@ -- 1 subobject vtable(s) @ +0x0
+inline constexpr std::array<::REL::ID, 1> VTABLE_C_FastTravelCutsceneData{ ::REL::ID(486661) /* 0x3BB41A8 */ };
 // .?AVC_FastTravelEndedCause@rpgmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_FastTravelEndedCause{ ::REL::ID(1068) /* 0x3F27170 */ };
 // .?AVC_FastTravelScriptBind@playermodule@wh@@ -- 1 subobject vtable(s) @ +0x0
@@ -598,6 +632,8 @@ inline constexpr std::array<::REL::ID, 2> VTABLE_C_FinishRecipeFromMortarAction{
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_FirstElement{ ::REL::ID(474118) /* 0x3B06EB0 */ };
 // .?AVC_FloatSerializationFormatColumnDescriptor@databasemodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_FloatSerializationFormatColumnDescriptor{ ::REL::ID(502594) /* 0x3C73728 */ };
+// .?AVC_FoodProcessingTrigger@entitymodule@wh@@ -- 1 subobject vtable(s) @ +0x0
+inline constexpr std::array<::REL::ID, 1> VTABLE_C_FoodProcessingTrigger{ ::REL::ID(478969) /* 0x3B483E8 */ };
 // .?AVC_FoodValueEffect@rpgmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_FoodValueEffect{ ::REL::ID(1104) /* 0x3F277C8 */ };
 // .?AVC_ForEach@conceptmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
@@ -608,6 +644,8 @@ inline constexpr std::array<::REL::ID, 1> VTABLE_C_ForcedDialogueNode{ ::REL::ID
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_ForgeAssetEnabledCause{ ::REL::ID(1069) /* 0x3F27198 */ };
 // .?AVC_FormationAnchorPuppet@xgenaimodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_FormationAnchorPuppet{ ::REL::ID(1293) /* 0x4766A68 */ };
+// .?AVC_FormationManager@movement@xgenaimodule@wh@@ -- 1 subobject vtable(s) @ +0x0
+inline constexpr std::array<::REL::ID, 1> VTABLE_C_FormationManager{ ::REL::ID(584904) /* 0x3FE5EB8 */ };
 // .?AVC_FormationSpinePointPuppet@movement@xgenaimodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_FormationSpinePointPuppet{ ::REL::ID(1160) /* 0x3FE5DE8 */ };
 // .?AVC_ForwardCheckingSituationSearch@xgenaimodule@wh@@ -- 1 subobject vtable(s) @ +0x0
@@ -684,10 +722,14 @@ inline constexpr std::array<::REL::ID, 1> VTABLE_C_GlobalVariableIndex{ ::REL::I
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_HealthValueEffect{ ::REL::ID(427) /* 0x3A8BD00 */ };
 // .?AVC_HearingSystem@xgenaimodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_HearingSystem{ ::REL::ID(1165) /* 0x3FE6888 */ };
+// .?AVC_HerbGathering@playermodule@wh@@ -- 3 subobject vtable(s) @ +0x0, +0x8, +0x10
+inline constexpr std::array<::REL::ID, 3> VTABLE_C_HerbGathering{ ::REL::ID(575810) /* 0x3F6FF00 */, ::REL::ID(575808) /* 0x3F6FEC8 */, ::REL::ID(575806) /* 0x3F6FEA8 */ };
 // .?AVC_HerbsCollectedCause@rpgmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_HerbsCollectedCause{ ::REL::ID(1084) /* 0x3F27440 */ };
 // .?AVC_HideActorCommand@data@dialogmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_HideActorCommand{ ::REL::ID(441) /* 0x3A93830 */ };
+// .?AVC_Hole@entitymodule@wh@@ -- 1 subobject vtable(s) @ +0x0
+inline constexpr std::array<::REL::ID, 1> VTABLE_C_Hole{ ::REL::ID(485259) /* 0x3B9F458 */ };
 // .?AVC_Horse@entitymodule@wh@@ -- 3 subobject vtable(s) @ +0x0, +0x40, +0x48
 inline constexpr std::array<::REL::ID, 3> VTABLE_C_Horse{ ::REL::ID(334) /* 0x3A6E508 */, ::REL::ID(332) /* 0x3A6E4B0 */, ::REL::ID(333) /* 0x3A6E4D0 */ };
 // .?AVC_HorseInventoryOwnership@xgenaimodule@wh@@ -- 1 subobject vtable(s) @ +0x0
@@ -712,6 +754,8 @@ inline constexpr std::array<::REL::ID, 1> VTABLE_C_IndexedArrayTreeVariable{ ::R
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_InfiniteHoldInteractionTrigger{ ::REL::ID(529) /* 0x3B06328 */ };
 // .?AVC_IngameCutscene@guimodule@wh@@ -- 4 subobject vtable(s) @ +0x0, +0x60, +0x68, +0x70
 inline constexpr std::array<::REL::ID, 4> VTABLE_C_IngameCutscene{ ::REL::ID(579) /* 0x3B2E040 */, ::REL::ID(576) /* 0x3B2DFF0 */, ::REL::ID(578) /* 0x3B2E020 */, ::REL::ID(577) /* 0x3B2E008 */ };
+// .?AVC_IngameCutsceneData@entitymodule@wh@@ -- 1 subobject vtable(s) @ +0x0
+inline constexpr std::array<::REL::ID, 1> VTABLE_C_IngameCutsceneData{ ::REL::ID(480447) /* 0x3B5AA40 */ };
 // .?AVC_InputDataPort@conceptmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_InputDataPort{ ::REL::ID(458945) /* 0x3A46730 */ };
 // .?AVC_InputTriggerPort@conceptmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
@@ -724,6 +768,10 @@ inline constexpr std::array<::REL::ID, 1> VTABLE_C_InstantSoulBuffInstance{ ::RE
 inline constexpr std::array<::REL::ID, 2> VTABLE_C_IntelligentObject{ ::REL::ID(324) /* 0x3A6C230 */, ::REL::ID(323) /* 0x3A6C210 */ };
 // .?AVC_IntelligentObjectManager@xgenaimodule@wh@@ -- 2 subobject vtable(s) @ +0x0, +0xA8
 inline constexpr std::array<::REL::ID, 2> VTABLE_C_IntelligentObjectManager{ ::REL::ID(1138) /* 0x3FD76F0 */, ::REL::ID(1137) /* 0x3FD76B0 */ };
+// .?AVC_InteractionTrigger@entitymodule@wh@@ -- 1 subobject vtable(s) @ +0x0
+inline constexpr std::array<::REL::ID, 1> VTABLE_C_InteractionTrigger{ ::REL::ID(480152) /* 0x3B55BE8 */ };
+// .?AVC_InteractionType@entitymodule@wh@@ -- 1 subobject vtable(s) @ +0x0
+inline constexpr std::array<::REL::ID, 1> VTABLE_C_InteractionType{ ::REL::ID(461934) /* 0x3A69FE0 */ };
 // .?AVC_InteractiveSmartEntity@xgenaimodule@wh@@ -- 4 subobject vtable(s) @ +0x0, +0x20, +0xA8, +0xB0
 inline constexpr std::array<::REL::ID, 4> VTABLE_C_InteractiveSmartEntity{ ::REL::ID(317) /* 0x3A6BCC8 */, ::REL::ID(311) /* 0x3A6BBD8 */, ::REL::ID(312) /* 0x3A6BBF8 */, ::REL::ID(315) /* 0x3A6BC58 */ };
 // .?AVC_InteractorOverride@guimodule@wh@@ -- 2 subobject vtable(s) @ +0x0, +0xB0
@@ -770,6 +818,8 @@ inline constexpr std::array<::REL::ID, 1> VTABLE_C_ItemEffect{ ::REL::ID(1061) /
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_ItemHealthValueEffect{ ::REL::ID(199) /* 0x3A4B7D8 */ };
 // .?AVC_ItemHolder@entitymodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_ItemHolder{ ::REL::ID(115) /* 0x3A2DD68 */ };
+// .?AVC_ItemIndexer@entitymodule@wh@@ -- 1 subobject vtable(s) @ +0x0
+inline constexpr std::array<::REL::ID, 1> VTABLE_C_ItemIndexer{ ::REL::ID(555873) /* 0x3EB6148 */ };
 // .?AVC_ItemManager@entitymodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_ItemManager{ ::REL::ID(913) /* 0x3EC1850 */ };
 // .?AVC_ItemOwnership@xgenaimodule@wh@@ -- 1 subobject vtable(s) @ +0x0
@@ -780,8 +830,12 @@ inline constexpr std::array<::REL::ID, 1> VTABLE_C_ItemPuppet{ ::REL::ID(151) /*
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_ItemRepairCause{ ::REL::ID(1092) /* 0x3F275B0 */ };
 // .?AVC_ItemUseCause@rpgmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_ItemUseCause{ ::REL::ID(1091) /* 0x3F27588 */ };
+// .?AVC_ItemWrapper@entitymodule@wh@@ -- 1 subobject vtable(s) @ +0x0
+inline constexpr std::array<::REL::ID, 1> VTABLE_C_ItemWrapper{ ::REL::ID(460801) /* 0x3A5C838 */ };
 // .?AVC_JailEndedCause@rpgmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_JailEndedCause{ ::REL::ID(1066) /* 0x3F27120 */ };
+// .?AVC_KettleActionTrigger@entitymodule@wh@@ -- 1 subobject vtable(s) @ +0x0
+inline constexpr std::array<::REL::ID, 1> VTABLE_C_KettleActionTrigger{ ::REL::ID(479903) /* 0x3B53C18 */ };
 // .?AVC_KeyRuntimeData@entitymodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_KeyRuntimeData{ ::REL::ID(917) /* 0x3EC8AF0 */ };
 // .?AVC_Keybinds@playermodule@wh@@ -- 2 subobject vtable(s) @ +0x0, +0x8
@@ -830,6 +884,10 @@ inline constexpr std::array<::REL::ID, 1> VTABLE_C_LocalizedString{ ::REL::ID(84
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_Location2PerkDatabase{ ::REL::ID(797) /* 0x3C3C2F8 */ };
 // .?AVC_LocationScriptBind@rpgmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_LocationScriptBind{ ::REL::ID(609) /* 0x3B55288 */ };
+// .?AVC_LockBase@entitymodule@wh@@ -- 1 subobject vtable(s) @ +0x0
+inline constexpr std::array<::REL::ID, 1> VTABLE_C_LockBase{ ::REL::ID(487189) /* 0x3BBE2F8 */ };
+// .?AVC_LockpickableEntity@entitymodule@wh@@ -- 1 subobject vtable(s) @ +0x0
+inline constexpr std::array<::REL::ID, 1> VTABLE_C_LockpickableEntity{ ::REL::ID(489709) /* 0x3BE7D50 */ };
 // .?AVC_LockpickingResultCause@rpgmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_LockpickingResultCause{ ::REL::ID(225) /* 0x3A5A5D0 */ };
 // .?AVC_LockpickingStartedCause@rpgmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
@@ -882,6 +940,8 @@ inline constexpr std::array<::REL::ID, 1> VTABLE_C_MetaPerk{ ::REL::ID(623) /* 0
 inline constexpr std::array<::REL::ID, 3> VTABLE_C_Minigame{ ::REL::ID(461978) /* 0x3A6A568 */, ::REL::ID(461976) /* 0x3A6A530 */, ::REL::ID(461974) /* 0x3A6A510 */ };
 // .?AVC_MissileHitCause@rpgmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_MissileHitCause{ ::REL::ID(1120) /* 0x3F45818 */ };
+// .?AVC_MissileWeaponItem@entitymodule@wh@@ -- 2 subobject vtable(s) @ +0x0, +0x40
+inline constexpr std::array<::REL::ID, 2> VTABLE_C_MissileWeaponItem{ ::REL::ID(480462) /* 0x3B5AD28 */, ::REL::ID(480460) /* 0x3B5ACF0 */ };
 // .?AVC_MissileWeaponPlayerController@entitymodule@wh@@ -- 2 subobject vtable(s) @ +0x0, +0x8
 inline constexpr std::array<::REL::ID, 2> VTABLE_C_MissileWeaponPlayerController{ ::REL::ID(356) /* 0x3A80E30 */, ::REL::ID(355) /* 0x3A80E20 */ };
 // .?AVC_MissileWeaponRuntimeData@entitymodule@wh@@ -- 1 subobject vtable(s) @ +0x0
@@ -920,10 +980,14 @@ inline constexpr std::array<::REL::ID, 5> VTABLE_C_NPCManager{ ::REL::ID(1208) /
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_NPCMessageDispatcher{ ::REL::ID(1205) /* 0x3FEE260 */ };
 // .?AVC_NamedIntervalDatabase@rpgmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_NamedIntervalDatabase{ ::REL::ID(470091) /* 0x3ACDF58 */ };
+// .?AVC_Navigation@navigation@xgenaimodule@wh@@ -- 2 subobject vtable(s) @ +0x0, +0x8
+inline constexpr std::array<::REL::ID, 2> VTABLE_C_Navigation{ ::REL::ID(588972) /* 0x400C3F8 */, ::REL::ID(588973) /* 0x400C550 */ };
 // .?AVC_NavigationSmartObject@xgenaimodule@wh@@ -- 4 subobject vtable(s) @ +0x0, +0x20, +0xA8, +0xB0
 inline constexpr std::array<::REL::ID, 4> VTABLE_C_NavigationSmartObject{ ::REL::ID(598) /* 0x3B4A5A0 */, ::REL::ID(595) /* 0x3B4A528 */, ::REL::ID(596) /* 0x3B4A548 */, ::REL::ID(597) /* 0x3B4A568 */ };
 // .?AVC_Nervousness@rpgmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_Nervousness{ ::REL::ID(457468) /* 0x3A33478 */ };
+// .?AVC_Nest@entitymodule@wh@@ -- 3 subobject vtable(s) @ +0x0, +0x70, +0x78
+inline constexpr std::array<::REL::ID, 3> VTABLE_C_Nest{ ::REL::ID(477988) /* 0x3B39C80 */, ::REL::ID(477984) /* 0x3B39C28 */, ::REL::ID(477986) /* 0x3B39C38 */ };
 // .?AVC_NoOwnerOwnership@xgenaimodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_NoOwnerOwnership{ ::REL::ID(391) /* 0x3A836F0 */ };
 // .?AVC_Node@conceptmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
@@ -966,12 +1030,18 @@ inline constexpr std::array<::REL::ID, 1> VTABLE_C_POIDiscoveredCause{ ::REL::ID
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_POIType2PerkDatabase{ ::REL::ID(796) /* 0x3C3BE70 */ };
 // .?AVC_ParallelModuleUpdater@framework@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_ParallelModuleUpdater{ ::REL::ID(395) /* 0x3A83F98 */ };
+// .?AVC_ParticleEffect@xgenaimodule@wh@@ -- 2 subobject vtable(s) @ +0x0, +0x20
+inline constexpr std::array<::REL::ID, 2> VTABLE_C_ParticleEffect{ ::REL::ID(488867) /* 0x3BD9780 */, ::REL::ID(488865) /* 0x3BD9760 */ };
+// .?AVC_ParticleEffectManager@xgenaimodule@wh@@ -- 1 subobject vtable(s) @ +0x0
+inline constexpr std::array<::REL::ID, 1> VTABLE_C_ParticleEffectManager{ ::REL::ID(584978) /* 0x3FE6828 */ };
 // .?AVC_ParticleEffectPuppet@xgenaimodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_ParticleEffectPuppet{ ::REL::ID(622) /* 0x3B67F28 */ };
 // .?AVC_ParticleEffectPuppetManager@xgenaimodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_ParticleEffectPuppetManager{ ::REL::ID(402) /* 0x3A84840 */ };
 // .?AVC_Patch1_3@xgenaimodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_Patch1_3{ ::REL::ID(1220) /* 0x400F9D0 */ };
+// .?AVC_PathManager@navigation@xgenaimodule@wh@@ -- 1 subobject vtable(s) @ +0x0
+inline constexpr std::array<::REL::ID, 1> VTABLE_C_PathManager{ ::REL::ID(589097) /* 0x400D6C8 */ };
 // .?AVC_PerceptibleObject@xgenaimodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_PerceptibleObject{ ::REL::ID(119) /* 0x3A332E8 */ };
 // .?AVC_PerceptibleRefPoint@xgenaimodule@wh@@ -- 1 subobject vtable(s) @ +0x0
@@ -1064,6 +1134,10 @@ inline constexpr std::array<::REL::ID, 1> VTABLE_C_PlayerDialogController{ ::REL
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_PlayerDistanceSituationGlobalCondition{ ::REL::ID(287) /* 0x3A676B8 */ };
 // .?AVC_PlayerEndedToLootStashCause@rpgmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_PlayerEndedToLootStashCause{ ::REL::ID(1088) /* 0x3F274E0 */ };
+// .?AVC_PlayerInteraction@entitymodule@wh@@ -- 1 subobject vtable(s) @ +0x0
+inline constexpr std::array<::REL::ID, 1> VTABLE_C_PlayerInteraction{ ::REL::ID(461926) /* 0x3A69D90 */ };
+// .?AVC_PlayerInteractor@entitymodule@wh@@ -- 2 subobject vtable(s) @ +0x0, +0x10
+inline constexpr std::array<::REL::ID, 2> VTABLE_C_PlayerInteractor{ ::REL::ID(461940) /* 0x3A6A0C8 */, ::REL::ID(461942) /* 0x3A6A100 */ };
 // .?AVC_PlayerIsActiveInCombatCause@rpgmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_PlayerIsActiveInCombatCause{ ::REL::ID(729) /* 0x3C1BC58 */ };
 // .?AVC_PlayerIsInCombatDangerCause@rpgmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
@@ -1100,6 +1174,8 @@ inline constexpr std::array<::REL::ID, 1> VTABLE_C_PotentialPlayerSneakingCause{
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_PowerReadingFinishedCause{ ::REL::ID(1071) /* 0x3F27238 */ };
 // .?AVC_PowerReadingStartedCause@rpgmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_PowerReadingStartedCause{ ::REL::ID(1077) /* 0x3F27328 */ };
+// .?AVC_PredefinedPathManager@navigation@xgenaimodule@wh@@ -- 2 subobject vtable(s) @ +0x0, +0x8
+inline constexpr std::array<::REL::ID, 2> VTABLE_C_PredefinedPathManager{ ::REL::ID(464170) /* 0x3A84738 */, ::REL::ID(464165) /* 0x3A84700 */ };
 // .?AVC_PrepareFoodEffect@rpgmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_PrepareFoodEffect{ ::REL::ID(1281) /* 0x472F258 */ };
 // .?AVC_PrepareItemEffect@rpgmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
@@ -1180,6 +1256,8 @@ inline constexpr std::array<::REL::ID, 1> VTABLE_C_RemoveItemOnEquipBuffEffect{ 
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_RenamedColumnDescriptor{ ::REL::ID(465873) /* 0x3A94EF8 */ };
 // .?AVC_RenderedCutscene@guimodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_RenderedCutscene{ ::REL::ID(967) /* 0x3EE1DB8 */ };
+// .?AVC_ReplanMoveArea@navigation@xgenaimodule@wh@@ -- 1 subobject vtable(s) @ +0x0
+inline constexpr std::array<::REL::ID, 1> VTABLE_C_ReplanMoveArea{ ::REL::ID(588767) /* 0x4008F80 */ };
 // .?AVC_ReputationChangeDatabase@rpgmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_ReputationChangeDatabase{ ::REL::ID(1044) /* 0x3F18B10 */ };
 // .?AVC_ReputationConditionDatabase@rpgmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
@@ -1294,6 +1372,8 @@ inline constexpr std::array<::REL::ID, 1> VTABLE_C_Sequence{ ::REL::ID(460) /* 0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_SequenceEndedCause{ ::REL::ID(177) /* 0x3A424C0 */ };
 // .?AVC_SequenceStartedCause@rpgmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_SequenceStartedCause{ ::REL::ID(429) /* 0x3A8BE58 */ };
+// .?AVC_SequenceTrigger@entitymodule@wh@@ -- 1 subobject vtable(s) @ +0x0
+inline constexpr std::array<::REL::ID, 1> VTABLE_C_SequenceTrigger{ ::REL::ID(488942) /* 0x3BDA9E0 */ };
 // .?AVC_SetItemPhaseEventImplementation@xgenaimodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_SetItemPhaseEventImplementation{ ::REL::ID(1222) /* 0x4010EC8 */ };
 // .?AVC_SharedResource@conceptmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
@@ -1310,6 +1390,8 @@ inline constexpr std::array<::REL::ID, 1> VTABLE_C_SharpeningStartedCause{ ::REL
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_SharpeningVictoryCause{ ::REL::ID(1074) /* 0x3F272B0 */ };
 // .?AVC_ShopInventoryOwnership@xgenaimodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_ShopInventoryOwnership{ ::REL::ID(618) /* 0x3B65370 */ };
+// .?AVC_ShopModule@shopmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
+inline constexpr std::array<::REL::ID, 1> VTABLE_C_ShopModule{ ::REL::ID(577428) /* 0x3F81328 */ };
 // .?AVC_ShoppingTransactionCause@rpgmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_ShoppingTransactionCause{ ::REL::ID(209) /* 0x3A52580 */ };
 // .?AVC_ShowActorCommand@data@dialogmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
@@ -1340,6 +1422,8 @@ inline constexpr std::array<::REL::ID, 1> VTABLE_C_SkillTeacherCause{ ::REL::ID(
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_SkillXPEffect{ ::REL::ID(425) /* 0x3A8BC48 */ };
 // .?AVC_SkipTimeCutscene@guimodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_SkipTimeCutscene{ ::REL::ID(575) /* 0x3B2DF38 */ };
+// .?AVC_SkipTimeCutsceneData@entitymodule@wh@@ -- 1 subobject vtable(s) @ +0x0
+inline constexpr std::array<::REL::ID, 1> VTABLE_C_SkipTimeCutsceneData{ ::REL::ID(482734) /* 0x3B79668 */ };
 // .?AVC_SkipTimeEndedCause@rpgmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_SkipTimeEndedCause{ ::REL::ID(775) /* 0x3C378B0 */ };
 // .?AVC_SkipTimeStartedCause@rpgmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
@@ -1386,6 +1470,8 @@ inline constexpr std::array<::REL::ID, 4> VTABLE_C_SmartObjectDefault{ ::REL::ID
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_SmartObjectHelpersManager{ ::REL::ID(1202) /* 0x3FECED8 */ };
 // .?AVC_SmartObjectSubBrain@xgenaimodule@wh@@ -- 2 subobject vtable(s) @ +0x0, +0xD0
 inline constexpr std::array<::REL::ID, 2> VTABLE_C_SmartObjectSubBrain{ ::REL::ID(1151) /* 0x3FD8260 */, ::REL::ID(1150) /* 0x3FD8208 */ };
+// .?AVC_SmartObjectTrigger@entitymodule@wh@@ -- 1 subobject vtable(s) @ +0x0
+inline constexpr std::array<::REL::ID, 1> VTABLE_C_SmartObjectTrigger{ ::REL::ID(555356) /* 0x3EB1760 */ };
 // .?AVC_SmartObjectsManager@xgenaimodule@wh@@ -- 4 subobject vtable(s) @ +0x0, +0x8, +0x10, +0x18
 inline constexpr std::array<::REL::ID, 4> VTABLE_C_SmartObjectsManager{ ::REL::ID(1200) /* 0x3FECE70 */, ::REL::ID(1198) /* 0x3FECDE0 */, ::REL::ID(1199) /* 0x3FECE58 */, ::REL::ID(1197) /* 0x3FECDC8 */ };
 // .?AVC_SocialClassDatabase@rpgmodule@wh@@ -- 2 subobject vtable(s) @ +0x0, +0xB8
@@ -1440,6 +1526,10 @@ inline constexpr std::array<::REL::ID, 1> VTABLE_C_SpawnItemEventImplementation{
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_SpawnedItemsCleanupEventImplemenation{ ::REL::ID(1224) /* 0x4010FA8 */ };
 // .?AVC_StanceAnimDatabase@NPCState@xgenaimodule@wh@@ -- 2 subobject vtable(s) @ +0x0, +0x78
 inline constexpr std::array<::REL::ID, 2> VTABLE_C_StanceAnimDatabase{ ::REL::ID(511) /* 0x3AD8140 */, ::REL::ID(508) /* 0x3AD7FB8 */ };
+// .?AVC_Stash@entitymodule@wh@@ -- 3 subobject vtable(s) @ +0x0, +0x70, +0x78
+inline constexpr std::array<::REL::ID, 3> VTABLE_C_Stash{ ::REL::ID(459186) /* 0x3A49A20 */, ::REL::ID(459182) /* 0x3A499C8 */, ::REL::ID(459184) /* 0x3A499D8 */ };
+// .?AVC_StashCorpse@entitymodule@wh@@ -- 3 subobject vtable(s) @ +0x0, +0x70, +0x78
+inline constexpr std::array<::REL::ID, 3> VTABLE_C_StashCorpse{ ::REL::ID(486218) /* 0x3BADC28 */, ::REL::ID(486214) /* 0x3BADBD0 */, ::REL::ID(486216) /* 0x3BADBE0 */ };
 // .?AVC_StatXPEffect@rpgmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_StatXPEffect{ ::REL::ID(428) /* 0x3A8BD88 */ };
 // .?AVC_StatePerceptibleObject@xgenaimodule@wh@@ -- 1 subobject vtable(s) @ +0x0
@@ -1504,6 +1594,8 @@ inline constexpr std::array<::REL::ID, 1> VTABLE_C_TreeEventSetDatabase{ ::REL::
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_TreeSignatureDatabase{ ::REL::ID(1127) /* 0x3F9D980 */ };
 // .?AVC_TriggerArea@xgenaimodule@wh@@ -- 3 subobject vtable(s) @ +0x0, +0x20, +0x60
 inline constexpr std::array<::REL::ID, 3> VTABLE_C_TriggerArea{ ::REL::ID(322) /* 0x3A6C170 */, ::REL::ID(320) /* 0x3A6C0C0 */, ::REL::ID(321) /* 0x3A6C0E0 */ };
+// .?AVC_TriggerAreaManager@xgenaimodule@wh@@ -- 2 subobject vtable(s) @ +0x0, +0x8
+inline constexpr std::array<::REL::ID, 2> VTABLE_C_TriggerAreaManager{ ::REL::ID(589317) /* 0x400F170 */, ::REL::ID(589319) /* 0x400F1B8 */ };
 // .?AVC_TriggerPointEventImplementation@xgenaimodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_TriggerPointEventImplementation{ ::REL::ID(1221) /* 0x4010E58 */ };
 // .?AVC_TriggerPort@conceptmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
@@ -1814,6 +1906,8 @@ inline constexpr std::array<::REL::ID, 1> VTABLE_C_VigourValueEffect{ ::REL::ID(
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_VisualEffectManager{ ::REL::ID(485) /* 0x3AB8EF8 */ };
 // .?AVC_WantedBuff@rpgmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_WantedBuff{ ::REL::ID(1043) /* 0x3F0DBB8 */ };
+// .?AVC_WaterTubeActionTrigger@entitymodule@wh@@ -- 1 subobject vtable(s) @ +0x0
+inline constexpr std::array<::REL::ID, 1> VTABLE_C_WaterTubeActionTrigger{ ::REL::ID(479505) /* 0x3B4EE30 */ };
 // .?AVC_WeaponDestroyCause@rpgmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_C_WeaponDestroyCause{ ::REL::ID(1097) /* 0x3F276A0 */ };
 // .?AVC_WeaponEquipRuntimeData@entitymodule@wh@@ -- 1 subobject vtable(s) @ +0x0
@@ -1908,6 +2002,10 @@ inline constexpr std::array<::REL::ID, 1> VTABLE_I_Event{ ::REL::ID(1046) /* 0x3
 inline constexpr std::array<::REL::ID, 1> VTABLE_I_FogOfWarListener{ ::REL::ID(953) /* 0x3ED92A0 */ };
 // .?AVI_InputStream@shared@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_I_InputStream{ ::REL::ID(194) /* 0x3A48768 */ };
+// .?AVI_InteractionTrigger@entitymodule@wh@@ -- 1 subobject vtable(s) @ +0x0
+inline constexpr std::array<::REL::ID, 1> VTABLE_I_InteractionTrigger{ ::REL::ID(459192) /* 0x3A49B80 */ };
+// .?AVI_Interactor@entitymodule@wh@@ -- 1 subobject vtable(s) @ +0x0
+inline constexpr std::array<::REL::ID, 1> VTABLE_I_Interactor{ ::REL::ID(512780) /* 0x3D15AE0 */ };
 // .?AVI_InventoryListener@entitymodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_I_InventoryListener{ ::REL::ID(275) /* 0x3A65058 */ };
 // .?AVI_ItemAttachmentListener@entitymodule@wh@@ -- 1 subobject vtable(s) @ +0x0
@@ -1972,6 +2070,8 @@ inline constexpr std::array<::REL::ID, 1> VTABLE_I_StealthWatcher{ ::REL::ID(120
 inline constexpr std::array<::REL::ID, 1> VTABLE_I_TableSerializer{ ::REL::ID(543416) /* 0x3E3D1E0 */ };
 // .?AVI_UIApse@framework@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_I_UIApse{ ::REL::ID(956) /* 0x3ED9320 */ };
+// .?AVI_UIBook@framework@wh@@ -- 1 subobject vtable(s) @ +0x0
+inline constexpr std::array<::REL::ID, 1> VTABLE_I_UIBook{ ::REL::ID(563679) /* 0x3EF7EC8 */ };
 // .?AVI_UICamera@framework@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_I_UICamera{ ::REL::ID(954) /* 0x3ED92C8 */ };
 // .?AVI_UIDragAndDropTarget@guimodule@wh@@ -- 1 subobject vtable(s) @ +0x0
@@ -2004,6 +2104,8 @@ inline constexpr std::array<::REL::ID, 1> VTABLE_I_XGenAINPCManager{ ::REL::ID(1
 inline constexpr std::array<::REL::ID, 1> VTABLE_S_AlchemyRecipeName{ ::REL::ID(490560) /* 0x3BF45A0 */ };
 // .?AUS_AnimalCrimeDescription@xgenaimodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_S_AnimalCrimeDescription{ ::REL::ID(1292) /* 0x4765748 */ };
+// .?AUS_BehaviorTreeSubBrainTemplate@xgenaimodule@wh@@ -- 1 subobject vtable(s) @ +0x0
+inline constexpr std::array<::REL::ID, 1> VTABLE_S_BehaviorTreeSubBrainTemplate{ ::REL::ID(465067) /* 0x3A8CD08 */ };
 // .?AUS_CombatActionAttackQueryData@combatmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_S_CombatActionAttackQueryData{ ::REL::ID(185) /* 0x3A45488 */ };
 // .?AUS_CombatActorActionAttackParams@combatmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
@@ -2076,6 +2178,10 @@ inline constexpr std::array<::REL::ID, 1> VTABLE_S_SilentVariableReference{ ::RE
 inline constexpr std::array<::REL::ID, 1> VTABLE_S_SmartEntityTemplate{ ::REL::ID(430) /* 0x3A8CE10 */ };
 // .?AUS_SoulArchetype@rpgmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_S_SoulArchetype{ ::REL::ID(607) /* 0x3B52798 */ };
+// .?AUS_SubBrainTemplate@xgenaimodule@wh@@ -- 1 subobject vtable(s) @ +0x0
+inline constexpr std::array<::REL::ID, 1> VTABLE_S_SubBrainTemplate{ ::REL::ID(465084) /* 0x3A8CE88 */ };
+// .?AUS_SwitchingSubBrainTemplate@xgenaimodule@wh@@ -- 1 subobject vtable(s) @ +0x0
+inline constexpr std::array<::REL::ID, 1> VTABLE_S_SwitchingSubBrainTemplate{ ::REL::ID(514814) /* 0x3D24E80 */ };
 // .?AUS_TheftDescription@xgenaimodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_S_TheftDescription{ ::REL::ID(1291) /* 0x4765718 */ };
 // .?AUS_Tracker@questmodule@wh@@ -- 1 subobject vtable(s) @ +0x0

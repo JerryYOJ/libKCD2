@@ -32,22 +32,6 @@ class I_Counter;
 
 class C_DistinctGuidCounter {
 public:
-    // The engine's guid hash, read off 0x1808B7C70/0x1808B7C50: FNV1a-64 over each 8-byte
-    // guid half, halves XORed (basis 0xCBF29CE484222325, prime 0x100000001B3).  Defined
-    // inline because Contains() executes it against the game-built buckets.
-    struct S_GuidHashFnv1a {
-        uint64_t operator()(const CryGUID& guid) const {
-            const auto* b = reinterpret_cast<const uint8_t*>(&guid);
-            uint64_t lo = 0xCBF29CE484222325ull;
-            uint64_t hi = 0xCBF29CE484222325ull;
-            for (int i = 0; i < 8; ++i)
-                lo = 0x100000001B3ull * (lo ^ b[i]);
-            for (int i = 8; i < 16; ++i)
-                hi = 0x100000001B3ull * (hi ^ b[i]);
-            return lo ^ hi;
-        }
-    };
-
     // The value-changed notify stack AddGuid fires on first-time inserts (reverse {listener,
     // callback}-pair walk sub_1803A524C; observers register through vf+0xB0).
     struct S_NotifyStack {
@@ -93,12 +77,11 @@ public:
 
     S_NotifyStack m_changedNotify;   // +0x08  fired by AddGuid when a NEW guid lands
     uint8_t       _unk18[8];         // +0x18  unmapped
-    std::unordered_set<CryGUID, S_GuidHashFnv1a>
-                  m_guids;           // +0x20  the distinct-guid set (save-persisted)
+    std::unordered_set<CryGUID> m_guids; // +0x20, distinct GUID set (save-persisted)
     // Object continues past +0x60 -- size unproven, tail unmodeled (see banner).
 };
 static_assert(offsetof(C_DistinctGuidCounter, m_guids) == 0x20, "guid set at 0x20");
-static_assert(sizeof(std::unordered_set<CryGUID, C_DistinctGuidCounter::S_GuidHashFnv1a>) == 0x40,
+static_assert(sizeof(std::unordered_set<CryGUID>) == 0x40,
               "MSVC unordered_set header must be 0x40 to match the engine walk");
 
 }  // namespace wh::rpgmodule

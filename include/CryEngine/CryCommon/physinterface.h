@@ -2659,7 +2659,10 @@ struct EventPhysCollision : EventPhysStereo {
 	char deferredState; // EventPhysCollisionState
 	char deferredResult; // stores the result returned by the deferred event
 	float fDecalPlacementTestMaxSize; // maximum allowed size of decals caused by this collision
+	short idmatOrg; // original material index, not mapped with material mapping
 };
+static_assert(offsetof(EventPhysCollision, idmatOrg) == 0xA0, "original material id must be at 0xA0");
+static_assert(sizeof(EventPhysCollision) == 0xA8, "EventPhysCollision must be 0xA8");
 
 struct EventPhysStateChange : EventPhysMono {	// triggered by simclass changes, even those caused by SetParams
 	enum entype { id=8, flagsCall=pef_monitor_state_changes, flagsLog=pef_log_state_changes };

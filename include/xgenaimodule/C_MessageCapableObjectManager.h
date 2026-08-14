@@ -4,7 +4,7 @@
 #include "../framework/WUID.h"
 
 // -----------------------------------------------
-// wh::xgenaimodule::C_MessageCapableObjectManager -- the message-routing registry
+// wh::xgenaimodule::C_MessageCapableObjectManager -- the message-capable WUID view
 // (KCD2 WHGame.dll 1.5.6, kd7u).  sizeof 0xA0 (create-site proven: new 160 in
 // sub_180BECAC4).
 // -----------------------------------------------
@@ -12,8 +12,8 @@
 // [1] nullsub_1, [2] sub_180A2D924). Global qword_185496198; NOT hub-reached
 // (confirmed twice, G1 §2.3 / G2_dossier §11.6). Same template base stack as
 // C_AIObjectManager (C_ObjectManagerOwnStorage<C_MessageCapableObject,...>, modeled
-// flat). C_MessageCapableObject's ctor sub_180A2BD74 hashmap-registers here
-// (node+0x18 = this); C_NPCMessageDispatcher::Dispatch resolves targets here.
+// flat). C_MessageCapableObject's ctor sub_180A2BD74 indexes the same inherited root
+// WUID here (node+0x18 = this); C_NPCMessageDispatcher::Dispatch resolves this view.
 // Layout: the 0xA0 total = the 0x60 base-stack prefix (identical shape to
 // C_AIObjectManager) + the registry map @+0x60 -- prefix interior [U], map [V]
 // (registration inserts at mgr+0x60).
@@ -25,6 +25,10 @@ class C_MessageCapableObject;
 class C_MessageCapableObjectManager {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_MessageCapableObjectManager;
+
+    static C_MessageCapableObjectManager* GetInstance();
+    C_MessageCapableObject* FindByWuid(const framework::WUID& wuid);
+
     virtual ~C_MessageCapableObjectManager();   // [0] deleting dtor sub_18341F70C
     virtual void _vf1();                        // [1] nullsub_1 [U role]
     virtual void _vf2();                        // [2] sub_180A2D924 [U role -- likely Remove/Unregister]

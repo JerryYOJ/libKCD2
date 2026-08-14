@@ -5,7 +5,7 @@
 #include "../framework/C_Listeners.h"
 
 // -----------------------------------------------
-// wh::xgenaimodule::C_AIObjectManager -- the linkable/AIObject registry, HUB SLOT 1
+// wh::xgenaimodule::C_AIObjectManager -- the root AI-object WUID registry, HUB SLOT 1
 // (KCD2 WHGame.dll 1.5.6, kd7u).  sizeof 0x110 (create-site proven: new 272 in
 // sub_180BECBAC).
 // -----------------------------------------------
@@ -16,9 +16,9 @@
 //   C_AIObjectManager : C_ObjectManagerOwnStorage<C_AIObject,C_AIObjectManager>
 //   : C_ObjectManager<...> : Callbacks::C_NoDataExtension<Functor2<E_AIONotifyEvent::
 //   Type, WUID&>> : ... with C_CallbackListHolder @+0x08, C_TrackSequencing<1> @+0x10.
-// Find-by-linkableId: sub_18047C1F8 -- FNV-1a-64(id, 8) over the map @+0x60, value at
-// node+0x18. Every spine ctor level registers here (insert + notify sub_18047C238);
-// the C_AIObject dtor and the NPC-factory error path unregister via slot [2].
+// FindByWuid: sub_18047C1F8 -- FNV-1a-64 over the canonical C_AIObject+0x08 WUID;
+// the root C_AIObject constructor registers one pointer and its destructor removes it.
+// Capability managers reuse the same WUID as separate views.
 // NOTE: the supplement's "+0xC0 small 2-elem init (sub_180A03994(this+0xC0, 2, ...))"
 // is modeled as the C_Listeners<...,2> dispatch-cursor pair -- C_Listeners<L,2> is
 // 0x28 (vptr + vector + int32[2]), which lands the cursors exactly at +0xC0 and the
@@ -32,6 +32,10 @@ class I_AIObjectNotifyListener;   // notify-listener interface (not yet RE'd; po
 class C_AIObjectManager {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_AIObjectManager;
+
+    static C_AIObjectManager* GetInstance();
+    C_AIObject* FindByWuid(const framework::WUID& wuid);
+
     virtual ~C_AIObjectManager();                            // [0] deleting dtor sub_18341F7CC
     virtual void _vf1();                                     // [1] nullsub_1 [U role]
     virtual void RemoveObject(const framework::WUID& id);    // [2] sub_18047B810 -> sub_18047B818; erases from m_objects [V, U exact signature]

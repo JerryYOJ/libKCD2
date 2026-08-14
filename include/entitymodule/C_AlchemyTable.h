@@ -1,51 +1,60 @@
 #pragma once
-#include <cstdint>
 #include <cstddef>
-
-// -----------------------------------------------
-// wh::entitymodule::C_AlchemyTable -- the alchemy-table entity component (KCD2 1.5.6, kd7u).
-// sizeof 0x48.
-// -----------------------------------------------
-// RTTI .?AVC_AlchemyTable@entitymodule@wh@@ (TD 0x184B9D868); vtable 0x183BDCB10; ctor
-// sub_18163F150 (alloc 72, zeroes +0x08..+0x40, wraps in a holder via sub_18163F1F0); a
-// CGameObjectExtensionHelper<C_AlchemyTable, IGameObjectExtension, 0x40> extension of the
-// AlchemyTable entity (Scripts/Entities/WH/Minigames/AlchemyTable.lua).
-//
-// Vtable highlights (validated slots): [3] GetKind -> 7 (sub_181A74280); [5] getter this+0x38
-// (sub_180602360); [6] clone thunk (sub_1828C4AD8); [7] AttachLuaComponent (sub_181781F20 /
-// sub_181781F64 -- registers the per-entity "alchemyTable" Lua component, methods from
-// bind+0x48).  SetGameObject stores the game object at +0x28, entityId at +0x30, entity ptr at
-// +0x38, and registers with the table registry (S_GameContext+224 -> +144 -> +32).
-// The helper/slot names (alchemyPot/Bellow/Sandglass/...) resolve to SKELETON JOINT indices of
-// the table's ICharacterInstance (entity+0x18) via CRC32 (sub_18078BBF8); cache built by
-// sub_180D7FC88/sub_180D82BB0 (~32 named resolvers; "AlchemyUse" anchor at cache+464).
-//
-// ENABLED FLAG RESOLVED (table_enable_and_verbs.md §1): m_disabled at +0x40 (uint32, 0 = enabled).
-// Lua alchemyTable:IsEnabled() = sub_1814E37FC: entity -> QueryExtension("AlchemyTable") ->
-// returns *(u32)(this+0x40) == 0 (the interaction/use gate).  Writer = C_DisableAlchemyTable
-// Activate -> sub_1804F4BB0 generic RTTR property_wrapper::set over its AlchemyTables port (no
-// per-class mov -- reflected write).  Remaining fields +0x08..+0x20 are ctor-zeroed only
-// [roles UNVERIFIED].
+#include <cstdint>
+#include "../Offsets/vtables/CGameObjectExtensionHelper.h"
+#include "../Offsets/vtables/IGameObjectExtension.h"
+#include "../rttr/rttr_enable.h"
 
 namespace wh::entitymodule {
 
-class C_AlchemyTable {
+class C_AlchemyTable
+    : public Offsets::CGameObjectExtensionHelper<
+          C_AlchemyTable,
+          Offsets::IGameObjectExtension,
+          64> {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_AlchemyTable;
-    virtual ~C_AlchemyTable() = default;   // slot [0]; see banner for the validated slot map
 
-    uint64_t _unk08;        // +0x08  zeroed by ctor [role UNVERIFIED]
-    uint64_t _unk10;        // +0x10  zeroed [role UNVERIFIED]
-    uint64_t _unk18;        // +0x18  zeroed [role UNVERIFIED]
-    uint64_t _unk20;        // +0x20  zeroed [role UNVERIFIED]
-    void*    m_pGameObject; // +0x28  SetGameObject arg
-    uint32_t m_entityId;    // +0x30  *(gameObject+8)
-    uint32_t _pad34;        // +0x34
-    void*    m_pEntity;     // +0x38  IEntity* (also returned by vtable slot [5])
-    uint32_t m_disabled;    // +0x40  0 = enabled; set via the RTTR-reflected disable path
-    uint32_t _pad44;        // +0x44
+    ~C_AlchemyTable() override;                                      // [0] 0x18127F6BC
+    void ProcessEvent(SEntityEvent& event) override;                 // [1] nullsub_1
+    bool _vf2() override;                                            // [2] 0x180838AE0
+    int GetEventPriority(int eventId) override;                      // [3] 0x181A74280
+    void _vf4() override;                                            // [4] nullsub_1
+    Offsets::IEntity* GetEntity() override;                          // [5] 0x180602360
+    void GetMemoryUsage(ICrySizer* sizer) const override;            // [6] 0x1828C4AD8
+    bool Init(Offsets::IGameObject* gameObject) override;            // [7] 0x181781F20
+    void PostInit(Offsets::IGameObject* gameObject) override;        // [8] nullsub_1
+    void InitClient(int channelId) override;                         // [9] nullsub_1
+    void PostInitClient(int channelId) override;                     // [10] nullsub_1
+    bool ReloadExtension(Offsets::IGameObject* gameObject,
+                         const SEntitySpawnParams& params) override; // [11] 0x1827D22E8
+    void PostReloadExtension(Offsets::IGameObject* gameObject,
+                             const SEntitySpawnParams& params) override; // [12] nullsub_1
+    bool GetEntityPoolSignature(TSerialize signature) override;     // [13] 0x1828C4948
+    void Release() override;                                        // [14] 0x1803A5684
+    void FullSerialize(TSerialize serializer) override;             // [15] nullsub_1
+    bool NetSerialize(TSerialize serializer,
+                      EEntityAspects aspect,
+                      std::uint8_t profile,
+                      int flags) override;                           // [16] 0x180838AE0
+    bool _vf17() override;                                           // [17] 0x180838AE0, role OPEN
+    NetworkAspectType GetNetSerializeAspects() override;             // [18] 0x181A72600
+    void PostSerialize() override;                                   // [19] nullsub_1
+    void SerializeSpawnInfo(TSerialize serializer) override;        // [20] nullsub_1
+    ISerializableInfoPtr GetSpawnInfo() override;                    // [21] 0x1823CA690
+    void Update(SEntityUpdateContext& context, int updateSlot) override; // [22] nullsub_1
+    void HandleEvent(const SGameObjectEvent& event) override;        // [23] nullsub_1
+    void SetChannelId(std::uint16_t id) override;                    // [24] nullsub_1
+    void SetAuthority(bool authoritative) override;                  // [25] nullsub_1
+    void PostUpdate(float frameTime) override;                       // [27] nullsub_1
+    void PostRemoteSpawn() override;                                 // [28] nullsub_1
+
+    RTTR_ENABLE() // [29..31]
+
+    std::uint32_t m_disableCount; // +0x40, reconstructed name; signedness OPEN
 };
 static_assert(sizeof(C_AlchemyTable) == 0x48, "C_AlchemyTable must be 0x48");
-static_assert(offsetof(C_AlchemyTable, m_pGameObject) == 0x28, "game object at 0x28");
+static_assert(offsetof(C_AlchemyTable, m_disableCount) == 0x40,
+              "disable nesting counter must be at 0x40");
 
 }  // namespace wh::entitymodule

@@ -1,20 +1,27 @@
 #pragma once
 
 // -----------------------------------------------
-// wh::playermodule::I_MinigameCamera -- minigame camera-control interface (KCD2 1.5.6, kd7u).
-// sizeof 0x08 (vptr only).
+// wh::playermodule::I_MinigameCamera -- minigame camera-control interface
+// (KCD2 WHGame.dll 1.5.6, kd7u). sizeof 0x08, six slots.
 // -----------------------------------------------
-// Second MI base of the minigame sessions (C_Alchemy subobject at +0x08, vtable 0x183F60AD0).
-// Owns the minigame camera takeover (the AlchemyTable camera-limit-angle Lua properties feed this
-// layer).  Slot map UNVERIFIED -- only the deleting-dtor position is certain; do not call through
-// this base.
+// C_Minigame's secondary vtable 0x183A6A530 proves six slots and no destructor.
+// Signatures are constrained by the shared constant/default implementations; semantic
+// names remain open, so callers should not use the unk slots directly.
 
 namespace wh::playermodule {
 
 class I_MinigameCamera {
 public:
-    virtual ~I_MinigameCamera() = default;   // [0]; further slots UNVERIFIED
+    inline static constexpr auto RTTI = Offsets::RTTI_I_MinigameCamera;
+
+    virtual bool  camera_unk_00() const = 0; // [0] default false
+    virtual bool  camera_unk_01() const = 0; // [1] default false
+    virtual void  camera_unk_02() = 0;       // [2] nullsub
+    virtual bool  camera_unk_03() const = 0; // [3] default false
+    virtual float camera_unk_04() const = 0; // [4] default 1.0f
+    virtual bool  camera_unk_05() const = 0; // [5] default true
 };
-static_assert(sizeof(I_MinigameCamera) == 8, "I_MinigameCamera is a vptr-only interface");
+static_assert(sizeof(I_MinigameCamera) == 0x08,
+              "I_MinigameCamera is a vptr-only six-slot interface");
 
 }  // namespace wh::playermodule

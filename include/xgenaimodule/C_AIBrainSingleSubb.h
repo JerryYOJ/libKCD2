@@ -34,7 +34,7 @@ public:
     void _vf21() override;   // [21] sub_181A834F0 [U role]
     void _vf23() override;   // [23] sub_183209668 [U role]
     void _vf24() override;   // [24] nullsub_1
-    void _vf26() override;   // [26] sub_180418C48 [U role]
+    bool AddSubbrain(C_SUBBBase* subbrain) override; // [26] sub_180418C48
     void _vf27() override;   // [27] sub_180838AE0 (return false)
     void _vf28() override;   // [28] sub_1811D12E8 [U role]
     void _vf29() override;   // [29] sub_183209628 [U role]

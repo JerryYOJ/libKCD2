@@ -1,8 +1,8 @@
 #pragma once
 
 #include <cstdint>
-#include "../Offsets/vtables/IConsole.h"   // Offsets::IConsole (76-slot vtable) + Offsets::IRemoteConsoleListener
-                                               // (also pulls Offsets::IInputEventListener via IGame.h) + SDK typedefs
+#include "../Offsets/vtables/IConsole.h"
+#include "../Offsets/vtables/IInputEventListener.h"
 
 // -----------------------------------------------
 // CXConsole - CryEngine 3 engine console (CryEngine + Warhorse, KCD2)

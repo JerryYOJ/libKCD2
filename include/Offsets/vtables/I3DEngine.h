@@ -1,6 +1,8 @@
 #pragma once
 #include <cstdint>
 
+struct SRainParams;
+
 // -----------------------------------------------
 // I3DEngine -- CryEngine 3D engine, KCD2 binary vtable order (impl C3DEngine).
 // -----------------------------------------------
@@ -93,8 +95,8 @@ struct I3DEngine {
     virtual void _vf70() = 0;  // [70]
     virtual void _vf71() = 0;  // [71]
     virtual void _vf72() = 0;  // [72]
-    virtual void _vf73() = 0;  // [73]
-    virtual void _vf74() = 0;  // [74]
+    virtual void SetRainParams(const SRainParams& params) = 0;  // [73] 0x180552FE8
+    virtual bool GetRainParams(SRainParams& params) = 0;  // [74] 0x180E81E38
     virtual void SetSkyLightParameters(const void* params) = 0;  // [75] 0x18349C8C8  objman +512..536 mirror [LIKELY]
     virtual void GetSkyLightParameters(void* out) = 0;  // [76] 0x180E88FE4  Vec3+Km+3 moon floats [LIKELY; KCD1 66]
     virtual void _vf77() = 0;  // [77]

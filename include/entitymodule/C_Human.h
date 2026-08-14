@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include "C_Actor.h"
+#include "S_TrackedFloat.h"
 #include "../framework/C_Signal.h"
 
 // -----------------------------------------------
@@ -31,15 +32,6 @@ class IAction;                 // ICryMannequin action (class per SDK)
 namespace wh::entitymodule {
 
 class C_HumanHandHelper;
-
-// {float value; dirty flag} tracked parameter. Built by sub_1809CF028 (zeroes 24B for [3]);
-// assignment op sub_1809CEF38 walks 3 elements as {float@+0; if (new != old) byte@+4 = 1}.
-struct S_TrackedFloat {
-    float   value;      // +0x00
-    bool    changed;    // +0x04  dirty flag, set on assign-if-different
-    uint8_t _pad05[3];  // +0x05
-};
-static_assert(sizeof(S_TrackedFloat) == 0x8, "S_TrackedFloat must be 0x8");
 
 class C_Human : public C_Actor {
 public:

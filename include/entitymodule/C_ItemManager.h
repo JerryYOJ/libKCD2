@@ -13,7 +13,7 @@
 // -----------------------------------------------
 // wh::entitymodule::C_ItemManager -- KCD2 WHGame.dll 1.5.6 (kd7u).  sizeof 0x5B9070 (~6 MB).
 // -----------------------------------------------
-// RTTI .?AVC_ItemManager@entitymodule@wh@@  primary vtable 0x183EC1850 (3 slots)  ctor sub_180BEAB68
+// RTTI .?AVC_ItemManager@entitymodule@wh@@  provider vtable 0x183EC1850 (2 slots)  ctor sub_180BEAB68
 // Bases: I_WUIDMappingProvider (polymorphic, vtable @+0x00) + UnsafeOp::CryDeferrable<0> (empty).
 // Singleton: C_EntityModule a1[25]. Dominated by the inline WUID->C_Item* registry (m_itemTable).
 // The WUID key holders / wuid hashes are a bespoke Warhorse inline-bucket open hash (S_WuidHash) --
@@ -84,7 +84,7 @@ struct S_ItemMapKey {
 struct S_TreeBValue { uint8_t _raw[0x28]; };
 
 class C_ItemManager
-    : public wh::framework::I_WUIDMappingProvider   // +0x00  (3-slot vtable; combined identity)
+    : public wh::framework::I_WUIDMappingProvider   // +0x00  (2-slot provider vtable)
     , public UnsafeOp::CryDeferrable<0>             // empty mixin (-> ICryDeferrable)
 {
 public:
@@ -95,6 +95,9 @@ public:
     // Registry lookup sub_181E3E090(&m_itemTable, &wuid): validates type byte 2 + generation
     // (WUID >> 18) + the item's stored WUID.
     C_Item* LookupByWUID(const wh::framework::WUID& wuid);
+
+    wh::framework::WUID GetWuidForKey(const CryGUID& key) const override;
+    CryGUID GetValueForWuid(wh::framework::WUID wuid) const override;
 
     S_WuidKeyHolder m_keyHolderA;                      // +0x08   {sentinel, WUID key} holder
     S_WuidKeyHolder m_keyHolderB;                      // +0x18   owner index: C_Item::SetOwner (0x181F0F730)

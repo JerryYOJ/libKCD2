@@ -53,7 +53,7 @@ public:
     virtual void* GetRecognizingThresholdManager() = 0;   // [29] sub_1831ACD98 -> qword_185492EA0 sibling = C_RecognizingThresholdManager [V] * recognition
     virtual void* _vf30() = 0;                            // [30] sub_181A9E170 -> qword_1854961B0 (FormationManager dep) [U]
     virtual void* _vf31() = 0;                            // [31] sub_181AA1AD0 -> qword_1854961A0 [U]
-    virtual void* _vf32() = 0;                            // [32] sub_181AA1AC0 -> qword_185493118 [U]
+    virtual void* GetBrainTemplateLookup() = 0;           // [32] sub_181AA1AC0 -> GUID-keyed brain-template lookup qword_185493118 [V role, U class]
     virtual void* _vf33() = 0;                            // [33] sub_181AA2080 -> qword_185493110 [U]
     virtual void* _vf34() = 0;                            // [34] sub_181AA2090 -> qword_185496678 [U]
     virtual void* _vf35() = 0;                            // [35] sub_181AA20B0 -> qword_185493970 [U]

@@ -10,6 +10,7 @@
 #include "C_InventorySoul.h"
 #include "C_SoulRPGStats.h"
 #include "S_SoulRegistry.h"
+#include "S_SoulMailboxSub.h"
 #include "C_SoulBuffList.h"
 #include "../entitymodule/I_ItemCollectionListener.h"
 #include "../framework/CryDeferrable.h"
@@ -41,15 +42,6 @@ class C_DogSoulComponent;           // dog-archetype component (vtable via dtor 
 class C_SkillTeacherSoulComponent;  // 0xF0 skill-teacher component (ctor sub_180A1A4A8)
 class C_SoulAbilityPerk;            // the ability granter (C_SoulAbilityPerk.h)
 
-// 0x10 mailbox subscription (ctor sub_1803F1F40(this, soul); callback sub_180F42930; msg id 102).
-struct S_SoulMailboxSub {
-    C_Soul* m_pOwner;    // +0x00
-    int32_t m_msgId;     // +0x08  = 102
-    uint8_t m_flag0C;    // +0x0C
-    uint8_t _pad0D[3];   // +0x0D
-};
-static_assert(sizeof(S_SoulMailboxSub) == 0x10, "S_SoulMailboxSub must be 0x10");
-
 class C_Soul
     : public I_Soul                                      // +0x00  primary vtable 0x183F44F28
     , public wh::entitymodule::I_ItemCollectionListener  // +0x08  secondary vtable 0x183F45508
@@ -57,6 +49,12 @@ class C_Soul
 {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_Soul;
+
+    void ItemCollectionListenerUnk0(entitymodule::C_Item* splitItem) override; // secondary [0] 0x1811527A4
+    void ItemCollectionListenerUnk1(entitymodule::C_Item* consumedItem) override; // secondary [1] 0x1811527A4
+    void ItemCollectionListenerUnk3(entitymodule::C_Item* item,
+                                    std::int32_t amountDelta,
+                                    std::uint32_t changeMask) override; // secondary [3] 0x180F148F8
 
     // ---- engine-function forwarders (src/rpgmodule/C_Soul.cpp) ----
     // sub_180648B18(soul, statId, 0) -- native 218-value derived-stat evaluator.

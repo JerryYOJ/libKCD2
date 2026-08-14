@@ -1,4 +1,5 @@
 #pragma once
+#include "../framework/WUID.h"
 
 // -----------------------------------------------
 // wh::xgenaimodule::I_SmartAreaManager -- smart-area manager interface;
@@ -16,12 +17,14 @@
 
 namespace wh::xgenaimodule {
 
+class C_SmartArea;
+
 class I_SmartAreaManager {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_I_SmartAreaManager;
     virtual void SamVf0()  = 0;   // [0]  [U role]
     virtual void SamVf1()  = 0;   // [1]  [U role]
-    virtual void SamVf2()  = 0;   // [2]  [U role]
+    virtual C_SmartArea* FindByWuid(const framework::WUID& wuid) = 0; // [2] sub_180B43258
     virtual void SamVf3()  = 0;   // [3]  [U role]
     virtual void SamVf4()  = 0;   // [4]  [U role]
     virtual void SamVf5()  = 0;   // [5]  [U role]

@@ -1,66 +1,91 @@
 #pragma once
-#include <cstdint>
 #include <cstddef>
-#include "../CryEngine/CryCommon/CryString.h"
+#include <cstdint>
+#include "../CryEngine/CryCommon/CryExtension/CryGUID.h"
+#include "../CryEngine/CryCommon/CryListenerSet.h"
+#include "../framework/I_UIBook.h"
 #include "C_PickableItem.h"
-#include "E_DocumentViewMode.h"
+#include "E_DocumentBookKind.h"
+#include "I_DocumentActionListener.h"
 
 // -----------------------------------------------
-// wh::entitymodule::C_DocumentItem -- the readable-document item extension (KCD2 WHGame.dll
-// 1.5.6, utem).  sizeof 0x178.
+// wh::entitymodule::C_DocumentItem -- readable-document item extension
+// (KCD2 WHGame.dll 1.5.6, kd7u). sizeof 0x178.
 // -----------------------------------------------
-// RTTI .?AVC_DocumentItem@entitymodule@wh@@.  One of exactly THREE item classes registered with
-// the framework item system (IGameFramework::CItemCreator<T> vtables: C_DocumentItem 0x1840B6F20,
-// C_MissileWeaponItem, C_PickableItem) -- creator Create 0x1812765B0 allocates 0x178 and runs
-// ctor 0x181276680 (C_PickableItem ctor sub_1803F08EC first).
-//
-// This is the object CItemSystem::GetItem(entityId) returns for book/document entities (the
-// alchemy recipe book included: C_OpenBookAction::Activate 0x180A95AEC caches it at
-// bookAction+0xA0).  The READING STATE lives in the derived tail and persists as long as the
-// item exists -- ctor zero-inits verified at 0x18127672D (+0x12C word), 0x181276734 (+0x130),
-// 0x181276751 (+0x170).  Readers: GetOpenRecipeId 0x1808C3C68 (recipe id iff view==RecipeDetail
-// && !m_herbViewActive), reading-hint refresher 0x1808C33E8, autocook gate 0x1808C3AF4.
+// Creator 0x1812765B0 allocates 0x178 and calls ctor 0x181276680. The primary
+// table extends C_PickableItem's 130 slots with slot [130]. Only the eight
+// proved differences are redeclared below; every other slot is inherited.
+// The document tail uses Warhorse's 4-byte member packing, which places the
+// genuine CryGUID at +0x134. CListenerSet is the retail 0x28 representation.
 
 namespace wh::entitymodule {
 
-class C_DocumentItem : public C_PickableItem {   // +0x000..+0x0D8
+#pragma pack(push, 4)
+class C_DocumentItem : public C_PickableItem {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_DocumentItem;
 
-    void*    _unkD8;                 // +0x0D8  ctor 0; the reading ctrl stores its arg here (0x180A96C6B)
-    uint32_t _unkE0;                 // +0x0E0  ctor 0
-    uint32_t _padE4;                 // +0x0E4
-    CryStringT<char> _strE8;         // +0x0E8  ctor empty
-    void*    _unkF0;                 // +0x0F0  ctor 0
-    float    _unkF8;                 // +0x0F8  ctor 1.0f
-    uint32_t _padFC;                 // +0x0FC
-    uint16_t _unk100;                // +0x100  ctor 0
-    uint8_t  _unk102;                // +0x102  ctor 0
-    uint8_t  _pad103[5];             // +0x103
-    CryStringT<char> _str108;        // +0x108  ctor empty
-    CryStringT<char> _str110;        // +0x110  ctor empty
-    CryStringT<char> _str118;        // +0x118  ctor empty
-    CryStringT<char> _str120;        // +0x120  ctor empty
-    uint32_t _unk128;                // +0x128
-    uint8_t  _flag12C;               // +0x12C  ctor 0 (word store with +0x12D)
-    // 1 while the recipe book shows the HERB/ingredient page instead of the recipe page: the
-    // hint refresher (0x1808C33E8 via sub_1808C3D20 == 1) then offers "switch to recipe"
-    // ("ui_help_alchemy_reading_t_recip") and disables read_select, and GetOpenRecipeId
-    // (0x1808C3C68) returns 0 -- the open recipe is not showing.
-    uint8_t  m_herbViewActive;       // +0x12D
-    uint8_t  _pad12E[2];             // +0x12E
-    // The recipe currently/last opened in the book's detail view; written by the read_next/
-    // read_prev page-navigation handlers, consumed by autocook (and Autobrew).
-    uint32_t m_lastOpenRecipeId;     // +0x130
-    uint8_t  _unk134[16];            // +0x134  ctor = xmmword_183A38B00 sentinel (CryGUID-shaped)
-    uint32_t _unk144;                // +0x144
-    uint8_t  _obj148[0x28];          // +0x148  embedded member (ctor sub_1807046CC)
-    // The document's UI view kind (asset-static; see E_DocumentViewMode.h).
-    E_DocumentViewMode::Type m_viewMode; // +0x170
-    uint8_t  _pad171[7];             // +0x171
+    ~C_DocumentItem() override;                                  // [0] 0x1814C4BC4
+    void ProcessEvent(SEntityEvent& event) override;             // [1] 0x180EC4290
+    void PostInit(Offsets::IGameObject* gameObject) override;    // [8] 0x1808FD06C
+    void Reset() override;                                       // [72] 0x1808FD120
+    void _vf108() override;                                      // [108] 0x1808FD18C
+    void _vf116() override;                                      // [116] 0x182A6A274, document close
+    std::uint32_t _vf129() const override;                       // [129] 0x181A72480, Document=2
+    virtual void _vf130();                                       // [130] nullsub_1, signature OPEN
+
+    framework::I_UIBook* m_uiBook;                // +0xD8, borrowed
+    std::uint32_t m_userId;                       // +0xE0, exact typedef OPEN
+    std::uint32_t _padE4;                         // +0xE4
+    CryStringT<char> m_unknownE8;                 // +0xE8, role OPEN
+
+    bool m_nextPageAnimationActive;               // +0xF0
+    bool m_previousPageAnimationActive;           // +0xF1
+    bool m_pendingNextPageTurn;                   // +0xF2
+    bool m_pendingPreviousPageTurn;               // +0xF3
+    std::int32_t m_remainingPageDelta;            // +0xF4
+    float m_pageTurnSpeedMultiplier;              // +0xF8
+    bool m_openAnimationActive;                   // +0xFC
+    bool m_closeAnimationActive;                  // +0xFD
+    bool m_pendingClose;                          // +0xFE
+    bool m_canTurnNextPage;                       // +0xFF
+    bool m_canTurnPreviousPage;                   // +0x100
+    bool m_viewModeTransitionActive;              // +0x101
+    bool m_deferredViewModeToggle;                // +0x102
+    std::uint8_t _pad103[5];                      // +0x103
+
+    CryStringT<char> m_animPageNext;              // +0x108
+    CryStringT<char> m_animPagePrevious;          // +0x110
+    CryStringT<char> m_animOpen;                  // +0x118
+    CryStringT<char> m_animClose;                 // +0x120
+    float m_pageAnimationTransitionTime;          // +0x128
+    bool m_suppressResetAfterClose;               // +0x12C
+    bool m_useGuidPageNavigation;                 // +0x12D; false=numeric page, true=GUID page
+    std::uint8_t _pad12E[2];                      // +0x12E
+    std::uint32_t m_currentNumericPageId;         // +0x130
+    CryGUID m_currentPageGuid;                    // +0x134
+    std::uint32_t _pad144;                        // +0x144
+    CListenerSet<I_DocumentActionListener*> m_documentActionListeners; // +0x148
+    E_DocumentBookKind m_bookKind;                // +0x170
+    std::uint8_t _pad171[7];                      // +0x171
 };
-static_assert(sizeof(C_DocumentItem) == 0x178, "C_DocumentItem must be 0x178 (creator alloc 0x1812765FC)");
-static_assert(offsetof(C_DocumentItem, m_lastOpenRecipeId) == 0x130, "recipe id at 0x130");
-static_assert(offsetof(C_DocumentItem, m_viewMode) == 0x170, "view mode at 0x170");
+#pragma pack(pop)
+
+static_assert(sizeof(CListenerSet<I_DocumentActionListener*>) == 0x28,
+              "retail CListenerSet must be 0x28");
+static_assert(sizeof(C_DocumentItem) == 0x178,
+              "C_DocumentItem must be 0x178");
+static_assert(offsetof(C_DocumentItem, m_uiBook) == 0xD8,
+              "UI book pointer must be at 0xD8");
+static_assert(offsetof(C_DocumentItem, m_animPageNext) == 0x108,
+              "page animation names must begin at 0x108");
+static_assert(offsetof(C_DocumentItem, m_currentNumericPageId) == 0x130,
+              "numeric page id must be at 0x130");
+static_assert(offsetof(C_DocumentItem, m_currentPageGuid) == 0x134,
+              "GUID page id must be at 0x134");
+static_assert(offsetof(C_DocumentItem, m_documentActionListeners) == 0x148,
+              "document listeners must be at 0x148");
+static_assert(offsetof(C_DocumentItem, m_bookKind) == 0x170,
+              "book kind byte must be at 0x170");
 
 }  // namespace wh::entitymodule

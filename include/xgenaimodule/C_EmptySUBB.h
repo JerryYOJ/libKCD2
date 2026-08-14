@@ -19,7 +19,7 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_EmptySUBB;
     void  Step() override;              // [22] sub_180838AE0 (return 0)
     bool  IsRunning() override;         // [23] sub_18041A6A0 (return 1)
-    void* GetSubbrainType() override;   // [27] sub_181A74280
+    E_SubBrainType::Type GetSubbrainType() override; // [27] sub_181A74280
     void  RequestOwnerTick() override;  // [35] sub_18075EDB8 (common body)
     void  CancelOwnerTick() override;   // [36] sub_1807F8484 (common body)
 };

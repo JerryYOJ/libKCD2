@@ -26,7 +26,7 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_ItemPuppet;
     ~C_ItemPuppet() override;
     void _vf1() override;
-    void _vf2() override;
+    void* _vf2() override;
     void* _vf3() override;
     void _vf4() override;
     void UpdateCachedTransform() override;   // [5] sub_18082B74C

@@ -36,6 +36,16 @@ class C_UIInventoryBase : public C_UIBase,
                           public I_UIItemContext {                            // +0x18
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_UIInventoryBase;
+
+    void ItemCollectionListenerUnk0(wh::entitymodule::C_Item* splitItem) override; // secondary [0] 0x1812B3498
+    void ItemCollectionListenerUnk2(wh::entitymodule::S_ItemClass* itemClass,
+                                    std::uint32_t amount,
+                                    wh::framework::WUID itemWuid) override; // secondary [2] 0x1812B355C
+    void ItemCollectionListenerUnk3(wh::entitymodule::C_Item* item,
+                                    std::int32_t amountDelta,
+                                    std::uint32_t changeMask) override; // secondary [3] 0x1805643DC
+    void ItemCollectionListenerUnk4(wh::entitymodule::C_ItemCollection* collection) override; // secondary [4] 0x182B137C8
+
     virtual void _vf10();   // [10] 0x1808C0FAC  role UNVERIFIED
     virtual void _vf11();   // [11] 0x180C4686C  role UNVERIFIED
     virtual void _vf12();   // [12] 0x180C46790  role UNVERIFIED

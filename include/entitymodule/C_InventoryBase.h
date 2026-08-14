@@ -24,6 +24,27 @@ class C_InventoryBase : public C_ItemHolder {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_InventoryBase;
 
+    void _vf2(const ItemVisitor& visitor) override; // [2] 0x1808C6690
+    void _vf3(const ItemVisitor& visitor) override; // [3] 0x18087E1B0
+    void _vf8(C_Item* item, E_ItemHolderChangeFlags flags,
+              std::uint32_t amount) override; // [8] 0x18047949C
+    void _vf9(C_Item* item, E_ItemHolderChangeFlags flags,
+              std::uint32_t amount) override; // [9] 0x180466A98
+    void _vf10(C_Item* item, E_ItemHolderChangeFlags flags,
+               std::uint32_t amount) override; // [10] 0x1804795A4
+    void _vf11(C_Item* item, E_ItemHolderChangeFlags flags,
+               std::uint32_t amount) override; // [11] 0x180465F1C
+    void _vf12(S_ItemClass* itemClass, E_ItemHolderChangeFlags flags,
+               std::uint32_t amount,
+               framework::WUID itemWuid) override; // [12] 0x180479558
+    bool _vf14() const override; // [14] 0x18041A6A0
+    void _vf17(C_Item* consumedItem,
+               C_Item* survivingItem) override; // [17] 0x1808F4854
+    void _vf19(C_Item* sourceItem,
+               C_Item* splitItem) override; // [19] 0x1808F0D14
+    void _vf20(C_Item* item, std::int32_t amountDelta,
+               std::uint32_t changeMask) override; // [20] 0x1818C89D0
+
     // First item whose CLASS guid (S_ItemClass +0x08) equals classId; null if none (0x1808D315C,
     // an alchemy-TU helper walking m_items).  EXACT match only -- the autocook gather callback
     // (0x181FFE040) adds a one-hop substitute retry via the item-class registry
@@ -49,8 +70,8 @@ public:
     // path passes 1, the change-owner path 0.  0x1808D534C
     C_Item* MoveItemIn(C_Item* item, uint32_t count, bool unkOwnerFlag);
 
-    std::vector<C_Item*>       m_items;        // +0x08  held items  VERIFIED layout
-    std::vector<C_ItemHolder*> m_items2;       // +0x20  secondary list (role/elem type UNVERIFIED)
+    std::vector<C_Item*> m_items;  // +0x08, primary item relation
+    std::vector<C_Item*> m_items2; // +0x20, secondary item relation
     // Keyed listener registry (0xB0): delegate vector @+0x40, primary/secondary WUID guard stacks.
     wh::shared::C_DependentListeners<I_InventoryListener, wh::framework::WUID, 4> m_listeners;  // +0x38
 };

@@ -98,11 +98,10 @@ uint32_t Executor::GetOpenRecipeId() const
     if (!book)
         return 0;
 
-    const bool onDetailPage = book->m_viewMode == wh::entitymodule::E_DocumentViewMode::RecipeDetail;
-    const bool herbViewOpen = book->m_herbViewActive;
-    if (!onDetailPage || herbViewOpen)
+    if (book->m_bookKind != wh::entitymodule::E_DocumentBookKind::AlchemyBook ||
+        book->m_useGuidPageNavigation)
         return 0;
-    return book->m_lastOpenRecipeId;
+    return book->m_currentNumericPageId;
 }
 
 // The game's own brewed-before record: the UniquePotionsBrewed statistic (type DistinctGuid)

@@ -1,59 +1,57 @@
 #pragma once
-#include <cstdint>
-
-// -----------------------------------------------
-// wh::xgenaimodule::C_LinkableObjectExtension -- the IGameObjectExtension that
-// attaches a linkable to a game object/entity (KCD2 WHGame.dll 1.5.6, kd7u).
-// sizeof NOT create-site proven -> no size assert [U].
-// -----------------------------------------------
-// RTTI TD rva 0x4F46AA0; primary vtable 0x183A651E8, 29 slots.  Real base chain
-// (RTTI CHD): CGameObjectExtensionHelper<C_LinkableObjectExtension,
-// IGameObjectExtension, 64> -> IGameObjectExtension -> IComponent @+0, with
-// std::enable_shared_from_this<IComponent> @+0x08.  Modeled FLAT here: the stock
-// CryCommon IGameObject.h/IComponent.h cannot compile in this build env (boost
-// dependency; same policy as crysystem/IEntitySystemSink.h), and IGameObjectExtension
-// is interfuscator-shuffled, so slot indices below are BINARY VTABLE ORDER, not SDK
-// declaration order -- layout mirror only, do not call by declaration index.
-// enable_shared_from_this base is mirrored as a 2-qword member @+0x08 (weak_ptr
-// {ctrl, ptr}).
+#include <cstddef>
+#include "../Offsets/vtables/CGameObjectExtensionHelper.h"
+#include "../Offsets/vtables/IGameObjectExtension.h"
+#include "C_LinkableObjectHolder.h"
 
 namespace wh::xgenaimodule {
 
-class C_LinkableObjectExtension {
+class C_LinkableObjectExtension
+    : public Offsets::CGameObjectExtensionHelper<
+          C_LinkableObjectExtension,
+          Offsets::IGameObjectExtension,
+          64> {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_LinkableObjectExtension;
-    virtual ~C_LinkableObjectExtension();  // [0]  deleting dtor sub_18096D3F0
-    virtual void _vf1();                   // [1]  nullsub_1
-    virtual void _vf2();                   // [2]  sub_180838AE0 (shared stub)
-    virtual void _vf3();                   // [3]  sub_181A74280
-    virtual void _vf4();                   // [4]  nullsub_1
-    virtual void _vf5();                   // [5]  sub_180602360
-    virtual void _vf6();                   // [6]  nullsub_1
-    virtual void _vf7();                   // [7]  sub_18096E264
-    virtual void _vf8();                   // [8]  nullsub_1
-    virtual void _vf9();                   // [9]  nullsub_1
-    virtual void _vf10();                  // [10] nullsub_1
-    virtual void _vf11();                  // [11] sub_1832F36CC
-    virtual void _vf12();                  // [12] nullsub_1
-    virtual void _vf13();                  // [13] sub_1832F3410
-    virtual void _vf14();                  // [14] sub_18096D5FC
-    virtual void _vf15();                  // [15] nullsub_1
-    virtual void _vf16();                  // [16] sub_180838AE0
-    virtual void _vf17();                  // [17] sub_180838AE0
-    virtual void _vf18();                  // [18] sub_181A72600
-    virtual void _vf19();                  // [19] nullsub_1
-    virtual void _vf20();                  // [20] nullsub_1
-    virtual void _vf21();                  // [21] sub_1823CA690
-    virtual void _vf22();                  // [22] nullsub_1
-    virtual void _vf23();                  // [23] nullsub_1
-    virtual void _vf24();                  // [24] nullsub_1
-    virtual void _vf25();                  // [25] nullsub_1
-    virtual void _vf26();                  // [26] sub_181AA49F0
-    virtual void _vf27();                  // [27] nullsub_1
-    virtual void _vf28();                  // [28] nullsub_1
+    ~C_LinkableObjectExtension() override;                              // [0] 0x18096D3F0
+    void ProcessEvent(SEntityEvent& event) override;                    // [1] nullsub_1
+    bool _vf2() override;                                               // [2] 0x180838AE0
+    int GetEventPriority(int eventId) override;                         // [3] 0x181A74280, returns 7
+    void _vf4() override;                                               // [4] nullsub_1
+    Offsets::IEntity* GetEntity() override;                             // [5] 0x180602360
+    void GetMemoryUsage(ICrySizer* sizer) const override;               // [6] nullsub_1
+    bool Init(Offsets::IGameObject* gameObject) override;               // [7] 0x18096E264
+    void PostInit(Offsets::IGameObject* gameObject) override;           // [8] nullsub_1
+    void InitClient(int channelId) override;                            // [9] nullsub_1
+    void PostInitClient(int channelId) override;                        // [10] nullsub_1
+    bool ReloadExtension(Offsets::IGameObject* gameObject,
+                         const SEntitySpawnParams& params) override;     // [11] 0x1832F36CC
+    void PostReloadExtension(Offsets::IGameObject* gameObject,
+                             const SEntitySpawnParams& params) override; // [12] nullsub_1
+    bool GetEntityPoolSignature(TSerialize signature) override;         // [13] 0x1832F3410
+    void Release() override;                                            // [14] 0x18096D5FC
+    void FullSerialize(TSerialize serializer) override;                 // [15] nullsub_1
+    bool NetSerialize(TSerialize serializer,
+                      EEntityAspects aspect,
+                      std::uint8_t profile,
+                      int flags) override;                              // [16] 0x180838AE0
+    bool _vf17() override;                                              // [17] 0x180838AE0, role OPEN
+    NetworkAspectType GetNetSerializeAspects() override;                // [18] 0x181A72600
+    void PostSerialize() override;                                      // [19] nullsub_1
+    void SerializeSpawnInfo(TSerialize serializer) override;           // [20] nullsub_1
+    ISerializableInfoPtr GetSpawnInfo() override;                       // [21] 0x1823CA690
+    void Update(SEntityUpdateContext& context, int updateSlot) override; // [22] nullsub_1
+    void HandleEvent(const SGameObjectEvent& event) override;           // [23] nullsub_1
+    void SetChannelId(std::uint16_t id) override;                       // [24] nullsub_1
+    void SetAuthority(bool authoritative) override;                     // [25] nullsub_1
+    void PostUpdate(float frameTime) override;                          // [27] nullsub_1
+    void PostRemoteSpawn() override;                                    // [28] nullsub_1
 
-    uint64_t m_weakSelf[2];   // +0x08  std::enable_shared_from_this<IComponent> base mirrored flat (weak_ptr {ptr, ctrl}) [layout mirror]
+    C_LinkableObjectHolder m_holder; // +0x40
 };
-// extension data past +0x18 + sizeof unresolved -> no static_assert [U]
+static_assert(sizeof(C_LinkableObjectExtension) == 0x58,
+              "C_LinkableObjectExtension must be 0x58");
+static_assert(offsetof(C_LinkableObjectExtension, m_holder) == 0x40,
+              "linkable-object holder must be at 0x40");
 
 }  // namespace wh::xgenaimodule

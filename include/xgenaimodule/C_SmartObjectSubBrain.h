@@ -31,7 +31,8 @@ public:
     void* CastQuery2() override;            // [2]  cast thunk sub_1811D1288
     void  Step() override;                  // [22] sub_1807F9544
     bool  IsRunning() override;             // [23]
-    void* GetSubbrainType() override;       // [27]
+    bool  Configure(const S_SubBrainTemplate* descriptor) override; // [24] sub_1804188E8
+    E_SubBrainType::Type GetSubbrainType() override; // [27]
     void  Serialize(void* stream) override; // [29]
     void  _vf31() override;                 // [31] live here (base return-1 stub)
     void  RequestOwnerTick() override;      // [35]

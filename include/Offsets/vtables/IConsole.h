@@ -1,6 +1,6 @@
 #pragma once
 #include <cstdint>
-#include "IGame.h"   // reuse Offsets::IInputEventListener (2nd MI base of CXConsole)
+#include "IInputEventListener.h"
 
 // -----------------------------------------------
 // IConsole - KCD2 binary vtable order  (CryEngine CXConsole primary vtable)

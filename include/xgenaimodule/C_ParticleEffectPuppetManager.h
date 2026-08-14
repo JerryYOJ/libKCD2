@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include "../framework/WUID.h"
 
 // -----------------------------------------------
 // wh::xgenaimodule::C_ParticleEffectPuppetManager -- particle-effect puppet
@@ -17,9 +18,15 @@
 
 namespace wh::xgenaimodule {
 
+class C_ParticleEffectPuppet;
+
 class C_ParticleEffectPuppetManager {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_ParticleEffectPuppetManager;
+
+    static C_ParticleEffectPuppetManager* GetInstance();
+    C_ParticleEffectPuppet* FindByWuid(const framework::WUID& wuid);
+
     virtual ~C_ParticleEffectPuppetManager();   // [0] sub_18344F534
     virtual void _vf1();                        // [1] nullsub [U role]
     virtual void _vf2();                        // [2] sub_1813666F4 [U role]

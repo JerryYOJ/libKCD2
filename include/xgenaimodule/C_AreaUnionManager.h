@@ -1,44 +1,46 @@
 #pragma once
+#include <cstddef>
 #include <cstdint>
+#include <unordered_map>
+#include "../Offsets/vtables/IEntity.h"
 #include "../framework/I_WUIDMappingProvider.h"
-
-// -----------------------------------------------
-// wh::xgenaimodule::C_AreaUnionManager : framework::I_WUIDMappingProvider --
-// area-union registry SINGLETON at qword_1854960E8 (KCD2 WHGame.dll 1.5.6,
-// kd7u).  sizeof 0xB0 (getter sub_1811A47C8 @0x1811a481c:
-// sub_18549D378(176,...), += 0xB0, ctor sub_1811A4884).  Post-ctor the getter
-// registers with a system (sub_180BEB108(sub_18341F52C())).
-// -----------------------------------------------
-// RTTI TD rva 0x4F47198.  Vtable rva 0x3FE4088 -- 4 slots ([0]0x3281B60
-// (dossier labels it the dtor) [1]0x3281B18 [2]0x32805C8 [3]0x154CF4C): one
-// MORE than the 3-slot I_WUIDMappingProvider (dtor LAST at [2] per the
-// C_InventoryManager-proven model).  DISCREPANCY [U]: modeled as the 3 iface
-// slots + one appended own virtual; the slot->body mapping here is NOT
-// resolved -- do not call through raw indices.
-// WUID tag E_WUIDTag::AreaUnion (0x14) -- stamped sub_1811A4DF4 from the m_18 counter;
-// creates a 0x108 area-union object and indexes it into m_hashSet30 / m_sub70.
+#include "../framework/S_MulticastDelegateStorage.h"
 
 namespace wh::xgenaimodule {
 
+class C_AreaUnion;
+
+// AreaUnion registry and WUID provider. Both maps are non-owning indexes; each
+// C_AreaUnionExtension controls the lifetime of its runtime object.
 class C_AreaUnionManager : public framework::I_WUIDMappingProvider {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_AreaUnionManager;
-    void* GetValueForWuid(const void* wuid) override;          // iface [0] [U body mapping]
-    void  GetWuidForKey(void* out, const void* key) override;  // iface [1] [U body mapping]
-    ~C_AreaUnionManager() override;                            // iface [2] [U body mapping]
-    virtual void _vf3();                                       // appended own virtual [U role/mapping]
 
-    void*    m_defaultRep08;   // +0x08  DynArray<T> head (WHDynStorage single ptr); empty -> &unk_18566BEB0 (game empty-prefix sentinel); elem stride 0x10. T [U]
-    uint16_t m_id10;           // +0x10  ctor: 0xFFFF
-    uint16_t m_id12;           // +0x12  ctor: 0xFFFF
-    uint8_t  _pad14[4];        // +0x14
-    uint64_t m_18;             // +0x18  ctor: 0 [U role]
-    uint64_t m_20;             // +0x20  ctor: 0 [U role]
-    uint8_t  m_byte28;         // +0x28  ctor: 0 [U role]
-    uint8_t  _pad29[7];        // +0x29
-    uint8_t  m_hashSet30[0x40]; // +0x30..+0x70  WH hash-set (float 1.0 @+0x34; mask 7 @+0x60, count 8 @+0x68) [U interior]
-    uint8_t  m_sub70[0x40];    // +0x70..+0xB0  container (sub_1806030E4) [U interior]
+    static C_AreaUnionManager* GetInstance();
+    C_AreaUnion* Create(Offsets::IEntity* entity);
+
+    framework::WUID GetWuidForKey(const CryGUID& key) const override; // [0] 0x183281B60
+    CryGUID GetValueForWuid(framework::WUID wuid) const override;     // [1] 0x183281B18
+    virtual ~C_AreaUnionManager();                                    // [2] 0x1832805C8
+    virtual C_AreaUnion* FindByWuid(const framework::WUID& wuid);     // [3] 0x18154CF4C
+
+    shared::S_MulticastDelegateStorage m_removalObservers;            // +0x08
+    std::uint64_t m_currentIdentity;                                  // +0x18
+    std::uint64_t m_reservedIdentity;                                 // +0x20, exact source role OPEN
+    bool m_skipReservedIdentity;                                      // +0x28
+    std::uint8_t _pad29[7];                                           // +0x29
+    std::unordered_map<framework::WUID, C_AreaUnion*> m_byWuid;       // +0x30, non-owning
+    std::unordered_map<EntityGUID, C_AreaUnion*> m_byEntityGuid;      // +0x70, non-owning
 };
-static_assert(sizeof(C_AreaUnionManager) == 0xB0, "must be 0xB0 (alloc 176 at sub_1811A47C8)");
+static_assert(sizeof(C_AreaUnionManager) == 0xB0,
+              "C_AreaUnionManager must be 0xB0");
+static_assert(offsetof(C_AreaUnionManager, m_removalObservers) == 0x08,
+              "removal observers must be at 0x08");
+static_assert(offsetof(C_AreaUnionManager, m_currentIdentity) == 0x18,
+              "AreaUnion identity counter must be at 0x18");
+static_assert(offsetof(C_AreaUnionManager, m_byWuid) == 0x30,
+              "WUID index must be at 0x30");
+static_assert(offsetof(C_AreaUnionManager, m_byEntityGuid) == 0x70,
+              "EntityGUID index must be at 0x70");
 
 }  // namespace wh::xgenaimodule

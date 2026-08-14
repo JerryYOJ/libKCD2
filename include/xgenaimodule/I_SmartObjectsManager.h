@@ -1,4 +1,5 @@
 #pragma once
+#include "../framework/WUID.h"
 
 // -----------------------------------------------
 // wh::xgenaimodule::I_SmartObjectsManager -- smart-objects manager interface;
@@ -15,10 +16,12 @@
 
 namespace wh::xgenaimodule {
 
+class C_SmartObject;
+
 class I_SmartObjectsManager {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_I_SmartObjectsManager;
-    virtual void SomVf0()  = 0;   // [0]  [U role]
+    virtual C_SmartObject* FindByWuid(framework::WUID wuid) = 0; // [0] sub_1807E3D68
     virtual void SomVf1()  = 0;   // [1]  [U role]
     virtual void SomVf2()  = 0;   // [2]  [U role]
     virtual void SomVf3()  = 0;   // [3]  [U role]

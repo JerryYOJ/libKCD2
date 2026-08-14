@@ -1,5 +1,7 @@
 #pragma once
 #include <cstdint>
+#include <list>
+#include <unordered_map>
 #include "../crysystem/IEntitySystemSink.h"
 #include "I_SmartObjectsManager.h"
 #include "I_DebugDraw.h"
@@ -39,8 +41,12 @@ class C_SmartObjectsManager
       public framework::I_WUIDMappingProvider {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_SmartObjectsManager;
+
+    static C_SmartObjectsManager* GetInstance();
+
     // I_SmartObjectsManager impls (14) [U roles]
-    void SomVf0() override;  void SomVf1() override;  void SomVf2() override;
+    C_SmartObject* FindByWuid(framework::WUID wuid) override;
+    void SomVf1() override;  void SomVf2() override;
     void SomVf3() override;  void SomVf4() override;  void SomVf5() override;
     void SomVf6() override;  void SomVf7() override;  void SomVf8() override;
     void SomVf9() override;  void SomVf10() override; void SomVf11() override;
@@ -48,11 +54,10 @@ public:
     // I_DebugDraw impl
     void DebugDraw() override;   // [1] nullsub
     // framework::I_WUIDMappingProvider impls
-    void* GetValueForWuid(const void* wuid) override;          // [0] 0x32EFF54
-    void  GetWuidForKey(void* out, const void* key) override;  // [1] 0x32EFF0C
+    framework::WUID GetWuidForKey(const CryGUID& key) const override; // [0] sub_1832EFF54
+    CryGUID GetValueForWuid(framework::WUID wuid) const override;     // [1] sub_1832EFF0C
 
-    void*    m_listHeadA;       // +0x20  std::list<T> _Myhead sentinel (self-ref 24B node: {_Next8,_Prev8,val8}); _Mysize @+0x28; standalone (no bucket vec); T (8B value) unknown -- node alloc sub_181AB55C0(sub_180699848(1)=24)
-    uint64_t m_listSizeA;       // +0x28  ctor: 0
+    std::list<C_SmartObject*> m_smartObjects; // +0x20  push_back sub_180A2A5C4; erase on entity removal sub_180A2DDF8
     std::unordered_map<uint64_t, void*> m_map30;  // +0x30..+0x70  MSVC _Hash (0x40): traits/EBO @+0x30, max_load_factor 1.0f @+0x34, _List _Myhead @+0x38 / _Mysize @+0x40, bucket vec @+0x48/+0x50/+0x58, _Mask 7 @+0x60, _Maxidx 8 @+0x68; node 32B = pair<K8,V8ptr>; find sub_1807E3D68 uses base this+0x30, FNV-1a hash over 8B key (sub_18208BC00). K exact type unknown (8B); V = ptr to polymorphic entry (GetWuidForKey calls value->vfn+24).
     uint8_t  m_sub70[0x40];     // +0x70..+0xB0  sub-object (sub_1806030C0) [U interior]
     uint64_t m_B0;              // +0xB0  ctor: 0

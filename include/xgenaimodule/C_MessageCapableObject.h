@@ -10,8 +10,8 @@
 // -----------------------------------------------
 // RTTI TD rva 0x4EFD8C8; primary vtable 0x183A6C330, 20 slots (adds pure [19]);
 // I_RWLocked subobject vtable @+0x20 = 0x183A6C310. Real ctor
-// sub_180A2BD74(this, const WUID*): hashmap-registers in the
-// C_MessageCapableObjectManager (q_185496198, node+0x18 = this).
+// sub_180A2BD74(this, const WUID*): indexes this capability under the inherited
+// root WUID in C_MessageCapableObjectManager (qword_185496198, node+0x18 = this).
 // C_NPCMessageDispatcher::Dispatch looks the target up in that registry and invokes
 // slot [19] (vf +0x98), treating result 3 as rejected.
 

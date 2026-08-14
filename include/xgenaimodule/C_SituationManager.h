@@ -1,8 +1,10 @@
 #pragma once
 #include <cstdint>
+#include <map>
 #include "I_SEBehaviorConditionManager.h"
 #include "../game/I_EntitySideEffectCallback.h"
 #include "C_SEConditionDatabase.h"
+#include "../framework/WUID.h"
 
 // -----------------------------------------------
 // wh::xgenaimodule::C_SituationManager : I_SEBehaviorConditionManager (@+0x0) +
@@ -22,11 +24,17 @@
 
 namespace wh::xgenaimodule {
 
+class C_Situation;
+
 class C_SituationManager
     : public I_SEBehaviorConditionManager,
       public game::I_EntitySideEffectCallback {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_SituationManager;
+
+    static C_SituationManager* GetInstance();
+    C_Situation* FindByWuid(const framework::WUID& wuid);
+
     void BcmVf0() override;                        // primary [0] sub_1832B98D8
     ~C_SituationManager() override;                // primary [1] sub_1832B760C
     void OnEntitySideEffectAdded(void* sideEffect) override;    // ESEC secondary [0] sub_1815FFE3C (adjustor thunk; previously misread as dtor thunk)
@@ -40,7 +48,7 @@ public:
                                       //   (ctor sub_1806010EC calls sub_1805FFC9C(this+0x38); G6I)
     uint8_t  m_zeroA0[0x10];          // +0xA0..+0xB0  [U] (+0xA0 = lazy hash-map ptr, alloc'd in BcmVf0 sub_1832B98D8; +0xA8 [U])
     std::vector<std::pair<uint64_t, void*>> m_sortedByKeyB0; // +0xB0..+0xC8  first/last/cap; sorted flat-map {u64 key, T* val} (16B elems); bin-search insert sub_180D9BC5C / erase sub_180D9AEC8
-    std::map<uint64_t, void*> m_treeByKeyC8; // +0xC8..+0xD8  std::_Tree: head node@+0xC8, size@+0xD0; 48B nodes (K/V sizes 8/8 inferred; map-vs-set unconfirmed)
+    std::map<framework::WUID, C_Situation*> m_situationsByWuid; // +0xC8  inserted by sub_180E9AF04
     uint8_t  m_zeroD8[0x20];          // +0xD8..+0xF8  zeroed ptrs [U roles]
     uint64_t m_hashCountF8;           // +0xF8  element count of custom hash container at +0xD8 (iter end = *(+0xF0)+this; sub_180D9CA04 / insert sub_182089950)
     int32_t  m_100;                   // +0x100 [U role]

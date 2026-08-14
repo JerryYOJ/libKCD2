@@ -10,8 +10,8 @@
 // -----------------------------------------------
 // RTTI TD rva 0x4FF5E60; vtable 0x183AA3D08, 25 slots. Real ctor
 // sub_180D9AB40(this, const WUID*, blobA, blobB). Generated WUID =
-// (++counter | 0x0800000000000000) -- tag 0x08 marks generated-SO puppets. Registers
-// in the puppet registry q_185496338 like C_AIPuppet.
+// (++counter | 0x0800000000000000), proving tag 0x08. The former attribution of
+// qword_185496338 as this tag's registry is retracted; its exact role is unresolved.
 // Overrides: [0] dtor sub_1810083C8; [1..3] sub_18066CD10 (return 0); [4] sub_181A71D30;
 // [5] sub_181A72EC0; [6] sub_181A72D20; [7] sub_1809F44F0; [8] sub_180838AE0;
 // [9] sub_181A6ED60; [10] sub_18066CD10; [11] sub_181A72B70; [12] sub_18344750C;
@@ -25,7 +25,7 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_GeneratedSOPuppet;
     ~C_GeneratedSOPuppet() override;
     void _vf1() override;
-    void _vf2() override;
+    void* _vf2() override;
     void* _vf3() override;
     void _vf4() override;
     void UpdateCachedTransform() override;   // [5] sub_181A72EC0

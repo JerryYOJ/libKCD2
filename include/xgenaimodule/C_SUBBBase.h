@@ -3,6 +3,9 @@
 #include <vector>
 #include "I_CastableIface.h"
 #include "C_VariableIndex.h"
+#include "E_SubBrainType.h"
+#include "S_SubBrainTemplate.h"
+#include "S_SUBBStateListener.h"
 
 // -----------------------------------------------
 // wh::xgenaimodule::C_SUBBBase : I_CastableIface : I_NoRTTITypeInfo -- shared
@@ -24,11 +27,13 @@
 
 namespace wh::xgenaimodule {
 
+class C_AIBrain;
+
 class C_SUBBBase : public I_CastableIface {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_SUBBBase;
-    virtual void  Init(void* owner);        // [5]  sub_18041A758 -- m_owner = owner
-    virtual void  Deinit();                 // [6]  sub_183208A14 -- m_owner = 0
+    virtual void  Init(C_AIBrain* brain);   // [5]  sub_18041A758 -- stores brain back-pointer
+    virtual void  Deinit();                 // [6]  sub_183208A14 -- clears brain back-pointer
     virtual void  SetGoals(void* goalsVec); // [7]  sub_1810B2DFC -> m_goals, SetState(256)
     virtual void  _vf8();                   // [8]  lifecycle cmd (SetState funnel) [U role]
     virtual void  _vf9();                   // [9]  lifecycle cmd [U role]
@@ -46,10 +51,10 @@ public:
     virtual void  _vf21();                  // [21] lifecycle cmd [U role]
     virtual void  Step() = 0;               // [22] PURE -- per-tick state processor (BT impl sub_180760A44)
     virtual bool  IsRunning() = 0;          // [23] PURE -- run-query [U name]
-    virtual void  Configure(void* desc);    // [24] sub_180418A68 -- reads desc+0x18/+0x28/+0x2C
+    virtual bool  Configure(const S_SubBrainTemplate* descriptor); // [24] sub_180418A68
     virtual void  _vf25();                  // [25] [U role]
     virtual void  _vf26();                  // [26] [U role]
-    virtual void* GetSubbrainType() = 0;    // [27] PURE -- per-subclass const stub
+    virtual E_SubBrainType::Type GetSubbrainType() = 0; // [27] PURE -- per-subclass type constant
     virtual void  _vf28();                  // [28] [U role]
     virtual void  Serialize(void* stream);  // [29] sub_18320A388 (stream tags 4700/4701/4702)
     virtual void  Serialize2(void* stream); // [30] sub_183209970 (callback-record wrapper)
@@ -62,9 +67,9 @@ public:
 
     CryStringT<char>     m_name;            // +0x08  subbrain name; empty = shared _emptyHeader atom
                                             //        (ctor sub_1804FD80C()+3); Configure assigns desc+0x18; dtor sub_1804FD898 decrefs ptr-12
-    uint32_t             m_field10;         // +0x10  init 0; no writer/reader found; not serialized [U role]
-    uint32_t             m_state;           // +0x14  state bitmask (init 8); SetState target
-    void*                m_owner;           // +0x18  owning brain/host back-ptr (slot [5]/[6])
+    std::uint32_t        m_priority;        // +0x10  sorted descending by C_AIBrainMultiSubb
+    std::uint32_t        m_state;           // +0x14  state bitmask (init 8); SetState target
+    C_AIBrain*           m_pBrain;          // +0x18  owning brain back-pointer (slot [5]/[6])
     std::vector<void*>   m_names;           // +0x20  name-handle elems (dtor sub_1803F70D8 frees each-12)
     uint8_t              m_flagsA;          // +0x38  |=1 (bits 1,2,4,8) [U bit meanings]
     uint8_t              _pad39[7];         // +0x39
@@ -77,21 +82,12 @@ public:
     uint32_t             m_countCache;      // +0x78  = m_goals count
     uint32_t             m_status;          // +0x7C  constant 3 in all observed writers (not a live FSM)
 
-    // 32-byte state-listener record appended via sub_18206DB30 (2x OWORD);
-    // SetState fires (*(rec+0x18))(rec, this, oldState, newState).  Fields [U].
-    struct S_StateListener {
-        void* m_dispatch; // +0x00  fn ptr (SmartObject sub_180BDBE88 / DogCompanion sub_18171D9D0)
-        void* _unk8;      // +0x08  flag/unused (int 0 in SmartObject ctor; unset in Dog ctor) [U]
-        void* m_context;  // +0x10  callback context = owning subbrain 'this'
-        void* m_callback; // +0x18  fn ptr; SetState calls (rec, this, oldState, newState)
-    };
-    std::vector<S_StateListener> m_listeners;   // +0x80
+    std::vector<S_SUBBStateListener> m_listeners; // +0x80
 
     C_VariableIndex      m_varIndex;        // +0x98  embedded (0x28); parent = qword_185496678
     uint8_t              m_pendingOwnerNotify; // +0xC0  gate for [35]/[36] owner notify
     uint8_t              _padC1[7];         // +0xC1
 };
 static_assert(sizeof(C_SUBBBase) == 0xC8, "C_SUBBBase must be 0xC8 (factory memset 0xC8)");
-static_assert(sizeof(C_SUBBBase::S_StateListener) == 0x20, "listener record is 32 bytes");
 
 }  // namespace wh::xgenaimodule

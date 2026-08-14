@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include <vector>
+#include "../framework/WUID.h"
 
 // -----------------------------------------------
 // wh::xgenaimodule::C_PerceptibleVolumeManager -- spatial registry of perceptible
@@ -31,6 +32,9 @@ class C_PerceptibleVolume;
 class C_PerceptibleVolumeManager {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_PerceptibleVolumeManager;
+
+    C_PerceptibleVolume* FindByWuid(const framework::WUID& wuid);
+
     virtual ~C_PerceptibleVolumeManager();   // [0] sub_1832AE970 (deleting dtor -> body sub_1832AE1FC)
     virtual C_PerceptibleVolume* FindVolumeOfType(const void* wuid);  // [1] sub_1832AEFA0 -- FindVolumeByWuid + dynamic-type check vs unk_183FE6D88
 
