@@ -1,17 +1,16 @@
 #pragma once
 
 // -----------------------------------------------
-// ::IEntitySystemSink -- entity-system spawn/remove/event callback interface (CryEngine stock,
-// KCD2 WHGame.dll 1.5.6).  sizeof 0x08 (vtable-only).
+// ::IEntitySystemSink -- entity-system spawn/remove/event callback interface (CryEngine stock plus
+// KCD2's appended name query). sizeof 0x08 (vtable-only), 8 slots.
 // -----------------------------------------------
-// Declared here (verbatim 7-slot shape of the stock CryCommon IEntitySystem.h declaration) because
-// the stock header cannot compile in this build env (its IComponent.h requires boost) and it would
-// also redefine IEntityEventListener against crysystem/EntityEventListenerWithCleanup.h in the same
-// TU. Do NOT also include the stock IEntitySystem.h in a TU using this.
+// Declared here because the stock CryCommon IEntitySystem.h declaration lacks KCD2's final GetName
+// slot, cannot compile in this build env (its IComponent.h requires boost), and would redefine
+// IEntityEventListener against crysystem/EntityEventListenerWithCleanup.h in the same TU. Do NOT
+// also include the stock IEntitySystem.h in a TU using this.
 //
-// NOTE: the interface is <interfuscator:shuffle>d in the shipping binary -- the declaration order
-// below is the SDK source order, NOT the runtime vtable order. Do not call through these slots by
-// declaration index; the interface is mirrored for layout (one vtable pointer) only.
+// The first seven source contracts retain the stock order. KCD2 appends GetName at slot 7; concrete
+// eight-slot sink tables independently return their class identity from that slot.
 // Used as a base of wh::combatmodule::C_CombatScene (@+0x10, vtable 0x183A6C7F0).
 
 struct IEntity;
@@ -27,5 +26,6 @@ struct IEntitySystemSink {
     virtual void OnReused(IEntity* pEntity, SEntitySpawnParams& params) = 0;
     virtual void OnEvent(IEntity* pEntity, SEntityEvent& event) = 0;
     virtual void GetMemoryUsage(ICrySizer* pSizer) const {}
+    virtual const char* GetName() const = 0; // [7], KCD2 addition
 };
 static_assert(sizeof(IEntitySystemSink) == 0x08, "IEntitySystemSink is vtable-only");
