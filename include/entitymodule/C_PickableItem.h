@@ -188,7 +188,8 @@ public:
     bool SetAspectProfile(EEntityAspects aspect,
                           std::uint8_t profile) override;             // secondary [1] 0x180A5619C
     std::uint8_t GetDefaultProfile(EEntityAspects aspect) override;  // secondary [2] 0x182A89B64
-    bool ProfileManagerUnk3() override;                              // secondary [3] 0x180838AE0
+    std::uint8_t GetAspectProfile(
+        EEntityAspects aspect) const override;                       // secondary [3] 0x180838AE0
     void ConnectProfileChanged(
         const Offsets::S_ProfileChangedDelegate& delegate) override; // secondary [4] 0x18295D160
     void DisconnectProfileChanged(

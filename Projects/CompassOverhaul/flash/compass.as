@@ -1,7 +1,13 @@
 // CompassOverhaul :: compass.gfx  (ActionScript 2 / Scaleform GFx)
 // ---------------------------------------------------------------------------
-// Self-driven HUD overlay, loaded by the plugin into _root.compassOverlay of the
-// game's "hud" movie. Reads the native compass data directly:
+// Self-driven HUD overlay, loaded by the plugin into
+// _root.tc.compass.compassOverlay of the game's "hud" movie (MUST live under
+// tc.compass -- a _root sibling is outside C_UIHudMask and sits above
+// br.actionHints, which is how photo-mode prompts vanished and the
+// take-photo frame went black). Stage is 1x1 px on purpose: an 800x450
+// leftover displayRect as a child of tc.compass inflates that clip's
+// bounds and the strip looks shrunken. Labels sit in parent space via
+// globalToLocal and do not need a real stage. Reads the native compass data directly:
 //   _root.g_MarkersO  dict (Enum.MARKER+id) -> CompassMarker (m_Mc, m_Distance, ...)
 //
 // TUNING: edit the C_* constants below and rebuild (build_gfx.sh). Text size
@@ -98,6 +104,16 @@ function isShown(mc)
 
 self.onEnterFrame = function()
 {
+   // Parent is hidden in photo mode / cutscenes / wh_ui_ShowHud 0. GFx can
+   // still fire onEnterFrame on an invisible clip -- bail so we never paint
+   // labels (or a leftover stage fill) over br.actionHints.
+   if (self._parent._visible == false)
+   {
+      self.lbl._visible = false;
+      self.nameLbl._visible = false;
+      return;
+   }
+
    var na = self.co_names;
    if (na != undefined && na.length != lastNamesLen)
    {

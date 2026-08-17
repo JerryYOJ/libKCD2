@@ -23,6 +23,7 @@ namespace Offsets {
     struct IGame; struct IEntitySystem; struct IConsole; struct ISystem;
     struct ILog; struct IRenderer; struct IFlashUI; struct I3DEngine;
     struct IHardwareMouse; struct ICharacterManager; struct ICryPak;
+    struct IParticleManager;
 }
 
 struct SSystemGlobalEnvironment {
@@ -42,7 +43,7 @@ struct SSystemGlobalEnvironment {
     Offsets::ICryPak*           pCryPak;                // +0x58  VERIFIED: IActorSystem::Scan 0x180E46CE8 runs the FindFirst/FindNext wildcard loop (vtable +0x1F8/+0x200) on qword_18492D850, matching CCryPak vtable 0x183a97328 slots [63]/[64]; single most-referenced gEnv slot (681 reads); KCD1 pCryPak also +0x58.
     void*                       _unk60;                 // +0x60
     void*                       _unk68;                 // +0x68
-    void*                       _unk70;                 // +0x70
+    Offsets::IParticleManager*  pParticleManager;       // +0x70  VERIFIED: FindEffect this-adjust -8; abs 0x18492D868 = gEnv+0x70
     void*                       _unk78;                 // +0x78
     void*                       _unk80;                 // +0x80
     Offsets::ITimer*            pTimer;                 // +0x88  VERIFIED: GetCurrTime

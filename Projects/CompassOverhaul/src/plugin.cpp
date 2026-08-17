@@ -38,7 +38,7 @@ namespace {
     }
 
     void PushObjectiveNames(Offsets::IFlashPlayer* fp) {
-        PushTable(fp, "_root.compassOverlay.co_names", g_objectiveNames);
+        PushTable(fp, "_root.tc.compass.compassOverlay.co_names", g_objectiveNames);
     }
 
     void PushTypeNames(Offsets::IFlashPlayer* fp) {
@@ -77,7 +77,7 @@ namespace {
             if (!wh::framework::C_LocalizedString::Localize(standardized, localized)) continue;
             table[name] = localized.c_str();
         }
-        PushTable(fp, "_root.compassOverlay.co_typeNames", table);
+        PushTable(fp, "_root.tc.compass.compassOverlay.co_typeNames", table);
     }
 
     class{
@@ -156,11 +156,17 @@ namespace {
             
             if(self->m_sName == "hud"){
                 const auto& fp = self->m_pFlashPlayer;
-                if (!fp || fp->IsAvailable("_root.compassOverlay")) return ok;
+                // Parent under tc.compass so C_UIHudMask's photo-mode hide of
+                // "Compass" (HUD.xml instancename tc.compass) takes the overlay
+                // with it. A _root sibling sits above br.actionHints (the
+                // photomode_base helpbar) and is NOT in the 28-element mask list,
+                // so it stayed visible in photo mode -- covering the take-photo
+                // prompts and, with compass.gfx's black stage, the screenshot.
+                if (!fp || fp->IsAvailable("_root.tc.compass.compassOverlay")) return ok;
 
-                Offsets::FlashVarPtr root, mc;
-                if (!fp->GetVariable("_root", root.put()) || !root) return ok;
-                if (!root->CreateEmptyMovieClip(mc.put(), "compassOverlay") || !mc) return ok;
+                Offsets::FlashVarPtr compass, mc;
+                if (!fp->GetVariable("_root.tc.compass", compass.put()) || !compass) return ok;
+                if (!compass->CreateEmptyMovieClip(mc.put(), "compassOverlay") || !mc) return ok;
 
                 SFlashVarValue url("compass.gfx");   // resolved relative to the parent movie dir "Libs/UI/"
                 if (!mc->Invoke("loadMovie", &url, 1, nullptr)) return ok;

@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <cstring>
 #include "CombatModelTraits.h"
+#include "E_BlockMode.h"
 #include "../framework/C_Signal.h"
 #include "../framework/C_ModelProperty.h"
 #include "../framework/C_ModelRefProperty.h"
@@ -23,8 +24,8 @@
 // KCD2 redesigned it into a flat sequence of C_ModelProperty<T> sub-objects (stored value + its
 // change signal unified, stride 0x30), then 8 standalone C_Signals and a small raw tail.
 // A KCD1-style scalar read becomes `state->property.m_value` (value @ propertyOffset+0x08).
-// [FUNDAMENTAL vs KCD1] m_pOpponent / m_pCurrentTarget / m_pPrevTarget are GONE from this struct;
-// opponent tracking moved to C_CombatActorOpponentManager (C_CombatActor+0x3B8).
+// Opponent selection is coordinated by C_CombatActorOpponentManager, but the state still owns two
+// I_CombatTarget holders at +0xCE8/+0xCF0 and borrows the active C_CombatActor at +0xCF8.
 //
 // Types/offsets/defaults are ctor-verified. Names marked (tentative) are inferred from type,
 // default value and KCD1 ordering, NOT accessor-verified. Three zone slots are now
@@ -40,10 +41,10 @@ namespace wh::entitymodule { enum class E_HandSlot : int32_t; }
 namespace wh::combatmodule {
 
 class I_CombatActor;
+class I_CombatTarget;
 class C_CombatActor;
 enum class E_CombatActorStateId : int32_t;   // (values not recovered)
-enum class E_BlockModeContext : int32_t;     // context tag of the block-mode property (kind assumed enum)
-namespace E_BlockMode               { enum Type : int32_t; }
+struct E_BlockModeContext;                   // RTTI template spelling proves a struct context tag
 namespace E_AnimActionMovementState { enum Type : int32_t; }
 namespace E_GuardRequestScope       { enum Type : int32_t; }
 
@@ -96,7 +97,7 @@ struct S_CombatActorState {
     Prop<bool>                                       m_pBool300;           // +0x300
     Prop<bool>                                       m_pBool330;           // +0x330
     Prop<bool>                                       m_pComboBool360;      // +0x360  combo-mgr connects (tentative m_isInCombo)
-    Prop<bool>                                       m_pBool390;           // +0x390
+    Prop<bool>                                       m_pBool390;           // +0x390  riposte trigger consumed/requested; exact role unresolved
     Prop<bool>                                       m_pBool3C0;           // +0x3C0
     PropCustom<float>                                m_pFloat3F0;          // +0x3F0  init/default -1.0
     PropCustom<float>                                m_pFloat420;          // +0x420  init -1.0
@@ -112,17 +113,17 @@ struct S_CombatActorState {
     PropStatic<E_HandSlot, (E_HandSlot)1>            m_pHandSlot600;       // +0x600
     wh::shared::C_ModelContextProperty<E_BlockModeContext, E_BlockMode::Type, 0>
                                                      m_blockModeContext;   // +0x630  (0x20)
-    Prop<E_BlockMode::Type>                          m_pBlockMode;         // +0x650
-    Prop<bool>                                       m_pBlockingBool680;   // +0x680  after the block cluster (tentative m_isBlocking)
-    PropRefBool                                      m_pRefBool6B0;        // +0x6B0
+    Prop<E_BlockMode::Type>                          m_pBlockMode;         // +0x650  0 none, 1 normal block, 2 free block
+    Prop<bool>                                       m_pPerfectBlocking;   // +0x680  set/cleared by PerfectBlock action start/stop
+    PropRefBool                                      m_pRefBool6B0;        // +0x6B0  count @+0x6B8; FreeBlock reads it, producers unresolved
     Prop<CTimeValue>                                 m_pTime6E0;           // +0x6E0
     Prop<CTimeValue>                                 m_pTime710;           // +0x710
     PropRefBoolActor                                 m_pRefBoolActor740;   // +0x740
-    PropRefBoolActor                                 m_pRefBoolActor770;   // +0x770
+    PropRefBoolActor                                 m_pPerfectBlockTrigger; // +0x770  count @+0x778; 0<->1 emits PB-window state
     PropRefBoolActor                                 m_pRefBoolActor7A0;   // +0x7A0
     PropRefBoolActor                                 m_pRefBoolActor7D0;   // +0x7D0
     PropRefBoolActor                                 m_pRefBoolActor800;   // +0x800
-    Prop<bool>                                       m_pBool830;           // +0x830
+    Prop<bool>                                       m_pRiposteTrigger;    // +0x830  value @+0x838; master-strike window
     Prop<bool>                                       m_pComboBool860;      // +0x860  combo-mgr connects
     wh::shared::C_ModelProperty<bool, wh::shared::traits::C_StandardDefaultValueTrait<bool>,
         traits::C_CombatSignalWithNewValueTrait<bool, I_CombatActor*>>
@@ -163,9 +164,9 @@ struct S_CombatActorState {
     Prop<bool>                                       m_pBoolCB0;           // +0xCB0
     // -- raw tail --
     C_CombatActor*                                   m_pOwner;             // +0xCE0  = ctor arg
-    void*                                            m_blockCtxDelegate0;  // +0xCE8  owned polymorphic delegate; deleted via virtual dtor vtable[0](this,1) on reset sub_1810F1D80; set externally when owner vfunc@+0x2C8 true (exact class unrecovered)
-    void*                                            m_blockCtxDelegate1;  // +0xCF0  owned polymorphic delegate (paired with +0xCE8); deleted via virtual dtor vtable[0](this,1) on reset sub_1810F1D80 (exact class unrecovered)
-    void*                                            m_field_CF8;          // +0xCF8  non-owning ptr, cleared to 0 (NOT released) on the block-context reset path of sub_1810F1D80
+    I_CombatTarget*                                  m_pCommittedTarget;   // +0xCE8  owned previous/committed target; released on replacement/reset
+    I_CombatTarget*                                  m_pSelectedTarget;    // +0xCF0  owned selected target; released on replacement/reset
+    C_CombatActor*                                   m_pOpponent;          // +0xCF8  borrowed active opponent; cleared without Release
     void*                                            m_triggerListHead;    // +0xD00  std::set/std::map _Myhead: 32B _Tree sentinel from sub_180472128 (_Left=_Parent=_Right=self, _Color=1,_Isnil=1); reset by sub_180473D4C. Element type unrecovered
     size_t                                           m_field_D08;          // +0xD08  std::set/std::map _Mysize (paired with +0xD00 _Myhead); reset to 0 by sub_180473D4C
 };
@@ -175,6 +176,12 @@ static_assert(offsetof(S_CombatActorState, m_blockModeContext) == 0x630, "m_bloc
 static_assert(offsetof(S_CombatActorState, m_weaponIdBySlot) == 0x8C0, "m_weaponIdBySlot offset");
 static_assert(offsetof(S_CombatActorState, m_restrictedInput) == 0xB20, "m_restrictedInput offset");
 static_assert(offsetof(S_CombatActorState, m_signalBD0) == 0xBD0, "m_signalBD0 offset");
+static_assert(offsetof(S_CombatActorState, m_pPerfectBlocking) == 0x680, "m_pPerfectBlocking offset");
+static_assert(offsetof(S_CombatActorState, m_pPerfectBlockTrigger) == 0x770, "m_pPerfectBlockTrigger offset");
+static_assert(offsetof(S_CombatActorState, m_pRiposteTrigger) == 0x830, "m_pRiposteTrigger offset");
 static_assert(offsetof(S_CombatActorState, m_pOwner) == 0xCE0, "m_pOwner offset");
+static_assert(offsetof(S_CombatActorState, m_pCommittedTarget) == 0xCE8, "m_pCommittedTarget offset");
+static_assert(offsetof(S_CombatActorState, m_pSelectedTarget) == 0xCF0, "m_pSelectedTarget offset");
+static_assert(offsetof(S_CombatActorState, m_pOpponent) == 0xCF8, "m_pOpponent offset");
 
 }  // namespace wh::combatmodule

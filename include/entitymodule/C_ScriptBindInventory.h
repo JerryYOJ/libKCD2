@@ -9,8 +9,8 @@
 // CScriptableBase])  vftable 0x183AB7FA0 (5 slots; [0] dtor sub_18260F330, [4] sub_1824AA0F8
 // returns sizeof=112)  ctor inlined in factory sub_180E30204 @~0x180E303F7.
 //
-// NO SetGlobalName (name buffer zeroed; m_bInstanceMethods=1, PROVEN from Init r9d): INSTANCED
-// per-entity methods table -- the entity's inventory table in Lua (e.g. <entity>.inventory:AddItem,
+// NO SetGlobalName (name buffer zeroed); Init passes nParamIdOffset=1. The methods table is
+// attached per entity as the inventory table in Lua (e.g. <entity>.inventory:AddItem,
 // matching KCD1; exact attach mechanism inferred). Handlers here are DIRECT member-fn delegates.
 //
 // Lua fn table (16 fns; registrar sub_1812B2F0C):

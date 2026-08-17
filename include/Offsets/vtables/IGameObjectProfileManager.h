@@ -22,7 +22,8 @@ public:
     virtual bool SetAspectProfile(EEntityAspects aspect,
                                   std::uint8_t profile) = 0;           // [1]
     virtual std::uint8_t GetDefaultProfile(EEntityAspects aspect) = 0; // [2]
-    virtual bool ProfileManagerUnk3() = 0;                            // [3], role OPEN
+    virtual std::uint8_t GetAspectProfile(
+        EEntityAspects aspect) const = 0;                              // [3]
     virtual void ConnectProfileChanged(
         const S_ProfileChangedDelegate& delegate) = 0;                 // [4]
     virtual void DisconnectProfileChanged(

@@ -42,6 +42,11 @@
 // C_FastTravelCutscene, playermodule::I_UIFastTravel, rpgmodule::C_FastTravelBuff +
 // Started/Ended cause/data structs, xgenai BT node C_IsFastTraveling.
 
+namespace wh::entitymodule {
+class C_Player;
+class C_Actor;
+}
+
 namespace wh::playermodule {
 
 class I_UIFastTravel;   // RTTI .?AVI_UIFastTravel@playermodule@wh@@ (C_UIMap+0x18 base)
@@ -72,24 +77,19 @@ public:
     uint8_t  m_flags49;               // +0x49  low 3 bits used (ctor &= 0xF8); bit 0x4 cleared by reset
     uint8_t  m_flag4A;                // +0x4A  cleared by EndFastTravel (role unresolved)
     uint8_t  _pad4B;                  // +0x4B
-    uint32_t m_state4C;               // +0x4C  (ctor 0; INFERRED state/counter)
-    uint32_t m_unk50;                 // +0x50  ctor zeroes ONLY these 4 bytes; the vtable[7]
-                                      //        broadcast (sub_182DE15EC) reads [+0x50..+0x58) as a
-                                      //        ptr range -- reading conflict UNRESOLVED (verify
-                                      //        pass ruled OUT a clean std::vector here)
+    float    m_pathLength;            // +0x4C  summed path length (sub_1809FF514 of the FindPath result)
+    float    m_travelSpeed;           // +0x50  written by sub_182DDE52C (1.0 / 0 / table)
     uint32_t m_unk54;                 // +0x54  ctor-UNWRITTEN (runtime-set)
-    void*    m_pCtrl0;                // +0x58  view/travel controller (EndFastTravel calls its
-                                      //        vtable +0x38/+0x1D0/+0x398; type UNRESOLVED)
-    void*    m_pCtrl1;                // +0x60  secondary controller (invoked if != m_pCtrl0;
-                                      //        vtable +0x398/+0x3B8; type UNRESOLVED)
+    wh::entitymodule::C_Player* m_pPlayer; // +0x58  cached player (reads +0x668 soul, +0xAE4 bit 0x10)
+    wh::entitymodule::C_Actor*  m_pTravelActor; // +0x60  mount if riding, else the player
     Vec3     m_destination;           // +0x68  FT destination: the arm (sub_182DE27D0) stores the
                                       //        SetDestination arg here verbatim; mover goal; GetPos
                                       //        binder 0x1849E4140 returns it
     Vec3     m_dirA;                  // +0x74  arrival/heading dir (runtime-set; EndFastTravel lenSq)
     Vec3     m_dirB;                  // +0x80  second dir/look vector (runtime-set)
     uint32_t _pad8C;                  // +0x8C
-    std::vector<uint32_t> m_pathNodeIds;  // +0x90  (0x18) 4-byte elems (dtor sub_1807D5ACC);
-                                      //        waypoint/POI id list (semantic INFERRED)
+    std::vector<Vec3> m_pathNodes;    // +0x90  (0x18) world-space waypoints, stored reversed
+                                      //        (copy helper divides byte count by 12)
     S_FastTravelConfig m_config;      // +0xA8  (0x58) copied from global default &unk_1855EE200
     uint32_t m_u100;                  // +0x100  (ctor 0; role unresolved)
     uint32_t _pad104;                 // +0x104
@@ -111,7 +111,9 @@ public:
 };
 static_assert(sizeof(C_FastTravel) == 0x130, "C_FastTravel must be 0x130");
 static_assert(offsetof(C_FastTravel, m_isFastTraveling) == 0x48, "traveling flag at 0x48");
-static_assert(offsetof(C_FastTravel, m_pathNodeIds) == 0x90, "path ids at 0x90");
+static_assert(offsetof(C_FastTravel, m_pathLength) == 0x4C, "path length at 0x4C");
+static_assert(offsetof(C_FastTravel, m_pPlayer) == 0x58, "player at 0x58");
+static_assert(offsetof(C_FastTravel, m_pathNodes) == 0x90, "path nodes at 0x90");
 static_assert(offsetof(C_FastTravel, m_config) == 0xA8, "config at 0xA8");
 static_assert(offsetof(C_FastTravel, m_pSkipTimeSession) == 0x110, "skip-time session at 0x110");
 

@@ -10,7 +10,7 @@
 // sub_182AB731C releases the two SmartScriptTables)  ctor sub_180E2FA24, called from the entitymodule
 // bind factory sub_180E30204 @0x180E303D7 (collection slot [9]).
 //
-// NO SetGlobalName (m_bInstanceMethods=1, PROVEN from Init r9d): INSTANCED per-entity methods table --
+// NO SetGlobalName; Init passes nParamIdOffset=1. The methods table is attached per entity --
 // methods injected into pickable ITEM ENTITY script tables (world item entities; <itemEntity>:Fn()
 // colon-call, successor of KCD1's PickableItem entity binding; exact attach mechanism inferred).
 // Handlers are DIRECT member-fn delegates; arg lists below are the binary's own SUserFunctionDesc

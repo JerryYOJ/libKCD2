@@ -10,7 +10,7 @@
 // teardown, same COMDAT-folded fn as C_ScriptBindCarryableItem)  ctor sub_180E30184, called from the
 // entitymodule bind factory sub_180E30204 @0x180E30802 (collection slot [16]).
 //
-// GLOBAL Lua table "CIPileBind" (SetGlobalName sub_180B85140; m_bInstanceMethods=0): dot-call verbs
+// GLOBAL Lua table "CIPileBind" (SetGlobalName sub_180B85140; Init nParamIdOffset=0): dot-call verbs
 // for carry-item piles (stacked carryables, e.g. quest hay/wood piles), keyed by acting entity +
 // pile entity. No members beyond CScriptableBase.
 //

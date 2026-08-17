@@ -10,7 +10,7 @@
 // sub_180E30204 @~0x180E3052E.
 //
 // GLOBAL Lua table "ItemManager" (SetGlobalName sub_180B85140 -> SetGlobalValue;
-// m_bInstanceMethods=0, PROVEN). Handlers are DIRECT member-fn delegates.
+// Init passes nParamIdOffset=0). Handlers are DIRECT member-fn delegates.
 //
 // Lua fn table `ItemManager` (7 fns; registrar sub_1812B2D38 = REL::ID(104708) --
 // single arg = this; Projects/LuaUtils hooks it to append its extension fns into

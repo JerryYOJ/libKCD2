@@ -10,7 +10,7 @@
 // teardown, same COMDAT-folded fn as C_ScriptBindCarryItemPile)  ctor sub_180EF7A08, called from the
 // entitymodule bind factory sub_180E30204 @0x180E30852 (collection slot [17]).
 //
-// GLOBAL Lua table "CarryableItemBind" (SetGlobalName sub_180B85140; m_bInstanceMethods=0): dot-call
+// GLOBAL Lua table "CarryableItemBind" (SetGlobalName sub_180B85140; Init nParamIdOffset=0): dot-call
 // verbs for carryable world-item entities, keyed by acting entity + target item entity. No members
 // beyond CScriptableBase.
 //

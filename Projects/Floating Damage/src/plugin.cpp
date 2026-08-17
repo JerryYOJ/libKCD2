@@ -7,9 +7,11 @@
 
 #include "KCSE/KCSEAPI.h"
 #include "crysystem/CCryAction.h"
+#include "crysystem/SSystemGlobalEnvironment.h"
 #include "REL.h"
 
 #include "mcm.h"
+#include "persist.h"
 
 namespace {
 
@@ -108,10 +110,10 @@ float ComputeTextSize(float amount) {
 
 // Inverse-linear distance decay for popup size: full scale at/inside g_decayStartDist
 // meters from the player, then shrinks like real perspective (half at 2x the distance,
-// a third at 3x), floored at g_minDistanceScale. Both knobs MCM-configurable (mcm.h);
-// slider at 0 m disables decay entirely. Player = IGameFramework::GetClientEntity
-// (slot [66], body-verified -- see Offsets/vtables/IGameFramework.h); on lookup
-// failure the popup just keeps full size.
+// a third at 3x), floored at g_minDistanceScale percent of the damage-scaled size.
+// Both knobs MCM-configurable (mcm.h); slider at 0 m disables decay entirely.
+// Player = IGameFramework::GetClientEntity (slot [66], body-verified -- see
+// Offsets/vtables/IGameFramework.h); on lookup failure the popup just keeps full size.
 float ComputeDistanceScale(const Vec3& worldPos) {
     if (g_decayStartDist <= 0.0f) return 1.0f;
 
@@ -124,7 +126,7 @@ float ComputeDistanceScale(const Vec3& worldPos) {
     const float dx = worldPos.x - eye.x, dy = worldPos.y - eye.y, dz = worldPos.z - eye.z;
     const float dist = std::sqrt(dx * dx + dy * dy + dz * dz);
     if (dist <= g_decayStartDist) return 1.0f;
-    return std::max(g_decayStartDist / dist, g_minDistanceScale);
+    return std::max(g_decayStartDist / dist, g_minDistanceScale * 0.01f);
 }
 
 // yOffsetFrac is a fraction of screen HEIGHT, not the xPx/yPx crossing into Flash below --
@@ -149,7 +151,7 @@ void ShowDamageAtWorldPos(float amount, bool isHealthDmg, const Vec3& worldPos, 
 
     // sizeScale (distance decay) deliberately multiplies AFTER the damage->px mapping,
     // so a far popup can drop below the MCM "Min Text Size" -- that floor is the
-    // damage-scale floor; the decay floor is g_minDistanceScale.
+    // damage-scale floor; the decay floor is g_minDistanceScale percent.
     InvokeShowDamage(amount, isHealthDmg, pxX, pxY + yOffsetFrac * h, ComputeTextSize(amount) * sizeScale, isFatal);
 }
 
@@ -303,19 +305,41 @@ KCSE_PLUGIN_LOAD(kcse)
     if (!InstallHooks())
         return false;
 
-    kcse->GetMessagingInterface()->RegisterListener([](KCSE::Message* msg) {
-        if (msg->type != KCSE::IMessagingInterface::kMessage_PreDataLoaded)
-            return;
-        auto* env = SSystemGlobalEnvironment::GetInstance();
-        if (!env || !env->pConsole)
-            return;
-        env->pConsole->AddCommand("kcse_fd_test", &ConsoleTestDamage, VF_NULL,
-            "Floating Damage: test-spawn a damage popup. Usage: kcse_fd_test [amount] [isHealthDmg 0/1] [xFrac] [yFrac] [isFatal 0/1]");
-    });
+    FloatingDamage::LoadPersistedEdits();
 
     // Soft dependency: if MCM.dll isn't installed, nothing ever broadcasts sender="MCM"
     // messages, so this listener simply never fires and the g_* defaults stand.
     MCM::ListenForMessages(&HandleMcmMessage);
+
+    kcse->GetMessagingInterface()->RegisterListener([](KCSE::Message* msg) {
+        auto* env = SSystemGlobalEnvironment::GetInstance();
+        if (!env || !env->pConsole)
+            return;
+        if (msg->type == KCSE::IMessagingInterface::kMessage_PreDataLoaded) {
+            env->pConsole->AddCommand("kcse_fd_test", &ConsoleTestDamage, VF_NULL,
+                "Floating Damage: test-spawn a damage popup. Usage: kcse_fd_test [amount] [isHealthDmg 0/1] [xFrac] [yFrac] [isFatal 0/1]");
+            return;
+        }
+        if (msg->type != KCSE::IMessagingInterface::kMessage_DataLoaded)
+            return;
+        // The same knobs as console CVars, bound to the mcm.h stores (console exists
+        // by DataLoaded). Engine-held mod.cfg values apply at RegisterCVar* time.
+        auto* con = env->pConsole;
+        con->RegisterCVarFloat("kcse_fd_min_text_size", &g_minTextSizePx, g_minTextSizePx,
+            VF_NULL, "Floating Damage: popup text size floor in pixels.");
+        con->RegisterCVarFloat("kcse_fd_max_text_size", &g_maxTextSizePx, g_maxTextSizePx,
+            VF_NULL, "Floating Damage: popup text size ceiling in pixels.");
+        con->RegisterCVarFloat("kcse_fd_min_scale_damage", &g_minScaleDamage, g_minScaleDamage,
+            VF_NULL, "Floating Damage: damage at/below which the popup stays at min text size.");
+        con->RegisterCVarFloat("kcse_fd_max_scale_damage", &g_maxScaleDamage, g_maxScaleDamage,
+            VF_NULL, "Floating Damage: damage at/above which the popup reaches max text size.");
+        con->RegisterCVarInt("kcse_fd_only_player_attacks", &g_onlyShowPlayerAttacks, g_onlyShowPlayerAttacks,
+            VF_NULL, "Floating Damage: 1 = only show numbers for hits the player deals.");
+        con->RegisterCVarFloat("kcse_fd_decay_start_distance", &g_decayStartDist, g_decayStartDist,
+            VF_NULL, "Floating Damage: meters before non-player-dealt popups start shrinking (0 = off).");
+        con->RegisterCVarFloat("kcse_fd_min_distance_scale", &g_minDistanceScale, g_minDistanceScale,
+            VF_NULL, "Floating Damage: distance-decay floor as a percent of the damage-scaled size (10-100).");
+    });
 
     return true;
 }

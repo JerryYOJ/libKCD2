@@ -39,7 +39,7 @@
 // Only +0x78 / +0xA0 / +0xA8 member types are certified; the rest are opaque regions
 // with ctor init values preserved in comments (offsets [V], C++ types [U]).
 
-namespace wh::xgenaimodule::navigation { class C_Navigation; }   // recast/detour navmesh system (unported); RTTI .?AVC_Navigation@navigation@xgenaimodule@wh@@
+#include "navigation/C_Navigation.h"
 namespace wh::shared { template <typename T> class C_RegularGridDynamic; }
 
 namespace wh::xgenaimodule {

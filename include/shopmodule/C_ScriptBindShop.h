@@ -9,7 +9,7 @@
 // CScriptableBase])  vftable 0x183B629A0  ctor sub_1813368D0  factory sub_1813366D4
 // (= C_ShopModule ctor).
 //
-// GLOBAL Lua table "Shops" (SetGlobalName sub_180B85140; m_bInstanceMethods=0). Handlers are
+// GLOBAL Lua table "Shops" (SetGlobalName sub_180B85140; Init nParamIdOffset=0). Handlers are
 // DIRECT function pointers (no vtable thunks -- Shop keeps only the base vtable slots).
 //
 // Lua fn table `Shops` (12 fns; registrar sub_180B639C8):

@@ -13,6 +13,13 @@ void CryDeleteCriticalSectionInplace(void* p) { DeleteCriticalSection(static_cas
 struct IMemoryManager;
 IMemoryManager* CryGetIMemoryManager() { return nullptr; }
 
+// Interlocked backing for the SDK's inline refcount helpers (CMultiThreadRefCount
+// AddRef/Release). Release's `delete this` dispatches through the object's own
+// vtable into the game's scalar-deleting dtor, so frees stay engine-side.
+long CryInterlockedIncrement(volatile int* pDst) { return _InterlockedIncrement(reinterpret_cast<volatile long*>(pDst)); }
+long CryInterlockedDecrement(volatile int* pDst) { return _InterlockedDecrement(reinterpret_cast<volatile long*>(pDst)); }
+void CryFatalError(const char* fmt, ...) { OutputDebugStringA(fmt); __debugbreak(); }
+
 // Forward to WHGame.dll's OWN CryModule allocator -- the retail-compiled
 // _CryMemoryManagerPoolHelper backed by the process-global BucketAllocator
 // (kd7u-verified; the pool-helper fn table at 0x18549D348..78 is filled by

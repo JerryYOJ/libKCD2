@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <swf _xmlExportMajor="2" _xmlExportMinor="2" type="SWF" charset="UTF-8" compression="ZLIB" encrypted="false" frameCount="1" frameRate="24.0" gfx="false" hasEndTag="true" version="8">
-  <displayRect type="RECT" Xmax="16000" Xmin="0" Ymax="9000" Ymin="0" nbits="14"/>
+  <displayRect type="RECT" Xmax="20" Xmin="0" Ymax="20" Ymin="0" nbits="6"/>
   <tags>
     <item type="FileAttributesTag" actionScript3="false" forceWriteAsLong="false" hasMetadata="false" noCrossDomainCache="false" reservedA="false" reservedB="0" swfRelativeUrls="false" useDirectBlit="false" useGPU="false" useNetwork="false"/>
     <item type="ImportAssets2Tag" downloadNow="1" forceWriteAsLong="true" hasDigest="0" url="gfxfontlib.gfx">
@@ -44,9 +44,6 @@
         <item>DistLabel</item>
         <item>NameLabel</item>
       </names>
-    </item>
-    <item type="SetBackgroundColorTag" forceWriteAsLong="false">
-      <backgroundColor type="RGB" blue="0" green="0" red="0"/>
     </item>
     <item type="DoActionTag" actionBytes="0700" forceWriteAsLong="false"/>
     <item type="ShowFrameTag" forceWriteAsLong="false"/>

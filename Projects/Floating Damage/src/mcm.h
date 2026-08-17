@@ -3,30 +3,59 @@
 #include <cstring>
 
 #include "MCM_API.h"
+#include "crysystem/SSystemGlobalEnvironment.h"
+#include "Offsets/vtables/ICVar.h"
+#include "persist.h"
 
-// Floating Damage's own MCM (Mod Configuration Menu) integration: the text-size/damage-scale
-// sliders and the glue that keeps their live values in the g_* globals below. Soft dependency
-// on MCM.dll -- if it isn't installed, nothing ever broadcasts sender="MCM" messages, so
-// HandleMcmMessage (registered via MCM::ListenForMessages in plugin.cpp) simply never fires
-// and these defaults stand.
+// Floating Damage's MCM (Mod Configuration Menu) integration.  Soft dependency
+// on MCM.dll -- if it isn't installed, nothing ever broadcasts sender="MCM"
+// messages, so HandleMcmMessage (registered via MCM::ListenForMessages in
+// plugin.cpp) never fires and these defaults stand.  Every knob is ALSO a
+// console CVar (kcse_fd_*, plugin.cpp binds this storage directly); int not
+// bool because IConsole::RegisterCVarInt wants int storage.
+//
+// PERSISTENCE (persist.h) is MCM-ONLY by design: every menu edit is recorded
+// into Mods/FloatingDamage/mod.cfg, which the engine replays next launch
+// (values held by the console until our cvars register).  Console edits apply
+// for the session but are NOT recorded.  BuildSettings pushes the live values
+// back with SetValue so the menu shows the persisted state, not the defaults.
 
 inline float g_minTextSizePx  = 32.0f;
 inline float g_maxTextSizePx  = 48.0f;
 inline float g_minScaleDamage = 40.0f;   // |amount| at/below this reads at g_minTextSizePx
 inline float g_maxScaleDamage = 350.0f;  // |amount| at/above this reads at g_maxTextSizePx
-inline bool  g_onlyShowPlayerAttacks = false;  // hide popups for hits the player didn't deal (taken, or NPC-vs-NPC)
+inline int   g_onlyShowPlayerAttacks = 0;  // hide popups for hits the player didn't deal (taken, or NPC-vs-NPC)
 inline float g_decayStartDist   = 8.0f;  // meters; popups farther than this shrink inverse-linearly (0 = decay off). Player-DEALT hits never decay.
-inline float g_minDistanceScale = 0.4f;  // decay floor as a fraction of the damage-scaled size (slider is in %)
+inline float g_minDistanceScale = 40.0f; // decay floor as a percent of the damage-scaled size (slider / cvar units; *0.01 at use)
 
-inline constexpr const char* kMcmModId           = "floating_damage";
-inline constexpr const char* kMcmModName         = "Floating Damage";
-inline constexpr const char* kSettingMinTextSize = "min_text_size";
-inline constexpr const char* kSettingMaxTextSize = "max_text_size";
-inline constexpr const char* kSettingMinScaleDmg = "min_scale_damage";
-inline constexpr const char* kSettingMaxScaleDmg = "max_scale_damage";
-inline constexpr const char* kSettingOnlyPlayerAtk = "only_player_attacks";
+inline constexpr const char* kMcmModId              = "floating_damage";
+inline constexpr const char* kMcmModName            = "Floating Damage";
+inline constexpr const char* kSettingMinTextSize    = "min_text_size";
+inline constexpr const char* kSettingMaxTextSize    = "max_text_size";
+inline constexpr const char* kSettingMinScaleDmg    = "min_scale_damage";
+inline constexpr const char* kSettingMaxScaleDmg    = "max_scale_damage";
+inline constexpr const char* kSettingOnlyPlayerAtk  = "only_player_attacks";
 inline constexpr const char* kSettingDecayStartDist = "decay_start_distance";
 inline constexpr const char* kSettingMinDistScale   = "min_distance_scale";
+
+// setting <-> cvar <-> storage bindings; exactly one store pointer is set per
+// row.  Drives the ValueChanged write-through AND the BuildSettings SetValue
+// reflection.  Store units match the MCM widget (min_distance_scale is percent).
+struct S_McmBinding {
+    const char* settingId;
+    const char* cvarName;
+    int*        intStore;
+    float*      floatStore;
+};
+inline constexpr S_McmBinding kMcmBindings[] = {
+    { kSettingMinTextSize,    "kcse_fd_min_text_size",        nullptr,                    &g_minTextSizePx },
+    { kSettingMaxTextSize,    "kcse_fd_max_text_size",        nullptr,                    &g_maxTextSizePx },
+    { kSettingMinScaleDmg,    "kcse_fd_min_scale_damage",     nullptr,                    &g_minScaleDamage },
+    { kSettingMaxScaleDmg,    "kcse_fd_max_scale_damage",     nullptr,                    &g_maxScaleDamage },
+    { kSettingOnlyPlayerAtk,  "kcse_fd_only_player_attacks",  &g_onlyShowPlayerAttacks,    nullptr },
+    { kSettingDecayStartDist, "kcse_fd_decay_start_distance", nullptr,                    &g_decayStartDist },
+    { kSettingMinDistScale,   "kcse_fd_min_distance_scale",   nullptr,                    &g_minDistanceScale },
+};
 
 inline void HandleMcmMessage(KCSE::Message* msg) {
     if (msg->type == MCM::kMessage_BuildSettings) {
@@ -54,16 +83,36 @@ inline void HandleMcmMessage(KCSE::Message* msg) {
         b->AddSlider(kMcmModId, kSettingMinDistScale, "Min Distance Scale",
             "Smallest a distance-shrunk popup can get, as a percentage of its normal size.",
             10.0, 100.0, 5.0, 40, "%");
+        // Reflect the LIVE values (persisted edits, console edits) -- without this
+        // the menu would show the Add* defaults after a restart even though the
+        // settings applied.
+        for (const auto& bind : kMcmBindings)
+            b->SetValue(kMcmModId, bind.settingId,
+                        bind.floatStore ? static_cast<double>(*bind.floatStore)
+                                        : static_cast<double>(*bind.intStore));
     } else if (msg->type == MCM::kMessage_ValueChanged) {
         auto* v = static_cast<const MCM::ValueChanged*>(msg->data);
         if (std::strcmp(v->modId, kMcmModId) != 0) return;
-        const float value = static_cast<float>(v->value);
-        if (std::strcmp(v->settingId, kSettingMinTextSize) == 0) g_minTextSizePx = value;
-        else if (std::strcmp(v->settingId, kSettingMaxTextSize) == 0) g_maxTextSizePx = value;
-        else if (std::strcmp(v->settingId, kSettingMinScaleDmg) == 0) g_minScaleDamage = value;
-        else if (std::strcmp(v->settingId, kSettingMaxScaleDmg) == 0) g_maxScaleDamage = value;
-        else if (std::strcmp(v->settingId, kSettingOnlyPlayerAtk) == 0) g_onlyShowPlayerAttacks = v->value != 0.0;
-        else if (std::strcmp(v->settingId, kSettingDecayStartDist) == 0) g_decayStartDist = value;
-        else if (std::strcmp(v->settingId, kSettingMinDistScale) == 0) g_minDistanceScale = value * 0.01f;
+        for (const auto& bind : kMcmBindings) {
+            if (std::strcmp(v->settingId, bind.settingId) != 0)
+                continue;
+            // Write THROUGH the cvar (its bound storage IS the global) so a
+            // console inspection of kcse_fd_* shows the menu value too.
+            auto* env = SSystemGlobalEnvironment::GetInstance();
+            ICVar* cvar = env && env->pConsole ? env->pConsole->GetCVar(bind.cvarName) : nullptr;
+            if (cvar) {
+                if (bind.floatStore)
+                    cvar->SetFloat(static_cast<float>(v->value));
+                else
+                    cvar->SetInt(static_cast<int>(v->value));
+            } else {   // cvar not registered (never the case for in-game menu edits)
+                if (bind.floatStore)
+                    *bind.floatStore = static_cast<float>(v->value);
+                else
+                    *bind.intStore = static_cast<int>(v->value);
+            }
+            FloatingDamage::PersistSetting(bind.cvarName, v->value, bind.floatStore != nullptr);
+            break;
+        }
     }
 }

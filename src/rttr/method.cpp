@@ -31,7 +31,8 @@ bool method::is_static() const
 
 parameter_info_range method::get_parameter_infos() const
 {
-    return m_wrapper ? m_wrapper->get_parameter_infos() : parameter_info_range{};
+    if(m_wrapper) return m_wrapper->get_parameter_infos();
+    return parameter_info_range{};
 }
 
 variant method::get_metadata(const variant& key) const

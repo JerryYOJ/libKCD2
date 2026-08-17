@@ -6,8 +6,8 @@
 // (KCD2 1.5.6, kd7u).  sizeof 0x70 (alloc 112).
 // -----------------------------------------------
 // RTTI TD rva 0x4FE8A00; vtable 0x183b19fc0 : ::CScriptableBase (0x60).
-// ctor sub_18114CECC: Init flag 1 (m_bInstanceMethods=1 -> per-instance userdata method
-// table; SetGlobalName NOT called -- attached to smart-object userdata by the caller),
+// ctor sub_18114CECC: Init nParamIdOffset=1; SetGlobalName is not called, and the
+// methods table is attached to smart-object userdata by the caller,
 // method registration sub_18114CF3C. Creator sub_18114CE20 = lazy module-global
 // singleton qword_1854961D8 (allocator qword_18549D378(112)).
 //

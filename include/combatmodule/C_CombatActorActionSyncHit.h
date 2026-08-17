@@ -20,8 +20,9 @@
 //
 // [vs KCD1] 0x108 -> 0xC8. KCD2 embeds the hit helper inline; still keeps a separate sync-helper pointer.
 //
-// Own primary-vtable overrides (leaf 0x183A993D8 vs base 0x183A60988): GetActionTypeId[14]=0x181A7D870,
-// combat slots [26..55], _vfOwn0[56]=0x18178995C, OnStart[57]=0x180D4B104, OnStop[58]=0x180D4B2C8,
+// Own primary-vtable overrides (leaf 0x183A993D8 vs base 0x183A60988): GetActionTypeId[14]=0x181A7D870
+// returns constant SyncHit (17), not the data-row action type. Combat slots [26..55],
+// _vfOwn0[56]=0x18178995C, OnStart[57]=0x180D4B104, OnStop[58]=0x180D4B2C8,
 // OnTick[60]=0x180D4CC9C, GetNameString[64]=0x18275860C. Vtable not re-enumerated here.
 
 namespace wh::combatmodule {
