@@ -27,7 +27,10 @@ class C_CombatActorHorsePullDown : public C_CombatActorUpdatedObject,
                                    public I_CombatActorHorsePullDown {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_CombatActorHorsePullDown;
-    // GetSubsystemId() -> 28 ; GetName() -> "HORSE_PULLDOWN" ; Can/Request implemented in binary
+    void Reset() override;                                      // 0x181A7E050
+    E_CombatSubsystem GetSubsystemId() const override;          // 0x181A7DF30
+    const char* GetName() const override;                       // 0x181A7DE40
+    // Can/Request implemented in binary
     // (sub_18072FA9C / sub_18275E848) -- overrides omitted (layout-only header).
     EntityId m_victimEntityId;  // +0x20  latched pulldown target (Request sub_18275E848 stores it @0x18275EA49; 0 = idle)
     bool     m_flag24;     // +0x24  (init 0; zeroed by Reset)

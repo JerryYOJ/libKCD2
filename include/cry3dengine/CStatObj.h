@@ -35,6 +35,7 @@ struct CStatObj : public Offsets::IStatObj,
                   public Offsets::IStreamCallback,
                   public Offsets::IRendermeshOwner,
                   public Cry3DEngineBase {
+    inline static constexpr auto RTTI = Offsets::RTTI_CStatObj;
     // m_nFlags (+0x178) -- public STATIC_OBJECT_* bits observed (CE3.8 numbering intact)
     enum : uint32_t {
         eStaticObjectFlag_Hidden          = 1u << 0,   // Render early-out

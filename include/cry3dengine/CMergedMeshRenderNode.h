@@ -31,6 +31,7 @@ class CMergedMeshRenderNode : public Offsets::IRenderNode,
                               public Offsets::IStreamCallback,
                               public Cry3DEngineBase {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_CMergedMeshRenderNode;
     // +0x6C lifecycle (all transitions behaviour-anchored; value 3's name is positional inference)
     enum E_State : int32_t {
         eState_Initial    = 0,   // ctor

@@ -19,6 +19,7 @@ namespace wh::conceptmodule {
 class I_Port;
 
 struct S_NodeExecuteContext {
+    inline static constexpr auto RTTI = Offsets::RTTI_S_NodeExecuteContext;
     virtual ~S_NodeExecuteContext();   // [0]  0x182650524 -- releases m_source
     _smart_ptr<I_Port> m_source;       // +0x08  the port whose trigger fired
 };

@@ -25,7 +25,10 @@ class C_CombatActorMercyKill : public C_CombatActorObject,
                                public I_CombatActorMercyKill {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_CombatActorMercyKill;
-    // GetSubsystemId() -> 30 ; GetName() -> "MERCY_KILL" ; Can/Request implemented in binary
+    void Reset() override;                                      // 0x181A7E060
+    E_CombatSubsystem GetSubsystemId() const override;          // 0x181A7DF50
+    const char* GetName() const override;                       // 0x181A7DE60
+    // Can/Request implemented in binary
     // (sub_1816043EC / sub_18275ED74) -- overrides omitted (layout-only header).
     EntityId m_victimEntityId;  // +0x18  latched mercy-kill target (Request sub_18275ED74 stores it @0x18275EE9E; 0 = idle)
     uint32_t _pad1C;       // +0x1C

@@ -27,6 +27,7 @@ namespace wh::conceptmodule {
 
 class C_ConceptGraphDeserializer : public framework::C_RTTRXMLDeserializer {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_ConceptGraphDeserializer;
     struct S_PendingEdge {            // 0x18 -- one <Edge From= To=>, stored on the CONSUMING node
         S_ResourceRef    node;        // +0x00
         CryStringT<char> from;        // +0x08  "otherNode.OutPort" | "modulePort" | "..(parent)"

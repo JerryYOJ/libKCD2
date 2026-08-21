@@ -23,6 +23,7 @@ namespace wh::framework {
 
 class C_RTTRXMLDeserializer {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_RTTRXMLDeserializer;
     virtual ~C_RTTRXMLDeserializer();   // [0]
     virtual void unk01();               // [1] [U]
     virtual void unk02();               // [2] [U]

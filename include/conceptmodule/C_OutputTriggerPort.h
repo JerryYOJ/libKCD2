@@ -17,6 +17,7 @@ namespace wh::conceptmodule {
 
 class C_OutputTriggerPort : public C_ActiveTriggerPort {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_OutputTriggerPort;
     RTTR_ENABLE(C_ActiveTriggerPort)   // [5] 0x180FA57E0, [7] 0x18265359C
 
     std::vector<S_ResourceRef> m_outgoing;   // +0x30  downstream sink links

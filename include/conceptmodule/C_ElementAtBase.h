@@ -20,6 +20,7 @@ namespace wh::conceptmodule {
 
 class C_ElementAtBase : public C_TemplatedNode {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_ElementAtBase;
     RTTR_ENABLE(C_TemplatedNode)   // [5..7] trio overrides
 
     rttr::variant GetElement(std::function<size_t(size_t)> const& selector);  // 0x1815E07A4 shared pull core [sig LIKELY]

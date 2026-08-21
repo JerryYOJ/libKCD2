@@ -22,6 +22,7 @@ namespace wh::conceptmodule {
 
 class C_Select : public C_EventNode<C_Node> {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_Select;
     RTTR_ENABLE(C_EventNode<C_Node>)   // [5..7] trio overrides
     void EnumerateNodeVariants() override;  // [27]
     void GetPortDefinitions(std::function<void(std::shared_ptr<definition::I_PortDefinition> const&)> sink) override;  // [28] 0x1804EFE64 group grammar

@@ -15,6 +15,7 @@
 
 class CParticleEffect : public Offsets::IParticleEffect, public Cry3DEngineBase {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_CParticleEffect;
     int              m_nRefCounter;     // +0x08
     void*            m_pListNext;       // +0x10  intrusive_linked_list_node
     void*            m_pListPrev;       // +0x18

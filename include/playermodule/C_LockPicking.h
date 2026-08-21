@@ -6,6 +6,7 @@
 #include "E_LockPickingState.h"
 #include "I_LockPickingAction.h"
 #include "S_MinigameHandleSlot.h"
+#include "E_InputDeviceClass.h"
 
 struct IActionController;
 
@@ -32,6 +33,7 @@ static_assert(sizeof(I_ExactPositioningListener) == 0x08,
 
 class C_LockPicking : public C_Minigame, public I_ExactPositioningListener {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_LockPicking;
     E_MinigameType::Type GetMinigameType() const override;  // [0] 0x181A78ED0 -> 5
     void unk_02() override;                                 // [2] 0x182E8835C pick-break
     void Destroy() override;                                // [4] 0x180899D48
@@ -49,6 +51,11 @@ public:
     bool Start(uint32_t entityId);                          // 0x1808986A4
     void CommitResult(bool success, bool skipLeave,
                       void* rpgScratch);                    // 0x180899568
+    void StampLockpickTime();                               // 0x180897460  Flash "lockpickTime"
+    // Pick-break resume helpers (sub_182E903D0's "still have a pick" branch).
+    void ResetPlayFields();                                 // 0x182E93B90  health/angle/cursor via this+0x88
+    void SetLockAngle(float angle);                         // 0x18089ADB0  +0x9C + Flash "lp_angle"
+    void RestartPlayActions();                              // 0x180899790  drop +0x150/+0x158, spawn idle action
 
     S_MinigameHandleSlot          m_slot70;                 // +0x70
     void*                         m_pActionMapSink;         // +0x80  sub_18079A6E8 tree
@@ -67,7 +74,12 @@ public:
     float                         m_unkB4;                  // +0xB4
     float                         m_playTime;               // +0xB8
     float                         m_inPlace;                // +0xBC  0 or 1
-    uint8_t                       _cursorBlock[0x70];       // +0xC0..+0x12F [OPEN]
+    uint8_t                       _cursorBlock[0x68];       // +0xC0..+0x127
+    float                         m_lockDifficulty;         // +0x128  Properties.Lock.fLockDifficulty
+    uint8_t                       m_fanciness;              // +0x12C  Common=0 Fancy=1
+    uint8_t                       m_lockReversed;           // +0x12D
+    uint8_t                       m_sendMessage;            // +0x12E  bSendMessage
+    uint8_t                       _pad12F;                  // +0x12F
     C_LockPickingView*            m_pView;                  // +0x130
     float                         m_inputDeltaX;            // +0x138
     float                         m_inputDeltaY;            // +0x13C
@@ -81,7 +93,7 @@ public:
     I_LockPickingAction*          m_pLeaveAction;           // +0x170
     uint8_t                       _pad178[0xC];             // +0x178
     float                         m_successHold;            // +0x184  0.5f on SuccessHold
-    int32_t                       m_unk188;                 // +0x188
+    E_InputDeviceClass::Type      m_inputDeviceClass;       // +0x188  Start: I_UIActionHintManager::GetInputDeviceClass
     uint8_t                       _pad18C[4];               // +0x18C
     void*                         m_pForceFeedback;         // +0x190
     uint32_t                      m_soundId198;             // +0x198

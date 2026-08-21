@@ -14,6 +14,7 @@
 namespace wh::playermodule {
 
 struct S_AlchemyRecipeName {
+    inline static constexpr auto RTTI = Offsets::RTTI_S_AlchemyRecipeName;
     CryStringT<char> m_name;   // +0x00
 };
 static_assert(sizeof(S_AlchemyRecipeName) == 0x08, "S_AlchemyRecipeName is one CryStringT");

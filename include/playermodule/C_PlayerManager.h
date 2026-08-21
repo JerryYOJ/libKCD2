@@ -48,6 +48,7 @@ namespace wh::playermodule {
 
 class C_PlayerManager {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_PlayerManager;
     // ---- primary vtable 0x183A84208 ----
     // [0] 0x181A73A70 -- shares an address with a Concurrency runtime thunk (ICF fold).
     virtual int32_t _vf0();

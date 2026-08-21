@@ -9,6 +9,7 @@ namespace wh::entitymodule {
 
 class I_Cart : public Offsets::IGameObjectExtension {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_I_Cart;
     virtual std::uint8_t GetStateCode_29() const = 0;               // [29]
     virtual QuatT GetTransform_30() const = 0;                       // [30]
     virtual bool Operation_31(std::uint64_t argument1,

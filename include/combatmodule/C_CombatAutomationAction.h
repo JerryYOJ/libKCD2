@@ -19,7 +19,8 @@ namespace wh::combatmodule {
 class C_CombatAutomationAction : public C_CombatActorUpdatedObject {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_CombatAutomationAction;
-    E_CombatSubsystem GetSubsystemId() const override { return static_cast<E_CombatSubsystem>(26); }  // [2] shared family id
+    void Reset() override {}                                                          // [1] 0x1803B6E80
+    E_CombatSubsystem GetSubsystemId() const override { return E_CombatSubsystem::AUTOMATION_ACTION; } // [2]
 
     virtual E_CombatAutomationActionKind GetActionKind() const = 0;  // [10]  per-leaf constant
     virtual bool _vf11() { return false; }         // [11]  default-false predicate (role unresolved)

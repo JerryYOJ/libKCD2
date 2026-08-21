@@ -18,6 +18,7 @@ namespace wh::conceptmodule {
 
 class C_Function : public C_FunctionBase {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_Function;
     RTTR_ENABLE(C_FunctionBase)    // [5..7] trio overrides
     rttr::variant GetPortValue(_smart_ptr<I_Port> const& port) override;  // [12] 0x18069133C invoke -> result
     void EnumerateNodeVariants() override;  // [27] 0x18068FCA4 one variant per exposed global method

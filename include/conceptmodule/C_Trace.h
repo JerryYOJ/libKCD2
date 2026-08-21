@@ -19,6 +19,7 @@ enum class E_TraceLevel : int32_t;   // registered trace-severity enum [values u
 
 class C_Trace : public C_TemplatedNode {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_Trace;
     RTTR_ENABLE(C_TemplatedNode)   // [5..7] trio overrides
     void EnumerateNodeVariants() override;  // [27] 0x18268EB98
     void OnExecute(S_NodeExecuteContext const& ctx) override;  // [33] 0x18268E0B4

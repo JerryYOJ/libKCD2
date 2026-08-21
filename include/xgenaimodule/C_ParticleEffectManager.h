@@ -9,6 +9,7 @@ namespace wh::xgenaimodule {
 
 class C_ParticleEffectManager : public framework::I_WUIDMappingProvider {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_ParticleEffectManager;
     static C_ParticleEffectManager* GetInstance();
     C_ParticleEffect* FindByWuid(const framework::WUID& wuid);
 

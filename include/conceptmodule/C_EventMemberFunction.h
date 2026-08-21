@@ -18,6 +18,7 @@ namespace wh::conceptmodule {
 
 class C_EventMemberFunction : public C_EventNode<C_MemberFunction> {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_EventMemberFunction;
     RTTR_ENABLE(C_EventNode<C_MemberFunction>)   // [5..7] trio overrides
     rttr::variant GetPortValue(_smart_ptr<I_Port> const& port) override;  // [12] 0x1826B9CA8 event-map lookup
     void GetPortDefinitions(std::function<void(std::shared_ptr<definition::I_PortDefinition> const&)> sink) override;  // [28] 0x180F816AC

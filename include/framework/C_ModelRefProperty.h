@@ -4,10 +4,8 @@
 // -----------------------------------------------
 // wh::shared::C_ModelRefProperty<Sig,Trace,Own> -- KCD2 1.5.6 (kd7u).  sizeof 0x30.
 // -----------------------------------------------
-// IS-A C_ModelProperty<int> (RTTI base chain: C_ModelRefProperty -> C_ModelProperty<int,Standard,
-// Sig,Trace,C_NoSaveLoad,Own> -> I_ReadonlyModelProperty<int,Sig>). Adds NO data; only overrides
-// the vtable to reinterpret the stored int as an entity reference/handle. 8 instances live inside
-// S_CombatActorState (ctor path 0x1810f1621 etc.).
+// IS-A C_ModelProperty<int> and adds no storage. The stored int at +0x08 is an
+// activation count; ref-property writers emit false/true only across the 0<->1 boundary.
 
 namespace wh::shared {
 

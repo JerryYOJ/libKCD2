@@ -25,6 +25,7 @@ namespace wh::conceptmodule {
 
 class C_ForEach : public C_EventNode<C_TemplatedNode> {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_ForEach;
     RTTR_ENABLE(C_EventNode<C_TemplatedNode>)   // [5..7] trio overrides
     rttr::variant GetPortValue(_smart_ptr<I_Port> const& port) override;  // [12] 0x18127FDF0 event-map lookup
     void EnumerateNodeVariants() override;      // [27] 0x18268E474 "Iterates over an array of elements"

@@ -14,6 +14,7 @@
 
 class CParticleBatchDataManager : public Offsets::IParticleManager {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_CParticleBatchDataManager;
     uint8_t m_batches[4][0x58];   // +0x08  four 0x58 batch slots [interior UNVERIFIED]
 };
 static_assert(sizeof(CParticleBatchDataManager) == 0x168, "4*0x58 + vptr = 0x168");

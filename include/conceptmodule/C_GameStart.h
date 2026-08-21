@@ -19,6 +19,7 @@ namespace wh::conceptmodule {
 
 class C_GameStart : public C_EventNode<C_Node> {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_GameStart;
     RTTR_ENABLE(C_EventNode<C_Node>)   // [5..7] trio overrides
     void EnumerateNodeVariants() override;      // [27] 0x18268E56C
     void OnLifecycleEvent(int32_t event) override;  // [34] 0x1819EBF58

@@ -15,6 +15,7 @@ namespace wh::conceptmodule {
 
 class C_StaticTriggerPort : public C_InterfaceTriggerPort {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_StaticTriggerPort;
     RTTR_ENABLE(C_InterfaceTriggerPort)
 };
 

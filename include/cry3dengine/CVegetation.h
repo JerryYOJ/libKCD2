@@ -28,6 +28,7 @@ class CDeformableNode;   // 0xB0-byte deform helper [type name = stock hypothesi
 
 class CVegetation : public Offsets::IVegetation, public Cry3DEngineBase {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_CVegetation;
     Vec3                      m_vPos;                       // +0x50  world position
     bool                      m_bRegisteredInPODGrid = false;  // +0x5C  set after RegisterBBoxInPODGrid (0x1803FD085); dtor unregisters on it
     uint8_t                   _pad5D[3] = {};               // +0x5D

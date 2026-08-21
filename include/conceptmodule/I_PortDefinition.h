@@ -23,6 +23,7 @@ namespace wh::conceptmodule::definition {
 
 class I_PortDefinition {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_I_PortDefinition;
     virtual ~I_PortDefinition();                       // [0]
     virtual CryStringT<char> GetName();                // [1]  0x08  consumed by C_PortRef lazy resolve (0x181E38E2F)
     virtual int32_t unk02();                           // [2]  0x10  enum; != 1 tested in I_Port::HasOwnValue [ValueOriginConstraint candidate, U]

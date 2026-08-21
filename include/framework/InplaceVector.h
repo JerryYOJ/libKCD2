@@ -69,8 +69,14 @@ struct InplaceVector {
         _storage.inUse = false;
         _storage.self = _storage.buffer;
     }
-    InplaceVector(const InplaceVector&) = delete;
-    InplaceVector& operator=(const InplaceVector&) = delete;
+    InplaceVector(const InplaceVector& rhs) : InplaceVector() {
+        _vec.assign(rhs._vec.begin(), rhs._vec.end());
+    }
+    InplaceVector& operator=(const InplaceVector& rhs) {
+        if (this != &rhs)
+            _vec.assign(rhs._vec.begin(), rhs._vec.end());
+        return *this;
+    }
 
     [[nodiscard]] auto begin() { return _vec.begin(); }
     [[nodiscard]] auto end() { return _vec.end(); }

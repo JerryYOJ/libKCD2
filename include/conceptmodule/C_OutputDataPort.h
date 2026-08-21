@@ -17,6 +17,7 @@ namespace wh::conceptmodule {
 
 class C_OutputDataPort : public C_DataPort {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_OutputDataPort;
     RTTR_ENABLE(C_DataPort)   // [5] 0x18061B81C, [7] 0x18265357C
 };
 static_assert(sizeof(C_OutputDataPort) == 0x30, "C_OutputDataPort adds no data");

@@ -16,6 +16,7 @@
 
 class CParticleManager : public Offsets::IVisAreaCallback, public CParticleBatchDataManager {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_CParticleManager;
     uint8_t m_tail[0x2C0];   // +0x170  name map @+0x1A8, emitter lists @+0x348, etc. [interior UNVERIFIED]
 };
 static_assert(sizeof(CParticleManager) == 0x430, "CParticleManager alloc is 0x430");

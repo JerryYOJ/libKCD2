@@ -17,6 +17,7 @@ namespace wh::conceptmodule {
 
 class C_AutoTriggerPort : public C_InputTriggerPort {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_AutoTriggerPort;
     RTTR_ENABLE(C_InputTriggerPort)   // [5] 0x1806B1BCC, [7] 0x18262CEC4
 
     S_ResourceRef m_wrapped;          // +0x30  weak handle to the wrapped port (0x180693A70)

@@ -15,6 +15,7 @@ namespace wh::playermodule {
 
 class C_LockPickingLeaveAction : public I_LockPickingAction {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_LockPickingLeaveAction;
     ~C_LockPickingLeaveAction() override;                   // [0] 0x180681EF8
     void OnActionStart() override;                          // [4] 0x180897C34
     void OnAnimEvent(int32_t eventCrc) override;            // [20] 0x180897CAC

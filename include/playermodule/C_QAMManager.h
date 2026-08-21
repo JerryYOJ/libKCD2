@@ -14,6 +14,7 @@ namespace wh::playermodule {
 
 class C_QAMManager : public I_QAMManager {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_QAMManager;
     ~C_QAMManager() override;                                                              // [0] sub_182EA7C2C
     void QAMManagerUnk01() override;                                                       // [1] [U signature]
     void QAMManagerUnk02() override;                                                       // [2] [U signature]

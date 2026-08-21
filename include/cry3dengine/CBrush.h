@@ -30,6 +30,7 @@ class CDeformableNode;   // 0xB0-byte deform helper (alloc @0x18221F009, ctor su
 
 class CBrush : public Offsets::IBrush, public Cry3DEngineBase {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_CBrush;
     // m_brushFlags (+0xB0) bits -- only 0..2 proven (ctor clears exactly these: &= ~7)
     enum : uint32_t {
         eBrushFlag_DrawLast                = 1u << 0,  // serialised (chunk+0x5A bit0), the only cloned bit; set by IBrush::SetDrawLast [bit identity = stock hypothesis]

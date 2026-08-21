@@ -17,6 +17,7 @@ namespace wh::conceptmodule {
 
 class C_InputDataPort : public C_DataPort {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_InputDataPort;
     RTTR_ENABLE(C_DataPort)   // [5] 0x1806B1BB0, [7] 0x18265353C
 
     S_ResourceRef m_incoming;   // +0x30  the one upstream producer (ctor {-1, 0})

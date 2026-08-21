@@ -17,6 +17,7 @@ namespace wh::conceptmodule {
 
 class C_AssetPort : public C_OutputDataPort {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_AssetPort;
     RTTR_ENABLE(C_OutputDataPort)      // [5] 0x1806B18AC, [7] 0x18265349C
     rttr::variant GetValue() override; // [16] 0x18087C988 world lookup by name+type
 

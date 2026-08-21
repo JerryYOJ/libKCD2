@@ -17,6 +17,7 @@ namespace wh::conceptmodule {
 
 class C_InterfaceTriggerPort : public C_ActiveTriggerPort {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_InterfaceTriggerPort;
     RTTR_ENABLE(C_ActiveTriggerPort)   // [5] 0x18061B924, [7] 0x180F8C07C
 
     int32_t m_direction;               // +0x30  runtime E_PortDirection (0 until assigned)

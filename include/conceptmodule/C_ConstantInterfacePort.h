@@ -16,6 +16,7 @@ namespace wh::conceptmodule {
 
 class C_ConstantInterfacePort : public C_InterfaceDataPort {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_ConstantInterfacePort;
     RTTR_ENABLE(C_InterfaceDataPort)   // [5] 0x18061B940, [7] 0x180FE93BC
     rttr::variant GetValue() override; // [16] 0x181765A2C
 

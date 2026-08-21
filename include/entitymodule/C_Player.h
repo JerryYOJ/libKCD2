@@ -6,6 +6,8 @@
 #include "C_AuxLightAttachment.h"
 #include "C_PlayerMaterialEffects.h"
 #include "C_MissileWeaponPlayerController.h"
+#include "C_ChatFollowManager.h"
+#include "C_RiderPlayerControl.h"
 #include "../framework/C_Signal.h"
 #include "../framework/C_ModelProperty.h"
 #include "../Offsets/vtables/IGameFrameworkListener.h"
@@ -32,6 +34,7 @@
 // their arg TYPES are thunk-derived inferences and the NAMES are semantic proposals, both flagged.
 
 namespace wh::xgenaimodule::BehaviorTree { namespace E_TrespassLevel { enum Type : uint8_t; } }
+class C_FocusCamera;   // game/C_FocusCamera.h (unnamespaced game-layer class)
 
 namespace wh::entitymodule {
 
@@ -42,7 +45,6 @@ class C_LevelBarrierInteractor;
 class C_PlayerInput;
 class C_RigidOnlyCollision;
 class C_FrontCollision;
-class C_ChatFollowManager;
 class C_PlayerCarryCorpse;
 class C_PlayerUnconscious;
 class C_PlayerTenseCircumstance;
@@ -107,7 +109,7 @@ public:
     float    m_floatCDC;                               // +0xCDC  init 1.0
     void*    m_pHelperCE0;                             // +0xCE0  owns 0x28 POD {C_Player*@0, u32@8, u8@0xC, u32@0x10, CTimeValue@0x18=-100000, u8@0x20}; alloc sub_180BC750C, dtor frees size 0x28; pointee unnamed (no vtable)
     C_ChatFollowManager* m_pChatFollowManager;         // +0xCE8  C_Ptr (0x78)  VERIFIED (NEW in KCD2)
-    void*    m_pManagerCF0;                            // +0xCF0  owns 0x98 polymorphic obj (ctor sub_180BC7590; vptr=&unk_185666D28; C_Player*@0x10; 2x CTimeValue=-100000 @0x48/0x50; float 1.0 @0x64; identity-quat @0x68); class UNRESOLVED (vtable in unloaded .data)
+    ::C_FocusCamera* m_pFocusCamera;                   // +0xCF0  C_Ptr (0x98, ctor sub_180BC7590; vptr=&unk_185666D28) view focus controller -- FocusCameraNode/combat-lock setups pull view-state+0x24 toward a target entity; ticked by C_Player vf[217] sub_1806D0198 -> sub_1808BA014. See game/C_FocusCamera.h  VERIFIED
     int32_t  m_arrayCF8[8];                            // +0xCF8  inline int32 array (ctor zeroed)
     void*    m_pDelegateD18;                           // +0xD18  owns 8B {C_Player*@0}; shared factory sub_18099D100 (identical to D28/D30); no vtable; dtor frees size 8
     C_PlayerCarryCorpse* m_pCarryCorpse;               // +0xD20  C_Ptr (0x18)  VERIFIED (NEW in KCD2)
@@ -119,7 +121,7 @@ public:
     void*    m_pHandlerD50;                            // +0xD50  owns 0x20 {C_Player*@0, u8@8, 4 subscription handles@0xC/0x10/0x14/0x18}; ctor sub_180BC88D4 binds brain-vars "player_armorload","player_hit_side","is_master_strike","player_bushman"
     void*    m_pHandlerD58;                            // +0xD58  owns 0x10 {C_Player*@0, u64@8=0}; factory sub_180BC877C; no vtable; ctor/dtor release via cleanup sub_180BC6A64
     C_PlayerTenseCircumstance* m_pTenseCircumstance;   // +0xD60  C_Ptr (0x20)  VERIFIED (NEW in KCD2)
-    void*    m_pRefCountedD68;                         // +0xD68  intrusive smart-ptr to polymorphic obj (ctor 0, assigned post-Init); dtor releases via vfunc (*(vtbl+0x18))(p,1); pointee class UNRESOLVED
+    C_RiderPlayerControl* m_pRiderPlayerControl;       // +0xD68  factory sub_180A4C5D0; dtor I_LabelTracker[3] Destroy
     C_MissileWeaponPlayerController m_missileWeaponController;   // +0xD70  (0x40)
     wh::shared::C_Signal<> m_signalDB0;                // +0xDB0  verified C_Signal; args/purpose UNRESOLVED (uses the binary-wide shared "default" signal family)
     uint64_t m_unkDC0;                                 // +0xDC0  (ctor 0)

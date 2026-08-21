@@ -17,6 +17,7 @@ namespace wh::conceptmodule {
 
 class C_MemberFunction : public C_FunctionBase {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_MemberFunction;
     RTTR_ENABLE(C_FunctionBase)    // [5..7] trio overrides
     rttr::variant GetPortValue(_smart_ptr<I_Port> const& port) override;  // [12] 0x18061AB8C Target -> instance -> invoke
     void GetPortDefinitions(std::function<void(std::shared_ptr<definition::I_PortDefinition> const&)> sink) override;  // [28] 0x180691550 Target pin + base pins

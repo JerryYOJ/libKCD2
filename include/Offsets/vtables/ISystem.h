@@ -19,6 +19,7 @@
 
 struct IXmlUtils;
 struct SSystemGlobalEnvironment;
+class CCamera;
 
 namespace Offsets {
 
@@ -161,9 +162,9 @@ struct ISystem {
     virtual void LoadXmlFromFile(IXmlNode** out, const char* path,
                                  char a4, char a5, char a6) = 0;          // [131] 0x418  impl 0x180D1B0EC forwards to CXmlUtils vfunc[1] 0x1806E63CC (injects const 1 as its arg4, demotes a4 to tail); consumers 0x180C3D5B4 / C_Keybinds::LoadConfig / C_Game::LoadConfigXml_18173CB3C all pass (this,&out,path,0,1,1) -- arity VERIFIED, flag semantics UNVERIFIED, pass (0,1,1) like stock
     virtual IXmlUtils* GetXmlUtils() = 0;                         // [132] 0x420  ret [+0xA20] (CXmlUtils, alloc 0x30)   VERIFIED
-    virtual void* _vf133() = 0;                                     // [133] 0x428  ret [+0xA28]
-    virtual void* _vf134() = 0;                                     // [134] 0x430  &m_ViewCamera [+0x288] (add rcx,0x288)
-    virtual void* GetViewCamera() = 0;                             // [135] 0x438  lea &m_ViewCamera [+0x288]           VERIFIED
+    virtual void* _vf133() = 0;                                     // [133] 0x428  ret [+0xA28] ArchiveHost
+    virtual void SetViewCamera(CCamera& camera) = 0;               // [134] 0x430  add rcx,288h; jmp operator= 0x180426E80
+    virtual CCamera& GetViewCamera() = 0;                          // [135] 0x438  lea rax,[rcx+288h]                   VERIFIED
     virtual void _vf136(bool) = 0;                                 // [136] 0x440  set byte [+0x5C2]
     virtual void _vf137(void*) = 0;                                // [137] 0x448  set ptr [+0x6B0]
     virtual void* _vf138() = 0;                                     // [138] 0x450  ret [+0x6B0]

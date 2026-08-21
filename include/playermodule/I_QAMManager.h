@@ -19,6 +19,7 @@ namespace wh::playermodule {
 
 class I_QAMManager {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_I_QAMManager;
     virtual ~I_QAMManager() = default;                                                    // [0]
     virtual void QAMManagerUnk01() = 0;                                                   // [1] [U signature]
     virtual void QAMManagerUnk02() = 0;                                                   // [2] [U signature]

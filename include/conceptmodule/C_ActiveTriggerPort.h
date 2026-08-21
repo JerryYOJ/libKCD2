@@ -20,6 +20,7 @@ namespace wh::conceptmodule {
 
 class C_ActiveTriggerPort : public C_TriggerPort {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_ActiveTriggerPort;
     RTTR_ENABLE(C_TriggerPort)   // [5] 0x181A6D980, [7] 0x18265347C
     void Trigger() override;     // [15] 0x18061D688 collect -> sort -> dispatch
 };

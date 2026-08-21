@@ -44,6 +44,7 @@ class C_ConceptGraphDeserializer;
 
 class C_ConceptNodeFactory : public I_NodeFactory {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_ConceptNodeFactory;
     rttr::variant Create(S_NodeCreationCtx const& ctx, void* args, bool& ok, XmlNodeRef node, bool& skipped, bool flag) override;  // [1] 0x181E38FA0 (args unused here)
     void Init() override;   // [5] 0x180BC2F64 resolves the 8 preset rttr type names + clears m_definitions
     RTTR_ENABLE(I_NodeFactory)   // [8..10] trio overrides

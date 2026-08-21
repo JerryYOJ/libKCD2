@@ -9,11 +9,12 @@
 //
 // The kd7u C_CombatActor primary vtable is 217 slots; the exact I_CombatActor /
 // C_CombatActor boundary is NOT separately recovered, so only the verified
-// interface slots through GetEntityId[8] are declared here. Slots [9..216] belong
-// to the concrete class and are documented in C_CombatActor.h. Where the boundary
-// falls does not affect object layout (the object stores only vtable pointers);
-// declaring the interface methods in their real slot order keeps GetEntity/
-// GetEntityId callable at the correct index.
+// interface slots through GetEntityId[8] are declared here. Slots [9..174] are
+// DECLARED on the concrete class in C_CombatActor.h ([9..106] named query/lifecycle
+// API, [107..174] the signal-subscribe band); [175..216] remain undeclared.
+// Where the boundary falls does not affect object layout (the object stores only
+// vtable pointers); declaring the methods in their real slot order keeps every
+// declared slot callable at the correct index.
 //
 // [vs KCD1] The interface widened by one slot at the front: GetEntity moved
 // [6]->[7] and GetEntityId [7]->[8].

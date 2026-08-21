@@ -13,6 +13,7 @@ class C_TriggerAreaManager
     : public IEntitySystemSink,
       public framework::I_WUIDMappingProvider {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_TriggerAreaManager;
     static C_TriggerAreaManager* GetInstance();
     C_TriggerArea* FindByWuid(const framework::WUID& wuid);
 

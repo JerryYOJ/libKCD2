@@ -18,6 +18,7 @@ namespace wh::conceptmodule {
 
 class C_Assert : public C_TemplatedNode {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_Assert;
     RTTR_ENABLE(C_TemplatedNode)   // [5..7] trio overrides
     void EnumerateNodeVariants() override;  // [27] 0x18268E334
     void OnExecute(S_NodeExecuteContext const& ctx) override;  // [33] 0x18268E058

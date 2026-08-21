@@ -1,99 +1,127 @@
 #pragma once
 #include <cstddef>
 #include <cstdint>
+#include <string>
 #include <vector>
 #include "../CryEngine/CryCommon/CryString.h"
 #include "../CryEngine/CryCommon/CryExtension/CryGUID.h"
+#include "E_HandContextSerializationMode.h"
+#include "E_ItemType.h"
 #include "rttr/rttr_enable.h"
 
 // -----------------------------------------------
-// wh::entitymodule::S_ItemClass -- the item CLASS-definition root (KCD2 WHGame.dll 1.5.6, utem).
+// wh::entitymodule::S_ItemClass -- the item CLASS-definition root (KCD2 WHGame.dll 1.5.6).
 // sizeof 0x38.  KCD2's rename of KCD1's S_ItemData (RTTI .?AUS_ItemClass@entitymodule@wh@@).
 // -----------------------------------------------
-// A 30-type polymorphic tree (root + S_TypedItemClass mixin + 28 CRTP leaves via
+// 30-type polymorphic tree (root + optional S_TypedItemClass mixin + 28 CRTP leaves via
 // S_ItemClassWrapper<Derived, Parent, TypeId>, RTTR-registered -- NO integer-switch factory).
-// Tree + per-type vtables/ctors/sizes + registry internals: analysis/item_data/s_itemdata_re.md.
-// TypeId (E_ItemType, vf[1]/vf[3]): Misc 0, Melee 1, Missile 2, Ammo 3, Armor 4, Food 5, Money 6,
-// DiceBadge 7, Document 8, CraftingMaterial 9, Herb 10, AlchemyBase 11, NPCTool 12, Ointment 13,
-// Poison 14, Die 15, Helmet 16, Key 17, KeyRing 18, QuickSlotContainer 19; intermediates
-// Pickable 22, Divisible 23, WeaponEquip 24, Player 25, Equippable 26, Weapon 27, Consumable 28,
-// Hood 29; 21 = this root.
+// The mixin is NOT on every concrete leaf (Money/Die/KeyRing/Poison/Key have none).
+// Tree: analysis/item_data/s_itemdata_re.md (copy-ctor IPs in that doc are often Clone/GetAs
+// stores -- do not treat them as in-place copy-ctors).
 //
 // Instances live in the global item-class database 0x185325820 (GUID-sorted vector keyed by
-// m_guid, comparator 0x18046A5AC; lookup sub_180468340, register sub_18097054C, loader
-// sub_1809702AC).  Reached from a live item via C_Item::m_pClassData (+0x48); accessor
-// sub_1804695B4 substitutes the static default row &qword_1854AFDE0 while that is null.
+// m_guid). Reached from a live item via C_Item::m_pClassData (+0x48).
 // Base vtable 0x183A4EC78 (55 slots), ctor sub_180754CE4, copy sub_180D290F8, dtor sub_181AB90BC.
+// GetAs [24..50]: introducing class (and descendants) override with `return this`; root returns
+// a TLS-lazy static default. S_MoneyItemClass has no own GetAs (inherits Divisible).
 namespace wh::entitymodule {
 
+class C_Item;
+struct S_ItemInstanceData;   // 0xF8 create/save blob (SYNTHETIC name) -- see S_ItemInstanceData.h.
+                             // NOT C_ItemClassDescriptor: that is the 0x50 RTTR match-filter class.
+
+class S_AlchemyBaseItemClass;
+class S_AmmoItemClass;
+class S_ArmorItemClass;
+class S_ConsumableItemClass;
+class S_CraftingMaterialItemClass;
+class S_DiceBadgeItemClass;
+class S_DieItemClass;
+class S_DivisibleItemClass;
+class S_DocumentItemClass;
 class S_EquippableItemClass;
+class S_FoodItemClass;
+class S_HelmetItemClass;
 class S_HerbItemClass;
+class S_HoodItemClass;
+class S_KeyItemClass;
+class S_KeyRingItemClass;
+class S_MeleeWeaponItemClass;
+class S_MiscItemClass;
+class S_MissileWeaponItemClass;
+class S_NPCToolItemClass;
+class S_OintmentItemClass;
 class S_PickableItemClass;
 class S_PlayerItemClass;
+class S_PoisonItemClass;
+class S_QuickSlotContainerItemClass;
+class S_WeaponEquipItemClass;
+class S_WeaponItemClass;
 
 class S_ItemClass {
 public:
-    // Element of m_properties: 0x20-byte record (dtor 0x18110E100); purpose UNVERIFIED
-    // (candidate: tagged attribute/modifier row -- vf[17] applies values by tag).
-    struct S_Property { uint8_t _opaque[0x20]; };
+    inline static constexpr auto RTTI = Offsets::RTTI_S_ItemClass;
 
-    virtual ~S_ItemClass();                                  // [0]  deleting dtor
-    virtual int32_t GetTypeId();                             // [1]  root returns 21; leaves their E_ItemType
-    virtual S_ItemClass* Clone();                            // [2]  new(sizeof(T)) + copy-ctor (source of the size proofs)
-    virtual bool IsType(int32_t typeId);                     // [3]  IsKindOf: matches self + ancestors
-    virtual uint32_t unk4();                                 // [4]  IsType() ? 0 : 0x80000000 [INFERRED]
-    virtual int64_t unk5();                                  // [5]  base: return 0
-    virtual bool unk6();                                     // [6]  base: return 1
-    virtual int64_t unk7();                                  // [7]  base: return 0
-    virtual int64_t unk8();                                  // [8]  base: return 0
-    virtual uint32_t unk9();                                 // [9]  base: return -1 (invalid-id default)
-    virtual uint32_t unk10();                                // [10] base: return -1
-    virtual uint32_t unk11();                                // [11] base: return -1
-    virtual float GetPrice(uint32_t priceContext);           // [12] base = (float)priceContext identity; leaves override
-    virtual float unk13();                                   // [13] base: return 0.0f
-    virtual std::vector<S_Property>* GetProperties();        // [14] returns &m_properties
-    virtual void unk15();                                    // [15] base: nullsub
-    virtual void unk16();                                    // [16] class-def reload/diff [INFERRED]
-    virtual void unk17();                                    // [17] tagged property applicator (serialization record)
-    virtual void unk18();                                    // [18] serialize/diff helper [INFERRED]
-    virtual void InitItemInstance(const CryGUID& classGuid, void* srcItem, void* newItem); // [19] item factory hook (0x180468B70)
-    virtual void InitItemDefaults(void* item);               // [20] health/amount/durability from the def (0x180467FFC)
-    virtual int64_t unk21();                                 // [21] base: return 0
-    virtual int64_t unk22();                                 // [22] getter [INFERRED]
-    virtual int64_t unk23();                                 // [23] base: return 0
-    // Typed-downcast family: returns `this` when the object IS that subclass, else a shared
-    // static default instance (e.g. [24] -> 0x1855DD170, [25] -> 0x1855DD210).
-    virtual S_PickableItemClass* GetAsPickableItemClass();   // [24] 0x182A44E98
-    virtual S_PlayerItemClass* GetAsPlayerItemClass();       // [25] 0x182A44F08 -- the UI name/icon view
-    // [26] is certified by S_ItemClassWrapper<S_EquippableItemClass, S_PlayerItemClass, 26>
-    // and C_RPGItemHealth callers. The remaining adjacent downcasts stay unresolved.
-    virtual S_EquippableItemClass* GetAsEquippableItemClass();
-    virtual S_ItemClass* GetAsUnk27();
-    virtual S_ItemClass* GetAsUnk28();  virtual S_ItemClass* GetAsUnk29();
-    virtual S_ItemClass* GetAsUnk30();  virtual S_ItemClass* GetAsUnk31();
-    virtual S_ItemClass* GetAsUnk32();  virtual S_ItemClass* GetAsUnk33();
-    virtual S_ItemClass* GetAsUnk34();  virtual S_ItemClass* GetAsUnk35();
-    virtual S_ItemClass* GetAsUnk36();  virtual S_ItemClass* GetAsUnk37();
-    virtual S_ItemClass* GetAsUnk38();
-    // [39] certified: herb override = `return this` (ICF 0x1805F5DA0), default 0x182A44A00 =
-    // TLS-lazy static default herb 0x1855DE0D0 (null m_driedItemId) -- callers: the alchemy
-    // ingredient counter 0x18175A4BC + autocook substitute retry 0x181FFE040.
-    virtual S_HerbItemClass* GetAsHerbItemClass();
-    virtual S_ItemClass* GetAsUnk40();  virtual S_ItemClass* GetAsUnk41();
-    virtual S_ItemClass* GetAsUnk42();  virtual S_ItemClass* GetAsUnk43();
-    virtual S_ItemClass* GetAsUnk44();  virtual S_ItemClass* GetAsUnk45();
-    virtual S_ItemClass* GetAsUnk46();  virtual S_ItemClass* GetAsUnk47();
-    virtual S_ItemClass* GetAsUnk48();  virtual S_ItemClass* GetAsUnk49();
-    virtual S_ItemClass* GetAsUnk50();
-    virtual void OnRegister();                               // [51] finalize hook: registrar calls it pre-insert; base nullsub
+    virtual ~S_ItemClass();                                                                  // [0]
+    virtual E_ItemType::Type GetTypeId() const;                                              // [1]  root returns Root(21)
+    virtual S_ItemClass* Clone() const;                                                      // [2]  alloc(sizeof(T)) + copy -- sizeof proof
+    virtual bool IsType(E_ItemType::Type type) const;                                        // [3]  IsKindOf: self + ancestors
+    virtual uint32_t GetTypeDistance(E_ItemType::Type type) const;                           // [4]
+    virtual bool HasQuality() const;                                                         // [5]  root false
+    virtual int32_t GetMaxQuality() const;                                                   // [6]  root returns 1
+    virtual bool IsDivisible() const;                                                        // [7]
+    virtual bool unk8() const;                                                               // [8]  root false; Pickable reads +0x89
+    virtual int32_t unk9() const;                                                            // [9]  root -1; bitset-index id (name UNVERIFIED)
+    virtual int32_t unk10() const;                                                           // [10] root -1; TypedItemClass +8 candidate
+    virtual int32_t unk11() const;                                                           // [11] root -1; TypedItemClass +0xC candidate
+    virtual float GetPrice(uint32_t price) const;                                            // [12] root = (float)price identity
+    virtual float unk13() const;                                                             // [13] root 0; combat-stat-ish float, no named consumer
+    virtual std::vector<std::string>* GetProperties();                                       // [14] &m_properties
+    virtual void OnItemFlagsChanged(C_Item* item, uint32_t mask, bool bitSet);               // [15]
+    virtual void DiffItemInstanceData();                                                     // [16] 0x180B56DA4 emits patch tags old->new; sig (collector, old, new) UNVERIFIED
+    virtual void PatchItemInstanceData();                                                    // [17] 0x180B5B134 tag-switch applicator (tags 0/1/2/3/5/6/0xA/0x12); sig UNVERIFIED
+    virtual S_ItemInstanceData* FillItemInstanceData(S_ItemInstanceData* out, C_Item* item); // [18] 0x180B56CA8 snapshot C_Item -> blob
+    virtual void InitItemInstance(void* notifyCtx, S_ItemInstanceData* src, C_Item* item);   // [19] 0x180468B70
+    virtual void InitItemDefaults(S_ItemInstanceData* data);                                 // [20] 0x180467FFC (flags &= 0xFFE7FFFE, amount/quality defaults)
+    virtual uint8_t unk21() const;                                                           // [21] 3-state 0/1/2 getter, name UNVERIFIED
+    virtual E_HandContextSerializationMode::Type GetHandContextSerializationMode() const;    // [22]
+    virtual bool unk23() const;                                                              // [23] Pickable +0x88 bool, name UNVERIFIED
+
+    virtual S_PickableItemClass* GetAsPickableItemClass();                                   // [24] default 0x1855DD170
+    virtual S_PlayerItemClass* GetAsPlayerItemClass();                                       // [25] default 0x1855DD210
+    virtual S_EquippableItemClass* GetAsEquippableItemClass();                               // [26] default 0x1855DD2D0
+    virtual S_DivisibleItemClass* GetAsDivisibleItemClass();                                 // [27] default 0x1855DD3C0
+    virtual S_NPCToolItemClass* GetAsNPCToolItemClass();                                     // [28] default 0x1855DD490
+    virtual S_ArmorItemClass* GetAsArmorItemClass();                                         // [29] default 0x1855DD540
+    virtual S_AmmoItemClass* GetAsAmmoItemClass();                                           // [30] default 0x1855DD660
+    virtual S_WeaponItemClass* GetAsWeaponItemClass();                                       // [31] default 0x1855DD7B0
+    virtual S_WeaponEquipItemClass* GetAsWeaponEquipItemClass();                             // [32]
+    virtual S_MissileWeaponItemClass* GetAsMissileWeaponItemClass();                         // [33]
+    virtual S_MeleeWeaponItemClass* GetAsMeleeWeaponItemClass();                             // [34]
+    virtual S_ConsumableItemClass* GetAsConsumableItemClass();                               // [35]
+    virtual S_FoodItemClass* GetAsFoodItemClass();                                           // [36]
+    virtual S_PoisonItemClass* GetAsPoisonItemClass();                                       // [37]
+    virtual S_OintmentItemClass* GetAsOintmentItemClass();                                   // [38]
+    virtual S_HerbItemClass* GetAsHerbItemClass();                                           // [39] default 0x1855DE0D0
+    virtual S_DocumentItemClass* GetAsDocumentItemClass();                                   // [40]
+    virtual S_CraftingMaterialItemClass* GetAsCraftingMaterialItemClass();                   // [41]
+    virtual S_AlchemyBaseItemClass* GetAsAlchemyBaseItemClass();                             // [42]
+    virtual S_DieItemClass* GetAsDieItemClass();                                             // [43]
+    virtual S_DiceBadgeItemClass* GetAsDiceBadgeItemClass();                                 // [44]
+    virtual S_HelmetItemClass* GetAsHelmetItemClass();                                       // [45]
+    virtual S_KeyItemClass* GetAsKeyItemClass();                                             // [46] default 0x1855DE720
+    virtual S_KeyRingItemClass* GetAsKeyRingItemClass();                                     // [47] default 0x1855DE7E0
+    virtual S_QuickSlotContainerItemClass* GetAsQuickSlotContainerItemClass();               // [48]
+    virtual S_MiscItemClass* GetAsMiscItemClass();                                           // [49]
+    virtual S_HoodItemClass* GetAsHoodItemClass();                                           // [50] default 0x1855DEAD0
+
+    virtual void OnRegister();                                                               // [51] registrar pre-insert; base nullsub
     RTTR_ENABLE()  // [52..54]: get_type 0x181A6DB4C, get_derived 0x182A23F6C
 
-    CryGUID m_guid;                        // +0x08  THE class guid: registry key, FindItemByClass
-                                           //        compare (0x1808D319D), bark/presentation id
-    CryStringT<char> m_name;               // +0x18  internal class name/key (name index at reg+0x90)
-    std::vector<S_Property> m_properties;  // +0x20  exposed by vf[14]; element purpose UNVERIFIED
+    CryGUID m_guid;                                 // +0x08  registry key
+    CryStringT<char> m_name;                        // +0x18  internal class name/key
+    std::vector<std::string> m_properties;          // +0x20  MSVC SSO string (0x20), NOT a custom S_Property
 };
-
 static_assert(sizeof(S_ItemClass) == 0x38, "S_ItemClass must be 0x38");
 static_assert(offsetof(S_ItemClass, m_guid) == 0x08, "class guid at 0x08");
 static_assert(offsetof(S_ItemClass, m_properties) == 0x20, "properties at 0x20");

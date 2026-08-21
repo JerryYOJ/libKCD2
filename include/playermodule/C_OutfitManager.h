@@ -19,6 +19,7 @@ class C_OutfitManager
     : public I_OutfitManager
     , public entitymodule::I_ItemCollectionListener {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_OutfitManager;
     ~C_OutfitManager() override;                                                   // [0] sub_180D89A54
     void OnItemEquipped(void* a2, std::uint64_t itemWuid) override;                // [1] [U signature]
     void OnItemUnequipped(void* a2, std::uint64_t itemWuid) override;              // [2] [U signature]

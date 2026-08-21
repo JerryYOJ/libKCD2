@@ -21,6 +21,7 @@ namespace wh::conceptmodule {
 
 class C_MakeArray : public C_TemplatedNode {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_MakeArray;
     RTTR_ENABLE(C_TemplatedNode)   // [5..7] trio overrides
     rttr::variant GetPortValue(_smart_ptr<I_Port> const& port) override;  // [12] 0x1806A98B8 append-all-ports -> container variant
     void EnumerateNodeVariants() override;  // [27] 0x180EF6B58 descriptor "MakeArray", category 0xA

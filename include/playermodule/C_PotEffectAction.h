@@ -27,6 +27,7 @@ namespace wh::playermodule {
 
 class C_PotEffectAction : public C_AlchemyActionBase<S_EmptyParams> {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_PotEffectAction;
     uint64_t _pad68[8];              // +0x68  effect state [contents UNVERIFIED]
     float    m_invHourGlassUnitTime; // +0xA8  1 / HourGlassUnitTime (0.1 for the 10 s default)
     float    m_weakBoilTimeout;      // +0xAC  WeakBoilTimeout table constant (5)

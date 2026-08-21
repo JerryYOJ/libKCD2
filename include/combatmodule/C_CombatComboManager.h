@@ -55,12 +55,7 @@ public:
     // dispatcher sub_180911250 case 32). Touches ONLY this manager: appends the fresh combo
     // seed, per active combo re-filters candidates against the state's executed-attack-zone
     // property (+0x270) + m_lastComboZone, ++m_currentStep, compacts, emits m_sigComboAdvanced
-    // (core sub_180C5C594). No faked hit, no damage. Behaviour deltas vs KCD1: (1) if
-    // m_pendingAdvanceFlag (+0xE8) is set the engine RESETS the combo instead (sub_180C5E460);
-    // (2) NEW dedup gate -- no-op when m_stepAppliedFlag (+0xEA) is already set, and the call
-    // sets it (cleared again on the next state-id-4 event); (3) the core is gated on the
-    // combat-settings int at g_combatSettings+0x188 (combos enabled); (4) takes only `this`
-    // (KCD1 passed an unused emitter + a char gate). Forwarder in C_CombatComboManager.cpp.
+    // (core sub_180C5C594). No faked hit, no damage.
     void ForceAdvanceStep();
 
     wh::shared::C_Signal<I_CombatActor&, bool>      m_onComboSlotChanged;  // +0x18  args tentative (desc unk_185666A00; could carry E_HandSlot)

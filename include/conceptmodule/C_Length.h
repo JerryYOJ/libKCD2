@@ -16,6 +16,7 @@ namespace wh::conceptmodule {
 
 class C_Length : public C_TemplatedNode {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_Length;
     RTTR_ENABLE(C_TemplatedNode)   // [5..7] trio overrides
     rttr::variant GetPortValue(_smart_ptr<I_Port> const& port) override;  // [12] 0x1814033B8
     void EnumerateNodeVariants() override;  // [27] 0x180EF6758

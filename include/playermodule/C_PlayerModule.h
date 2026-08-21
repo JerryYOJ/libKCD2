@@ -40,6 +40,7 @@ class I_ActionSets;
 class C_PlayerManager;
 class C_ShelverManager;
 class C_ControllerFeedbackManager;
+class I_UIActionHintManager;
 
 class C_PlayerModule
     : public wh::framework::C_BaseModule
@@ -74,8 +75,10 @@ public:
     C_ShelverManager*       m_pShelverManager;  // +0x80  (0x88,  ctor sub_180794D8C stores C_ShelverManager vtable)
     C_ControllerFeedbackManager* m_pControllerFeedbackManager; // +0x88  (0x58,  ctor sub_180C3D1CC stores C_ControllerFeedbackManager vtable)
     C_ForgeWardrobeManager* m_pForgeWardrobe;   // +0x90  (0x20)  NEW in KCD2                    VERIFIED
-    uint64_t                m_98;               // +0x98  zero-init, no verified reader; NOT the KCD1 autosave flag (UNVERIFIED)
+    I_UIActionHintManager*  m_pUIActionHintManager; // +0x98  ctor 0; C_UIActionHintManager setup 0x180C3C372 stores `this` here. Start 0x180898705 calls vf[0] GetInputDeviceClass into C_LockPicking+0x188.
 };
 static_assert(sizeof(C_PlayerModule) == 0xA0, "C_PlayerModule must be 0xA0");
+static_assert(offsetof(C_PlayerModule, m_pUIActionHintManager) == 0x98,
+              "UI action-hint manager published at +0x98");
 
 }  // namespace wh::playermodule

@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include "../Offsets/vtables/ISystem.h"
+#include "CCamera.h"
 
 // -----------------------------------------------
 // CSystem — CrySystem main engine object (KCD2)
@@ -41,11 +42,13 @@ public:
     SSystemGlobalEnvironment* m_env;                 // +0x020  = &gEnv (0x18492D800); GetGlobalEnvironment() slot 3
     uint8_t   _gap028[0x260];                        // +0x028  sub_180A53C48 sink object + init state
 
-    // ---- Cameras (CCamera; boundary folds any trailing members) ------------
-    uint8_t   m_ViewCamera[0x310];                   // +0x288  CCamera "CSystem::m_ViewCamera" (GetViewCamera slot 135)  /* size tentative */
-    bool      m_bQuit;                               // +0x598  set by Quit() slot 32 ("Quitting is declared")
+    // ---- Cameras -----------------------------------------------------------
+    CCamera   m_ViewCamera;                          // +0x288  sizeof 0x310; GetViewCamera slot 135
+    bool      m_bQuit;                               // +0x598  Quit() slot 32
     uint8_t   _gap599[0x12F];                        // +0x599  flags/CryStrings/subsystem ptrs (0x5A0..0x6C0)
-    uint8_t   m_PhysRendererCamera[0x320];           // +0x6C8  CCamera "CSystem::m_PhysRendererCamera"  /* size tentative */
+    CCamera   m_PhysRendererCamera;                  // +0x6C8  sizeof 0x310 (was wrongly [0x320])
+    uint8_t   _gap9D8[8];                            // +0x9D8  UNVERIFIED
+    void*     m_pUnk9E0;                             // +0x9E0  ctor 0; type UNVERIFIED
 
     // ---- Subsystem/manager pointers (roles tentative) ----------------------
     CSystemEventDispatcher* m_pSystemEventDispatcher; // +0x9E8  ctor sub_180A53908 installs CSystemEventDispatcher vtable on 0x68-byte alloc; slot 85 getter
@@ -80,4 +83,9 @@ public:
     uint8_t   _gap2BD4[0x24];                         // +0x2BD4  0x2BD8 ptr, 0x2BE1 flag, 0x2BE8 CryString  -> end
 };
 static_assert(sizeof(CSystem) == 0x2BF8);
+static_assert(offsetof(CSystem, m_ViewCamera) == 0x288);
+static_assert(offsetof(CSystem, m_bQuit) == 0x598);
+static_assert(offsetof(CSystem, m_PhysRendererCamera) == 0x6C8);
+static_assert(offsetof(CSystem, m_pUnk9E0) == 0x9E0);
+static_assert(offsetof(CSystem, m_pSystemEventDispatcher) == 0x9E8);
 static_assert(offsetof(CSystem, m_pLocalizationManager) == 0xD50);

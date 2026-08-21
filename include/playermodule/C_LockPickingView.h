@@ -18,6 +18,7 @@ namespace wh::playermodule {
 
 class C_LockPickingView {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_LockPickingView;
     virtual void OnElementEvent(const char** name, char visible); // [0] 0x182E8ED78
     virtual ~C_LockPickingView();                                 // [1] 0x1817448D8
 

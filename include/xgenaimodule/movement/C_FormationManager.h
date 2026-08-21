@@ -10,6 +10,7 @@ class C_Formation;
 
 class C_FormationManager {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_FormationManager;
     static C_FormationManager* GetInstance();
     C_Formation* FindByWuid(const framework::WUID& wuid);
 

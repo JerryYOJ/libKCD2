@@ -21,6 +21,7 @@ namespace wh::conceptmodule {
 
 class C_EdgePort : public I_Port {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_EdgePort;
     RTTR_ENABLE(I_Port)                                 // [5..7] trio overrides
     virtual bool HasOutgoing(_smart_ptr<I_Port> port);  // [23] base 0x1826506C4 "not supported" (release arg, false)
     virtual bool HasIncoming(_smart_ptr<I_Port> port);  // [24] base "not supported"

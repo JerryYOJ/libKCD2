@@ -17,6 +17,7 @@ namespace wh::conceptmodule {
 
 class C_If : public C_Node {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_If;
     RTTR_ENABLE(C_Node)                     // [5..7] trio overrides
     void EnumerateNodeVariants() override;  // [27] 0x18268E70C emits {"If", kind 2, "wh::conceptmodule"}
     void OnExecute(S_NodeExecuteContext const& ctx) override;  // [33] 0x18169333C: Condition ? True : False

@@ -20,6 +20,7 @@ namespace wh::conceptmodule {
 
 class C_TriggerSequence : public C_Node {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_TriggerSequence;
     RTTR_ENABLE(C_Node)   // [5..7] trio overrides
     void EnumerateNodeVariants() override;  // [27] 0x18268ECD8
     void OnExecute(S_NodeExecuteContext const& ctx) override;  // [33] 0x1818AAB9C fire outputs first -> last

@@ -427,6 +427,7 @@ typedef _i_multithread_reference_target<int> _i_multithread_reference_target_t;
 class CMultiThreadRefCount
 {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_CMultiThreadRefCount;
 	CMultiThreadRefCount() : m_cnt(0) {}
 	virtual ~CMultiThreadRefCount() {}
 

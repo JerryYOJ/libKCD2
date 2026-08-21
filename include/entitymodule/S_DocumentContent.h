@@ -7,8 +7,11 @@
 // wh::entitymodule::S_DocumentContent -- reflected full-book content
 // (KCD2 WHGame.dll 1.5.6, kd7u). sizeof 0x30.
 // -----------------------------------------------
-// SetFullBook consumes two contiguous MSVC std::vectors. RTTR exposes the
-// storage through Parts and Images; GeneralBook forwards m_parts as its Texts array.
+// SetFullBook consumes two contiguous MSVC std::vectors. RTTR "Images" is a plain
+// member_object_ptr of m_images; RTTR "Parts" is NOT a member view -- it is a member_func
+// boost::optional<std::string> that SPACE-JOINS the whole m_parts vector on get
+// (0x182A6A5B8) and clears+splits-on-space on set (0x18110E034). GeneralBook forwards
+// m_parts as its Texts array.
 
 namespace wh::entitymodule {
 

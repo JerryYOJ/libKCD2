@@ -16,6 +16,7 @@ namespace wh::rpgmodule {
 
 class C_RPGItemHealth : public I_RPGItemHealth {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_RPGItemHealth;
     ~C_RPGItemHealth() override;                                                                                  // [0] sub_180466F30
     void RPGItemHealthUnk01() override;                                                                           // [1] [U signature]
     void RPGItemHealthUnk02() override;                                                                           // [2] [U signature]

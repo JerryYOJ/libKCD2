@@ -29,7 +29,8 @@ class C_CombatTemporaryAutomationGuardStarter
 {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_CombatTemporaryAutomationGuardStarter;
-    E_CombatSubsystem GetSubsystemId() const override { return static_cast<E_CombatSubsystem>(48); }  // [2] 0x181A7E2E0
+    void Reset() override {}  // [1] 0x1803B6E80
+    E_CombatSubsystem GetSubsystemId() const override { return E_CombatSubsystem::TEMPORARY_AUTOMATION_GUARD_STARTER; } // [2]
     const char* GetName() const override { return ""; }   // [3] shared type-id -> name lookup impl (sub_18275DA28)
     void OnPropertyChanged() override {}
     void _vf1() override {}

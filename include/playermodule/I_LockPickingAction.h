@@ -13,6 +13,7 @@ namespace wh::playermodule {
 
 class I_LockPickingAction {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_I_LockPickingAction;
     virtual ~I_LockPickingAction();                         // [0]
     virtual void unk_01() = 0;                              // [1] 0x18126AC90
     virtual void unk_02() = 0;                              // [2]

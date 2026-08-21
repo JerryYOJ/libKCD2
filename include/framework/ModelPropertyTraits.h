@@ -49,6 +49,13 @@ struct C_SignalWithNewValueTrait {
     using Signal = wh::shared::C_Signal<T>;
 };
 
+// Broadcasts (old, new). Generic form of C_CombatSignalWithOldValueTrait (no owner).
+// RTTI: wh::shared::traits::C_SignalWithOldValueTrait<T>.
+template<class T>
+struct C_SignalWithOldValueTrait {
+    using Signal = wh::shared::C_Signal<T, T>;
+};
+
 // No debug tracing; empty tag (generic form; ToDbgStr returns the static empty string).
 struct C_DebugNoTrace {};
 

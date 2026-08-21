@@ -39,7 +39,8 @@ class C_CombatAutomation
 {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_CombatAutomation;
-    E_CombatSubsystem GetSubsystemId() const override { return static_cast<E_CombatSubsystem>(25); }  // 0x181A7E2D0
+    void Reset() override;                                                                          // 0x1827672C8
+    E_CombatSubsystem GetSubsystemId() const override { return E_CombatSubsystem::AUTOMATION; }      // 0x181A7E2D0
     const char* GetName() const override { return "Automation"; }                                     // 0x181A7E150
 
     wh::shared::C_Signal<> m_onAutomationSignal;   // +0x020  (sentinel unk_185666898; listener wired in GetOrCreate; args unverified)

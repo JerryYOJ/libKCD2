@@ -12,6 +12,7 @@ class C_PredefinedPathManager
     : public IEntitySystemSink,
       public framework::I_WUIDMappingProvider {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_PredefinedPathManager;
     static C_PredefinedPathManager* GetInstance();
     C_PredefinedPath* FindByWuid(const framework::WUID& wuid);
 

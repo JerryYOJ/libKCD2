@@ -41,10 +41,14 @@ namespace wh::databasemodule   { class I_DatabaseModule; }
 
 namespace wh::game {
 
+class C_CameraManager;
+
 struct S_GameContext {
     uint8_t                                 _pad00[0x18];         // +0x00
     void*                                   m_pFramework;         // +0x18  framework/system root (ctor arg0)  VERIFIED
-    uint8_t                                 _pad20[0x40];         // +0x20
+    uint8_t                                 _pad20[0x18];         // +0x20
+    C_CameraManager*                        m_pCameraManager;     // +0x38  camera-mode owner (C_Game::Init 0x1806034B4 stores ctor 0x180896DC8 result)  VERIFIED
+    uint8_t                                 _pad40[0x20];         // +0x40
     framework::C_ExpressionEngine*          m_pExpressionEngine;  // +0x60  EE core (= qword_185168B30); bootstrap sub_180C103AC stores it @0x180C104EC  VERIFIED
     uint8_t                                 _pad68[0x50];         // +0x68
     framework::C_ModulesManager*            m_pModulesManager;    // +0xB8  dispatches C_ModuleMessage          VERIFIED

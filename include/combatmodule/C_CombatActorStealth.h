@@ -49,8 +49,8 @@ public:
     void Reset() override;                        // [1] sub_1810EFFAC -- zero arm scalars + m_wuidSlots
     E_CombatSubsystem GetSubsystemId() const override;  // [2] sub_181A7DFA0 -> 27 (COMBAT_SUB_STEALTH)
     const char* GetName() const override;         // [3] sub_181A7DEA0 -> "STEALTH"
-    void GetDebugLabel(void* outLabel) override;  // [4] sub_1827603E4
-    void GetDebugInfo(void* outInfo) override;    // [5] sub_182757E04
+    S_CombatActorObjectDebugLine GetDebugLabel() override;  // [4] sub_1827603E4
+    S_CombatActorObjectDebugLine GetDebugInfo() override;   // [5] sub_182757E04
     void UpdatePhase2() override;                 // [7] sub_181418AEC (flags=2; only live phase)
     // I_CombatActorStealth overrides (subobject vtable 0x183B0A538)
     int32_t CanStealthKill(uint32_t victimEntityId) override;      // [1] sub_18072F280

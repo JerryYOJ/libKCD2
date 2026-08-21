@@ -28,6 +28,7 @@ namespace wh::conceptmodule {
 
 class C_StateVariable : public C_StateBase<rttr::variant> {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_StateVariable;
     RTTR_ENABLE(C_StateBase<rttr::variant>)   // [5..7] trio overrides
     rttr::variant GetPortValue(_smart_ptr<I_Port> const& port) override;  // [12] 0x1806ACC4C Set<E> name -> enumerator value
     void EnumerateNodeVariants() override;    // [27] 0x180691160 descriptor "State", category 7

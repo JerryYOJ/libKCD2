@@ -28,6 +28,7 @@
 
 class CMergedMeshesManager : public Cry3DEngineBase, public Offsets::IMergedMeshesManager {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_CMergedMeshesManager;
     enum : uint32_t {
         MMRM_HASH_DIM_XY          = 32,     // x/y hash buckets
         MMRM_HASH_DIM_Z           = 2,      // z hash buckets

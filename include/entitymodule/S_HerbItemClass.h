@@ -18,6 +18,7 @@ namespace wh::entitymodule {
 
 class S_HerbItemClass : public S_CraftingMaterialItemClass {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_S_HerbItemClass;
     CryStringT<char> m_latinName;    // +0xD8  "LatinName"
     CryStringT<char> m_desc;         // +0xE0  "Desc" loc key
     CryStringT<char> m_effect;       // +0xE8  "Effect" loc key

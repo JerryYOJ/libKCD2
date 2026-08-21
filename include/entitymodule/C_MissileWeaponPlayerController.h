@@ -1,4 +1,5 @@
 #pragma once
+#include <cstddef>
 #include <cstdint>
 #include "../CryEngine/CryCommon/Cry_Math.h"    // platform.h chain (int64/ILINE) for TimeValue.h
 #include "../CryEngine/CryCommon/CryString.h"
@@ -31,7 +32,9 @@ public:
 
     CTimeValue m_field10;        // +0x10  init -100000 = CTimeValue(-1.0s) "never" sentinel (ctor 0x180BC6D8E)
     C_Player* m_pOwner;          // +0x18
-    uint32_t m_flags;            // +0x20  low byte read as active bool
+    bool     m_isAiming;         // +0x20  drawn/aiming; AAA4C0=1, release/abort/detach=0
+    bool     m_drawHeld;         // +0x21  bow_primary press latch
+    uint8_t  _pad22[2];          // +0x22
     int16_t  m_field24;          // +0x24  (ctor 0)
     uint8_t  m_field26;          // +0x26  (ctor 0)
     uint8_t  _pad27;             // +0x27
@@ -42,6 +45,9 @@ public:
     bool     m_bool39;           // +0x39  init 1
     uint8_t  _pad3A[6];          // +0x3A
 };
+static_assert(offsetof(C_MissileWeaponPlayerController, m_isAiming) == 0x20, "m_isAiming");
+static_assert(offsetof(C_MissileWeaponPlayerController, m_drawHeld) == 0x21, "m_drawHeld");
+static_assert(offsetof(C_MissileWeaponPlayerController, m_field24) == 0x24, "m_field24");
 static_assert(sizeof(C_MissileWeaponPlayerController) == 0x40, "C_MissileWeaponPlayerController must be 0x40");
 
 }  // namespace wh::entitymodule

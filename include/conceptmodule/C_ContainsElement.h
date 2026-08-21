@@ -18,6 +18,7 @@ namespace wh::conceptmodule {
 
 class C_ContainsElement : public C_TemplatedNode {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_ContainsElement;
     RTTR_ENABLE(C_TemplatedNode)   // [5..7] trio overrides
     rttr::variant GetPortValue(_smart_ptr<I_Port> const& port) override;  // [12] 0x180825A98
     void EnumerateNodeVariants() override;  // [27] 0x180EF6A58

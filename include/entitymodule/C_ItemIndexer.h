@@ -6,6 +6,7 @@ namespace wh::entitymodule {
 
 class C_ItemIndexer : public C_ItemCollection {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_ItemIndexer;
     virtual void ItemIndexerVf1();
     virtual void ItemIndexerVf2();
     virtual void ItemIndexerVf3();

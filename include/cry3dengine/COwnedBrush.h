@@ -14,6 +14,7 @@
 
 class COwnedBrush : public CBrush {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_COwnedBrush;
     void* m_unk100 = nullptr;   // +0x100  pointer-shaped, zero-init; purpose unknown
 };
 static_assert(sizeof(COwnedBrush) == 0x108, "alloc+memset 0x108 @0x180A795AF");

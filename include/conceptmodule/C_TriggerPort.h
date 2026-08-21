@@ -15,6 +15,7 @@ namespace wh::conceptmodule {
 
 class C_TriggerPort : public C_EdgePort {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_TriggerPort;
     RTTR_ENABLE(C_EdgePort)   // [5] 0x181A6CB2C, [7] 0x1826535BC
 };
 static_assert(sizeof(C_TriggerPort) == 0x30, "C_TriggerPort adds no data");

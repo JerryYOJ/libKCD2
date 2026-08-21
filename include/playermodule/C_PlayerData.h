@@ -42,6 +42,7 @@ namespace wh::playermodule {
 
 class C_PlayerData {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_PlayerData;
     virtual ~C_PlayerData();                                 // [0] 0x182DDE140
     // RTTR trio [1..3]: get_type 0x181A6CDE8, get_ptr 0x1805F5DA0 (`return this`),
     // get_derived_info 0x1819CB7C0. Registered BASELESS (creator 0x18176988C,

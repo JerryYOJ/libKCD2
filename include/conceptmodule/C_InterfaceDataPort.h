@@ -17,6 +17,7 @@ namespace wh::conceptmodule {
 
 class C_InterfaceDataPort : public C_DataPort {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_InterfaceDataPort;
     RTTR_ENABLE(C_DataPort)   // [5] 0x18061B908, [7] 0x18069B898
 
     int32_t m_direction;      // +0x30  runtime E_PortDirection (0 until assigned)

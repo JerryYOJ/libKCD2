@@ -7,6 +7,7 @@ class C_PredefinedPathManager;
 // Partial primary-vtable replica; data layout remains unrecovered.
 class C_PathManager {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_PathManager;
     virtual void PathVf0() = 0;
     virtual void PathVf1() = 0;
     virtual void PathVf2() = 0;

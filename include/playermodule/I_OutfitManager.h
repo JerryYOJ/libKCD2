@@ -18,6 +18,7 @@ namespace wh::playermodule {
 
 class I_OutfitManager : public entitymodule::I_EquipmentManagerListener {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_I_OutfitManager;
     virtual void OutfitManagerUnk04() = 0;                                      // [4] [U signature]
     virtual void OutfitManagerUnk05() = 0;                                      // [5] [U signature]
     virtual void OutfitManagerUnk06() = 0;                                      // [6] [U signature]

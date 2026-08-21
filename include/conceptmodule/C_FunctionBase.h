@@ -27,6 +27,7 @@ namespace wh::conceptmodule {
 
 class C_FunctionBase : public C_TemplatedNode {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_FunctionBase;
     RTTR_ENABLE(C_TemplatedNode)   // [5..7] trio overrides
     bool Load(XmlNodeRef node) override;  // [11] 0x1826B9E10 validates the resolved method: "method:'%s' does not exist"
     void GetPortDefinitions(std::function<void(std::shared_ptr<definition::I_PortDefinition> const&)> sink) override;  // [28] 0x1804F5504 pins from the method signature (see above)

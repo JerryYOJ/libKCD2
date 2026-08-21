@@ -19,6 +19,7 @@
 
 class CParticleEmitter : public Offsets::IParticleEmitter, public CMultiThreadRefCount {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_CParticleEmitter;
     uint32_t               m_sourcePad60;     // +0x60  _plain_reference_target
     float                  m_fAge;            // +0x64  STimeState
     float                  m_fEndAge;         // +0x68  far-future 0x4E6E6B28; Kill writes 0xCE6E6B28

@@ -15,6 +15,7 @@ namespace wh::conceptmodule {
 
 class C_StaticDataPort : public C_InterfaceDataPort {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_StaticDataPort;
     RTTR_ENABLE(C_InterfaceDataPort)
 };
 

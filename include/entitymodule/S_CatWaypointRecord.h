@@ -6,6 +6,7 @@
 namespace wh::entitymodule {
 
 struct S_CatWaypointRecord {
+    inline static constexpr auto RTTI = Offsets::RTTI_S_CatWaypointRecord;
     std::uint8_t m_prefix00[0x10];           // +0x00, uint64 member offsets OPEN
     S_CatWaypointDefinition m_waypoint;      // +0x10, reflected as Waypoint
     std::uint8_t m_tail28[0x08];             // +0x28, field identity OPEN

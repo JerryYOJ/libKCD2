@@ -16,6 +16,8 @@ namespace wh::entitymodule {
 class S_CraftingMaterialItemClass
     : public S_DivisibleItemClass   // +0x00 .. 0xC8
     , public S_TypedItemClass {     // +0xC8 .. 0xD8 (per-leaf thunk vtable)
+public:
+    inline static constexpr auto RTTI = Offsets::RTTI_S_CraftingMaterialItemClass;
 };
 
 static_assert(sizeof(S_CraftingMaterialItemClass) == 0xD8,

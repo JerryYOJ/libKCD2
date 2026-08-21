@@ -15,6 +15,7 @@ namespace wh::conceptmodule {
 
 class C_InputTriggerPort : public C_TriggerPort {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_InputTriggerPort;
     RTTR_ENABLE(C_TriggerPort)   // [5] 0x18061B698, [7] 0x18265355C
     void Trigger() override;     // [15] 0x1806920D4 run the owner node
 };

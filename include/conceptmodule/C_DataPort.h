@@ -18,6 +18,7 @@ namespace wh::conceptmodule {
 
 class C_DataPort : public C_EdgePort {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_DataPort;
     RTTR_ENABLE(C_EdgePort)                    // [5] 0x181A6D2F0, [7] 0x1826534DC
     rttr::variant GetValue() override;         // [16] 0x1806926E4: AddRef self, dispatch [31]
     virtual rttr::variant GetValueImpl(_smart_ptr<I_Port> const& self);  // [31] base 0x18069254C: owner GetPortValue, else pull upstream

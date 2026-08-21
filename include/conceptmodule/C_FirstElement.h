@@ -14,6 +14,7 @@ namespace wh::conceptmodule {
 
 class C_FirstElement : public C_ElementAtBase {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_FirstElement;
     RTTR_ENABLE(C_ElementAtBase)   // [5..7] trio overrides
     rttr::variant GetPortValue(_smart_ptr<I_Port> const& port) override;  // [12] 0x1815E0778
     void EnumerateNodeVariants() override;  // [27] 0x180EF6858

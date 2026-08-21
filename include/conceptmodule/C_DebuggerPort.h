@@ -13,6 +13,7 @@ namespace wh::conceptmodule {
 
 class C_DebuggerPort : public I_Port {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_DebuggerPort;
     RTTR_ENABLE(I_Port)                     // [5] 0x181A6D2D4, [7] 0x1826534FC
     bool IsPassThrough() const override;    // [10] 0x182650894
     void Trigger() override;                // [15] 0x1826509AC

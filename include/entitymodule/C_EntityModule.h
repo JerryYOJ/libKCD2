@@ -11,6 +11,7 @@ class C_ItemIndexerManager;
 // Recovered prefix through the two item-collection registry owners at +0xE0/+0xE8.
 class C_EntityModule : public framework::C_BaseModule {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_EntityModule;
     static C_EntityModule* GetInstance();
     C_ItemCollection* FindItemCollectionByWuid(framework::WUID wuid);
 

@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include "../CryEngine/CryCommon/CryExtension/CryGUID.h"
+#include "../playermodule/E_InputDeviceClass.h"
 
 // -----------------------------------------------
 // wh::rpgmodule::I_RPGMinigames -- KCD2 WHGame.dll 1.5.6 (kd7u).  Pure interface (vptr only).
@@ -70,11 +71,22 @@ public:
     virtual void _vf17() = 0;                                                 // [17]
     virtual void _vf18() = 0;                                                 // [18]
     virtual void _vf19() = 0;                                                 // [19]
-    virtual void _vf20() = 0;                                                 // [20]
-    virtual void _vf21() = 0;                                                 // [21]
+    // Lockpicking sweet-spot: clamp01(base - DiffC*lpd(d) - SkillC*exp(-ExpC*thievery)).
+    // Returns T > AppropriateTolerance (setnbe). *outSweetSpot is the clamp01'd T.
+    // Start calls this virtually (slot +0xA0); Adequate 0x182CF568C calls the impl directly.
+    virtual bool EvalLockpickingSweetSpot(C_Soul* soul, float difficulty,
+                                          wh::playermodule::E_InputDeviceClass::Type device,
+                                          float* outSweetSpot) = 0;           // [20] +0xA0  0x1808979F4
+    virtual void EvalLockpickingSweetSpotTerms(C_Soul* soul, float difficulty,
+                                               wh::playermodule::E_InputDeviceClass::Type device,
+                                               float* outBase, float* outTermDiff,
+                                               float* outTermSkill,
+                                               float* outThreshold) = 0;      // [21] +0xA8  0x180896CAC
     virtual void _vf22() = 0;                                                 // [22]
     virtual void _vf23() = 0;                                                 // [23]
-    virtual void _vf24() = 0;                                                 // [24]
+    virtual void GrantLockpickingResult(C_Soul* soul, float difficulty,
+                                        uint8_t success, int breakCount,
+                                        int* outFlag, void* scratch) = 0;     // [24] +0xC0  0x180898244
     virtual void _vf25() = 0;                                                 // [25]
     virtual void _vf26() = 0;                                                 // [26]
     virtual void _vf27() = 0;                                                 // [27]

@@ -35,6 +35,7 @@ namespace wh::conceptmodule {
 
 class C_ObjectProperties : public C_Node {
 public:
+    inline static constexpr auto RTTI = Offsets::RTTI_C_ObjectProperties;
     // 0x18106FFF4 = REL::ID(90074). Resolves `name` via the same registry lookup
     // SetTypeT uses (sub_1806A589C), stores it in m_declaringType, and derives
     // m_declaringTypeName from it. Unlike SetTypeT there is NO validity check and
