@@ -3,7 +3,7 @@
 #include <functional>
 #include "../framework/C_Signal.h"
 #include "I_ObjectivePlannerRunnable.h"
-#include "I_DogObjectiveContext.h"
+#include "I_ActivityObjectiveContext.h"
 #include "S_DogObjectiveRequest.h"
 #include "S_ObjectiveScore.h"
 
@@ -36,10 +36,10 @@ public:
     virtual bool unk_13();                                                // [13] 0x18041A6A0
     virtual bool unk_14();                                                // [14] 0x180838AE0
     virtual void Complete();                                              // [15] 0x1803931E8
-    virtual void* GetDogObject();                                         // [16] 0x1809DD2D0
+    virtual I_ActivityObjectiveContext* GetDogObject();                   // [16] 0x1809DD2D0
 
     wh::shared::C_Signal<unsigned> m_onComplete;   // +0x08
-    void*                          m_pDogObject;   // +0x18  [U pointee]
+    I_ActivityObjectiveContext*    m_pDogObject;   // +0x18  C_ActivitySystemContext+8
     void*                          m_pWaitObject;  // +0x20  [U pointee]
     std::function<void()>          m_onRebegin;    // +0x28  signature [U]
 };

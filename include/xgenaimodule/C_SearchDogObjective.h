@@ -22,6 +22,8 @@ public:
 
     uint32_t                         m_stashClassId;      // +0x78
     uint32_t                         _pad7C;              // +0x7C
+    // keys: I_POI* (tag 2) or IEntity* (tag 3 corpse) by pointer identity; no common
+    // base. Tag 1 stash goes to I_DogObjectiveContext[1]()+0x158 (ctx+0x190), not here.
     std::unordered_map<void*, float> m_recent;            // +0x80
     float                            m_phaseTime;         // +0xC0
     uint8_t                          m_fsm;               // +0xC4

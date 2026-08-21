@@ -1382,6 +1382,7 @@ namespace Offsets {
     inline constexpr ::REL::ID RTTI_I_SniffableItemManager                                       { 1215403 };  // 0x4C15598 .?AVI_SniffableItemManager@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_C_SniffableItemManager                                       { 1215406 };  // 0x4C15658 .?AVC_SniffableItemManager@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_C_SniffableItem                                              { 1214202 };  // 0x4BDEF30 .?AVC_SniffableItem@entitymodule@wh@@
+    inline constexpr ::REL::ID RTTI_I_ActivityObjectiveContext                                   { 1235446 };  // 0x4F5E2F0 .?AVI_ActivityObjectiveContext@activitysystem@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_I_ObjectivePlannerRunnable                                   { 1235489 };  // 0x4F5FC20 .?AVI_ObjectivePlannerRunnable@activitysystem@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_ActivityObjective                                          { 1235491 };  // 0x4F5FCC0 .?AVC_ActivityObjective@activitysystem@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_I_DogObjectiveContext                                        { 1235586 };  // 0x4F640B0 .?AVI_DogObjectiveContext@activitysystem@xgenaimodule@wh@@

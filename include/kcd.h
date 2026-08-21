@@ -1607,6 +1607,7 @@
 #include "xgenaimodule/S_ObjectiveScore.h"
 #include "xgenaimodule/S_DogObjectiveRequest.h"
 #include "xgenaimodule/I_ObjectivePlannerRunnable.h"
+#include "xgenaimodule/I_ActivityObjectiveContext.h"
 #include "xgenaimodule/I_DogObjectiveContext.h"
 #include "xgenaimodule/C_ActivityObjective.h"
 #include "xgenaimodule/C_DogObjective.h"

@@ -27,7 +27,7 @@ public:
     bool             m_inHerbarium;  // +0xF9  "InHerbarium" (false on dried rows)
     uint8_t          _padFA[2];      // +0xFA
     float            m_decayTime;    // +0xFC  "DecayTime" hours; 0 = never decays
-    CryGUID          m_driedItemId;  // +0x100 "DriedItemId" -- dried-variant class guid or null
+    CryGUID          m_driedItemId;  // +0x100 "DriedItemId" -- fresh→dried; no native reverse index
 };
 
 static_assert(sizeof(S_HerbItemClass) == 0x110, "S_HerbItemClass must be 0x110");
