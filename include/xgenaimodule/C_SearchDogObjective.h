@@ -11,7 +11,7 @@
 // (KCD2 WHGame.dll 1.5.6). sizeof 0x140. 19 slots (no new virtuals vs parent).
 // -----------------------------------------------
 // RTTI .?AVC_SearchDogObjective@activitysystem@xgenaimodule@wh@@
-// vtable 0x183C122C8, ctor 0x181788904. Embed pack +0x720. GetType 7 (POI/chest/corpse).
+// vtable 0x183C122C8, ctor 0x181788904. Embed pack +0x720. GetType Search (POI/chest/corpse).
 // Not scent-Track.
 
 namespace wh::xgenaimodule::activitysystem {
@@ -19,6 +19,9 @@ namespace wh::xgenaimodule::activitysystem {
 class C_SearchDogObjective : public C_DogObjective {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_SearchDogObjective;
+
+    S_ObjectiveScore* ComputeScore(S_ObjectiveScore* out) override;  // [12]
+    E_DogObjective::Type GetType() const override;                   // [17] Search
 
     uint32_t                         m_stashClassId;      // +0x78
     uint32_t                         _pad7C;              // +0x7C

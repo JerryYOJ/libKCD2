@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include "C_ActivityObjective.h"
+#include "E_DogObjective.h"
 #include "I_DogObjectiveContext.h"
 
 // -----------------------------------------------
@@ -17,8 +18,10 @@ class C_DogObjective : public C_ActivityObjective {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_DogObjective;
 
-    virtual uint8_t GetType() const = 0;                // [17] 0x181D93E5D
+    virtual E_DogObjective::Type GetType() const = 0;   // [17] 0x181D93E5D
     virtual void unk_18();                              // [18] 0x181AA6870
+
+    C_DogObjective* FindByType(E_DogObjective::Type type) const;
 
     bool                    m_selfRunning;  // +0x68
     bool                    m_bound;        // +0x69

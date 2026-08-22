@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include <cstddef>
+#include <vector>
 #include "S_PerkDefinitionId.h"
 
 // ===========================================================================
@@ -37,7 +38,9 @@ public:
     // [4]  0x20  binary-search the 32-byte-row index (qword_18532DD88) by m_id; copies a
     //      {qword,qword} result  (0x180B46738)  [row/result typing UNVERIFIED]
     virtual void* LookupIndexEntry(void* out16);
-    virtual void* _vf5_tlsStatic();             // [5]  0x28  returns a TLS-init static (&qword_1855E5FE8) [role UNVERIFIED] (0x180468784)
+    // [5]  0x28  child-perk vector for HasPerk (sub_1804686E8).  Base returns a TLS empty
+    //      std::vector (&qword_1855E5FE8, sub_180468784).  C_MetaPerk returns &m_childPerks.
+    virtual const std::vector<C_Perk*>* GetChildPerks() const;
     virtual int64_t SaveTo(void* node);         // [6]  0x30  writes save node tag 4990  (0x18151CA70)
     virtual bool LoadFrom(void* node);          // [7]  0x38  expects node tag 4990  (0x1804C89B0)
     virtual int64_t ResolveAlias();             // [8]  0x40  forwards to [9]  (0x1804C88CC)

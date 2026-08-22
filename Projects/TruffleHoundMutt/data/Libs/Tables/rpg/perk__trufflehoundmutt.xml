@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<database xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="barbora" xsi:noNamespaceSchemaLocation="../database.xsd">
+	<perks version="1">
+		<perk autolearnable="false" icon_id="perk_hledej" level="8" perk_id="f9c4c980-e46f-4d67-a93a-f44efe10242d" perk_name="TruffleHoundMutt - Truffle Hound" perk_ui_desc="perk_trufflehoundmutt_desc" perk_ui_lore_desc="perk_trufflehoundmutt_lore_desc" perk_ui_name="perk_trufflehoundmutt_name" skill_selector="34" visibility="2" />
+	</perks>
+</database>

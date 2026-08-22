@@ -24,7 +24,7 @@ public:
     void* _vf2() override;                  // [2] 0x180602360, returns m_pEntity
     void* _vf3() override;                  // [3] 0x180602360, returns m_pEntity
     void _vf4() override;                   // [4] 0x181A749E0
-    void UpdateCachedTransform() override;  // [5] 0x180647EA4
+    void UpdateCachedTransform() override;  // [5] 0x180647EA4  C_AIPuppet always returns this+8; other leaves [U]
     void _vf6() override;                   // [6] 0x180761604
     void _vf7() override;                   // [7] 0x180D44DC8
     void _vf8() override;                   // [8] 0x183450898

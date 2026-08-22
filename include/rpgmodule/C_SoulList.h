@@ -67,8 +67,10 @@ public:
     std::unordered_map<CryGUID, C_Soul*> m_soulsByGuid2;  // +0x1000C0
     uint32_t m_unk100100;                    // +0x100100  flag/count (unresolved)
     uint32_t _pad100104;                     // +0x100104
-    C_Soul*  m_pNullSoul;                    // +0x100108  ctor-time cached copy of the global fallback
-                                             //            qword_185332358 (MapGuid returns the GLOBAL on miss)
+    wh::framework::WUID m_playerSoulWuid;    // +0x100108  ctor inits INVALID (qword_185332358); RTTR
+                                             //            "SoulList.PlayerSoul" getter 0x1808AF144 is
+                                             //            LookupByWUID(this+0x100108) -- writer untraced
+                                             //            (MapGuid's miss fallback is the GLOBAL, not this)
     std::set<uint64_t> m_tree100110;         // +0x100110  element type unresolved (8B payload; C_Soul*/WUID/u32-pair candidates)
     std::set<uint64_t> m_tree100120;         // +0x100120  (both torn down by sub_182D255AC)
     std::unordered_map<uint64_t, void*, wh::shared::S_DefaultHash<uint64_t>> m_ownedMap;  // +0x100130
@@ -84,5 +86,6 @@ public:
 static_assert(sizeof(C_SoulList) == 0x100220, "C_SoulList must be 0x100220");
 static_assert(offsetof(C_SoulList, m_soulTable) + offsetof(S_SoulWuidTable, m_slots) == 0x60, "slots at 0x60");
 static_assert(offsetof(C_SoulList, m_soulsByGuid) == 0x100080, "guid map at 0x100080");
+static_assert(offsetof(C_SoulList, m_playerSoulWuid) == 0x100108, "player soul WUID at 0x100108");
 
 }  // namespace wh::rpgmodule

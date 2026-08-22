@@ -13,6 +13,7 @@
 #include "playermodule/C_Alchemy.h"
 #include "playermodule/C_AlchemyRecipeDatabase.h"
 #include "playermodule/C_AlchemyResource.h"
+#include "framework/GuidUtils.h"
 #include "rpgmodule/C_Soul.h"
 
 #include "core/Executor.h"
@@ -63,12 +64,14 @@ void Executor::Tick()
     // MCM main switch folds into visibility AND the light (all three row properties false/empty
     // = the helpbar uninstalls the row entirely).
     // The Routine perk wall folds into VISIBILITY: without the perk the feature hides
-    // outright (no greyed teaser).  Possession = one sorted-map probe on the soul.
+    // outright (no greyed teaser).  Possession = HasPerk on the perk GUID (the tree the
+    // UI uses).  ParseGuid -- never pack hipart/lopart from the hex halves.
     bool perkOk = true;
     if (g_requirePerk) {
         auto* actor = alc->m_pPlayerActor;
         auto* soul = actor ? actor->m_pSoul : nullptr;
-        perkOk = soul && soul->HasAbility(kSoulAbilityAutobrewRoutine);
+        CryGUID perkId{};
+        perkOk = soul && wh::ParseGuid(kPerkIdAutobrewRoutine, perkId) && soul->HasPerk(perkId);
     }
     // The manual-brew wall GREYS per recipe (unlike the perk wall): the prompt stays visible
     // on unbrewed pages but unlit, with a "brew it by hand once" reason -- same presentation

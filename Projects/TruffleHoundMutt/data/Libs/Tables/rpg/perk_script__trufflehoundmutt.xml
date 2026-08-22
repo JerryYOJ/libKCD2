@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<database xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="barbora" xsi:noNamespaceSchemaLocation="../database.xsd">
+	<perk_scripts version="1">
+		<perk_script perk_editor_name="TruffleHoundMutt - Truffle Hound" perk_id="f9c4c980-e46f-4d67-a93a-f44efe10242d" />
+	</perk_scripts>
+</database>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<database xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="barbora" xsi:noNamespaceSchemaLocation="../database.xsd">
+	<perk_scripts version="1">
+		<perk_script perk_editor_name="Autobrew - Routine" perk_id="7c31a9d4-52e8-4b06-9f41-2a8e05c1d377" />
+	</perk_scripts>
+</database>

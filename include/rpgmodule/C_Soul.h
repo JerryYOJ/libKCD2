@@ -64,6 +64,11 @@ public:
     // 0 / 73 additionally require derived stat 186 / 187 > 0. KCD2 ability ids differ
     // from KCD1's E_SoulAbility -- not yet enumerated, hence the raw uint32_t.
     bool HasAbility(uint32_t abilityId) const;
+    // Owns this perk definition (GUID = perk table perk_id).  Walks live
+    // C_PerkList::m_perks then each perk's GetChildPerks() (C_MetaPerk::m_childPerks),
+    // comparing C_Perk::m_id.  Works for every C_Perk subclass.  Lua HasPerk is
+    // C_ScriptPerk-only and must not be used.
+    bool HasPerk(const CryGUID& perkId) const;
     // vtable slot +0x340 impl sub_18046F81C: modifier-adjusted skill level (base @+0x498
     // aggregate slot 8*skillId, modifier visitor over m_sortedModifierLists[1], clamped to
     // [0, S_Constants maxLevel]) divided by maxLevel -> [0,1].  Skill 6 = alchemy: this is THE

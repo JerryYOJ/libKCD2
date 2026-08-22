@@ -31,8 +31,8 @@ public:
     float            m_weight;      // +0x40
     float            m_condition;   // +0x44  ctor default -1.0f; serialized only when _vf7() passes
     float            m_price;       // +0x48
-    bool             m_bool4C;      // +0x4C
-    bool             m_bool4D;      // +0x4D
+    bool             m_bool4C;      // +0x4C  (C_Item::m_flags & 2) != 0
+    bool             m_bool4D;      // +0x4D  sniffable tooltip; ctor Contains(class.m_guid); not a picker gate
     uint8_t          _pad4E[2];     // +0x4E
 };
 static_assert(sizeof(C_UIFlashInfoItem) == 0x50, "C_UIFlashInfoItem must be 0x50 (creator sub_1816F30C0)");

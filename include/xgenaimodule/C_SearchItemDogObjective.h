@@ -10,12 +10,20 @@
 // RTTI .?AVC_SearchItemDogObjective@activitysystem@xgenaimodule@wh@@
 // vtable 0x183C392F8. Embed C_DogCompanion pack +0x860. GetType 0x17.
 // m_item is Item WUID (tag 2), not a C_Item*. DestCommit queues Search=7.
+// PickDestination override 0x18330F310 REL::ID(406230). Parent [26] 0x18330F304 is a
+// complete-1 stub; the 0xC gap is int3 padding, not a thunk. Never hook 406231
+// (0x18330F528, the next function). Picker writes nothing on this before Commit/Fail.
 
 namespace wh::xgenaimodule::activitysystem {
 
 class C_SearchItemDogObjective : public C_PlayerSynchroAnimBaseDogObjective {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_SearchItemDogObjective;
+
+    E_DogObjective::Type GetType() const override;  // [17] SearchItem
+    void unk_19() override;                         // [19]
+    void unk_20() override;                         // [20]
+    void unk_21() override;                         // [21]
 
     int64_t CommitDestination(const Vec3& pos);  // 0x18330EF7C
     int64_t Fail();                              // 0x18330B484

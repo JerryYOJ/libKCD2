@@ -30,7 +30,7 @@ public:
     virtual Vec3 GetMasterFacing();                               // [23] 0x18330BA68
     virtual float GetHeightTolerance() const;                     // [24] 0x181A7E430
     virtual void OnSynchroFail();                                 // [25] 0x1803931E8
-    virtual void PickDestination();                               // [26] 0x18330F304
+    virtual void PickDestination();                               // [26] 0x18330F304 complete-1 stub; SearchItem overrides 0x18330F310
 
     bool        m_playerCbHooked;  // +0x78
     uint8_t     _pad79[7];         // +0x79

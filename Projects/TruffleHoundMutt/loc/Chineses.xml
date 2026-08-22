@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Table>
+	<Row><Cell>perk_trufflehoundmutt_name</Cell><Cell>Truffle Hound</Cell><Cell>松露猎犬</Cell></Row>
+	<Row><Cell>perk_trufflehoundmutt_desc</Cell><Cell>Give Mutt a sniff of any herb — fresh or dried — and command him to Track. He'll lead you to a living plant of that kind growing nearby.</Cell><Cell>给穆特闻一闻任意药草——新鲜或晒干的都行——再下令追踪。他会带你找到附近还长着的那一种。</Cell></Row>
+	<Row><Cell>perk_trufflehoundmutt_lore_desc</Cell><Cell>After enough hours napping in herb patches, even a hunting dog starts to dream in green.</Cell><Cell>在药圃边打了够多的盹，猎犬也会开始梦见绿色。</Cell></Row>
+</Table>

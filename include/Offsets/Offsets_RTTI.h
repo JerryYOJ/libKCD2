@@ -1349,6 +1349,7 @@ namespace Offsets {
     inline constexpr ::REL::ID RTTI_S_FastForwardRequest                                         { 1516 };  // 0x4B6F270 .?AUS_FastForwardRequest@data@dialogmodule@wh@@
     inline constexpr ::REL::ID RTTI_S_FastForwardRequestForAll                                   { 1510 };  // 0x4B6EF90 .?AUS_FastForwardRequestForAll@data@dialogmodule@wh@@
     inline constexpr ::REL::ID RTTI_S_FastForwardRequestForRole                                  { 1514 };  // 0x4B6F1E0 .?AUS_FastForwardRequestForRole@data@dialogmodule@wh@@
+    inline constexpr ::REL::ID RTTI_S_FoodItemClass                                              { 1216249 };  // 0x4C38440 .?AUS_FoodItemClass@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_S_HerbItemClass                                              { 1216712 };  // 0x4C4C9E0 .?AUS_HerbItemClass@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_S_IncludedDecisionAlias                                      { 1507 };  // 0x4B67CE0 .?AUS_IncludedDecisionAlias@data@dialogmodule@wh@@
     inline constexpr ::REL::ID RTTI_S_ItemClass                                                  { 1216258 };  // 0x4C38888 .?AUS_ItemClass@entitymodule@wh@@

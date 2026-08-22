@@ -143,10 +143,11 @@ private:
     static constexpr double kStallLogIntervalSeconds = 2.0; // wedge snapshot cadence
     static constexpr double kBoilGraceSeconds        = 60.0; // beyond 2x the requested window
 
-    // soul_ability__autobrew.xml row, granted by the "Routine" perk (perk__autobrew.xml,
-    // alchemy tree).  Vanilla ability ids stop around ~130; >= 200 is mod space -- the
-    // grant/lookup chain is validation-free (see rpgmodule/C_Soul.h S_SoulAbilityMap).
-    static constexpr uint32_t kSoulAbilityAutobrewRoutine = 200;
+    // perk__autobrew.xml perk_id.  Gate is C_Soul::HasPerk (soul perk-tree @+0x798), not
+    // HasAbility: soul_ability ids >100 are clamped to 100 and HasAbility(100) is hardcoded
+    // false, and the 0-99 holes (20/22/32/35) are too small a mod space.
+    static constexpr const char* kPerkIdAutobrewRoutine =
+        "7c31a9d4-52e8-4b06-9f41-2a8e05c1d377";
 
     // Boil timing, in SECONDS.  Recipe turns are converted once in BuildPlan via the
     // HourglassTimeout RPG param (10 s -- the exact divisor of the game's boil sensor); progress

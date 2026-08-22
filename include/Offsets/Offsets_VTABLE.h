@@ -2344,6 +2344,8 @@ inline constexpr std::array<::REL::ID, 1> VTABLE_S_FastForwardRequest{ ::REL::ID
 inline constexpr std::array<::REL::ID, 1> VTABLE_S_FastForwardRequestForAll{ ::REL::ID(682) /* 0x3BCE468 */ };
 // .?AUS_FastForwardRequestForRole@data@dialogmodule@wh@@ -- 1 subobject vtable(s) @ +0x0
 inline constexpr std::array<::REL::ID, 1> VTABLE_S_FastForwardRequestForRole{ ::REL::ID(635) /* 0x3B8ED08 */ };
+// .?AUS_FoodItemClass@entitymodule@wh@@ -- 2 subobject vtable(s) @ +0x0, +0xE0
+inline constexpr std::array<::REL::ID, 2> VTABLE_S_FoodItemClass{ ::REL::ID(459553) /* 0x3A4DD20 */, ::REL::ID(459557) /* 0x3A4DF30 */ };
 // .?AUS_HerbItemClass@entitymodule@wh@@ -- 2 subobject vtable(s) @ +0x0, +0xC8
 inline constexpr std::array<::REL::ID, 2> VTABLE_S_HerbItemClass{ ::REL::ID(459537) /* 0x3A4D630 */, ::REL::ID(459541) /* 0x3A4D840 */ };
 // .?AUS_IncludedDecisionAlias@data@dialogmodule@wh@@ -- 1 subobject vtable(s) @ +0x0

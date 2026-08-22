@@ -9,6 +9,8 @@
 // -----------------------------------------------
 // Ctor 0x180C589B4 / heap new 0x180C58950. DestCommit writes m_position + m_hasPosition.
 // SearchItem submit writes m_item (Item WUID, tag 2) + m_hasItem.
+// NOT C_ObjectivePlanner::S_Request (real polymorphic queue entry : I_ObjectivePlannerRunnable,
+// vtable 0x183A8A940, ctor 0x180C58B90) — that wrapper carries this POD, distinct type.
 
 namespace wh::xgenaimodule::activitysystem {
 

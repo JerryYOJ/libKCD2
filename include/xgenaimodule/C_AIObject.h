@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include "../CryEngine/CryCommon/Cry_Math.h"
 #include "../framework/WUID.h"
 
 // -----------------------------------------------
@@ -28,7 +29,7 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_AIObject;
     virtual ~C_AIObject();               // [0] deleting dtor sub_18344211C -> dtor sub_18047B6A4 (unregisters from C_AIObjectManager)
     virtual uint32_t GetTypeMask();      // [1] sub_181AABDC0 -> dword_18533AE80; per-class type bit consumed by the checked-cast sub_1805D2764 [V]
-    virtual void _vf2();                 // [2] sub_180647E98 -> m_puppet->[5] UpdateCachedTransform [V fwd]
+    virtual Vec3* UpdateCachedTransform(); // [2] 0x180647E98 -> m_puppet[5]; C_AIPuppet returns &m_worldPosition
     virtual void _vf3();                 // [3] sub_1808777F0 -> m_puppet->[14] [V fwd, U role]
     virtual void _vf4();                 // [4] sub_18081361C -> m_puppet->[17] [V fwd, U role]
     virtual void _vf5();                 // [5] sub_1834437BC -> m_puppet->[19] [V fwd, U role]

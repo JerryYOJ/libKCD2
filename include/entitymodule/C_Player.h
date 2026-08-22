@@ -107,7 +107,7 @@ public:
     uint64_t m_unkCD0;                                 // +0xCD0  (ctor 0)
     uint32_t m_unkCD8;                                 // +0xCD8  (ctor 0)
     float    m_floatCDC;                               // +0xCDC  init 1.0
-    void*    m_pHelperCE0;                             // +0xCE0  owns 0x28 POD {C_Player*@0, u32@8, u8@0xC, u32@0x10, CTimeValue@0x18=-100000, u8@0x20}; alloc sub_180BC750C, dtor frees size 0x28; pointee unnamed (no vtable)
+    void*    m_pHelperCE0;                             // +0xCE0  owns 0x28 POD {C_Player*@0, u32@8, u8@0xC, u32@0x10, CTimeValue@0x18=-100000, u8@0x20=dog-picker mode (1=SearchItem submit)}; alloc sub_180BC750C, dtor frees size 0x28; pointee unnamed (no vtable)
     C_ChatFollowManager* m_pChatFollowManager;         // +0xCE8  C_Ptr (0x78)  VERIFIED (NEW in KCD2)
     ::C_FocusCamera* m_pFocusCamera;                   // +0xCF0  C_Ptr (0x98, ctor sub_180BC7590; vptr=&unk_185666D28) view focus controller -- FocusCameraNode/combat-lock setups pull view-state+0x24 toward a target entity; ticked by C_Player vf[217] sub_1806D0198 -> sub_1808BA014. See game/C_FocusCamera.h  VERIFIED
     int32_t  m_arrayCF8[8];                            // +0xCF8  inline int32 array (ctor zeroed)

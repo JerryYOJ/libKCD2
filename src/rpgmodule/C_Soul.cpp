@@ -1,4 +1,5 @@
 #include "rpgmodule/C_Soul.h"
+#include "rpgmodule/C_Perk.h"
 #include "rpgmodule/C_SoulList.h"
 #include "rpgmodule/C_RPGModule.h"
 #include "Offsets/Offsets.h"
@@ -51,6 +52,32 @@ bool C_Soul::HasAbility(uint32_t abilityId) const
     if (abilityId == 73)
         return r.present && GetDerivedStat(E_DerivedStat::Ams) > 0.0f;
     return r.present;
+}
+
+bool C_Soul::HasPerk(const CryGUID& perkId) const
+{
+    // Same walk as sub_1804686E8: live C_PerkList::m_perks, compare C_Perk::m_id, then
+    // each perk's GetChildPerks() (C_MetaPerk::m_childPerks).  No AsType filter --
+    // Lua HasPerk is C_ScriptPerk-only and misses Routine.
+    const auto match = [&](auto&& self, const C_Perk* perk) -> bool {
+        if (!perk)
+            return false;
+        if (perk->m_id == perkId)
+            return true;
+        const auto* kids = perk->GetChildPerks();
+        if (!kids)
+            return false;
+        for (const C_Perk* child : *kids) {
+            if (self(self, child))
+                return true;
+        }
+        return false;
+    };
+    for (const C_Perk* perk : m_rpgStats.m_liveBlock.m_perks.m_perks) {
+        if (match(match, perk))
+            return true;
+    }
+    return false;
 }
 
 float C_Soul::GetSkillFraction(uint32_t skillId, bool visitorFlag) const

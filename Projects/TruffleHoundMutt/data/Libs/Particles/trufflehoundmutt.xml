@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<ParticleLibrary Name="trufflehoundmutt" SandboxVersion="1.0.0.0" ParticleVersion="28">
+	<Particles Name="plant_shaft">
+		<Params Count="1" Continuous="true" ParticleLifeTime="0.6" EmitAngle="0" OrientToVelocity="true" Curvature="0" BlendType="Additive" Texture="textures/particles/glow_diff.tif" TextureTiling="AnimFramerate=10,AnimCycle=Loop,AnimBlend=true,FlipChance=0.5" OctagonalShape="true" SoftParticle="true,Softness=2" Alpha="0.85,Random=0.15,ParticleAge=(;t=0.463,v=1;t=1)" Color="(x=0.9822506,y=0.8307699,z=0.61049557),ParticleAge=(t=0.247,v=(x=0.643,y=0.345,z=0.145))" DiffuseLighting="2" DiffuseBacklighting="0.5" EmissiveLighting="0.8" NotAffectedByFog="true" Size="1" Aspect="0.2" PivotY="-0.5" Stretch="1" Speed="1.5" AirResistance="WindScale=0" CameraMaxDistance="100" />
+	</Particles>
+</ParticleLibrary>

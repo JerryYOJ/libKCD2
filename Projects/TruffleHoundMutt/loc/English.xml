@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Table>
+	<Row><Cell>perk_trufflehoundmutt_name</Cell><Cell>Truffle Hound</Cell><Cell>Truffle Hound</Cell></Row>
+	<Row><Cell>perk_trufflehoundmutt_desc</Cell><Cell>Give Mutt a sniff of any herb — fresh or dried — and command him to Track. He'll lead you to a living plant of that kind growing nearby.</Cell><Cell>Give Mutt a sniff of any herb — fresh or dried — and command him to Track. He'll lead you to a living plant of that kind growing nearby.</Cell></Row>
+	<Row><Cell>perk_trufflehoundmutt_lore_desc</Cell><Cell>After enough hours napping in herb patches, even a hunting dog starts to dream in green.</Cell><Cell>After enough hours napping in herb patches, even a hunting dog starts to dream in green.</Cell></Row>
+</Table>
