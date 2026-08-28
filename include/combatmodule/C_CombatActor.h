@@ -299,7 +299,14 @@ public:
                                uint32_t scopeIndex = 0, bool useOpponentDefenseZone = false,
                                int32_t queryId = -1);
 
+    // Engine auto-request wrapper (sub_182756168). attackerEntityId 0 = the slot's bound attacker.
+    void RequestCounterAction(I_CombatActorActionPtr* pOutAction, E_CounterActionType type,
+                              uint32_t attackerEntityId = 0);
+
     void SetOpponent(C_CombatActor* target);
+
+    // Writes m_pAttackZoneId; commit also writes m_pCommittedAttackZone (sub_18090F824).
+    void SetAttackZone(E_CombatZoneId zone, bool commit = false);
 
     uint8_t  m_updateMode;                             // +0x28   init 4 (update-bucket mode; enum domain UNVERIFIED, no reader traced)
     uint8_t  _pad29[7];                                // +0x29

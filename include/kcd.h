@@ -1696,6 +1696,7 @@
 #include "combatmodule/C_CombatTriggerSyncPerfectBlock.h"
 #include "combatmodule/C_CombatWeaponGroupData.h"
 #include "combatmodule/C_CombatZoneData.h"
+#include "combatmodule/C_CombatZoneDatabase.h"
 #include "combatmodule/E_CombatActionType.h"
 #include "combatmodule/E_CombatAttackType.h"
 #include "combatmodule/E_CombatInputClass.h"

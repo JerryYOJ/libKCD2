@@ -20,6 +20,16 @@ void C_CombatActor::DispatchCounterAction(I_CombatActorActionPtr* pOutAction, E_
     fn(this, pOutAction, static_cast<char>(type), scopeIndex, useOpponentDefenseZone, queryId);
 }
 
+void C_CombatActor::RequestCounterAction(I_CombatActorActionPtr* pOutAction, E_CounterActionType type,
+                                         uint32_t attackerEntityId)
+{
+    // sub_182756168 -- thin wrapper over DispatchCounterAction that fills a5=0 and the "block"
+    // input class (dword_18532102C). The open-window converter and automation executors go here.
+    using Fn = void* (__fastcall*)(C_CombatActor*, I_CombatActorActionPtr*, char, uint32_t);
+    static REL::Relocation<Fn> fn{ REL::ID(329010) };
+    fn(this, pOutAction, static_cast<char>(type), attackerEntityId);
+}
+
 void C_CombatActor::SetOpponent(C_CombatActor* target)
 {
     // sub_182757B10: extracts target->GetEntity()+0x38 (entity handle, identical to KCD1
@@ -30,6 +40,15 @@ void C_CombatActor::SetOpponent(C_CombatActor* target)
     using Fn = void(__fastcall*)(C_CombatActor*, C_CombatActor*);
     static REL::Relocation<Fn> fn{ REL::ID(80) };
     fn(this, target);
+}
+
+void C_CombatActor::SetAttackZone(E_CombatZoneId zone, bool commit)
+{
+    // sub_18090F824 -- change-gated writes of m_pAttackZoneId (+0xF0) and, when commit,
+    // m_pCommittedAttackZone (+0x180). Native a3 is unused; forwarded as 0.
+    using Fn = void (__fastcall*)(C_CombatActor*, int32_t, int64_t, bool);
+    static REL::Relocation<Fn> fn{ REL::ID(49873) };
+    fn(this, static_cast<int32_t>(zone), 0, commit);
 }
 
 }  // namespace wh::combatmodule
