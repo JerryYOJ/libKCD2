@@ -8,12 +8,16 @@
 // (RTTR sizeof 1). Matcher semantics (C_ItemPropertyDescriptor 0x18096F50C): Unused skips the
 // test, Pass requires the predicate true, ANY other value (incl. Fail) requires it false.
 
-namespace wh::entitymodule::E_ItemFilterType {
+namespace wh::entitymodule {
 
-enum Type : std::uint8_t {
-    Unused = 0,
-    Pass   = 1,
-    Fail   = 2,
+struct E_ItemFilterType {
+    enum Type : std::uint8_t {
+        Unused = 0,
+        Pass   = 1,
+        Fail   = 2,
+    };
 };
+static_assert(sizeof(E_ItemFilterType::Type) == 1,
+              "E_ItemFilterType::Type size mismatch");
 
-}  // namespace wh::entitymodule::E_ItemFilterType
+}  // namespace wh::entitymodule

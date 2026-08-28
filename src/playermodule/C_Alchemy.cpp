@@ -57,10 +57,10 @@ bool C_Alchemy::CanPerformVerb(E_AlchemyVerb::Type verb)
     return fn(this, verb);
 }
 
-E_AlchemyState::Type C_Alchemy::GetEffectiveState() const
+E_AlchemyInteractionState::Type C_Alchemy::GetEffectiveState() const
 {
     // 0x1808D237C: m_brewState.m_primaryState, or m_subState while primary == Idle (21).
-    using Fn = E_AlchemyState::Type (__fastcall*)(const C_Alchemy*);
+    using Fn = E_AlchemyInteractionState::Type (__fastcall*)(const C_Alchemy*);
     static REL::Relocation<Fn> fn{ REL::ID(48162) };  // 0x1808D237C
     return fn(this);
 }

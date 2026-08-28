@@ -6,11 +6,13 @@
 
 namespace wh::conceptmodule {
 
-enum class E_NodeWakeReason : uint32_t {
+enum class E_NodeWakeReason : std::int32_t {
     GameStart              = 0,
     RandomEventStart       = 1,
     RuntimeConditionPassed = 2,
     Debug                  = 3,
 };
+static_assert(sizeof(E_NodeWakeReason) == 4,
+              "E_NodeWakeReason size mismatch");
 
 }  // namespace wh::conceptmodule

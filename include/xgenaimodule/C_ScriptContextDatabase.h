@@ -18,8 +18,16 @@
 namespace wh::xgenaimodule {
 
 struct S_ScriptContextDatabaseNode {
+    enum class E_ContextClass : std::int32_t {
+        Game     = 0,
+        Entity   = 1,
+        Relation = 2,
+    };
+
     uint8_t _raw[16];   // sizeof proven (slot-4 `>>4`); fields [U]
 };
+static_assert(sizeof(S_ScriptContextDatabaseNode::E_ContextClass) == 4,
+              "S_ScriptContextDatabaseNode::E_ContextClass size mismatch");
 static_assert(sizeof(S_ScriptContextDatabaseNode) == 16);
 
 class C_ScriptContextDatabase : public databasemodule::C_ObjectTreeDatabase<S_ScriptContextDatabaseNode> {

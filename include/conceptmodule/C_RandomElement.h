@@ -17,7 +17,9 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_RandomElement;
     RTTR_ENABLE(C_ElementAtBase)   // [5..7] trio overrides
     rttr::variant GetPortValue(_smart_ptr<I_Port> const& port) override;  // [12] 0x1815E074C
-    void EnumerateNodeVariants() override;  // [27] 0x18270A76C
+    void EnumerateNodeVariants(
+        wh::conceptmodule::definition::NodeDefinitionSink sink,
+        bool allVariants) override;  // [27] 0x18270A76C
 };
 static_assert(sizeof(C_RandomElement) == 0xC8, "C_RandomElement adds nothing");
 

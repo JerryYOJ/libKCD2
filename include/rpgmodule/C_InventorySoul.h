@@ -37,10 +37,22 @@ public:
     C_Soul* GetSoul() override;                                            // [3]  sub_1809DD2D0
     const C_Soul* GetSoulConst() const override;                            // [4]  sub_1809DD2D0
     void InventorySoulUnk05() override;                                    // [5]  sub_1808F1964 [U signature]
-    void InventorySoulUnk06() override;                                    // [6]  sub_181058674 [U signature]
-    void InventorySoulUnk07() override;                                    // [7]  sub_181057828 [U signature]
-    void InventorySoulUnk08() override;                                    // [8]  sub_181058738 [U signature]
-    void InventorySoulUnk09() override;                                    // [9]  sub_1810578C8 [U signature]
+    bool ApplyClothingPreset(
+        const entitymodule::S_ClothingPresetGUID& preset,
+        const CryStringT<char>& key,
+        bool priorityEquip,
+        bool initialApplication) override;                                  // [6]  sub_181058674
+    void RemoveClothingPreset(
+        const entitymodule::S_ClothingPresetGUID& preset,
+        const CryStringT<char>& key) override;                              // [7]  sub_181057828
+    bool ApplyWeaponPreset(
+        const entitymodule::S_WeaponPresetGUID& preset,
+        const CryStringT<char>& key,
+        bool priorityEquip,
+        bool initialApplication) override;                                  // [8]  sub_181058738
+    void RemoveWeaponPreset(
+        const entitymodule::S_WeaponPresetGUID& preset,
+        const CryStringT<char>& key) override;                              // [9]  sub_1810578C8
     void InventorySoulUnk10() override;                                    // [10] sub_181FE1A00 [U signature]
     void InventorySoulUnk11() override;                                    // [11] sub_181FE1AE0 [U signature]
     void InventorySoulUnk12() override;                                    // [12] sub_181FE05B0 [U signature]

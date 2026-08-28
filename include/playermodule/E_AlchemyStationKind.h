@@ -6,7 +6,7 @@
 // Type : int32.
 // -----------------------------------------------
 // [SYNTHETIC NAME] -- station/bucket indices of the brew state (== the creating verb code;
-// shared code space with E_AlchemyVerb / E_AlchemyState).  Values verified from the mutation
+// shared code space with E_AlchemyVerb / E_AlchemyInteractionState).  Values verified from the mutation
 // writers: 2 mortar (mill sub_1806C4384) / 4 retort-distill INPUT (sub_182E2B148, then moved
 // 4->5 by sub_1806C4D5C) / 5 retort OUTPUT / 6 pot-base (pour sub_1806C29D8; boil accrual
 // sub_18073920C) / 7-9 herb slots (add sub_1808D42D8) / 10-12 special slots (sub_182E19644).

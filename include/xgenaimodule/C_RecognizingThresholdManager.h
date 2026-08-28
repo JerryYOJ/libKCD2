@@ -29,8 +29,8 @@ struct S_PerceptorSensingContext;
 class C_RecognizingThresholdManager : public game::I_EntitySideEffectCallback {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_RecognizingThresholdManager;
-    void OnEntitySideEffectAdded(void* sideEffect) override;    // [0] sub_1808ACF2C -- push per-entity threshold float
-    void OnEntitySideEffectRemoved(void* sideEffect) override;  // [1] sub_1808AC6F4 -- drop per-entity thresholds matching PM+0xD0
+    void OnEntitySideEffectAdded(std::uint8_t sideEffectId, ::wh::framework::WUID entityWuid) override;   // [0] sub_1808ACF2C
+    void OnEntitySideEffectRemoved(std::uint8_t sideEffectId, ::wh::framework::WUID entityWuid) override; // [1] sub_1808AC6F4
 
     uint8_t  _unk08[8];           // +0x08  [U] left uninit by ctor sub_180FB74DC and untouched by PM-init sub_180F661D0; no reader/writer seen from any PM-getter caller -- reserved/unresolved
     wh::rpgmodule::C_RPGPerception* m_rpgPerception;   // +0x10  PM-init sub_180F661D0 @0x180f6642a stores &qword_1855E63B0 = the C_RPGPerception singleton (guarded ctor sub_1819DD880); THE recognition evaluator the FSM calls (eval->vt[6/10/11]); non-owning

@@ -1,5 +1,9 @@
 #pragma once
 #include <cstdint>
+
+#include <boost/optional.hpp>
+
+#include "../rttr/rttr_enable.h"
 #include "E_MinigameType.h"
 
 // -----------------------------------------------
@@ -17,7 +21,7 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_I_Minigame;
     virtual E_MinigameType::Type GetMinigameType() const = 0; // [0]
     virtual bool unk_01() const = 0;                          // [1]
-    virtual void unk_02() = 0;                               // [2]
+    virtual void unk_02(std::uint32_t entityId) = 0;         // [2]
     virtual bool unk_03() const = 0;                          // [3]
     virtual void Destroy() = 0;                              // [4] forwards to [5]
     virtual ~I_Minigame();                                   // [5]
@@ -28,11 +32,9 @@ public:
     virtual uint32_t GetPlayerId() const = 0;                // [10]
     virtual void unk_11() = 0;                               // [11]
     virtual void unk_12() = 0;                               // [12]
-    virtual void unk_13() = 0;                               // [13]
+    virtual boost::optional<std::uint8_t> unk_13() = 0;      // [13]
     virtual void unk_14() = 0;                               // [14]
-    virtual void unk_15() = 0;                               // [15]
-    virtual void* unk_16() = 0;                              // [16]
-    virtual void unk_17() = 0;                               // [17]
+    RTTR_ENABLE() // [15..17]
     virtual bool Begin() = 0;                                // [18] minigame setup gate
     virtual void Update(float deltaTime) = 0;                // [19] per-frame session update
     virtual void unk_20() = 0;                               // [20]
@@ -47,14 +49,14 @@ public:
     virtual void unk_29() = 0;                               // [29]
     virtual void unk_30() = 0;                               // [30]
     virtual void unk_31() = 0;                               // [31]
-    virtual void unk_32() = 0;                               // [32]
+    virtual std::uint8_t unk_32() = 0;                       // [32]
     virtual void SelfDestruct() = 0;                         // [33] removes the session
     virtual void SetActionMapContext(CryStringT<char> context) = 0; // [34] callee-destroy by value
     virtual void UpdateExitHint() = 0;                       // [35] "minigame_exit" action/hint
     virtual void unk_36() = 0;                               // [36]
     virtual void unk_37() = 0;                               // [37]
     virtual void unk_38() = 0;                               // [38]
-    virtual void unk_39() = 0;                               // [39]
+    virtual bool unk_39() = 0;                               // [39]
     virtual void unk_40() = 0;                               // [40]
     virtual void unk_41() = 0;                               // [41]
     virtual void unk_42() = 0;                               // [42]

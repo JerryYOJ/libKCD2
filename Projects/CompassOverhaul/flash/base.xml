@@ -12,7 +12,7 @@
       </names>
     </item>
     <item type="DefineEditTextTag" align="2" autoSize="false" border="false" characterID="101" fontHeight="400" fontId="100" forceWriteAsLong="true" hasFont="true" hasFontClass="false" hasLayout="true" hasMaxLength="false" hasText="true" hasTextColor="true" html="false" indent="0" initialText="0 m" leading="40" leftMargin="0" maxLength="0" multiline="false" noSelect="true" password="false" readOnly="true" rightMargin="0" useOutlines="true" variableName="" wasStatic="false" wordWrap="false">
-      <bounds type="RECT" Xmax="2760" Xmin="-40" Ymax="480" Ymin="-40" nbits="12"/>
+      <bounds type="RECT" Xmax="2840" Xmin="-80" Ymax="520" Ymin="-80" nbits="12"/>
       <textColor type="RGBA" alpha="255" blue="255" green="255" red="255"/>
     </item>
     <item type="DefineSpriteTag" forceWriteAsLong="true" frameCount="1" hasEndTag="true" spriteId="102">
@@ -24,7 +24,7 @@
       </subTags>
     </item>
     <item type="DefineEditTextTag" align="2" autoSize="false" border="false" characterID="103" fontHeight="400" fontId="100" forceWriteAsLong="true" hasFont="true" hasFontClass="false" hasLayout="true" hasMaxLength="false" hasText="true" hasTextColor="true" html="false" indent="0" initialText=" " leading="40" leftMargin="0" maxLength="0" multiline="false" noSelect="true" password="false" readOnly="true" rightMargin="0" useOutlines="true" variableName="" wasStatic="false" wordWrap="false">
-      <bounds type="RECT" Xmax="7160" Xmin="-40" Ymax="480" Ymin="-40" nbits="14"/>
+      <bounds type="RECT" Xmax="7240" Xmin="-80" Ymax="520" Ymin="-80" nbits="14"/>
       <textColor type="RGBA" alpha="255" blue="255" green="255" red="255"/>
     </item>
     <item type="DefineSpriteTag" forceWriteAsLong="true" frameCount="1" hasEndTag="true" spriteId="104">

@@ -20,7 +20,7 @@ class I_LocationListener {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_I_LocationListener;
     virtual void _vf0() = 0;   // [0] 0x00
-    virtual void _vf1() = 0;   // [1] 0x08
+    virtual void _vf1(void* discoveryEvent) = 0; // [1] 0x08 discovery-status change
     virtual void _vf2() = 0;   // [2] 0x10
     virtual void _vf3() = 0;   // [3] 0x18
     virtual void _vf4() = 0;   // [4] 0x20

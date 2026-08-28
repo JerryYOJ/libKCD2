@@ -31,8 +31,11 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_StateVariable;
     RTTR_ENABLE(C_StateBase<rttr::variant>)   // [5..7] trio overrides
     rttr::variant GetPortValue(_smart_ptr<I_Port> const& port) override;  // [12] 0x1806ACC4C Set<E> name -> enumerator value
-    void EnumerateNodeVariants() override;    // [27] 0x180691160 descriptor "State", category 7
-    void GetPortDefinitions(std::function<void(std::shared_ptr<definition::I_PortDefinition> const&)> sink) override;  // [28] 0x1804F029C base + int: Increment/Decrement/OnIncrease/OnDecrease, bool: SetTrue/SetFalse/OnTrue/OnFalse
+    void EnumerateNodeVariants(
+        wh::conceptmodule::definition::NodeDefinitionSink sink,
+        bool allVariants) override;    // [27] 0x180691160 descriptor "State", category 7
+    void GetPortDefinitions(
+        definition::PortDefinitionSink sink, bool includeAll) override;  // [28] 0x1804F029C base + int: Increment/Decrement/OnIncrease/OnDecrease, bool: SetTrue/SetFalse/OnTrue/OnFalse
     void OnExecute(S_NodeExecuteContext const& ctx) override;  // [33] 0x18061E91C fired-port-name -> operation
     void OnLifecycleEvent(int32_t event) override;  // [34] 0x1806B0CA8 event 5: init from DefaultValue
     void Reset() override;                    // [37] 0x1806B0DC4 re-apply DefaultValue (no notify)

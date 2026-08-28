@@ -13,7 +13,11 @@ namespace wh::entitymodule {
 
 class C_HomogenousItemDescriptor : public I_ItemDescriptor {
 public:
-    // No own data; abstract mid-class.
+    std::vector<C_Item*> GetMatchingItems(
+        const std::vector<C_Item*>& items) const override; // [1] 0x18096EF4C
+    void unk2() override;                                 // [2] 0x18096E81C
+    std::int32_t unk5() const override;                   // [5] 0x1804C88CC
+    virtual std::int32_t GetAmount() const = 0;           // [9]
 };
 
 }  // namespace wh::entitymodule

@@ -21,9 +21,8 @@ History:
 
 #include <boost/enable_shared_from_this.hpp>
 
-#ifndef __SPU__
-#include <boost/mem_fn.hpp>
-#endif
+// boost/mem_fn.hpp lives in boost-bind, which this tree does not vcpkg.
+// Nothing in the RE include graph uses boost::mem_fn.
 
 #define DECLARE_BOOST_POINTERS(name) \
 	typedef boost::shared_ptr<name> name##Ptr; \

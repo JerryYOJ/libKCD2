@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include "../CryEngine/CryCommon/smartptr.h"
+#include "../rttr/rttr_enable.h"
 
 // -----------------------------------------------
 // wh::framework::I_Action -- ref-counted action interface (KCD2 WHGame.dll 1.5.6, kd7u).  sizeof 0x10.
@@ -36,7 +37,7 @@ public:
     virtual bool     IsRunning() const = 0;              // [5]  0x181A75490  returns flag (+0x29; set on Stop) [KCD1-correlated name]
     virtual bool     IsCompleted() const = 0;            // [6]  0x181A7D930  returns m_isCompleted (+0x2A)
     virtual bool     CanInterrupt(const _smart_ptr<I_Action>& other) const = 0; // [7]  0x1814962EC  !other || other->GetPriority() > m_priority
-    virtual bool     _vf8() const = 0;                   // [8]  0x180838AE0  returns false (base default)
+    virtual bool     _vf8(const _smart_ptr<I_Action>& other) const = 0; // [8] 0x180838AE0 default false; leaf overrides inspect other
     virtual void     _vf9() = 0;                         // [9]  0x1803B6E80  nullsub
     virtual void     _vf10() = 0;                        // [10] 0x1803B6E80  nullsub
     virtual int64_t  _vf11() const = 0;                  // [11] 0x18066CD10  returns 0 (base default)
@@ -51,9 +52,7 @@ public:
     virtual void     ConnectOnChanged(void* delegate) = 0;    // [20] 0x18090BE68  Connect delegate to m_onActionChanged (+0x18)
     virtual void     DisconnectOnChanged(void* delegate) = 0; // [21] 0x180618538  Disconnect delegate from m_onActionChanged (+0x18)
     virtual void*    AsActionImpl() = 0;                 // [22] 0x181A72EC0  returns this+0x10 (the I_ActionImpl subobject)
-    virtual void     _vf23(void* out) const = 0;         // [23] 0x18275AAB0  constructs an out-object (handle/pair)
-    virtual void*    GetSelf() = 0;                      // [24] 0x1805F5DA0  returns this
-    virtual void     _vf25(void* out) const = 0;         // [25] 0x18275A85C  out = { this, ... } (handle/pair)
+    RTTR_ENABLE()                                        // [23..25]
 
     // No data members: _i_multithread_reference_target<int> provides
     //   +0x00 vtable   +0x08 volatile int m_nRefCounter   (+0x0C pad to 0x10)

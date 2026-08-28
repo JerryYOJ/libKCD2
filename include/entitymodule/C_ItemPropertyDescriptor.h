@@ -19,6 +19,12 @@ namespace wh::entitymodule {
 
 class C_ItemPropertyDescriptor : public C_HomogenousItemDescriptor {
 public:
+    ~C_ItemPropertyDescriptor() override; // [0] 0x180626404
+    std::uint32_t GetMatchFailReason(
+        C_Item* item, std::uint32_t flags) const override; // [4] 0x18096F50C
+    RTTR_ENABLE(C_HomogenousItemDescriptor) // [6..8]
+    std::int32_t GetAmount() const override; // [9] 0x181A72970
+
     std::int32_t           m_amount;             // +0x08  RTTR param "Amount"; -1 = unlimited (vf[9])
     E_ItemFilterType::Type m_equippedFilter;     // +0x0C  "EquippedFilter" vs C_Item flags bit0
     E_ItemFilterType::Type m_questFilter;        // +0x0D  "QuestFilter"    vs C_Item flags bit1

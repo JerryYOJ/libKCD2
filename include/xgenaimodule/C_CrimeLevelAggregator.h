@@ -13,8 +13,8 @@
 // RTTI TD rva 0x4F48310; FOUR vtables written by the ctor:
 //   +0x00 primary (I_CrimeLevelAggregator) 0x183ABEA48, 9 slots;
 //   +0x08 game::I_GameSideEffectCallback 0x183ABEA18 (2x sub_1832A6414);
-//   +0x10 game::I_EntitySideEffectCallback 0x183ABEA30 ([0] sub_181785754 dtor
-//         thunk, [1] sub_1817856D0);
+//   +0x10 game::I_EntitySideEffectCallback 0x183ABEA30 ([0] sub_181785754,
+//         [1] sub_1817856D0; both side-effect handlers);
 //   +0x18 rpgmodule::I_LocationListener 0x183ABEA98, 10 slots ([6] = [9]
 //         sub_180B57328, rest nullsub_1).
 // This is the parallel wanted-level accrual path: the three mailbox handles feed
@@ -43,12 +43,12 @@ public:
     // game::I_GameSideEffectCallback impls (both -> sub_1832A6414)
     void OnSideEffectDeactivated(char sideEffectId) override;  // GSEC [0] sub_1832A6414
     void OnSideEffectActivated(char sideEffectId) override;    // GSEC [1] sub_1832A6414
-    // game::I_EntitySideEffectCallback impls (interface shape corrected: 2 handlers, no vdtor)
-    void OnEntitySideEffectAdded(void* sideEffect) override;   // ESEC [0] [U EA -- previously misread as a dtor thunk]
-    void OnEntitySideEffectRemoved(void* sideEffect) override; // ESEC [1] sub_1817856D0
+    // game::I_EntitySideEffectCallback impls (two handlers, no virtual destructor)
+    void OnEntitySideEffectAdded(std::uint8_t sideEffectId, ::wh::framework::WUID entityWuid) override;   // ESEC [0]
+    void OnEntitySideEffectRemoved(std::uint8_t sideEffectId, ::wh::framework::WUID entityWuid) override; // ESEC [1] sub_1817856D0
     // rpgmodule::I_LocationListener impls (subobject vt 0x183ABEA98)
     void _vf0() override;   // LL [0] nullsub_1
-    void _vf1() override;   // LL [1] nullsub_1
+    void _vf1(void* discoveryEvent) override; // LL [1] nullsub_1
     void _vf2() override;   // LL [2] nullsub_1
     void _vf3() override;   // LL [3] nullsub_1
     void _vf4() override;   // LL [4] nullsub_1

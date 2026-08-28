@@ -21,7 +21,9 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_ContainsElement;
     RTTR_ENABLE(C_TemplatedNode)   // [5..7] trio overrides
     rttr::variant GetPortValue(_smart_ptr<I_Port> const& port) override;  // [12] 0x180825A98
-    void EnumerateNodeVariants() override;  // [27] 0x180EF6A58
+    void EnumerateNodeVariants(
+        wh::conceptmodule::definition::NodeDefinitionSink sink,
+        bool allVariants) override;  // [27] 0x180EF6A58
 
     C_PortRef m_arrayPort;           // +0x48  rttr "Array" -- In (Template = TypeT)
     C_PortRef m_valuePort;           // +0x88  rttr "Value" -- In needle (Template = TypeT_0)

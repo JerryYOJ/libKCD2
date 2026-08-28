@@ -12,11 +12,13 @@
 namespace wh::playermodule {
 
 struct E_OutfitId {
-    enum Type : int32_t {
+    enum Type : std::uint8_t {
         A = 0,
         B = 1,
         C = 2,
     };
 };
+static_assert(sizeof(E_OutfitId::Type) == 1,
+              "E_OutfitId::Type size mismatch");
 
 }  // namespace wh::playermodule

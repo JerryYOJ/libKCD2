@@ -8,12 +8,16 @@
 // (Serialized=0, NotSerialized=1, MoveToLinkedSlot=2). Player+ override is
 // *(this+0xA9)==0 → 0 or 1; Pickable/NPCTool/AlchemyBase keep 2.
 
-namespace wh::entitymodule::E_HandContextSerializationMode {
+namespace wh::entitymodule {
 
-enum Type : std::uint8_t {
-    Serialized         = 0,
-    NotSerialized      = 1,
-    MoveToLinkedSlot   = 2,
+struct E_HandContextSerializationMode {
+    enum Type : std::uint8_t {
+        Serialized       = 0,
+        NotSerialized    = 1,
+        MoveToLinkedSlot = 2,
+    };
 };
+static_assert(sizeof(E_HandContextSerializationMode::Type) == 1,
+              "E_HandContextSerializationMode::Type size mismatch");
 
-}  // namespace wh::entitymodule::E_HandContextSerializationMode
+}  // namespace wh::entitymodule

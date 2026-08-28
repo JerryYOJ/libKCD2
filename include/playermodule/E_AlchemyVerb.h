@@ -7,7 +7,7 @@
 // -----------------------------------------------
 // [SYNTHETIC NAME] -- "verb" is this project's term (see C_Alchemy.h): the code passed to
 // C_Alchemy::PerformVerb and stored in m_pendingVerb / m_performedVerbs / m_lastVerb.  The domain
-// is the shared station code space (verb == E_AlchemyStationKind bucket index == E_AlchemyState
+// is the shared station code space (verb == E_AlchemyStationKind bucket index == E_AlchemyInteractionState
 // carry code): a verb means "interact with station N", and what that does depends on the current
 // state -- the (state, verb) action factory sub_1808D1FF8 picks the action class
 // (table_enable_and_verbs.md §3).  Names describe the IDLE-state action; while holding an object,

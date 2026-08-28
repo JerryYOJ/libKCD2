@@ -23,7 +23,7 @@ namespace wh::framework {
 class C_SaveGameDescription {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_SaveGameDescription;
-    // DLC presence record (RTTR-confirmed vector<C_DLCDescription> element; interior not RE'd).
+    // DLC presence record; defined in C_SaveGameDescription_C_DLCDescription.h.
     class C_DLCDescription;
 
     virtual ~C_SaveGameDescription() = default;   // +0x00  vptr (slot order UNVERIFIED)
@@ -46,7 +46,7 @@ public:
     uint8_t  m_installCompleted;      // +0x58  default 1; recomputed from
                                       //        wh_sys_GameSaveInstallCompleted
     uint8_t  _pad59[7];               // +0x59
-    std::vector<C_DLCDescription> m_dlcList;  // +0x60  RTTR-confirmed (element interior not RE'd)
+    std::vector<C_DLCDescription> m_dlcList;  // +0x60  owned DLC presence records
     int32_t  m_field78;               // +0x78  int32 (ctor 1); serialized int32 (chunk id 0x10 @0x180C3DCB6); populate sets from qword_18492D890 vf (@0x181E21982)
     uint32_t _pad7C;                  // +0x7C
     CryStringT<char> m_fileName;      // +0x80  per-type template (see banner)

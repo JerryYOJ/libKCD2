@@ -19,7 +19,9 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_Length;
     RTTR_ENABLE(C_TemplatedNode)   // [5..7] trio overrides
     rttr::variant GetPortValue(_smart_ptr<I_Port> const& port) override;  // [12] 0x1814033B8
-    void EnumerateNodeVariants() override;  // [27] 0x180EF6758
+    void EnumerateNodeVariants(
+        wh::conceptmodule::definition::NodeDefinitionSink sink,
+        bool allVariants) override;  // [27] 0x180EF6758
 
     C_PortRef m_arrayPort;          // +0x48  rttr "Array" -- In (Template = TypeT)
     C_TypedPortRef<int> m_length;   // +0x88  rttr "Length" -- Out

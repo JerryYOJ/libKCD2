@@ -156,12 +156,8 @@ namespace {
             
             if(self->m_sName == "hud"){
                 const auto& fp = self->m_pFlashPlayer;
-                // Parent under tc.compass so C_UIHudMask's photo-mode hide of
-                // "Compass" (HUD.xml instancename tc.compass) takes the overlay
-                // with it. A _root sibling sits above br.actionHints (the
-                // photomode_base helpbar) and is NOT in the 28-element mask list,
-                // so it stayed visible in photo mode -- covering the take-photo
-                // prompts and, with compass.gfx's black stage, the screenshot.
+                // Child of tc.compass so HudMask photo-mode hide of "Compass"
+                // takes the overlay with it. Stage is 1x1 (no black fill).
                 if (!fp || fp->IsAvailable("_root.tc.compass.compassOverlay")) return ok;
 
                 Offsets::FlashVarPtr compass, mc;
@@ -171,10 +167,12 @@ namespace {
                 SFlashVarValue url("compass.gfx");   // resolved relative to the parent movie dir "Libs/UI/"
                 if (!mc->Invoke("loadMovie", &url, 1, nullptr)) return ok;
 
-                // The stopped HUD timeline only drains its load queue on a frame-step,
-                // so service our entry now (see GFxMovieRoot.h).
-                if (auto* movie = static_cast<CFlashPlayer*>(fp.get())->GetMovieRoot())
+                // Drain compass.gfx AND the ImportAssets2 gfxfontlib it enqueues
+                // while loading (one ProcessLoadQueue pass may only see the first).
+                if (auto* movie = static_cast<CFlashPlayer*>(fp.get())->GetMovieRoot()) {
                     movie->ProcessLoadQueue();
+                    movie->ProcessLoadQueue();
+                }
 
                 PushObjectiveNames(fp.get());
                 PushTypeNames(fp.get());

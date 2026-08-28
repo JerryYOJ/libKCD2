@@ -17,7 +17,7 @@
 namespace wh::guimodule {
 
 struct E_ConceptMarkerType {
-    enum Type : int32_t {
+    enum Type : std::uint8_t {
         QuestGiver             = 0,
         ActivityGiver          = 1,
         QuestTipster           = 2,
@@ -40,5 +40,7 @@ struct E_ConceptMarkerType {
         DLC2_stealingPackages  = 19,
     };
 };
+static_assert(sizeof(E_ConceptMarkerType::Type) == 1,
+              "E_ConceptMarkerType::Type size mismatch");
 
 }  // namespace wh::guimodule

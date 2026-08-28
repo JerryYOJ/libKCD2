@@ -21,9 +21,7 @@ struct S_PathFindingRequestDefault : S_PathFindingRequest {
     S_PathFindingRequest* Clone() override { return nullptr; }
     void unk_3() override {}
     void unk_4() override {}
-    void unk_5() override {}
-    void unk_6() override {}
-    void unk_7() override {}
+    RTTR_ENABLE(S_PathFindingRequest)
 
     Vec3     m_target;                                      // +0x78  filled by the caller (not the ctor)
     uint8_t  m_flag84;                                      // +0x84  ctor 1

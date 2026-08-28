@@ -1,5 +1,6 @@
 #pragma once
 #include "../CryEngine/CryCommon/Cry_Math.h"
+#include "../framework/WUID.h"
 
 // -----------------------------------------------
 // wh::xgenaimodule::I_Area -- area interface; MI base of C_TriggerArea /
@@ -17,8 +18,8 @@ namespace wh::xgenaimodule {
 class I_Area {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_I_Area;
-    virtual bool Overlaps(const Vec3& pos) = 0;  // [0]  AABB/shape point test [V]
-    virtual void ArVf1()  = 0;   // [1]  shared adjustor body [U role]
+    virtual bool Overlaps(const Vec3& pos) = 0;                  // [0]
+    virtual const wh::framework::WUID& GetWuid() const = 0;      // [1]
     virtual void ArVf2()  = 0;   // [2]  [U role]
     virtual AABB GetAABB() = 0;  // [3]  returns the area's world bounds [V]
     virtual void ArVf4()  = 0;   // [4]  [U role]

@@ -10,11 +10,11 @@
 // sizeof 0x30 (create-site proven: sub_180AF26C8 @0x180af2715:
 // qword_18549D378(48,&v6) -> ctor sub_180AF2764).
 // -----------------------------------------------
-// RTTI TD rva 0x4F5A4F0.  Vtables: +0x0 rva 0x3A78C78 (4 slots: [0]0xA2A8D8
-// [1]0x1491830 [2]nullsub [3]deleting-dtor thunk 0x32D6B30); +0x8 rva
-// 0x3A78C58 (3 slots: [0]0xD9BBF4 [1]0x3FBC58 [2]nullsub).  ctor subscribes to
-// the SmartObjectsManager listener list and to C_SmartAreaManager (vtbl+128,
-// passing this+8).  Alt construction path sub_1832D6640.
+// RTTI TD rva 0x4F5A4F0.  Vtables: +0x0 rva 0x3A78C78 has the three
+// I_SmartObjectsManagerListener callbacks followed by C_SmartEntityResolver's
+// own virtual destructor at [3]; +0x8 rva 0x3A78C58 has the three
+// I_SmartAreasManagerListener callbacks.  The ctor subscribes both subobjects
+// to their managers.  Alt destruction path sub_1832D6640.
 
 namespace wh::xgenaimodule {
 
@@ -24,10 +24,10 @@ class C_SmartEntityResolver
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_SmartEntityResolver;
     // I_SmartObjectsManagerListener impls
-    void SomlVf0() override;                    // [0] 0xA2A8D8
-    void SomlVf1() override;                    // [1] 0x1491830
-    void SomlVf2() override;                    // [2] nullsub
-    ~C_SmartEntityResolver() override;          // [3] deleting-dtor thunk 0x32D6B30
+    void OnSmartObjectAdded(C_SmartObject* smartObject) override;    // [0] 0x180A2A8D8
+    void OnSmartObjectRemoving(C_SmartObject* smartObject) override; // [1] 0x181491830
+    void OnSmartObjectRemoved(C_SmartObject* smartObject) override;  // [2] nullsub
+    virtual ~C_SmartEntityResolver();                                // [3] 0x1832D6B30
     // I_SmartAreasManagerListener impls
     void _vf0() override;                       // [0] 0xD9BBF4
     void OnSmartAreaRemoved(void* area) override; // [1] 0x3FBC58

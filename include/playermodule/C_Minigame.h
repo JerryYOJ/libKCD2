@@ -26,7 +26,7 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_Minigame;
 
     bool unk_01() const override;                         // [1] default false
-    void unk_02() override;                              // [2] nullsub
+    void unk_02(std::uint32_t entityId) override;        // [2] nullsub
     bool unk_03() const override;                        // [3] default true
     void Destroy() override;                             // [4] forwards to destructor
     ~C_Minigame() override;                              // [5] sub_1809F0E60
@@ -36,11 +36,9 @@ public:
     uint32_t GetPlayerId() const override;               // [10]
     void unk_11() override;                              // [11]
     void unk_12() override;                              // [12]
-    void unk_13() override;                              // [13]
+    boost::optional<std::uint8_t> unk_13() override;     // [13] disengaged
     void unk_14() override;                              // [14]
-    void unk_15() override;                              // [15]
-    void* unk_16() override;                             // [16]
-    void unk_17() override;                              // [17]
+    RTTR_ENABLE(I_Minigame) // [15..17]
     bool Begin() override;                               // [18] sub_18061885C
     void unk_20() override;                              // [20] nullsub
     uint32_t GetUserId() const override;                 // [22]
@@ -53,14 +51,14 @@ public:
     void unk_29() override;                              // [29]
     void unk_30() override;                              // [30]
     void unk_31() override;                              // [31]
-    void unk_32() override;                              // [32]
+    std::uint8_t unk_32() override;                      // [32] default 0
     void SelfDestruct() override;                        // [33] base nullsub
     void SetActionMapContext(CryStringT<char> context) override; // [34] sub_18085A3EC
     void UpdateExitHint() override;                      // [35] sub_1809F1E1C
     void unk_36() override;                              // [36]
     void unk_37() override;                              // [37]
     void unk_38() override;                              // [38]
-    void unk_39() override;                              // [39]
+    bool unk_39() override;                              // [39] default true
     void unk_40() override;                              // [40]
     void unk_41() override;                              // [41]
     void unk_42() override;                              // [42]

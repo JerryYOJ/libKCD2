@@ -30,7 +30,8 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_FunctionBase;
     RTTR_ENABLE(C_TemplatedNode)   // [5..7] trio overrides
     bool Load(XmlNodeRef node) override;  // [11] 0x1826B9E10 validates the resolved method: "method:'%s' does not exist"
-    void GetPortDefinitions(std::function<void(std::shared_ptr<definition::I_PortDefinition> const&)> sink) override;  // [28] 0x1804F5504 pins from the method signature (see above)
+    void GetPortDefinitions(
+        definition::PortDefinitionSink sink, bool includeAll) override;  // [28] 0x1804F5504 pins from the method signature (see above)
     void OnExecute(S_NodeExecuteContext const& ctx) override;  // [33] 0x18061AD78 invoke + fire OnExec
 
     rttr::method GetMethod();          // 0x18069168C lazy cache (m_methodResolved/m_method)

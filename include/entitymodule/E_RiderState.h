@@ -10,7 +10,7 @@
 namespace wh::entitymodule {
 
 struct E_RiderState {
-    enum Type : int32_t {
+    enum Type : std::uint8_t {
         none           = 0,
         mount          = 1,
         mounted        = 2,
@@ -26,5 +26,7 @@ struct E_RiderState {
         bondingGround  = 12,
     };
 };
+static_assert(sizeof(E_RiderState::Type) == 1,
+              "E_RiderState::Type size mismatch");
 
 }  // namespace wh::entitymodule

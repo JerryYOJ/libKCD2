@@ -37,7 +37,7 @@ public:
     virtual bool unk14() const;                    // [14] return false; keep-filter in ResolvePortPath's interface hop (0x1806988CC) [U]
     virtual void Trigger();                        // [15] base nullsub; C_InputTriggerPort 0x1806920D4 runs the owner; C_ActiveTriggerPort 0x18061D688 fans out
     virtual rttr::variant GetValue();              // [16] base 0x180453D30 invalid variant
-    virtual E_PortSpecification GetSpecification() const;  // [17] the port-class discriminator ("role"); base None; leaves per E_PortSpecification.h
+    virtual E_PortSpecification::Type GetSpecification() const;  // [17] port-class discriminator; base Unknown; leaves per E_PortSpecification.h
     virtual void ForEachConnected(std::function<bool(_smart_ptr<I_Port>&)> visitor, int32_t dir, uint32_t flags);  // [18] dir 1=upstream 2=downstream 3=both; flags bit0 skip pass-through, bit1 recurse; base 0x18061DF80 no links
     virtual void Unbind();                         // [19] 0x1806B3D58: m_ownerRef = {-1, 0}, m_definition.reset()
     virtual void unk20();                          // [20] nullsub [U]

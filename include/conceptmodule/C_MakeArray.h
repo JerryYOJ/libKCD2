@@ -24,7 +24,9 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_MakeArray;
     RTTR_ENABLE(C_TemplatedNode)   // [5..7] trio overrides
     rttr::variant GetPortValue(_smart_ptr<I_Port> const& port) override;  // [12] 0x1806A98B8 append-all-ports -> container variant
-    void EnumerateNodeVariants() override;  // [27] 0x180EF6B58 descriptor "MakeArray", category 0xA
+    void EnumerateNodeVariants(
+        wh::conceptmodule::definition::NodeDefinitionSink sink,
+        bool allVariants) override;  // [27] 0x180EF6B58 descriptor "MakeArray", category 0xA
 
     C_PortRef m_value;   // +0x48  rttr "Value" -- variadic In prototype (Template = TypeT_0)
     C_PortRef m_array;   // +0x88  rttr "Array" -- Out (Template = TypeT)

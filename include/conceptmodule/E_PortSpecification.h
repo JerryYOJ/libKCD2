@@ -2,30 +2,26 @@
 #include <cstdint>
 
 // -----------------------------------------------
-// wh::conceptmodule::E_PortSpecification -- the concrete port-class discriminator
-// (KCD2 WHGame.dll Steam 1.5.6, e4cp).
+// wh::conceptmodule::E_PortSpecification::Type -- concrete port-class
+// discriminator (KCD2 WHGame.dll Steam 1.5.6, e4cp).
 // -----------------------------------------------
-// Registered rttr enum (name string 0x183E39B68, reg sub_1800A5280) whose
-// enumerators are literally the six concrete port-class names.  Numeric values
-// PROVEN by decompiling every I_Port vslot-17 override (each a `mov al, N; ret`);
-// the AL-only write also PROVES the underlying type is byte-sized -- an int32
-// replica reads garbage in EAX[8..31] and never matches (live-diagnosed bug).
-// name<->value pairing follows the class of each override [LIKELY].  Edge rules
-// (Connect 0x1806986AC): CanBeEdgeSource (0x1806943A4) -> spec in {InterfaceDataPort,
-// OutputTriggerPort, InterfaceTriggerPort}; CanBeEdgeTarget (0x18069437C) -> spec in
-// {InputDataPort, InterfaceDataPort, InterfaceTriggerPort}.  Spec None (abstract
-// layers + C_PortRef + C_DebuggerPort) can never be an edge endpoint.
+// Identity, labels, values, and unsigned-byte underlying type are RTTR-proven.
+// I_Port vslot 17 independently returns the same values with `mov al, N; ret`.
 
 namespace wh::conceptmodule {
 
-enum class E_PortSpecification : uint8_t {
-    None                 = 0,   // abstract layers / C_PortRef / C_DebuggerPort (not a registered enumerator)
-    InputDataPort        = 1,
-    OutputDataPort       = 2,   // + C_ConstantPort, C_AssetPort
-    InterfaceDataPort    = 3,   // + C_ConstantInterfacePort, C_AssetInterfacePort
-    InputTriggerPort     = 4,   // + C_AutoTriggerPort
-    OutputTriggerPort    = 5,
-    InterfaceTriggerPort = 6,
+struct E_PortSpecification {
+    enum Type : std::uint8_t {
+        Unknown              = 0,
+        InputDataPort        = 1,
+        OutputDataPort       = 2,
+        InterfaceDataPort    = 3,
+        InputTriggerPort     = 4,
+        OutputTriggerPort    = 5,
+        InterfaceTriggerPort = 6,
+    };
 };
+static_assert(sizeof(E_PortSpecification::Type) == 1,
+              "E_PortSpecification::Type size mismatch");
 
 }  // namespace wh::conceptmodule

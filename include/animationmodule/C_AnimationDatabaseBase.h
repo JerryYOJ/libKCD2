@@ -35,4 +35,10 @@ public:
     std::unordered_map<uint64_t, TData*> m_objectIndex; // +0xA8 [key/value UNVERIFIED]
 };
 
+template <typename TData, typename TObjAnimGen>
+class C_AnimationDatabaseBase<TData, void, TObjAnimGen> : public TObjAnimGen {
+public:
+    virtual bool unk_22(); // [22] 0x18041A6A0
+};
+
 }  // namespace wh::animationmodule

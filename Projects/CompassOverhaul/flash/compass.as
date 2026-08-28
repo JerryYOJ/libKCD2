@@ -1,13 +1,10 @@
 // CompassOverhaul :: compass.gfx  (ActionScript 2 / Scaleform GFx)
 // ---------------------------------------------------------------------------
 // Self-driven HUD overlay, loaded by the plugin into
-// _root.tc.compass.compassOverlay of the game's "hud" movie (MUST live under
-// tc.compass -- a _root sibling is outside C_UIHudMask and sits above
-// br.actionHints, which is how photo-mode prompts vanished and the
-// take-photo frame went black). Stage is 1x1 px on purpose: an 800x450
-// leftover displayRect as a child of tc.compass inflates that clip's
-// bounds and the strip looks shrunken. Labels sit in parent space via
-// globalToLocal and do not need a real stage. Reads the native compass data directly:
+// _root.tc.compass.compassOverlay of the game's "hud" movie. Lives under
+// tc.compass so HudMask photo-mode hide takes it with the strip. Stage is
+// 1x1 px so the leftover displayRect does not inflate compass bounds.
+// Labels sit in parent space via globalToLocal. Reads the native compass data directly:
 //   _root.g_MarkersO  dict (Enum.MARKER+id) -> CompassMarker (m_Mc, m_Distance, ...)
 //
 // TUNING: edit the C_* constants below and rebuild (build_gfx.sh). Text size
@@ -27,18 +24,10 @@
 // nothing"). Left baked here anyway: this template predates the finding and
 // already works, so there's no functional reason to change it.
 //
-// NAMES (all strings arrive PRE-LOCALIZED -- the GFx translator does not
-// resolve "@keys" set at runtime in this movie, so the plugin localizes
-// natively via sub_1803C235C and pushes display text as flat string arrays).
-// Both tables are pushed onto this clip from quest-marker events ONLY (the
-// C_UIQuestLog::AddObjectiveCompassMarkers hook, 0xDC5F24), which fire after
-// the queued loadMovie has completed -- an earlier push would be wiped when
-// the load replaces this clip's content:
-//   co_names     = [markerId, name, ...]  quest objectives
-//   co_typeNames = [type, name, ...]      every mark type with a
-//                  "ui_maplegend_<type>" loc entry (the map-tooltip key);
-//                  types without one are absent -> their name label hides
-// Both arrays only ever grow, so a length change is the reparse signal.
+// DISTANCE UNIT: @ui_compass_meters (mod loc pak). CryGFxTranslator
+// LocalizeCryString-s @keys at display time on this HUD player. RU/UK paks
+// ship "м", every other language "m". Marker NAMES stay C++-localized
+// (not @keys — objective text + ui_maplegend_* suffix remaps).
 //
 // TARGETING: a marker is "aimed" when its global x is near the screen centre
 // (the native code scrolls markers so the faced bearing lands at centre).
@@ -66,6 +55,14 @@ self.attachMovie("DistLabel", "lbl", self.getNextHighestDepth());
 self.lbl._visible = false;
 self.attachMovie("NameLabel", "nameLbl", self.getNextHighestDepth());
 self.nameLbl._visible = false;
+
+// Soft gray halo so white glyphs read on the strip. GlowFilter on the
+// TEXT FIELD only (not the overlay / compass sprite). Tight blur — last
+// time this was blur 8 / strength 3 on the whole label clip and it ate
+// the compass; this is a 渐变 outline, not a drop shadow.
+var halo = new flash.filters.GlowFilter(0x000000, 0.55, 4, 4, 2, 2, false, false);
+self.lbl.tField.filters = [halo];
+self.nameLbl.tField.filters = [halo];
 
 // Measure each field's authored centre inside its sprite, then let autoSize
 // "center" keep that centre anchored while the field hugs the text -- the
@@ -104,9 +101,8 @@ function isShown(mc)
 
 self.onEnterFrame = function()
 {
-   // Parent is hidden in photo mode / cutscenes / wh_ui_ShowHud 0. GFx can
-   // still fire onEnterFrame on an invisible clip -- bail so we never paint
-   // labels (or a leftover stage fill) over br.actionHints.
+   // Parent (tc.compass) is hidden in photo mode. GFx can still fire
+   // onEnterFrame on an invisible clip.
    if (self._parent._visible == false)
    {
       self.lbl._visible = false;
@@ -145,6 +141,9 @@ self.onEnterFrame = function()
       // skip anything not actually on screen (own fade OR hidden ancestor)
       if (!isShown(mc)) continue;
       if (m.m_IsLocked) continue;   // locked markers: m_Distance forced to 0, spread at fixed offsets
+      // CreateMC tweens inside._alpha 0->100 on the same clip; writing scale
+      // every frame fights that tween and can leave the icon at alpha 0.
+      if (mc.inside._alpha < 100) continue;
 
       var p = {x: 0, y: 0};
       mc.localToGlobal(p);
@@ -169,7 +168,7 @@ self.onEnterFrame = function()
    self.globalToLocal(tgtPt);
    self.lbl._x = tgtPt.x - lblCx;         // field centre -> icon centre
    self.lbl._y = tgtPt.y + C_LABEL_DY;
-   self.lbl.tField.text = Math.round(mo[tgtKey].m_Distance) + " m";
+   self.lbl.tField.text = Math.round(mo[tgtKey].m_Distance) + " @ui_compass_meters";
    self.lbl._visible = true;
 
    var nm = namesTable[tgtKey];           // localized objective name from the plugin

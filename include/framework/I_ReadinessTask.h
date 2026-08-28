@@ -1,4 +1,5 @@
 #pragma once
+#include <cstdint>
 #include "I_ReadinessDebuggable.h"
 
 // -----------------------------------------------
@@ -20,9 +21,9 @@ namespace wh {
 class I_ReadinessTask : public I_ReadinessDebuggable {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_I_ReadinessTask;
-    virtual void TaskVf2() {}            // [2]  C_SaveGameManager: sub_1825BD8B4; C_XGenAIModule: sub_18180B8A0 (UNRESOLVED)
-    virtual void TaskVf3() {}            // [3]  C_SaveGameManager: sub_181A76C10; C_XGenAIModule: sub_181A72480 (UNRESOLVED)
-    virtual void TaskVf4() {}            // [4]  C_SaveGameManager: sub_181A76C30; C_XGenAIModule: sub_181AAB780 (UNRESOLVED)
+    virtual bool TaskVf2() { return false; }               // [2] readiness predicate
+    virtual std::uint32_t TaskVf3() { return 0; }          // [3] readiness value
+    virtual const void* TaskVf4() { return nullptr; }      // [4] runtime descriptor
 };
 static_assert(sizeof(I_ReadinessTask) == 0x8, "I_ReadinessTask must be 0x8");
 

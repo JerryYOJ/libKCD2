@@ -18,13 +18,15 @@
 
 namespace wh::rpgmodule {
 
-// Relation kind stored @+0x18 (real binary enum name E_RelationType, RTTR-registered). Enumerator
-// names inferred from the reputation-sign logic in the ctor (reputation<0 -> 2, else predicate?1:0).
-enum class E_RelationType : int32_t {
-    Neutral = 0,   // inferred
-    Friend  = 1,   // inferred
-    Enemy   = 2,   // inferred
+// Relation kind stored at +0x18. Source identifiers are retained; RTTR proves
+// the corrected values and runtime labels friend=0, neutral=1, enemy=2.
+enum class E_RelationType : std::int32_t {
+    Friend  = 0,
+    Neutral = 1,
+    Enemy   = 2,
 };
+static_assert(sizeof(E_RelationType) == 4,
+              "E_RelationType size mismatch");
 
 class C_FactionRelation {
 public:

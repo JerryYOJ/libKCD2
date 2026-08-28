@@ -17,7 +17,9 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_LastElement;
     RTTR_ENABLE(C_ElementAtBase)   // [5..7] trio overrides
     rttr::variant GetPortValue(_smart_ptr<I_Port> const& port) override;  // [12] 0x18270A3B0
-    void EnumerateNodeVariants() override;  // [27] 0x180EF6958
+    void EnumerateNodeVariants(
+        wh::conceptmodule::definition::NodeDefinitionSink sink,
+        bool allVariants) override;  // [27] 0x180EF6958
 };
 static_assert(sizeof(C_LastElement) == 0xC8, "C_LastElement adds nothing");
 

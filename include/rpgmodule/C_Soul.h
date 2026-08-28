@@ -49,6 +49,7 @@ class C_Soul
 {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_Soul;
+    const wh::framework::WUID& GetWuid() const override;           // primary [0] 0x181A749E0 -> m_selfWuid
 
     void ItemCollectionListenerUnk0(entitymodule::C_Item* splitItem) override; // secondary [0] 0x1811527A4
     void ItemCollectionListenerUnk1(entitymodule::C_Item* consumedItem) override; // secondary [1] 0x1811527A4

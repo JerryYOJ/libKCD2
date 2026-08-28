@@ -21,6 +21,8 @@ class S_SmartEntityTemplate
     , public wh::databasemodule::C_ObjectTreeDBMultipartBase
 {
 public:
+    struct S_UnstanceResourceRecord;
+
     inline static constexpr auto RTTI = Offsets::RTTI_S_SmartEntityTemplate;
 
     ~S_SmartEntityTemplate() override;  // [0] 0x1832C28E0

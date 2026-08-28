@@ -43,6 +43,10 @@ class C_SaveGameManager : public wh::I_ReadinessTask   // +0x00  (0x8; : I_Readi
 {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_SaveGameManager;
+    bool TaskVf2() override;                               // [2] 0x1825BD8B4
+    std::uint32_t TaskVf3() override;                      // [3] 0x181A76C10
+    const void* TaskVf4() override;                        // [4] 0x181A76C30
+
     // The readiness chain is dtor-less (see I_ReadinessTask.h); this class introduces the
     // virtual dtor itself, landing the deleting dtor at slot [5] of its primary vtable.
     virtual ~C_SaveGameManager();          // [5]  deleting dtor sub_1825BC4F0

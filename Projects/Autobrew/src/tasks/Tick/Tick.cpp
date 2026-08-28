@@ -51,7 +51,7 @@ void Executor::Tick()
     const bool bookLanded = bs.m_mode == E_AlchemyMode::Reading;   // open montage done -- the
                                                                    //   vanilla light-up instant
     const bool verbBusy   = alc->m_director.IsSlotOccupied(E_AlchemyDirectorSlot::Verb);
-    const bool tableIdle  = alc->GetEffectiveState() == E_AlchemyState::Idle;
+    const bool tableIdle  = alc->GetEffectiveState() == E_AlchemyInteractionState::Idle;
     const uint32_t openRecipeId = GetOpenRecipeId();
 
     // ---- intents (recorded by the action-row callbacks between our frames) ----
@@ -251,9 +251,9 @@ void Executor::Tick()
             }
             case S_PlanOp::EnsureHoldPot: {
                 const auto st = alc->GetEffectiveState();
-                if (st == E_AlchemyState::HoldingPot) {
+                if (st == E_AlchemyInteractionState::HoldingPot) {
                     advanced = true;
-                } else if (st == E_AlchemyState::Idle
+                } else if (st == E_AlchemyInteractionState::Idle
                            && alc->CanPerformVerb(E_AlchemyVerb::TakePot)) {
                     alc->PerformVerb(E_AlchemyVerb::TakePot);
                     advanced = true;

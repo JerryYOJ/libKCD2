@@ -29,6 +29,12 @@ public:
     void* _vf5() override; // [5] 0x1805F5DA0
     bool _vf6() const override; // [6] 0x18041A6A0
     const framework::WUID& GetWuid() const override; // [7] 0x1808F50F0
+    const framework::WUID& GetCollectionWuid() const override; // collection [0] 0x181A7FAF0
+    void VisitItems(const C_ItemCollection::ItemVisitor& visitor) const override; // collection [1] 0x18087E1A0
+    bool ContainsWuid(const framework::WUID& itemWuid) const override; // collection [2] 0x1808F2C30
+    bool ContainsItem(const C_Item* item) const override; // collection [3] 0x1808F38F8
+    void* CreateIterator() const override; // collection [4] 0x180563140
+    bool Empty() const override; // collection [5] 0x181225498
     void _vf8(C_Item* item, E_ItemHolderChangeFlags flags,
               std::uint32_t amount) override; // [8] 0x180479420
     void _vf11(C_Item* item, E_ItemHolderChangeFlags flags,

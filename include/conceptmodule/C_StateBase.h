@@ -1,33 +1,26 @@
 #pragma once
 #include "C_TemplatedNode.h"
 
-// -----------------------------------------------
-// wh::conceptmodule::C_StateBase<T> -- stateful node mixin
-// (KCD2 WHGame.dll Steam 1.5.6, e4cp).  Adds T at +0x48 and 2 vtable slots.
-// -----------------------------------------------
-// Instantiations (RTTI-proven): <rttr::variant> -> C_StateVariable (the generic
-// "State" node); <rpgmodule::E_TimerState> -> rpgmodule::C_Timer;
-// <rpgmodule::E_TimeOfDayState> -> C_TimeOfDayWatch; <framework::
-// E_GameReleaseVersion> -> C_ModuleVersionState; <playermodule::
-// E_SaveGameWithNotificationState> -> playermodule::C_SaveGameWithNotification.
-// The <rttr::variant> instantiation's GetPortDefinitions (0x1804F5E14) synthesizes
-// the dynamic pin set: global "OnExec" out-trigger, and for an ENUM TypeT three
-// pins per enumerator -- "Set<E>" (In trigger), "On<E>" (Out trigger), "<E>" (bool
-// Out data).  Change flow: [30] applies a new value with change detection and,
-// when changed, calls OnStateChanged [42], which fires the matching On* triggers
-// then always "OnExec".
-
 namespace wh::conceptmodule {
 
 template <typename T>
 class C_StateBase : public C_TemplatedNode {
 public:
-    RTTR_ENABLE(C_TemplatedNode)   // [5..7] trio overrides
-    void GetPortDefinitions(std::function<void(std::shared_ptr<definition::I_PortDefinition> const&)> sink) override;  // [28] <variant>: 0x1804F5E14 dynamic enum pins
-    virtual void OnStateChanged(T const& oldValue, T const& newValue, bool changed);  // [+0] <variant>: 0x18061C19C fires On*/OnIncrease/OnTrue/... then OnExec [sig LIKELY]
-    virtual bool IsAtDefaultValue();   // [+1] <variant>: 0x1808B1208 compare against the DefaultValue pin
+    RTTR_ENABLE(C_TemplatedNode) // [5..7]
+    rttr::variant GetPortValue(
+        _smart_ptr<I_Port> const& port) override;              // [12], current state and enum-state pins
+    void GetPortDefinitions(
+        definition::PortDefinitionSink sink,
+        bool includeAll) override;                             // [28], state and per-enumerator ports
+    bool unk29() override;                                    // [29], true for every specialization
+    void OnExecute(
+        S_NodeExecuteContext const& context) override;         // [33], apply a fired enum-state input
 
-    T m_value;   // +0x48  the state payload
+    virtual void OnStateChanged(
+        T const& oldValue, T const& newValue, bool changed);   // [42]
+    virtual bool IsAtDefaultValue();                          // [43]
+
+    T m_value;                                                // +0x48
 };
 
 }  // namespace wh::conceptmodule

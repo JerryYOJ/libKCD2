@@ -1,18 +1,22 @@
 #pragma once
+#include <cstddef>
+#include "../framework/WUID.h"
 
 // -----------------------------------------------
-// wh::rpgmodule::I_Soul -- KCD2 WHGame.dll 1.5.6 (kd7u).  Pure interface (vtable only).
+// wh::rpgmodule::I_Soul -- KCD2 WHGame.dll 1.5.6. Pure interface.
 // -----------------------------------------------
-// Primary base of C_Soul (RTTI CHD 0x1843F5060, mdisp 0; shares the ~60-slot primary vtable
-// 0x183F44F28). The slot table was NOT enumerated (honest gap in the C_Soul deep map) -- only a
-// dtor is declared here to give the base its vptr; do NOT rely on any slot index from this header.
+// C_Soul primary slot 0 target 0x181A749E0 returns this+0x30, exactly
+// C_Soul::m_selfWuid. Callers throughout the skirmish subsystem use this slot
+// as an eight-byte WUID key; it is not a virtual destructor.
 
 namespace wh::rpgmodule {
 
 class I_Soul {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_I_Soul;
-    virtual ~I_Soul() = default;   // slot position UNVERIFIED
+    virtual const wh::framework::WUID& GetWuid() const = 0;        // [0]
 };
 
-}  // namespace wh::rpgmodule
+static_assert(sizeof(I_Soul) == 0x08, "I_Soul size mismatch");
+
+} // namespace wh::rpgmodule

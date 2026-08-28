@@ -29,8 +29,11 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_StateWatch;
     RTTR_ENABLE(C_EventNode<C_AutoTriggerable<C_TemplatedNode>>)   // [5..7] trio overrides
     rttr::variant GetPortValue(_smart_ptr<I_Port> const& port) override;  // [12] 0x1826B9BC8 event-map lookup
-    void EnumerateNodeVariants() override;  // [27] 0x18268E9EC
-    void GetPortDefinitions(std::function<void(std::shared_ptr<definition::I_PortDefinition> const&)> sink) override;  // [28] 0x180ACFCD0
+    void EnumerateNodeVariants(
+        wh::conceptmodule::definition::NodeDefinitionSink sink,
+        bool allVariants) override;  // [27] 0x18268E9EC
+    void GetPortDefinitions(
+        definition::PortDefinitionSink sink, bool includeAll) override;  // [28] 0x180ACFCD0
     void OnExecute(S_NodeExecuteContext const& ctx) override;  // [33] 0x180DC3E10 watched-state change -> EmitEvent(OnChanged)
 
     C_TypedPortRef<bool>      m_isActive;      // +0x70  rttr "IsActive" -- In gate (corrected 2026-08-05, was swapped with m_watchedState)

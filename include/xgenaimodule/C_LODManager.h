@@ -29,9 +29,9 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_LODManager;
     ~C_LODManager() override;    // [0] deleting dtor sub_183320D14
     void DebugDraw() override;   // [1] nullsub
-    void TaskVf2() override;     // readiness [2] sub_18209C850 [U role]
-    void TaskVf3() override;     // readiness [3] sub_18209C620 [U role]
-    void TaskVf4() override;     // readiness [4] sub_18209C630 [U role]
+    bool TaskVf2() override;                   // readiness [2] sub_18209C850
+    std::uint32_t TaskVf3() override;          // readiness [3] sub_18209C620
+    const void* TaskVf4() override;            // readiness [4] sub_18209C630
 
     uint8_t  m_flags10;        // +0x10  ctor: 0 [U role]
     uint8_t  _pad11[3];        // +0x11

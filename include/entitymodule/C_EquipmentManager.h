@@ -34,7 +34,7 @@ public:
     // the reflected names to wh::entitymodule::E_QuickSlotSpec and E_QuickSlotSpecWrapper.
     // This selects the equip-to-QAM destination; it is not stored QAM state or an EquipmentSlotId.
     struct E_QuickSlotSpec {
-        enum Type : std::int32_t {
+        enum Type : std::uint8_t {
             QuickSlot1                 = 0,
             QuickSlot2                 = 1,
             QuickSlot3                 = 2,
@@ -72,8 +72,8 @@ public:
     std::uint8_t _pad12C[4];                                   // +0x12C
 };
 
-static_assert(sizeof(C_EquipmentManager::E_QuickSlotSpec::Type) == 0x04,
-    "E_QuickSlotSpec::Type must be 0x04");
+static_assert(sizeof(C_EquipmentManager::E_QuickSlotSpec::Type) == 0x01,
+    "E_QuickSlotSpec::Type must be 0x01");
 static_assert(sizeof(C_EquipmentManager) == 0x130, "C_EquipmentManager must be 0x130");
 
 }  // namespace wh::entitymodule

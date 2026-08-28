@@ -15,7 +15,7 @@
 namespace wh::framework {
 
 struct E_SaveGameType {
-    enum Type : int32_t {
+    enum Type : std::uint8_t {
         PermanentSave                  = 0,  // "permanent%03d.whs"
         AutoSave                       = 1,  // "autosave%03d.whs"
         ManualSave                     = 2,  // "save%03d.whs"
@@ -28,5 +28,7 @@ struct E_SaveGameType {
         Last                           = 9,  // count sentinel
     };
 };
+static_assert(sizeof(E_SaveGameType::Type) == 1,
+              "E_SaveGameType::Type size mismatch");
 
 }  // namespace wh::framework

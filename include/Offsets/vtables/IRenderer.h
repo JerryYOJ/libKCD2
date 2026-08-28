@@ -2,46 +2,18 @@
 #include <cstdint>
 
 // -----------------------------------------------
-// IRenderer - KCD2 binary vtable order (CryEngine 3 renderer interface)
+// IRenderer - KCD2 binary vtable order (CryEngine renderer interface)
 // -----------------------------------------------
-// Target: WHGame.dll 1.5.6 (KCD2), image base 0x180000000, IDA instance kd7u.
-//
-// Concrete instance: CD3D9Renderer (RTTI .?AVCD3D9Renderer@@, TD name @0x184a52f68,
-// primary vtable 0x183dfc008 / 381 slots, COL 0x18419eeb0; also owns a secondary
-// vtable at 0x183dfcbf8, COL 0x18419ee10, NOT modeled here). It derives from
-// CRenderer (RTTI .?AVCRenderer@@, TD name @0x184a4dbf0, vtable 0x183df0f68, same
-// 381-slot shape) -- several slots (e.g. [97], [199]) are still the generic
-// unimplemented stub 0x181d93e5d on CRenderer and only get real bodies on
-// CD3D9Renderer, VERIFIED by direct decompile (see those slots' comments below).
-// This header documents the vtable the runtime gEnv->pRenderer object actually
-// carries (CD3D9Renderer's), not the less-derived CRenderer's.
-//
-// ACCESS: NOT a GetInstance()-style singleton. Reached exclusively through
-// SSystemGlobalEnvironment::pRenderer (crysystem/SSystemGlobalEnvironment.h,
-// already VERIFIED there, header offset +0x110 == abs 0x18492D908) -- already the
-// idiomatic, zero-new-plumbing access path: SSystemGlobalEnvironment::GetInstance()->pRenderer.
-// That gEnv slot is populated exactly once, at engine startup, by
-// CEngineModule_CryRenderer::Initialize (RTTI-verified vtable 0x183dfbfc8 slot [6],
-// sub_180FB1AE4): it calls sub_180FB1B08() and stores the result at gEnv CODE-offset
-// +264 (== header +0x110 under the established +8 CSystem/gEnv skew documented in
-// SSystemGlobalEnvironment.h's own header comment). sub_180FB1B08 in turn returns a
-// SEPARATE renderer-module-internal global, qword_18547DB60 -- the classic CryEngine
-// "gRenDev" pattern (the renderer module caches its own pointer to itself in
-// addition to publishing through gEnv). gEnv->pRenderer is the correct access path
-// for mod code; qword_18547DB60 is an internal implementation detail, not modeled.
-//
-// Slot count (381) established by scanning forward from the vtable start until
-// hitting the next RTTI symbol boundary (CD3D9Renderer's own secondary-vtable COL,
-// landing exactly at slot 381) -- a real, if unusually large, CryEngine 3 IRenderer
-// surface. Only 4 slots below carry direct behavioral evidence (fully decompiled,
-// not just observed from a caller); every other slot is a bare terse stub awaiting
-// its own investigation, matching this codebase's existing convention for huge
-// interfaces (see IGameFramework.h, IActor.h).
+// IRenderer owns slots [0..333]. CRenderer appends its RTTR trio [334..336]
+// and concrete-only slots [337..375]; CD3D9Renderer appends [376..380].
+// The target comments below use the runtime CD3D9Renderer implementations where
+// available, while the declaration itself stops at the certified interface boundary.
+// Runtime access remains SSystemGlobalEnvironment::pRenderer.
 
 namespace Offsets {
 
 struct IRenderer {
-    virtual void  _vf0() = 0;      // [0]   0x1825404F8
+    virtual ~IRenderer() = default; // [0]   CRenderer 0x1824DA884; CD3D9Renderer 0x1825404F8
     virtual void  _vf1() = 0;      // [1]   0x1824DB3F4
     virtual void  _vf2() = 0;      // [2]   0x1824FE5A8
     virtual void  _vf3() = 0;      // [3]   0x181A74A40
@@ -403,53 +375,6 @@ struct IRenderer {
     virtual void  _vf331() = 0;    // [331] 0x181E03AD0
     virtual void  _vf332() = 0;    // [332] 0x181DEC950
     virtual void  _vf333() = 0;    // [333] 0x1804FE2DC
-    virtual void  _vf334() = 0;    // [334] 0x18250B3A4
-    virtual void  _vf335() = 0;    // [335] 0x1805F5DA0
-    virtual void  _vf336() = 0;    // [336] 0x18250B2C8
-    virtual void  _vf337() = 0;    // [337] 0x180FB0798
-    virtual void  _vf338() = 0;    // [338] 0x1812038FC
-    virtual void  _vf339() = 0;    // [339] 0x1825488E8
-    virtual void  _vf340() = 0;    // [340] 0x180861260
-    virtual void  _vf341() = 0;    // [341] 0x180C17A1C
-    virtual void  _vf342() = 0;    // [342] 0x18086264C
-    virtual void  _vf343() = 0;    // [343] 0x18252A060
-    virtual void  _vf344() = 0;    // [344] 0x18252A0A0
-    virtual void  _vf345() = 0;    // [345] 0x1823DCFD8
-    virtual void  _vf346() = 0;    // [346] 0x1803B6E80  (shared stub)
-    virtual void  _vf347() = 0;    // [347] 0x180864728
-    virtual void  _vf348() = 0;    // [348] 0x180DE4EC8
-    virtual void  _vf349() = 0;    // [349] 0x180FD21B4
-    virtual void  _vf350() = 0;    // [350] 0x181683268
-    virtual void  _vf351() = 0;    // [351] 0x18197AB8C
-    virtual void  _vf352() = 0;    // [352] 0x181E04610
-    virtual void  _vf353() = 0;    // [353] 0x181E04BC0
-    virtual void  _vf354() = 0;    // [354] 0x181E04880
-    virtual void  _vf355() = 0;    // [355] 0x180860D2C
-    virtual void  _vf356() = 0;    // [356] 0x1803B6E80  (shared stub)
-    virtual void  _vf357() = 0;    // [357] 0x1803FA7A0
-    virtual void  _vf358() = 0;    // [358] 0x1803FA774
-    virtual void  _vf359() = 0;    // [359] 0x18252A01C
-    virtual void  _vf360() = 0;    // [360] 0x1819DE1E0
-    virtual void  _vf361() = 0;    // [361] 0x1806B7964
-    virtual void  _vf362() = 0;    // [362] 0x1803B6E80  (shared stub)
-    virtual void  _vf363() = 0;    // [363] 0x1803B6E80  (shared stub)
-    virtual void  _vf364() = 0;    // [364] 0x181A74DC0
-    virtual void  _vf365() = 0;    // [365] 0x182545A70
-    virtual void  _vf366() = 0;    // [366] 0x1805F987C
-    virtual void  _vf367() = 0;    // [367] 0x1803D5D34
-    virtual void  _vf368() = 0;    // [368] 0x180749808
-    virtual void  _vf369() = 0;    // [369] 0x1803B6E80  (shared stub)
-    virtual void  _vf370() = 0;    // [370] 0x18066CD10  (shared stub)
-    virtual void  _vf371() = 0;    // [371] 0x18066CD10  (shared stub)
-    virtual void  _vf372() = 0;    // [372] 0x181A75850
-    virtual void  _vf373() = 0;    // [373] 0x1803B6E80  (shared stub)
-    virtual void  _vf374() = 0;    // [374] 0x181A75730
-    virtual void  _vf375() = 0;    // [375] 0x181A740C0
-    virtual void  _vf376() = 0;    // [376] 0x1808630D8
-    virtual void  _vf377() = 0;    // [377] 0x1807C2D40
-    virtual void  _vf378() = 0;    // [378] 0x18086466C
-    virtual void  _vf379() = 0;    // [379] 0x181203928
-    virtual void  _vf380() = 0;    // [380] 0x182548834
 };
 
 }  // namespace Offsets

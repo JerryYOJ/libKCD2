@@ -8,7 +8,7 @@
 // Do not edit by hand. One entry per RE'd polymorphic class, matched to the binary
 // by exact mangled name. Consumed by Offsets/RTTI.h (kcd_cast) and the
 // `static constexpr auto RTTI` member on each class.
-// Target: WHGame.dll 1.5.6. Count: 1354 classes.
+// Target: WHGame.dll 1.5.6. Count: 1430 classes.
 
 namespace Offsets {
 
@@ -60,6 +60,7 @@ namespace Offsets {
     inline constexpr ::REL::ID RTTI_C_ActiveTriggerPort                                          { 1206667 };  // 0x4A9ADA8 .?AVC_ActiveTriggerPort@conceptmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_ActivityCollection                                         { 1586 };  // 0x4C868D0 .?AVC_ActivityCollection@questmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_ActivityManager                                            { 1595 };  // 0x4C8AF60 .?AVC_ActivityManager@questmodule@wh@@
+    inline constexpr ::REL::ID RTTI_C_ActivityObjective                                          { 1235491 };  // 0x4F5FCC0 .?AVC_ActivityObjective@activitysystem@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_ActivityType                                               { 1589 };  // 0x4C86978 .?AVC_ActivityType@questmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_ActivityUnit                                               { 1588 };  // 0x4C86940 .?AVC_ActivityUnit@questmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_Actor                                                      { 1519 };  // 0x4B73D78 .?AVC_Actor@entitymodule@wh@@
@@ -74,6 +75,7 @@ namespace Offsets {
     inline constexpr ::REL::ID RTTI_C_AddPerkEffect                                              { 2002 };  // 0x4D5FDB8 .?AVC_AddPerkEffect@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_AimBeginCause                                              { 1968 };  // 0x4D5DC00 .?AVC_AimBeginCause@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_AimEndCause                                                { 1971 };  // 0x4D5DDB0 .?AVC_AimEndCause@rpgmodule@wh@@
+    inline constexpr ::REL::ID RTTI_C_AlarmDogObjective                                          { 1235577 };  // 0x4F63BD0 .?AVC_AlarmDogObjective@activitysystem@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_Alchemy                                                    { 1225947 };  // 0x4DD5670 .?AVC_Alchemy@playermodule@wh@@
     inline constexpr ::REL::ID RTTI_C_AlchemyActionDirector                                      { 1225915 };  // 0x4DD4BE8 .?AVC_AlchemyActionDirector@playermodule@wh@@
     inline constexpr ::REL::ID RTTI_C_AlchemyAnimAction                                          { 1225904 };  // 0x4DD4828 .?AVC_AlchemyAnimAction@playermodule@wh@@
@@ -125,6 +127,7 @@ namespace Offsets {
     inline constexpr ::REL::ID RTTI_C_AutoTriggerPort                                            { 1206670 };  // 0x4A9AE58 .?AVC_AutoTriggerPort@conceptmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_BarberExtensionController                                  { 1450 };  // 0x4B49C50 .?AVC_BarberExtensionController@dialogmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_BarberServiceUsedCause                                     { 2031 };  // 0x4D71B18 .?AVC_BarberServiceUsedCause@rpgmodule@wh@@
+    inline constexpr ::REL::ID RTTI_C_BarkDogObjective                                           { 1235584 };  // 0x4F64010 .?AVC_BarkDogObjective@activitysystem@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_BaseModule                                                 { 1325 };  // 0x4A8BB68 .?AVC_BaseModule@framework@wh@@
     inline constexpr ::REL::ID RTTI_C_Battlement                                                 { 1226549 };  // 0x4DF0050 .?AVC_Battlement@playermodule@wh@@
     inline constexpr ::REL::ID RTTI_C_BattlementSlot                                             { 1226539 };  // 0x4DEFD68 .?AVC_BattlementSlot@playermodule@wh@@
@@ -168,8 +171,10 @@ namespace Offsets {
     inline constexpr ::REL::ID RTTI_C_CatHolder                                                  { 1213063 };  // 0x4BA92D0 .?AVC_CatHolder@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_C_CatWaypoint                                                { 1213065 };  // 0x4BA93C8 .?AVC_CatWaypoint@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_C_CauseVisitor                                               { 1223271 };  // 0x4D5FF60 .?AVC_CauseVisitor@rpgmodule@wh@@
+    inline constexpr ::REL::ID RTTI_C_ChaseDogObjective                                          { 1235592 };  // 0x4F64320 .?AVC_ChaseDogObjective@activitysystem@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_ChatFollowManager                                          { 1217595 };  // 0x4C733C0 .?AVC_ChatFollowManager@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_C_CheckpointMark                                             { 1605 };  // 0x4C92430 .?AVC_CheckpointMark@guimodule@wh@@
+    inline constexpr ::REL::ID RTTI_C_Clothing                                                   { 1213560 };  // 0x4BC08E0 .?AVC_Clothing@clothing@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_C_ClothingWashedCause                                        { 1955 };  // 0x4D5D4F8 .?AVC_ClothingWashedCause@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_CodexPerk                                                  { 1914 };  // 0x4D53EE0 .?AVC_CodexPerk@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_CollisionHitCause                                          { 2028 };  // 0x4D719C0 .?AVC_CollisionHitCause@rpgmodule@wh@@
@@ -271,6 +276,7 @@ namespace Offsets {
     inline constexpr ::REL::ID RTTI_C_CompanionManager                                           { 2042 };  // 0x4D724D8 .?AVC_CompanionManager@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_CompanionPerk                                              { 1909 };  // 0x4D53DE8 .?AVC_CompanionPerk@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_CompassMark                                                { 1619 };  // 0x4C92818 .?AVC_CompassMark@guimodule@wh@@
+    inline constexpr ::REL::ID RTTI_C_Component                                                  { 1213561 };  // 0x4BC0920 .?AVC_Component@clothing@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_C_ConceptGraphDeserializer                                   { 1208640 };  // 0x4AEF280 .?AVC_ConceptGraphDeserializer@conceptmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_ConceptModule                                              { 1326 };  // 0x4A8BB98 .?AVC_ConceptModule@conceptmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_ConceptNodeFactory                                         { 1208637 };  // 0x4AEF148 .?AVC_ConceptNodeFactory@conceptmodule@wh@@
@@ -340,15 +346,18 @@ namespace Offsets {
     inline constexpr ::REL::ID RTTI_C_DialogueWrapper                                            { 1512 };  // 0x4B6F158 .?AVC_DialogueWrapper@data@dialogmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_DiceMinigameEndedCause                                     { 1957 };  // 0x4D5D638 .?AVC_DiceMinigameEndedCause@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_DiceMinigameStartedCause                                   { 1958 };  // 0x4D5D6E0 .?AVC_DiceMinigameStartedCause@rpgmodule@wh@@
+    inline constexpr ::REL::ID RTTI_C_DigDogObjective                                            { 1235574 };  // 0x4F63AD0 .?AVC_DigDogObjective@activitysystem@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_DisableAlchemyTable                                        { 1214198 };  // 0x4BDED30 .?AVC_DisableAlchemyTable@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_C_DisappearingObject                                         { 1243314 };  // 0x505DD50 .?AVC_DisappearingObject@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_C_DistanceSituationGlobalCondition                           { 2176 };  // 0x4F4D630 .?AVC_DistanceSituationGlobalCondition@xgenaimodule@wh@@
+    inline constexpr ::REL::ID RTTI_C_DistractDogObjective                                       { 1235572 };  // 0x4F63900 .?AVC_DistractDogObjective@activitysystem@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_DmgREffect                                                 { 1878 };  // 0x4D4E478 .?AVC_DmgREffect@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_DocumentItem                                               { 1217197 };  // 0x4C645C0 .?AVC_DocumentItem@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_C_DocumentRewardPerkDatabase                                 { 1853 };  // 0x4D398A0 .?AVC_DocumentRewardPerkDatabase@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_Dog                                                        { 1215387 };  // 0x4C15100 .?AVC_Dog@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_C_DogCompanionSubbrain                                       { 2099 };  // 0x4EFDE78 .?AVC_DogCompanionSubbrain@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_DogFoundEventCause                                         { 1995 };  // 0x4D5F720 .?AVC_DogFoundEventCause@rpgmodule@wh@@
+    inline constexpr ::REL::ID RTTI_C_DogObjective                                               { 1235583 };  // 0x4F63FC0 .?AVC_DogObjective@activitysystem@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_DogPointDatabase                                           { 2169 };  // 0x4F4C960 .?AVC_DogPointDatabase@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_DogPointManager                                            { 2160 };  // 0x4F4C528 .?AVC_DogPointManager@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_DrunkennessCause                                           { 1802 };  // 0x4CE4130 .?AVC_DrunkennessCause@rpgmodule@wh@@
@@ -357,6 +366,7 @@ namespace Offsets {
     inline constexpr ::REL::ID RTTI_C_DynamicLinkableObject                                      { 2227 };  // 0x4F5B518 .?AVC_DynamicLinkableObject@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_DynamicLinkableObjectWithOwnership                         { 2292 };  // 0x4FF5A20 .?AVC_DynamicLinkableObjectWithOwnership@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_DynamicLinkablesManager                                    { 2287 };  // 0x4FF5840 .?AVC_DynamicLinkablesManager@xgenaimodule@wh@@
+    inline constexpr ::REL::ID RTTI_C_EatDogObjective                                            { 1235589 };  // 0x4F64230 .?AVC_EatDogObjective@activitysystem@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_EdgePort                                                   { 1206674 };  // 0x4A9AF78 .?AVC_EdgePort@conceptmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_EffectVisitor                                              { 1811 };  // 0x4CE4C20 .?AVC_EffectVisitor@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_ElementAt                                                  { 1207878 };  // 0x4AD09A0 .?AVC_ElementAt@conceptmodule@wh@@
@@ -390,6 +400,7 @@ namespace Offsets {
     inline constexpr ::REL::ID RTTI_C_FaderCutscene                                              { 1675 };  // 0x4CB0530 .?AVC_FaderCutscene@guimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_FaderDialogueNode                                          { 1513 };  // 0x4B6F198 .?AVC_FaderDialogueNode@data@dialogmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_FaderSuspend                                               { 1688 };  // 0x4CB0B30 .?AVC_FaderSuspend@guimodule@wh@@
+    inline constexpr ::REL::ID RTTI_C_FailDogObjective                                           { 1235591 };  // 0x4F642D0 .?AVC_FailDogObjective@activitysystem@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_FallDamageCause                                            { 1960 };  // 0x4D5D808 .?AVC_FallDamageCause@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_FastTravel                                                 { 2047 };  // 0x4DCF148 .?AVC_FastTravel@playermodule@wh@@
     inline constexpr ::REL::ID RTTI_C_FastTravelCutscene                                         { 1676 };  // 0x4CB0568 .?AVC_FastTravelCutscene@guimodule@wh@@
@@ -397,12 +408,16 @@ namespace Offsets {
     inline constexpr ::REL::ID RTTI_C_FastTravelEndedCause                                       { 1952 };  // 0x4D5D318 .?AVC_FastTravelEndedCause@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_FastTravelScriptBind                                       { 2049 };  // 0x4DFA0B8 .?AVC_FastTravelScriptBind@playermodule@wh@@
     inline constexpr ::REL::ID RTTI_C_FastTravelStartedCause                                     { 1949 };  // 0x4D5D160 .?AVC_FastTravelStartedCause@rpgmodule@wh@@
+    inline constexpr ::REL::ID RTTI_C_FetchDogObjective                                          { 1235576 };  // 0x4F63B80 .?AVC_FetchDogObjective@activitysystem@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_FileTableSerializer                                        { 1208644 };  // 0x4AEF468 .?AVC_FileTableSerializer@databasemodule@wh@@
     inline constexpr ::REL::ID RTTI_C_FinishRecipeFromMortarAction                               { 1225922 };  // 0x4DD4D90 .?AVC_FinishRecipeFromMortarAction@playermodule@wh@@
     inline constexpr ::REL::ID RTTI_C_FirstElement                                               { 1207881 };  // 0x4AD0A48 .?AVC_FirstElement@conceptmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_FloatSerializationFormatColumnDescriptor                   { 1210488 };  // 0x4B40040 .?AVC_FloatSerializationFormatColumnDescriptor@databasemodule@wh@@
     inline constexpr ::REL::ID RTTI_C_FocusCamera                                                { 1242347 };  // 0x5045C78 .?AVC_FocusCamera@@
     inline constexpr ::REL::ID RTTI_C_FocusCameraNode                                            { 1210485 };  // 0x4B3FEC8 .?AVC_FocusCameraNode@animationmodule@wh@@
+    inline constexpr ::REL::ID RTTI_C_FollowDogObjective                                         { 1235685 };  // 0x4F67380 .?AVC_FollowDogObjective@activitysystem@xgenaimodule@wh@@
+    inline constexpr ::REL::ID RTTI_C_FollowHeelDogObjective                                     { 1235688 };  // 0x4F67470 .?AVC_FollowHeelDogObjective@activitysystem@xgenaimodule@wh@@
+    inline constexpr ::REL::ID RTTI_C_FollowRiderDogObjective                                    { 1235678 };  // 0x4F67160 .?AVC_FollowRiderDogObjective@activitysystem@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_FoodProcessingTrigger                                      { 1215643 };  // 0x4C1EDE0 .?AVC_FoodProcessingTrigger@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_C_FoodValueEffect                                            { 2008 };  // 0x4D5FF98 .?AVC_FoodValueEffect@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_ForEach                                                    { 1207230 };  // 0x4AB37B8 .?AVC_ForEach@conceptmodule@wh@@
@@ -413,6 +428,10 @@ namespace Offsets {
     inline constexpr ::REL::ID RTTI_C_FormationSpinePointPuppet                                  { 2133 };  // 0x4F472D0 .?AVC_FormationSpinePointPuppet@movement@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_ForwardCheckingSituationSearch                             { 2184 };  // 0x4F4DB50 .?AVC_ForwardCheckingSituationSearch@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_FragmentedMemoryIOStream                                   { 1302 };  // 0x4A37820 .?AVC_FragmentedMemoryIOStream@shared@wh@@
+    inline constexpr ::REL::ID RTTI_C_FunMoveDogObjective                                        { 1235652 };  // 0x4F66530 .?AVC_FunMoveDogObjective@activitysystem@xgenaimodule@wh@@
+    inline constexpr ::REL::ID RTTI_C_FunOnPointDogObjective                                     { 1235686 };  // 0x4F673D0 .?AVC_FunOnPointDogObjective@activitysystem@xgenaimodule@wh@@
+    inline constexpr ::REL::ID RTTI_C_FunOnSoDogObjective                                        { 1235653 };  // 0x4F66580 .?AVC_FunOnSoDogObjective@activitysystem@xgenaimodule@wh@@
+    inline constexpr ::REL::ID RTTI_C_FunOnTargetBaseDogObjective                                { 1235575 };  // 0x4F63B20 .?AVC_FunOnTargetBaseDogObjective@activitysystem@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_Function                                                   { 1207566 };  // 0x4AC2898 .?AVC_Function@conceptmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_FunctionBase                                               { 1207569 };  // 0x4AC2998 .?AVC_FunctionBase@conceptmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_FunctionBoilingTimeRange                                   { 1226142 };  // 0x4DDEAE0 .?AVC_FunctionBoilingTimeRange@playermodule@wh@@
@@ -452,6 +471,7 @@ namespace Offsets {
     inline constexpr ::REL::ID RTTI_C_HerbsCollectedCause                                        { 1974 };  // 0x4D5DFE0 .?AVC_HerbsCollectedCause@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_HideActorCommand                                           { 1479 };  // 0x4B528F8 .?AVC_HideActorCommand@data@dialogmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_Hole                                                       { 1243337 };  // 0x505E4C8 .?AVC_Hole@entitymodule@wh@@
+    inline constexpr ::REL::ID RTTI_C_HomogenousItemDescriptor                                   { 1217218 };  // 0x4C64C60 .?AVC_HomogenousItemDescriptor@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_C_Horse                                                      { 1530 };  // 0x4C17D60 .?AVC_Horse@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_C_HorseInventoryOwnership                                    { 2153 };  // 0x4F492E0 .?AVC_HorseInventoryOwnership@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_HorseIrritationActionCause                                 { 1930 };  // 0x4D5C5A0 .?AVC_HorseIrritationActionCause@rpgmodule@wh@@
@@ -459,6 +479,7 @@ namespace Offsets {
     inline constexpr ::REL::ID RTTI_C_HorseRidingDistanceReachedCause                            { 2026 };  // 0x4D71860 .?AVC_HorseRidingDistanceReachedCause@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_HorseUsageManager                                          { 1215485 };  // 0x4C17D90 .?AVC_HorseUsageManager@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_C_Human                                                      { 1533 };  // 0x4C1F9B0 .?AVC_Human@entitymodule@wh@@
+    inline constexpr ::REL::ID RTTI_C_HuntDogObjective                                           { 1235680 };  // 0x4F67200 .?AVC_HuntDogObjective@activitysystem@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_IdleState                                                  { 1522 };  // 0x4B76888 .?AVC_IdleState@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_C_If                                                         { 1207215 };  // 0x4AB3228 .?AVC_If@conceptmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_IfFunction                                                 { 1207549 };  // 0x4AC21A0 .?AVC_IfFunction@conceptmodule@wh@@
@@ -490,6 +511,7 @@ namespace Offsets {
     inline constexpr ::REL::ID RTTI_C_Item                                                       { 1547 };  // 0x4C64BC0 .?AVC_Item@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_C_ItemBloodEffect                                            { 2011 };  // 0x4D600B8 .?AVC_ItemBloodEffect@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_ItemBuffInitParams                                         { 1822 };  // 0x4CE6190 .?AVC_ItemBuffInitParams@rpgmodule@wh@@
+    inline constexpr ::REL::ID RTTI_C_ItemClassDescriptor                                        { 1217201 };  // 0x4C646E8 .?AVC_ItemClassDescriptor@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_C_ItemCollection                                             { 1539 };  // 0x4C38850 .?AVC_ItemCollection@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_C_ItemDamagedOnConsciousnessLossCause                        { 1982 };  // 0x4D5E450 .?AVC_ItemDamagedOnConsciousnessLossCause@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_ItemDatabase                                               { 1217214 };  // 0x4C64A88 .?AVC_ItemDatabase@entitymodule@wh@@
@@ -501,6 +523,7 @@ namespace Offsets {
     inline constexpr ::REL::ID RTTI_C_ItemIndexer                                                { 1216253 };  // 0x4C38618 .?AVC_ItemIndexer@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_C_ItemManager                                                { 1549 };  // 0x4C64CA8 .?AVC_ItemManager@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_C_ItemOwnership                                              { 2152 };  // 0x4F492A8 .?AVC_ItemOwnership@xgenaimodule@wh@@
+    inline constexpr ::REL::ID RTTI_C_ItemPropertyDescriptor                                     { 1217211 };  // 0x4C64998 .?AVC_ItemPropertyDescriptor@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_C_ItemPuppet                                                 { 2299 };  // 0x4FF5DF0 .?AVC_ItemPuppet@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_ItemRepairCause                                            { 1980 };  // 0x4D5E380 .?AVC_ItemRepairCause@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_ItemUseCause                                               { 1981 };  // 0x4D5E410 .?AVC_ItemUseCause@rpgmodule@wh@@
@@ -554,8 +577,10 @@ namespace Offsets {
     inline constexpr ::REL::ID RTTI_C_ManlyOdourBase                                             { 1826 };  // 0x4CE84D8 .?AVC_ManlyOdourBase@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_ManlyOdourStealthBuff                                      { 1825 };  // 0x4CE8498 .?AVC_ManlyOdourStealthBuff@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_MapLabelDatabase                                           { 1660 };  // 0x4CAF0B8 .?AVC_MapLabelDatabase@guimodule@wh@@
+    inline constexpr ::REL::ID RTTI_C_MarkDogObjective                                           { 1235689 };  // 0x4F674C0 .?AVC_MarkDogObjective@activitysystem@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_MaterialEffectFloat                                        { 1577 };  // 0x4C7BC60 .?AVC_MaterialEffectFloat@environmentmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_MaterialEffectVec                                          { 1576 };  // 0x4C7BC18 .?AVC_MaterialEffectVec@environmentmodule@wh@@
+    inline constexpr ::REL::ID RTTI_C_MeleeCombatDogObjective                                    { 1235682 };  // 0x4F672A0 .?AVC_MeleeCombatDogObjective@activitysystem@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_MeleeWeaponRuntimeData                                     { 1551 };  // 0x4C6F0B8 .?AVC_MeleeWeaponRuntimeData@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_C_MemberFunction                                             { 1207565 };  // 0x4AC2860 .?AVC_MemberFunction@conceptmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_MemoryIOStream                                             { 1307 };  // 0x4A37930 .?AVC_MemoryIOStream@shared@wh@@
@@ -582,6 +607,7 @@ namespace Offsets {
     inline constexpr ::REL::ID RTTI_C_MoodCommand                                                { 1484 };  // 0x4B532B0 .?AVC_MoodCommand@data@dialogmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_MoonEffect                                                 { 1566 };  // 0x4C7A850 .?AVC_MoonEffect@environmentmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_MountRiderLinkManager                                      { 2233 };  // 0x4F5C500 .?AVC_MountRiderLinkManager@xgenaimodule@wh@@
+    inline constexpr ::REL::ID RTTI_C_MoveDogObjective                                           { 1235681 };  // 0x4F67250 .?AVC_MoveDogObjective@activitysystem@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_MovePotAction                                              { 1225938 };  // 0x4DD53D8 .?AVC_MovePotAction@playermodule@wh@@
     inline constexpr ::REL::ID RTTI_C_MovementActionCause                                        { 1931 };  // 0x4D5C628 .?AVC_MovementActionCause@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_MusicModule                                                { 2062 };  // 0x4E2B330 .?AVC_MusicModule@musicmodule@wh@@
@@ -590,6 +616,8 @@ namespace Offsets {
     inline constexpr ::REL::ID RTTI_C_NPCFactionNode                                             { 1880 };  // 0x4D4E540 .?AVC_NPCFactionNode@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_NPCManager                                                 { 2249 };  // 0x4F6E458 .?AVC_NPCManager@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_NPCMessageDispatcher                                       { 2237 };  // 0x4F5D548 .?AVC_NPCMessageDispatcher@xgenaimodule@wh@@
+    inline constexpr ::REL::ID RTTI_C_NPCProperty                                                { 1235503 };  // 0x4F60490 .?AVC_NPCProperty@activitysystem@xgenaimodule@wh@@
+    inline constexpr ::REL::ID RTTI_C_NPCWatch                                                   { 1235510 };  // 0x4F60820 .?AVC_NPCWatch@activitysystem@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_NamedIntervalDatabase                                      { 1844 };  // 0x4D37B98 .?AVC_NamedIntervalDatabase@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_Navigation                                                 { 1238393 };  // 0x4FDFED8 .?AVC_Navigation@navigation@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_NavigationElementWalkBase                                  { 1238426 };  // 0x4FE1140 .?AVC_NavigationElementWalkBase@navigation@xgenaimodule@wh@@
@@ -653,6 +681,7 @@ namespace Offsets {
     inline constexpr ::REL::ID RTTI_C_PerkScriptDatabase                                         { 1843 };  // 0x4D37B60 .?AVC_PerkScriptDatabase@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_PerkSoulAbilityDatabase                                    { 1839 };  // 0x4D36710 .?AVC_PerkSoulAbilityDatabase@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_PerkUsedEffect                                             { 1808 };  // 0x4CE4B80 .?AVC_PerkUsedEffect@rpgmodule@wh@@
+    inline constexpr ::REL::ID RTTI_C_PetDogObjective                                            { 1235651 };  // 0x4F664E0 .?AVC_PetDogObjective@activitysystem@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_PhaseItemEventImplementation                               { 2270 };  // 0x4FF2E30 .?AVC_PhaseItemEventImplementation@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_PhaseItemEventImplementationBase                           { 2269 };  // 0x4FF2DE0 .?AVC_PhaseItemEventImplementationBase@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_PickBookAction                                             { 1225921 };  // 0x4DD4D58 .?AVC_PickBookAction@playermodule@wh@@
@@ -685,6 +714,7 @@ namespace Offsets {
     inline constexpr ::REL::ID RTTI_C_PlayerOutfitChangedCause                                   { 2023 };  // 0x4D71668 .?AVC_PlayerOutfitChangedCause@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_PlayerOutfitSwitchedCause                                  { 2024 };  // 0x4D71708 .?AVC_PlayerOutfitSwitchedCause@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_PlayerStartedToLootStashCause                              { 1992 };  // 0x4D5F270 .?AVC_PlayerStartedToLootStashCause@rpgmodule@wh@@
+    inline constexpr ::REL::ID RTTI_C_PlayerSynchroAnimBaseDogObjective                          { 1235676 };  // 0x4F670B0 .?AVC_PlayerSynchroAnimBaseDogObjective@activitysystem@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_PlayerWeapon                                               { 1243344 };  // 0x505E700 .?AVC_PlayerWeapon@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_C_PointAtCommand                                             { 1490 };  // 0x4B53438 .?AVC_PointAtCommand@data@dialogmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_PointShape                                                 { 1915 };  // 0x4D53F40 .?AVC_PointShape@rpgmodule@wh@@
@@ -755,6 +785,7 @@ namespace Offsets {
     inline constexpr ::REL::ID RTTI_C_RiderPlayerInput                                           { 1215460 };  // 0x4C173C8 .?AVC_RiderPlayerInput@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_C_RiderSync                                                  { 1215467 };  // 0x4C17730 .?AVC_RiderSync@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_C_RotationSpatialOperation                                   { 2305 };  // 0x4FFB880 .?AVC_RotationSpatialOperation@xgenaimodule@wh@@
+    inline constexpr ::REL::ID RTTI_C_RunawayDogObjective                                        { 1235683 };  // 0x4F672F0 .?AVC_RunawayDogObjective@activitysystem@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_RuntimePrefabAutoPhase                                     { 1243312 };  // 0x505DC88 .?AVC_RuntimePrefabAutoPhase@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_C_RuntimeState                                               { 1331 };  // 0x4AB3370 .?AVC_RuntimeState@conceptmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_RuntimeStateFlagEffect                                     { 2017 };  // 0x4D60260 .?AVC_RuntimeStateFlagEffect@rpgmodule@wh@@
@@ -799,12 +830,15 @@ namespace Offsets {
     inline constexpr ::REL::ID RTTI_C_ScriptContextDatabase                                      { 2304 };  // 0x4FFB7B0 .?AVC_ScriptContextDatabase@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_ScriptPerk                                                 { 1912 };  // 0x4D53E80 .?AVC_ScriptPerk@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_ScriptedHitCause                                           { 2030 };  // 0x4D71AE0 .?AVC_ScriptedHitCause@rpgmodule@wh@@
+    inline constexpr ::REL::ID RTTI_C_SearchDogObjective                                         { 1235679 };  // 0x4F671B0 .?AVC_SearchDogObjective@activitysystem@xgenaimodule@wh@@
+    inline constexpr ::REL::ID RTTI_C_SearchItemDogObjective                                     { 1235677 };  // 0x4F67110 .?AVC_SearchItemDogObjective@activitysystem@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_Select                                                     { 1207217 };  // 0x4AB3288 .?AVC_Select@conceptmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_Sequence                                                   { 1504 };  // 0x4B67C30 .?AVC_Sequence@data@dialogmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_SequenceEndedCause                                         { 1967 };  // 0x4D5DBC8 .?AVC_SequenceEndedCause@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_SequenceStartedCause                                       { 1964 };  // 0x4D5DA18 .?AVC_SequenceStartedCause@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_SequenceTrigger                                            { 1215635 };  // 0x4C1EAE8 .?AVC_SequenceTrigger@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_C_SetItemPhaseEventImplementation                            { 2275 };  // 0x4FF30D0 .?AVC_SetItemPhaseEventImplementation@xgenaimodule@wh@@
+    inline constexpr ::REL::ID RTTI_C_ShakeOutDogObjective                                       { 1235650 };  // 0x4F66490 .?AVC_ShakeOutDogObjective@activitysystem@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_SharedResource                                             { 1322 };  // 0x4A8A7B0 .?AVC_SharedResource@conceptmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_SharpPedalingCause                                         { 1976 };  // 0x4D5E118 .?AVC_SharpPedalingCause@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_SharpPressureCause                                         { 1979 };  // 0x4D5E2F8 .?AVC_SharpPressureCause@rpgmodule@wh@@
@@ -855,6 +889,8 @@ namespace Offsets {
     inline constexpr ::REL::ID RTTI_C_SmartObjectTrigger                                         { 1215631 };  // 0x4C1E9A8 .?AVC_SmartObjectTrigger@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_C_SmartObjectsManager                                        { 2226 };  // 0x4F5B380 .?AVC_SmartObjectsManager@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_Smithery                                                   { 1243308 };  // 0x505DB20 .?AVC_Smithery@playermodule@wh@@
+    inline constexpr ::REL::ID RTTI_C_SniffableItem                                              { 1214202 };  // 0x4BDEF30 .?AVC_SniffableItem@entitymodule@wh@@
+    inline constexpr ::REL::ID RTTI_C_SniffableItemManager                                       { 1215406 };  // 0x4C15658 .?AVC_SniffableItemManager@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_C_SocialClassDatabase                                        { 1858 };  // 0x4D413E8 .?AVC_SocialClassDatabase@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_Soul                                                       { 2040 };  // 0x4D72390 .?AVC_Soul@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_SoulAbilityPerk                                            { 1905 };  // 0x4D53D08 .?AVC_SoulAbilityPerk@rpgmodule@wh@@
@@ -908,6 +944,7 @@ namespace Offsets {
     inline constexpr ::REL::ID RTTI_C_TagPointWithScript                                         { 1243316 };  // 0x505DE08 .?AVC_TagPointWithScript@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_C_TakeIngredientAction                                       { 1225902 };  // 0x4DD4788 .?AVC_TakeIngredientAction@playermodule@wh@@
     inline constexpr ::REL::ID RTTI_C_TakeObjectAction                                           { 1225928 };  // 0x4DD4FF0 .?AVC_TakeObjectAction@playermodule@wh@@
+    inline constexpr ::REL::ID RTTI_C_TeleportDogObjective                                       { 1235655 };  // 0x4F66620 .?AVC_TeleportDogObjective@activitysystem@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_TemplatedNode                                              { 1332 };  // 0x4AB3740 .?AVC_TemplatedNode@conceptmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_TemporaryFactionEffect                                     { 1832 };  // 0x4D09C38 .?AVC_TemporaryFactionEffect@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_TextCutscene                                               { 1681 };  // 0x4CB06E8 .?AVC_TextCutscene@guimodule@wh@@
@@ -1077,6 +1114,7 @@ namespace Offsets {
     inline constexpr ::REL::ID RTTI_C_VigourValueEffect                                          { 2009 };  // 0x4D5FFD0 .?AVC_VigourValueEffect@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_VisualEffect                                               { 1575 };  // 0x4C7BBD8 .?AVC_VisualEffect@environmentmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_VisualEffectManager                                        { 1570 };  // 0x4C7B980 .?AVC_VisualEffectManager@environmentmodule@wh@@
+    inline constexpr ::REL::ID RTTI_C_WaitDogObjective                                           { 1235687 };  // 0x4F67420 .?AVC_WaitDogObjective@activitysystem@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_C_WantedBuff                                                 { 1835 };  // 0x4D0B1F8 .?AVC_WantedBuff@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_C_WaterPuddle                                                { 1217737 };  // 0x4C78670 .?AVC_WaterPuddle@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_C_WaterTubeActionTrigger                                     { 1215637 };  // 0x4C1EBA0 .?AVC_WaterTubeActionTrigger@entitymodule@wh@@
@@ -1102,6 +1140,7 @@ namespace Offsets {
     inline constexpr ::REL::ID RTTI_I_ActionActorExpansion                                       { 1212334 };  // 0x4B8BC98 .?AVI_ActionActorExpansion@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_I_ActionImpl                                                 { 1386 };  // 0x4AFE2C0 .?AVI_ActionImpl@framework@wh@@
     inline constexpr ::REL::ID RTTI_I_ActionSets                                                 { 1225943 };  // 0x4DD5550 .?AVI_ActionSets@playermodule@wh@@
+    inline constexpr ::REL::ID RTTI_I_ActivityObjectiveContext                                   { 1235445 };  // 0x4F5E2F0 .?AVI_ActivityObjectiveContext@activitysystem@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_I_ActorAction                                                { 1209462 };  // 0x4B130A8 .?AVI_ActorAction@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_I_ActorSpeakCallback                                         { 1458 };  // 0x4B4B860 .?AVI_ActorSpeakCallback@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_I_AdbChangeListener                                          { 1426 };  // 0x4B12EF0 .?AUI_AdbChangeListener@animationmodule@wh@@
@@ -1116,6 +1155,7 @@ namespace Offsets {
     inline constexpr ::REL::ID RTTI_I_AreaTracker                                                { 1618 };  // 0x4C92788 .?AVI_AreaTracker@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_I_BattlementSlot                                             { 1226541 };  // 0x4DEFDD8 .?AVI_BattlementSlot@playermodule@wh@@
     inline constexpr ::REL::ID RTTI_I_BehaviorHost                                               { 2068 };  // 0x4E5EDA0 .?AVI_BehaviorHost@xgenaimodule@wh@@
+    inline constexpr ::REL::ID RTTI_I_BehaviorReservationHost                                    { 1230784 };  // 0x4E8E4B0 .?AVI_BehaviorReservationHost@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_I_BehaviorToMonsterLODPostponer                              { 2072 };  // 0x4EA3650 .?AVI_BehaviorToMonsterLODPostponer@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_I_BindableObject                                             { 1548 };  // 0x4C64BF0 .?AVI_BindableObject@framework@wh@@
     inline constexpr ::REL::ID RTTI_I_BuffInitParams                                             { 1524 };  // 0x4B7F230 .?AVI_BuffInitParams@rpgmodule@wh@@
@@ -1167,6 +1207,7 @@ namespace Offsets {
     inline constexpr ::REL::ID RTTI_I_DialogInteractionCallback                                  { 1459 };  // 0x4B4B8A0 .?AVI_DialogInteractionCallback@dialogmodule@wh@@
     inline constexpr ::REL::ID RTTI_I_DialogueExtension                                          { 1469 };  // 0x4B4E7C0 .?AVI_DialogueExtension@dialogmodule@wh@@
     inline constexpr ::REL::ID RTTI_I_DocumentActionListener                                     { 1225916 };  // 0x4DD4C28 .?AVI_DocumentActionListener@entitymodule@wh@@
+    inline constexpr ::REL::ID RTTI_I_DogObjectiveContext                                        { 1235586 };  // 0x4F640B0 .?AVI_DogObjectiveContext@activitysystem@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_I_DynamicEnum                                                { 1335 };  // 0x4AEF338 .?AVI_DynamicEnum@databasemodule@wh@@
     inline constexpr ::REL::ID RTTI_I_EEFunction                                                 { 1311 };  // 0x4A57B50 .?AVI_EEFunction@framework@wh@@
     inline constexpr ::REL::ID RTTI_I_EntitySideEffectCallback                                   { 1419 };  // 0x4B063D0 .?AVI_EntitySideEffectCallback@game@wh@@
@@ -1196,6 +1237,7 @@ namespace Offsets {
     inline constexpr ::REL::ID RTTI_I_InventorySoul                                              { 2043 };  // 0x4D72550 .?AVI_InventorySoul@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_I_ItemAttachmentListener                                     { 1531 };  // 0x4C1F848 .?AVI_ItemAttachmentListener@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_I_ItemCollectionListener                                     { 1527 };  // 0x4BC02F0 .?AVI_ItemCollectionListener@entitymodule@wh@@
+    inline constexpr ::REL::ID RTTI_I_ItemDescriptor                                             { 1217217 };  // 0x4C64C28 .?AVI_ItemDescriptor@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_I_ItemRuntimeData                                            { 1542 };  // 0x4C38C80 .?AVI_ItemRuntimeData@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_I_LODAnimationController                                     { 1210399 };  // 0x4B3D420 .?AVI_LODAnimationController@animationmodule@wh@@
     inline constexpr ::REL::ID RTTI_I_LODHandle                                                  { 2250 };  // 0x4F6E608 .?AVI_LODHandle@xgenaimodule@wh@@
@@ -1224,6 +1266,7 @@ namespace Offsets {
     inline constexpr ::REL::ID RTTI_I_NoRTTITypeInfo                                             { 2066 };  // 0x4E41468 .?AVI_NoRTTITypeInfo@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_I_ObjectDatabase                                             { 1340 };  // 0x4AF0828 .?AVI_ObjectDatabase@databasemodule@wh@@
     inline constexpr ::REL::ID RTTI_I_ObjectManagerBaseListener                                  { 1617 };  // 0x4C92740 .?AVI_ObjectManagerBaseListener@xgenaimodule@wh@@
+    inline constexpr ::REL::ID RTTI_I_ObjectivePlannerRunnable                                   { 1235489 };  // 0x4F5FC20 .?AVI_ObjectivePlannerRunnable@activitysystem@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_I_OutfitManager                                              { 1227116 };  // 0x4E06380 .?AVI_OutfitManager@playermodule@wh@@
     inline constexpr ::REL::ID RTTI_I_OutputStream                                               { 1305 };  // 0x4A378D0 .?AVI_OutputStream@shared@wh@@
     inline constexpr ::REL::ID RTTI_I_Ownership                                                  { 2158 };  // 0x4F49EC0 .?AVI_Ownership@xgenaimodule@wh@@
@@ -1276,6 +1319,7 @@ namespace Offsets {
     inline constexpr ::REL::ID RTTI_I_SmartObjectHelpersManager                                  { 2223 };  // 0x4F5B1A0 .?AVI_SmartObjectHelpersManager@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_I_SmartObjectsManager                                        { 2229 };  // 0x4F5C140 .?AVI_SmartObjectsManager@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_I_SmartObjectsManagerListener                                { 1421 };  // 0x4B115D0 .?AVI_SmartObjectsManagerListener@xgenaimodule@wh@@
+    inline constexpr ::REL::ID RTTI_I_SniffableItemManager                                       { 1215403 };  // 0x4C15598 .?AVI_SniffableItemManager@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_I_Soul                                                       { 2041 };  // 0x4D723C0 .?AVI_Soul@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_I_SoulResolver                                               { 2039 };  // 0x4D72320 .?AVI_SoulResolver@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_I_SourceMonitorListener                                      { 1476 };  // 0x4B4FDA0 .?AVI_SourceMonitorListener@framework@wh@@
@@ -1319,8 +1363,10 @@ namespace Offsets {
     inline constexpr ::REL::ID RTTI_I_XGenAIModuleSingletons                                     { 2284 };  // 0x4FF3948 .?AVI_XGenAIModuleSingletons@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_I_XGenAINPC                                                  { 2248 };  // 0x4F6E430 .?AVI_XGenAINPC@wh@@
     inline constexpr ::REL::ID RTTI_I_XGenAINPCManager                                           { 2247 };  // 0x4F6E400 .?AVI_XGenAINPCManager@wh@@
+    inline constexpr ::REL::ID RTTI_S_AlchemyBaseItemClass                                       { 1216212 };  // 0x4C37610 .?AUS_AlchemyBaseItemClass@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_S_AlchemyRecipeName                                          { 1225751 };  // 0x4DCE1D0 .?AUS_AlchemyRecipeName@playermodule@wh@@
     inline constexpr ::REL::ID RTTI_S_AnimalCrimeDescription                                     { 2125 };  // 0x4F44418 .?AUS_AnimalCrimeDescription@xgenaimodule@wh@@
+    inline constexpr ::REL::ID RTTI_S_ArmorItemClass                                             { 1216268 };  // 0x4C38CF8 .?AUS_ArmorItemClass@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_S_AutoController                                             { 1215465 };  // 0x4C176B8 .?AVS_AutoController@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_S_BehaviorTreeSubBrainTemplate                               { 1233427 };  // 0x4EFE640 .?AUS_BehaviorTreeSubBrainTemplate@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_S_CatWaypointDefinition                                      { 1213066 };  // 0x4BA9400 .?AUS_CatWaypointDefinition@entitymodule@wh@@
@@ -1336,6 +1382,7 @@ namespace Offsets {
     inline constexpr ::REL::ID RTTI_S_CombatActorActionSyncPerfectBlockParams                    { 1345 };  // 0x4AF90A0 .?AUS_CombatActorActionSyncPerfectBlockParams@combatmodule@wh@@
     inline constexpr ::REL::ID RTTI_S_ConstVariableReference                                     { 2070 };  // 0x4E8E660 .?AUS_ConstVariableReference@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_S_Constants                                                  { 1845 };  // 0x4D37D48 .?AUS_Constants@rpgmodule@wh@@
+    inline constexpr ::REL::ID RTTI_S_ConsumableItemClass                                        { 1216252 };  // 0x4C38598 .?AUS_ConsumableItemClass@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_S_CraftingMaterialItemClass                                  { 1216215 };  // 0x4C37710 .?AUS_CraftingMaterialItemClass@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_S_CreditsRole                                                { 1663 };  // 0x4CAF910 .?AUS_CreditsRole@guimodule@wh@@
     inline constexpr ::REL::ID RTTI_S_CutsceneEventDesc                                          { 1684 };  // 0x4CB0788 .?AUS_CutsceneEventDesc@guimodule@wh@@
@@ -1343,24 +1390,38 @@ namespace Offsets {
     inline constexpr ::REL::ID RTTI_S_DatabaseIDTemplate                                         { 1233432 };  // 0x4EFE8A8 .?AUS_DatabaseIDTemplate@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_S_DialogParams                                               { 1427 };  // 0x4B12F30 .?AUS_DialogParams@dialogmodule@wh@@
     inline constexpr ::REL::ID RTTI_S_DialogueAttachmentProceduralParams                         { 1472 };  // 0x4B4EEF0 .?AUS_DialogueAttachmentProceduralParams@dialogmodule@wh@@
+    inline constexpr ::REL::ID RTTI_S_DiceBadgeItemClass                                         { 1216223 };  // 0x4C37A20 .?AUS_DiceBadgeItemClass@entitymodule@wh@@
+    inline constexpr ::REL::ID RTTI_S_DieItemClass                                               { 1216214 };  // 0x4C376D0 .?AUS_DieItemClass@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_S_DivisibleItemClass                                         { 1216243 };  // 0x4C38200 .?AUS_DivisibleItemClass@entitymodule@wh@@
+    inline constexpr ::REL::ID RTTI_S_DocumentItemClass                                          { 1216217 };  // 0x4C377E0 .?AUS_DocumentItemClass@entitymodule@wh@@
+    inline constexpr ::REL::ID RTTI_S_DogPoint                                                   { 1235076 };  // 0x4F4CB60 .?AUS_DogPoint@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_S_DogPointLayer                                              { 2172 };  // 0x4F4D378 .?AUS_DogPointLayer@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_S_EquippableItemClass                                        { 1216236 };  // 0x4C37EF8 .?AUS_EquippableItemClass@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_S_FastForwardRequest                                         { 1516 };  // 0x4B6F270 .?AUS_FastForwardRequest@data@dialogmodule@wh@@
     inline constexpr ::REL::ID RTTI_S_FastForwardRequestForAll                                   { 1510 };  // 0x4B6EF90 .?AUS_FastForwardRequestForAll@data@dialogmodule@wh@@
     inline constexpr ::REL::ID RTTI_S_FastForwardRequestForRole                                  { 1514 };  // 0x4B6F1E0 .?AUS_FastForwardRequestForRole@data@dialogmodule@wh@@
     inline constexpr ::REL::ID RTTI_S_FoodItemClass                                              { 1216249 };  // 0x4C38440 .?AUS_FoodItemClass@entitymodule@wh@@
+    inline constexpr ::REL::ID RTTI_S_HelmetItemClass                                            { 1216708 };  // 0x4C4C860 .?AUS_HelmetItemClass@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_S_HerbItemClass                                              { 1216712 };  // 0x4C4C9E0 .?AUS_HerbItemClass@entitymodule@wh@@
+    inline constexpr ::REL::ID RTTI_S_HoodItemClass                                              { 1216714 };  // 0x4C4CAA8 .?AUS_HoodItemClass@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_S_IncludedDecisionAlias                                      { 1507 };  // 0x4B67CE0 .?AUS_IncludedDecisionAlias@data@dialogmodule@wh@@
     inline constexpr ::REL::ID RTTI_S_ItemClass                                                  { 1216258 };  // 0x4C38888 .?AUS_ItemClass@entitymodule@wh@@
+    inline constexpr ::REL::ID RTTI_S_ItemClassPhase                                             { 1216230 };  // 0x4C37C68 .?AUS_ItemClassPhase@entitymodule@wh@@
+    inline constexpr ::REL::ID RTTI_S_KeyItemClass                                               { 1216717 };  // 0x4C4CBE0 .?AUS_KeyItemClass@entitymodule@wh@@
+    inline constexpr ::REL::ID RTTI_S_KeyRingItemClass                                           { 1216225 };  // 0x4C37AE0 .?AUS_KeyRingItemClass@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_S_LinkEdge                                                   { 2235 };  // 0x4F5C580 .?AUS_LinkEdge@xgenaimodule@wh@@
+    inline constexpr ::REL::ID RTTI_S_MoneyItemClass                                             { 1216219 };  // 0x4C378A0 .?AUS_MoneyItemClass@entitymodule@wh@@
+    inline constexpr ::REL::ID RTTI_S_NPCToolItemClass                                           { 1216239 };  // 0x4C38080 .?AUS_NPCToolItemClass@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_S_NodeExecuteContext                                         { 1206676 };  // 0x4A9AFE8 .?AUS_NodeExecuteContext@conceptmodule@wh@@
+    inline constexpr ::REL::ID RTTI_S_OintmentItemClass                                          { 1216706 };  // 0x4C4C798 .?AUS_OintmentItemClass@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_S_OnPressController                                          { 1215466 };  // 0x4C176F0 .?AVS_OnPressController@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_S_PathFindingRequest                                         { 1215468 };  // 0x4C17770 .?AUS_PathFindingRequest@navigation@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_S_PathFindingRequestDefault                                  { 1215475 };  // 0x4C17960 .?AUS_PathFindingRequestDefault@navigation@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_S_PickableItemClass                                          { 1216264 };  // 0x4C38B08 .?AUS_PickableItemClass@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_S_PlayerItemClass                                            { 1216266 };  // 0x4C38BC8 .?AUS_PlayerItemClass@entitymodule@wh@@
+    inline constexpr ::REL::ID RTTI_S_PoisonItemClass                                            { 1216710 };  // 0x4C4C920 .?AUS_PoisonItemClass@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_S_Port                                                       { 1508 };  // 0x4B67D28 .?AUS_Port@data@dialogmodule@wh@@
+    inline constexpr ::REL::ID RTTI_S_QuickSlotContainerItemClass                                { 1216719 };  // 0x4C4CCA0 .?AUS_QuickSlotContainerItemClass@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_S_RPGPerceptionHelper                                        { 2282 };  // 0x4FF3770 .?AUS_RPGPerceptionHelper@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_S_ReputationChangeRequest                                    { 1869 };  // 0x4D4E1F0 .?AUS_ReputationChangeRequest@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_S_Response                                                   { 1509 };  // 0x4B67D60 .?AUS_Response@data@dialogmodule@wh@@
@@ -1376,20 +1437,10 @@ namespace Offsets {
     inline constexpr ::REL::ID RTTI_S_VictimCrimeDescription                                     { 2123 };  // 0x4F44398 .?AUS_VictimCrimeDescription@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_S_VictimlessCrimeDescription                                 { 2122 };  // 0x4F44350 .?AUS_VictimlessCrimeDescription@xgenaimodule@wh@@
     inline constexpr ::REL::ID RTTI_S_VirtualLinkEdge                                            { 2239 };  // 0x4F5D6D8 .?AUS_VirtualLinkEdge@xgenaimodule@wh@@
+    inline constexpr ::REL::ID RTTI_S_WeaponEquipItemClass                                       { 1216247 };  // 0x4C38380 .?AUS_WeaponEquipItemClass@entitymodule@wh@@
     inline constexpr ::REL::ID RTTI_conceptmodule_C_Effect                                       { 1329 };  // 0x4AA1A98 .?AVC_Effect@conceptmodule@wh@@
     inline constexpr ::REL::ID RTTI_conceptmodule_C_SoulEffect                                   { 1333 };  // 0x4AC2960 .?AVC_SoulEffect@conceptmodule@wh@@
     inline constexpr ::REL::ID RTTI_rpgmodule_C_Effect                                           { 1816 };  // 0x4CE4D60 .?AVC_Effect@rpgmodule@wh@@
     inline constexpr ::REL::ID RTTI_rpgmodule_C_SoulEffect                                       { 1810 };  // 0x4CE4BF0 .?AVC_SoulEffect@rpgmodule@wh@@
-    inline constexpr ::REL::ID RTTI_I_SniffableItemManager                                       { 1215403 };  // 0x4C15598 .?AVI_SniffableItemManager@entitymodule@wh@@
-    inline constexpr ::REL::ID RTTI_C_SniffableItemManager                                       { 1215406 };  // 0x4C15658 .?AVC_SniffableItemManager@entitymodule@wh@@
-    inline constexpr ::REL::ID RTTI_C_SniffableItem                                              { 1214202 };  // 0x4BDEF30 .?AVC_SniffableItem@entitymodule@wh@@
-    inline constexpr ::REL::ID RTTI_I_ActivityObjectiveContext                                   { 1235446 };  // 0x4F5E2F0 .?AVI_ActivityObjectiveContext@activitysystem@xgenaimodule@wh@@
-    inline constexpr ::REL::ID RTTI_I_ObjectivePlannerRunnable                                   { 1235489 };  // 0x4F5FC20 .?AVI_ObjectivePlannerRunnable@activitysystem@xgenaimodule@wh@@
-    inline constexpr ::REL::ID RTTI_C_ActivityObjective                                          { 1235491 };  // 0x4F5FCC0 .?AVC_ActivityObjective@activitysystem@xgenaimodule@wh@@
-    inline constexpr ::REL::ID RTTI_I_DogObjectiveContext                                        { 1235586 };  // 0x4F640B0 .?AVI_DogObjectiveContext@activitysystem@xgenaimodule@wh@@
-    inline constexpr ::REL::ID RTTI_C_DogObjective                                               { 1235583 };  // 0x4F63FC0 .?AVC_DogObjective@activitysystem@xgenaimodule@wh@@
-    inline constexpr ::REL::ID RTTI_C_PlayerSynchroAnimBaseDogObjective                          { 1235676 };  // 0x4F670B0 .?AVC_PlayerSynchroAnimBaseDogObjective@activitysystem@xgenaimodule@wh@@
-    inline constexpr ::REL::ID RTTI_C_SearchItemDogObjective                                     { 1235677 };  // 0x4F67110 .?AVC_SearchItemDogObjective@activitysystem@xgenaimodule@wh@@
-    inline constexpr ::REL::ID RTTI_C_SearchDogObjective                                         { 1235679 };  // 0x4F671B0 .?AVC_SearchDogObjective@activitysystem@xgenaimodule@wh@@
 
 }  // namespace Offsets

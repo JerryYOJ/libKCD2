@@ -8,7 +8,7 @@
 #include "../framework/WUID.h"
 #include "C_Minigame.h"
 #include "C_AlchemyActionDirector.h"
-#include "E_AlchemyState.h"
+#include "E_AlchemyInteractionState.h"
 #include "E_AlchemyVerb.h"
 #include "S_AlchemyBrewState.h"
 
@@ -54,6 +54,7 @@ public:
     E_MinigameType::Type GetMinigameType() const override; // [0] returns Alchemy
     ~C_Alchemy() override;                                 // [5] sub_1809F1A8C
     bool IsFinished() const override;                      // [7] sub_180737914
+    RTTR_ENABLE(C_Minigame) // [15..17]
     void Update(float deltaTime) override;                 // [19] sub_180737920
     void Reset() override;                                 // [21] sub_1806C4F1C
 
@@ -75,7 +76,7 @@ public:
     // Permission probe: verb allowed for the current state (settings byte + create+validate dry-run).
     bool CanPerformVerb(E_AlchemyVerb::Type verb);                              // 0x1808D1F90
     // Effective brew state: m_primaryState, or m_subState while primary == Idle.
-    E_AlchemyState::Type GetEffectiveState() const;                             // 0x1808D237C
+    E_AlchemyInteractionState::Type GetEffectiveState() const;                             // 0x1808D237C
     // UI name of the action the verb would create (empty if none).
     void GetVerbActionName(CryStringT<char>& out, E_AlchemyVerb::Type verb);    // 0x1808D1ECC
     // In-session cleanup = the inherited Reset() virtual (I_Minigame [21], impl 0x1806C4F1C):

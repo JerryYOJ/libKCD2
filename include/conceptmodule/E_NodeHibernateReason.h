@@ -6,12 +6,14 @@
 
 namespace wh::conceptmodule {
 
-enum class E_NodeHibernateReason : uint32_t {
+enum class E_NodeHibernateReason : std::int32_t {
     GameModeEnd            = 0,
     GraphUnload            = 1,
     RandomEventEnd         = 2,
     RuntimeConditionPassed = 3,
     Debug                  = 4,
 };
+static_assert(sizeof(E_NodeHibernateReason) == 4,
+              "E_NodeHibernateReason size mismatch");
 
 }  // namespace wh::conceptmodule

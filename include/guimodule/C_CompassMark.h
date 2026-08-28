@@ -55,10 +55,16 @@ class C_CompassMark
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_CompassMark;
     // I_AreaTracker: all four impls toggle m_playerInArea (see I_AreaTracker.h).
-    void OnAreaEntered() override;   // 0x181A8C560
-    void OnAreaLeft() override;      // 0x181A8C570
-    void _vf2() override;            // 0x182B162FC
-    void _vf3() override;            // 0x182B162FC (folded)
+    void OnAreaEntered(
+        wh::xgenaimodule::I_NPC* npc,
+        wh::framework::WUID areaWuid,
+        std::int32_t eventFlags) override;                     // [0] 0x181A8C560
+    void OnAreaLeft(
+        wh::xgenaimodule::I_NPC* npc,
+        wh::framework::WUID areaWuid,
+        std::int32_t eventFlags) override;                     // [1] 0x181A8C570
+    void OnAreaRemoved(wh::xgenaimodule::I_Area* area) override; // [2] 0x182B162FC
+    void OnNPCRemoved(wh::xgenaimodule::I_NPC* npc) override;    // [3] 0x182B162FC
     // I_ObjectManagerBaseListener: event 1 (removed) -> detach (sub_180A195A4) + clear m_pTrackedObject.
     void OnObjectEvent(int event) override;   // 0x182B1438C
     // C_UIFlashObject: id/str + type + screen floats + in-area bytes -> SUIArguments.

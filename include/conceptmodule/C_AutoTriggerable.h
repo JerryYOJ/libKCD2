@@ -1,7 +1,9 @@
 #pragma once
 #include <cstdint>
 #include <memory>
+#include "../CryEngine/CryCommon/CryString.h"
 #include "C_SharedResource.h"
+#include "definition/I_NodeDefinition.h"
 
 // -----------------------------------------------
 // wh::conceptmodule::C_AutoTriggerable<TBase> -- auto-trigger node mixin
@@ -17,21 +19,25 @@
 namespace wh::conceptmodule {
 
 class I_Port;
-namespace definition { class I_PortDefinition; }
+namespace definition { class C_RunTimePortDefinition; }
 
 template <typename TBase>
 class C_AutoTriggerable : public TBase {
 public:
+    RTTR_ENABLE(TBase)                                    // [5..7]
     int32_t GetExecutionOrder() const override;          // [10] 0x181A72470 -> 1: sorts after plain nodes in the trigger-fire pipeline
     bool IsAutoTriggerable() const override;             // [24] 0x18041A6A0 -> true
     void SetAutoTriggerEnabled(bool enabled) override;   // [25] 0x1823CC2DC set/clear Flag_AutoTriggerEnabled
     void OnLifecycleEvent(int32_t event) override;       // [34] 0x1806B0C04 walks m_ports (sub_181E2CBB0) for ev in {0,1,3,4,5}
     int32_t MapEventToPhase(int32_t event) override;     // [35] 0x1806B0B80: ev {0,1}->1, 5->2, else 0
-    void GetPortDefinitions(std::function<void(std::shared_ptr<definition::I_PortDefinition> const&)> sink) override;  // [28] 0x1804F6120
+    void GetPortDefinitions(
+        definition::PortDefinitionSink sink, bool includeAll) override;  // [28] 0x1804F6120
     void Reset() override;                               // [37] 0x180694E8C (re)registers the auto-trigger (guard Flag_AutoTriggerEnabled; target sub_180694894)
     void UnregisterAutoTrigger() override;               // [38] 0x180F6ED40 (target sub_180F6EE2C)
     virtual _smart_ptr<I_Port> ResolveTriggerSource(_smart_ptr<C_SharedResource> source);  // [41] 0x1806B1478 maps a fired source to one of this node's ports (identity, else name lookup) [name LIKELY]
-    virtual void unk42();                                // [42] nullsub everywhere sampled [U]
+    virtual void ConfigurePortDefinition(
+        std::shared_ptr<definition::C_RunTimePortDefinition> const& definition,
+        CryStringT<char> const& name);                     // [42] base nullsub; C_ModuleBase marks its OnWake definition
 };
 
 }  // namespace wh::conceptmodule

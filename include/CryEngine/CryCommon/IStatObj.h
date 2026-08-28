@@ -119,12 +119,14 @@ struct SRayHitInfo
   Vec4 vHitBinormal;
 };
 
-enum EFileStreamingStatus
+enum EFileStreamingStatus : uint8
 {
-  ecss_NotLoaded,
-  ecss_InProgress,
-  ecss_Ready
+  ecss_NotLoaded  = 0,
+  ecss_InProgress = 1,
+  ecss_Ready      = 2
 };
+static_assert(sizeof(EFileStreamingStatus) == 1,
+              "EFileStreamingStatus size mismatch");
 
 // Interface for streaming of objects like CStatObj.
 struct IStreamable

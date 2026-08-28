@@ -19,8 +19,15 @@
 namespace wh::xgenaimodule::NPCState {
 
 struct S_UnstanceData {
+    struct S_Phase {
+        CryStringT<char> m_fragment;                     // +0x00 RTTR "Fragment"
+        std::uint8_t m_unknown08[0x18];                  // +0x08 accessor Tags
+    };
+
     uint8_t _raw[176];   // sizeof proven (slot-4 `>>4 *inv11`); fields [U]
 };
+static_assert(sizeof(S_UnstanceData::S_Phase) == 0x20,
+              "S_UnstanceData::S_Phase size mismatch");
 static_assert(sizeof(S_UnstanceData) == 176);
 
 class C_UnstanceDatabase : public databasemodule::C_ObjectTreeDatabase<S_UnstanceData> {

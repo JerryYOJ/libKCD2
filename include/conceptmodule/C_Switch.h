@@ -25,8 +25,11 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_Switch;
     RTTR_ENABLE(C_TemplatedNode)   // [5..7] trio overrides
     rttr::variant GetPortValue(_smart_ptr<I_Port> const& port) override;  // [12] 0x18061ECC0 case-select + forward
-    void EnumerateNodeVariants() override;  // [27]
-    void GetPortDefinitions(std::function<void(std::shared_ptr<definition::I_PortDefinition> const&)> sink) override;  // [28] 0x1804F22BC case groups (emitter sub_1804F2EC8)
+    void EnumerateNodeVariants(
+        wh::conceptmodule::definition::NodeDefinitionSink sink,
+        bool allVariants) override;  // [27]
+    void GetPortDefinitions(
+        definition::PortDefinitionSink sink, bool includeAll) override;  // [28] 0x1804F22BC case groups (emitter sub_1804F2EC8)
 
     C_PortRef m_switch;             // +0x48  rttr "Switch" -- the discriminator pin (untyped/TypeT)
     std::vector<uint64_t> m_unk88;  // +0x88  ctor-zeroed, never touched in analyzed paths [element type U]

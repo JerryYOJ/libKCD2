@@ -509,7 +509,7 @@ UNIQUE_IFACE struct ISkin
 #ifdef EDITOR_PCDEBUGCODE
 	virtual Vec3 GetRenderMeshOffset( uint32 nLOD ) const = 0;
 	virtual uint32 GetNumMorphTargets() const =0;
-	virtual const char* GetMorphTargetName (uint32 nMorphTargetId) const =0; 
+	virtual const char* GetMorphTargetName (uint32 nMorphTargetId) const =0;
 	virtual uint32 GetNumLODs() const = 0;
 	virtual uint32 GetTextureMemoryUsage2( ICrySizer* pSizer = 0 ) const = 0;
 	virtual uint32 GetMeshMemoryUsage( ICrySizer* pSizer = 0 ) const = 0;

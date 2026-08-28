@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include <functional>
 #include <memory>
 #include "C_SharedResource.h"
 #include "E_NodeHibernateReason.h"
@@ -7,6 +8,8 @@
 #include "E_NodeWakeReason.h"
 #include "S_NodeExecuteContext.h"
 #include "S_ResourceRef.h"
+#include "../CryEngine/CryCommon/SerializeFwd.h"
+#include "definition/I_NodeDefinition.h"
 #include "rttr/variant.h"
 
 class XmlNodeRef;
@@ -34,10 +37,14 @@ class XmlNodeRef;
 namespace wh::conceptmodule {
 
 class I_Port;
-namespace definition { class I_PortDefinition; }
+class C_Node;
+
+using NodeSink = std::function<void(_smart_ptr<C_Node> const&)>;
 
 class C_Node : public C_SharedResource {
 public:
+    struct S_Hint;
+
     inline static constexpr auto RTTI = Offsets::RTTI_C_Node;
 
     virtual ~C_Node();                                     // [0]  0x1806B3EF4; body 0x1806B4318 unsubscribes + frees m_ports, frees m_name
@@ -62,11 +69,14 @@ public:
     virtual bool unk23();                                  // [23] return false (0x180838AE0) [U]
     virtual bool IsAutoTriggerable() const;                // [24] base false; C_AutoTriggerable+ true (0x18041A6A0)
     virtual void SetAutoTriggerEnabled(bool enabled);      // [25] base nullsub; C_AutoTriggerable+ sets/clears Flag_AutoTriggerEnabled (0x1823CC2DC)
-    virtual void unk26();                                  // [26] 0x180F57008 takes a std::function by value, base just destroys it [U sig]
-    virtual void EnumerateNodeVariants();                  // [27] base 0x18061DF80 no-op; Skald editor palette enumerator -- C_Function 0x18068FCA4 emits one variant per reflected global method with metadata[0]==1; C_If 0x18268E70C emits {"If", 2, "wh::conceptmodule"} [sig U: (sink, bool allVariants)]
-    virtual void GetPortDefinitions(std::function<void(std::shared_ptr<definition::I_PortDefinition> const&)> sink);  // [28] base 0x1804F5004: one definition per reflected C_PortRef-typed property (filter type qword_1855D3CB0); dynamic-pin nodes synthesize (FunctionBase 0x1804F5504 from the method signature, Switch/Select/StateBase per group)
+    virtual void EnumerateNodes(
+        NodeSink sink, bool recursive);                    // [26] 0x180F57008 consumes the sink; C_ModuleBase recursively walks m_nodes
+    virtual void EnumerateNodeVariants(
+        definition::NodeDefinitionSink sink, bool allVariants);  // [27] base 0x18061DF80; C_Function uses allVariants to select one vs all reflected methods
+    virtual void GetPortDefinitions(
+        definition::PortDefinitionSink sink, bool includeAll);   // [28] base 0x1804F5004; includeAll is forwarded by C_NodeDefinition and true for its Ports getter
     virtual bool unk29();                                  // [29] base false; C_StateVariable -> true (0x18041A6A0) [U -- "has persistent value" candidate]
-    virtual void unk30();                                  // [30] base nullsub; C_StateVariable 0x1808B0F8C applies a new value with change detection -> fires OnStateChanged [SetValue candidate, sig U]
+    virtual void Serialize(TSerialize serializer);         // [30] node save/load hook; base nullsub
     virtual uint8_t unk31();                               // [31] 0x181A74A40 returns 2 (small enum getter) [U]
     virtual bool unk32();                                  // [32] return false [U]
     virtual void OnExecute(S_NodeExecuteContext const& ctx);  // [33] base nullsub; the node-type work, rttr-registered under the graph name "Execute" (C_Effect 0x1806B13C4, C_If 0x18169333C)

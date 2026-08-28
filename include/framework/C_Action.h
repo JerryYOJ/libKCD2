@@ -37,15 +37,15 @@ class C_Action : public TPrivate, public I_ActionImpl {
 public:
     // ---- C_Action's own primary virtuals (appended after TPrivate's slots) ----
     // slot indices below are for C_Action<I_CombatActorActionPrivate> (56..64).
-    virtual void        _vfOwn0() = 0;                   // [56] 0x1803B6E80 (base nullsub; dtor hook target of I_ActionImpl[0])
+    virtual void        _vfOwn0();                       // [56] 0x1803B6E80 (base nullsub; dtor hook target of I_ActionImpl[0])
     virtual bool        OnStart() = 0;                   // [57] _purecall  concrete-action start hook (driven by I_ActionImpl::Start)
     virtual void        OnStop() = 0;                    // [58] _purecall  concrete-action stop  hook (driven by I_ActionImpl::Stop)
-    virtual void        OnUpdate() = 0;                  // [59] 0x1803B6E80 nullsub default (driven by I_ActionImpl::Update)
-    virtual int64_t     OnTick() = 0;                    // [60] 0x18066CD10 returns 0 default (driven by I_ActionImpl::Tick)
-    virtual const char* GetDebugName() const = 0;        // [61] 0x181A72B70 returns the static action-name string
-    virtual const char* GetPriorityString() const = 0;   // [62] 0x182756708 sprintf("%d", GetPriority()) -> static buffer
-    virtual const char* GetSeqIdString() const = 0;      // [63] 0x1827568F0 sprintf("%d", GetActionSequenceId()) -> static buffer
-    virtual void        GetNameString(void* out) const = 0; // [64] 0x1808D2480 builds a string object from the static name
+    virtual void        OnUpdate();                      // [59] 0x1803B6E80 nullsub default (driven by I_ActionImpl::Update)
+    virtual int64_t     OnTick();                        // [60] 0x18066CD10 returns 0 default (driven by I_ActionImpl::Tick)
+    virtual const char* GetDebugName() const;            // [61] 0x181A72B70 returns the static action-name string
+    virtual const char* GetPriorityString() const;       // [62] 0x182756708 sprintf("%d", GetPriority()) -> static buffer
+    virtual const char* GetSeqIdString() const;          // [63] 0x1827568F0 sprintf("%d", GetActionSequenceId()) -> static buffer
+    virtual void        GetNameString(void* out) const;  // [64] 0x1808D2480 builds a string object from the static name
 
     // ---- data (0x18..0x50) ----
     // +0x00 vtable(primary), +0x08 m_nRefCounter (from _i_multithread_reference_target),

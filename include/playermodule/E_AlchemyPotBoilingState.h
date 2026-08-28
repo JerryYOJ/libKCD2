@@ -16,11 +16,13 @@
 namespace wh::playermodule {
 
 struct E_AlchemyPotBoilingState {
-    enum Type : int32_t {
+    enum Type : std::uint8_t {
         NoBoiling     = 0,
         WeakBoiling   = 1,
         StrongBoiling = 2,
     };
 };
+static_assert(sizeof(E_AlchemyPotBoilingState::Type) == 1,
+              "E_AlchemyPotBoilingState::Type size mismatch");
 
 }  // namespace wh::playermodule

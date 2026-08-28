@@ -19,10 +19,12 @@ class C_PlayerSynchroAnimBaseDogObjective : public C_DogObjective {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_PlayerSynchroAnimBaseDogObjective;
 
+    bool Accept(const S_DogObjectiveRequest*) override;           // [6] 0x18041A6A0 return true (C_DogObjective/Activity base returns false)
     void BeginWork() override;                                    // [8] 0x18330CD60
     void Tick() override;                                         // [10] 0x18330E2B4
     void unk_11() override;                                       // [11] 0x18330D404
     S_ObjectiveScore* ComputeScore(S_ObjectiveScore* out) override; // [12] 0x18330B318
+    bool unk_13() override;                                       // [13] 0x181490F10 (base stub returns true; Pet dossier proposes "HasMaster" = GetMaster()!=0, not yet adopted campaign-wide)
     virtual void unk_19() = 0;                                    // [19] 0x181D93E5D
     virtual void unk_20() = 0;                                    // [20] 0x181D93E5D
     virtual void unk_21() = 0;                                    // [21] 0x181D93E5D

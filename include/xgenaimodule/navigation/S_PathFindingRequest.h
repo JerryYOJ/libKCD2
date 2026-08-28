@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include <functional>
+#include "../../rttr/rttr_enable.h"
 #include "E_PathFindingMode.h"
 #include "S_PathFindingResult.h"
 
@@ -22,9 +23,7 @@ struct S_PathFindingRequest {
     virtual S_PathFindingRequest* Clone() = 0;              // [2] Default: sub_1809FEC80 (alloc 0x98)
     virtual void unk_3() = 0;                               // [3]
     virtual void unk_4() = 0;                               // [4]
-    virtual void unk_5() = 0;                               // [5]
-    virtual void unk_6() = 0;                               // [6] 0x1805F5DA0  `return this`
-    virtual void unk_7() = 0;                               // [7]
+    RTTR_ENABLE()                                           // [5..7]
 
     uint32_t m_navMeshId;                                   // +0x08  I_Navigation::GetDefaultNavMeshId
     uint32_t _pad0C;                                        // +0x0C

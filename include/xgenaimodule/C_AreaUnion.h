@@ -21,7 +21,8 @@ public:
     void _vf18() override;                  // [18] 0x18158F9C8
 
     bool Overlaps(const Vec3& pos) override; // I_Area [0] 0x1805CCF2C
-    void ArVf1() override;  void ArVf2() override;
+    const wh::framework::WUID& GetWuid() const override; // [1] 0x181AA49C0
+    void ArVf2() override;
     AABB GetAABB() override;                 // [3] sub_180873BD4
     void ArVf4() override;  void ArVf5() override;  void ArVf6() override;
     void ArVf7() override;  void ArVf8() override;  void ArVf9() override;

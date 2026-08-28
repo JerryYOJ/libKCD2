@@ -86,8 +86,8 @@ public:
     virtual void _vf37();                  // [37] sub_180D47640
     // mixin impls
     void DebugDraw() override;             // I_DebugDraw[1] = nullsub_1
-    void OnEntitySideEffectAdded(void* sideEffect) override;    // I_EntitySideEffectCallback subobject vt 0x183FF1930 [0] sub_1816DE384
-    void OnEntitySideEffectRemoved(void* sideEffect) override;  // ESEC [1] sub_1816E9DB0
+    void OnEntitySideEffectAdded(std::uint8_t sideEffectId, ::wh::framework::WUID entityWuid) override;   // I_EntitySideEffectCallback [0] sub_1816DE384
+    void OnEntitySideEffectRemoved(std::uint8_t sideEffectId, ::wh::framework::WUID entityWuid) override; // ESEC [1] sub_1816E9DB0
     void _xnpcm_vf1() override;            // I_XGenAINPCManager[1] sub_180AEBC3C
     void _xnpcm_vf2() override;            // I_XGenAINPCManager[2] sub_180AEEA88
 

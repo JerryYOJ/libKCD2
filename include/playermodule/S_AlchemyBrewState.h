@@ -6,7 +6,7 @@
 #include "E_AlchemyMode.h"
 #include "E_AlchemyPotBoilingState.h"
 #include "E_AlchemyStationKind.h"
-#include "E_AlchemyState.h"
+#include "E_AlchemyInteractionState.h"
 #include "E_AlchemyVerb.h"
 
 // -----------------------------------------------
@@ -49,8 +49,8 @@ struct S_AlchemyBrewState {
     float    m_errorProb2;           // +0x1C4  reader -- the LCG mistake sim that consumes the dice twin is dice-only
     uint8_t  _pad1C8[0x30];          // +0x1C8
     uint64_t m_stateSlots[21];       // +0x1F8..+0x2A0  per-state 8B element array (array_ctor sub_1803D1670)
-    E_AlchemyState::Type m_primaryState; // +0x2A0  Idle (21) = interactive idle (reader sub_1808D237C)
-    E_AlchemyState::Type m_subState;     // +0x2A4  effective state while primary == Idle
+    E_AlchemyInteractionState::Type m_primaryState; // +0x2A0  Idle (21) = interactive idle (reader sub_1808D237C)
+    E_AlchemyInteractionState::Type m_subState;     // +0x2A4  effective state while primary == Idle
     uint8_t  m_delegate2A8[0x10];    // +0x2A8  delegate slot (wired sub_1806C67B0)
     void*    m_specialSlot[3];       // +0x2B8..+0x2C8  special-ingredient slot values (verb 10/11/12)
     CryGUID  m_specialSlotKey[3];    // +0x2D0..+0x300  16B slot-select keys, mirror of m_herbSlotKey:

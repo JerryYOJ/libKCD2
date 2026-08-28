@@ -15,8 +15,8 @@
 // -----------------------------------------------
 // RTTI TD rva 0x4F4E308; COLs 0x4551330 (@+0) / 0x4551308 (@+8).  Primary
 // vtable rva 0x3FE8708 (2 slots: [0]sub_1832B98D8 [1]dtor sub_1832B760C);
-// secondary vtable rva 0x3FE86F0 (2 slots: [0]dtor thunk sub_1815FFE3C
-// [1]sub_1815FFE30).  ctor registers cvars wh_ai_SituationInterruptPriority
+// secondary vtable rva 0x3FE86F0 (2 side-effect-handler slots:
+// [0] sub_1815FFE3C, [1] sub_1815FFE30).  ctor registers cvars wh_ai_SituationInterruptPriority
 // (+0x108, default 10), wh_ai_SituationInterruptUrgency (+0x110, default
 // "Slow"), wh_ai_SituationManagerSearchBudget (+0x11C); inits the registry at
 // +0x38 (sub_1805FFC9C); intrusive-list sentinel at +0xC8; registers a
@@ -37,8 +37,8 @@ public:
 
     void BcmVf0() override;                        // primary [0] sub_1832B98D8
     ~C_SituationManager() override;                // primary [1] sub_1832B760C
-    void OnEntitySideEffectAdded(void* sideEffect) override;    // ESEC secondary [0] sub_1815FFE3C (adjustor thunk; previously misread as dtor thunk)
-    void OnEntitySideEffectRemoved(void* sideEffect) override;  // ESEC secondary [1] sub_1815FFE30
+    void OnEntitySideEffectAdded(std::uint8_t sideEffectId, ::wh::framework::WUID entityWuid) override;   // ESEC secondary [0] sub_1815FFE3C
+    void OnEntitySideEffectRemoved(std::uint8_t sideEffectId, ::wh::framework::WUID entityWuid) override; // ESEC secondary [1] sub_1815FFE30
 
     std::vector<std::array<uint8_t, 40>> m_ctrlEntries10; // +0x10..+0x28  first/last/cap; 40B elems {u64 key; _8; std::vector<T*>@+0x10}; per-elem dtor sub_1811921D0
     uint8_t  _unk28[8];               // +0x28  [U] NOT written by ctor (disasm-verified); no writer in ctor/dtor/add(sub_180D9BC5C)/remove(sub_180D9AEC8)

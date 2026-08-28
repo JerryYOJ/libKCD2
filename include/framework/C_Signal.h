@@ -49,6 +49,7 @@
 
 namespace wh::entitymodule { class C_Item; }
 namespace wh::combatmodule { class I_CombatActor; }
+namespace wh::xgenaimodule::activitysystem { class C_ActivityObjective; }
 
 namespace wh::shared {
 
@@ -172,6 +173,19 @@ struct S_SignalFamily<char, entitymodule::C_Item*, uint32_t> {
 template<>
 struct S_SignalFamily<combatmodule::I_CombatActor&, combatmodule::I_CombatActor&, bool> {
     static constexpr REL::ID kConnect{66316};     // 0x180C57A1C  reserve 0x180C57AC0, shared store 0x182420480
+};
+
+// C_Signal<C_ActivityObjective*, unsigned> -- the objective-planner event family
+// (C_ObjectivePlanner::m_onObjectiveEvent +0x00, fired by StartObjective / OnObjectiveComplete /
+// StopCurrent with the started-or-completed objective and a 1/0 start-vs-stop flag). Empty
+// sentinel 0x18566A3F8, planted by the C_DogCompanionContext ctor 0x180BC9D10. Emit is
+// ICF-folded with every marshal-identical (T*, unsigned) family -- identity is the sentinel +
+// Connect, not this address alone; see KCD2/analysis/dogpack_re/planner_deep.md.
+template<>
+struct S_SignalFamily<xgenaimodule::activitysystem::C_ActivityObjective*, unsigned> {
+    static constexpr REL::ID kConnect{129106};     // 0x18167028C  dedup+reserve+append (store 0x182420480)
+    static constexpr REL::ID kDisconnect{129109};  // 0x18167046C  generic erase
+    static constexpr REL::ID kEmit{24626};         // 0x1803ED300  2-cursor walk; fn(instance, C_ActivityObjective*, unsigned)
 };
 
 }  // namespace wh::shared

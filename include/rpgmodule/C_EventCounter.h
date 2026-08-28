@@ -36,7 +36,7 @@ public:
     // five subobject vtables (0x183B091B8..).  Declared-not-defined here (this replica is
     // never instantiated); listed only so the inline embedding in C_Statistics compiles.
     void _vf0() override;   // I_LocationListener [0] (same signature also satisfies C_CauseVisitor::_vf0)
-    void _vf1() override;
+    void _vf1(void* discoveryEvent) override;
     void _vf2() override;
     void _vf3() override;
     void _vf4() override;

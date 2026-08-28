@@ -4,16 +4,24 @@
 // -----------------------------------------------
 // wh::guimodule::E_BlockUINotificationType -- KCD2 WHGame.dll 1.5.6 (kd7u).  Enum wrapper.
 // -----------------------------------------------
-// Nested-Type enum wrapper (rttr name-helper string "NotificationType" @0x183C78E00).
-// The UI-notification category selector of C_BlockUINotifications: while triggered, the
-// node increments a per-type global refcount dword_1855A7840[type] to suppress that
-// notification category. ENUMERATOR NAMES/VALUES NOT RECOVERED; underlying width
-// inferred from the dword-indexed refcount table (int-sized index) -- both UNVERIFIED.
+// UI-notification category selector of C_BlockUINotifications. Exact labels,
+// values, and unsigned-byte underlying type are RTTR-proven.
 
 namespace wh::guimodule {
 
 struct E_BlockUINotificationType {
-    enum Type : int32_t {};   // enumerators UNVERIFIED
+    enum Type : std::uint8_t {
+        Common     = 0,
+        Compass    = 1,
+        Crime      = 2,
+        StaminaBar = 3,
+        Buffs      = 4,
+        Cursor     = 5,
+        LevelUp    = 6,
+        Flush      = 7,
+    };
 };
+static_assert(sizeof(E_BlockUINotificationType::Type) == 1,
+              "E_BlockUINotificationType::Type size mismatch");
 
 }  // namespace wh::guimodule

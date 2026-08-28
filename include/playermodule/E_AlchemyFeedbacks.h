@@ -16,7 +16,7 @@
 namespace wh::playermodule {
 
 struct E_AlchemyFeedbacks {
-    enum Type : int32_t {
+    enum Type : std::uint8_t {
         None                        = 0,
         WrongIngredients            = 1,   // aggregate: no correct ingredient present (bs+0x2D cleared)
         RightIngredientsWrongBase   = 2,   // aggregate: PotionBase() failed, ingredients ok (bs+0x2C cleared)
@@ -36,5 +36,7 @@ struct E_AlchemyFeedbacks {
         ResultNotMilled             = 16,  // IsResultMilled(1) but not milled
     };
 };
+static_assert(sizeof(E_AlchemyFeedbacks::Type) == 1,
+              "E_AlchemyFeedbacks::Type size mismatch");
 
 }  // namespace wh::playermodule

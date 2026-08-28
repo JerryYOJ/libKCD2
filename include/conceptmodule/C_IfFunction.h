@@ -24,7 +24,8 @@ class C_IfFunction : public C_FunctionBase {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_IfFunction;
     RTTR_ENABLE(C_FunctionBase)   // [5..7] trio overrides
-    void GetPortDefinitions(std::function<void(std::shared_ptr<definition::I_PortDefinition> const&)> sink) override;  // [28] 0x180FDB8A0 filtered base set
+    void GetPortDefinitions(
+        definition::PortDefinitionSink sink, bool includeAll) override;  // [28] 0x180FDB8A0 filtered base set
     void OnExecute(S_NodeExecuteContext const& ctx) override;  // [33] 0x18061ACD4 invoke -> bool -> True/False
 
     C_TypedPortRef<S_Trigger> m_exec;   // +0x68  "Exec"  In trigger

@@ -15,13 +15,19 @@ struct IVertexAnimation;
 
 
 
-//Flags used by game DO NOT REORDER
+// Flags used by game. Source spellings from CryEngine release IAttachment.h;
+// values and complete seven-entry surface independently confirmed by KCD2 RTTR.
 enum AttachmentTypes
 {
-	CA_BONE,
-	CA_FACE,
-	CA_SKIN,
+	CA_BONE   = 0,
+	CA_FACE   = 1,
+	CA_SKIN   = 2,
+	CA_PROX   = 3,
+	CA_PROW   = 4,
+	CA_VCLOTH = 5,
+	CA_Invalid = 6,
 };
+static_assert(sizeof(AttachmentTypes) == 4, "AttachmentTypes size mismatch");
 
 enum ProxyTypes
 {

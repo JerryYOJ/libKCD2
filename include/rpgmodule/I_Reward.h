@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include "../CryEngine/CryCommon/CryString.h"
+#include "../rttr/rttr_enable.h"
 
 // -----------------------------------------------
 // wh::rpgmodule::I_Reward -- perk-reward interface (KCD2 WHGame.dll 1.5.6, kd7u).
@@ -21,9 +22,7 @@ public:
     // [1] 0x08  apply the reward: C_PerkReward 0x180B45D48 resolves its perk name in
     //     C_PerkDatabase and gives the perk to `target`'s soul via the soul-manager vtbl.
     virtual bool Give(void* target, CryStringT<char>* context, int a4) = 0;
-    virtual void* _vf2(void* out) = 0;                        // [2] 0x10  fills out-value [UNVERIFIED]
-    virtual I_Reward* _vf3() = 0;                             // [3] 0x18  shared `return this` stub
-    virtual void* _vf4(void* out) = 0;                        // [4] 0x20  fills {qword, value} pair [UNVERIFIED]
+    RTTR_ENABLE()                                             // [2..4]
 };
 static_assert(sizeof(I_Reward) == 0x08, "I_Reward is a vfptr-only interface");
 

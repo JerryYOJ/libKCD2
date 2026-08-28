@@ -57,6 +57,10 @@ class C_XGenAIModule
 {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_XGenAIModule;
+    bool TaskVf2() override;                               // Readiness [2] 0x18180B8A0
+    std::uint32_t TaskVf3() override;                      // Readiness [3] 0x181A72480
+    const void* TaskVf4() override;                        // Readiness [4] 0x181AAB780
+
     uint8_t   m_list0[0x10];          // +0x28  ctor sub_1808DDC28 -- intrusive list/deque head [type UNVERIFIED]
     uint8_t   m_list1[0x10];          // +0x38  ctor sub_1808DDC28 [type UNVERIFIED]
     uint8_t   m_list2[0x10];          // +0x48  ctor sub_1808DDC28 [type UNVERIFIED]

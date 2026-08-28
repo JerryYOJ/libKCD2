@@ -28,7 +28,9 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_ForEach;
     RTTR_ENABLE(C_EventNode<C_TemplatedNode>)   // [5..7] trio overrides
     rttr::variant GetPortValue(_smart_ptr<I_Port> const& port) override;  // [12] 0x18127FDF0 event-map lookup
-    void EnumerateNodeVariants() override;      // [27] 0x18268E474 "Iterates over an array of elements"
+    void EnumerateNodeVariants(
+        wh::conceptmodule::definition::NodeDefinitionSink sink,
+        bool allVariants) override;      // [27] 0x18268E474 "Iterates over an array of elements"
     void OnExecute(S_NodeExecuteContext const& ctx) override;  // [33] 0x180619BDC Begin -> RunLoop; Break -> flag
 
     void RunLoop();                             // 0x180619F8C (the iteration body)

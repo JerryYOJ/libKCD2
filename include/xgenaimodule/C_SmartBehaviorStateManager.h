@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include "E_SmartBehaviorState.h"
 #include "../framework/C_OverrideConflictManager.h"
 
 // -----------------------------------------------
@@ -14,17 +15,12 @@
 // C_OverrideConflictManager<US_BehaviorHandle, W4Type@E_SmartBehaviorState...>).
 // Vtable rva 0x3FE9890 (3 slots: [0]dtor 0x32C26D0 [1]0x870F68 [2]0x410304).
 // +0x08 = head of 104-byte intrusive node (3 self-ptrs + WORD 257), +0x10 = 0
-// -- exactly the template-base layout.  S_BehaviorHandle /
-// E_SmartBehaviorState enumerators NOT recovered [U] -- declared minimally
-// here.
+// -- exactly the template-base layout. S_BehaviorHandle remains layout-unresolved;
+// E_SmartBehaviorState::Type is complete in its dedicated RTTR-proven header.
 
 namespace wh::xgenaimodule {
 
 struct S_BehaviorHandle;   // layout [U] -- template parameter only
-
-struct E_SmartBehaviorState {
-    enum Type : int32_t {};   // values [U]
-};
 
 class C_SmartBehaviorStateManager
     : public framework::C_OverrideConflictManager<S_BehaviorHandle, E_SmartBehaviorState::Type> {

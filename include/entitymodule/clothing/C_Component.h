@@ -4,6 +4,7 @@
 #include <memory>
 #include <vector>
 #include "../../CryEngine/CryCommon/CryString.h"
+#include "../../rttr/rttr_enable.h"
 
 // -----------------------------------------------
 // wh::entitymodule::clothing::C_Component -- clothing-asset tree node base (KCD2 1.5.6, kd7u).
@@ -22,19 +23,19 @@ namespace wh::entitymodule::clothing {
 
 class C_Component {
 public:
-    virtual ~C_Component();                            // [0]  (convention; deleter runs via shared_ptr ctrl block)
-    virtual std::shared_ptr<C_Component> Clone() const; // [1]  base 0x181E960A0 (_Ref_count_obj2 alloc 0x130)
-    virtual void* unk2();                              // [2]  base 0x18176CF80 -> BSS 0x18557AFD8; derived 0x181A71D30 -> &m_name
-    virtual void unk3();                               // [3]
-    virtual void unk4();                               // [4]
-    virtual void unk5();                               // [5]
-    virtual void unk6();                               // [6]
-    virtual void unk7();                               // [7]
-    virtual void unk8();                               // [8]
-    virtual void unk9();                               // [9]
-    virtual void unk10();                              // [10]
-    virtual void unk11();                              // [11]
-    virtual void* GetRttrType() const;                 // [12] +0x60  base 0x180FE3258 -> C_Component type (0x18110F8A0); C_Clothing 0x1809734B8 -- exact-type gate key
+    virtual ~C_Component();                             // [0] 0x18291721C
+    virtual std::shared_ptr<C_Component> Clone() const; // [1] 0x181E960A0
+    virtual const CryStringT<char>& GetName() const;    // [2] 0x18176CF80
+    virtual void unk_03(const C_Component* source);     // [3] 0x18068E674
+    virtual bool unk_04() const;                        // [4] 0x180838AE0
+    virtual bool unk_05() const;                        // [5] 0x180838AE0
+    virtual bool unk_06() const;                        // [6] 0x180838AE0
+    virtual bool unk_07(const C_Component* other) const;// [7] 0x18097208C
+    virtual bool unk_08(bool value) const;              // [8] 0x1809722B0
+    virtual const void* unk_09() const;                 // [9] 0x181A84660
+    virtual void unk_10(void* collector) const;         // [10] 0x1809714E0
+    virtual void unk_11();                              // [11] 0x180E11E70
+    RTTR_ENABLE()                                        // [12..14], vtable 0x183A4F6E0
 
     CryStringT<char> m_name;                           // +0x08  RTTR "Name"; DB map key; Hood matches "{Name}_up"
     std::uint8_t     _unk10[0x70];                     // +0x10  layout UNVERIFIED

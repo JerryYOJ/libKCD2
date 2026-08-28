@@ -9,8 +9,8 @@
 // sub_18549D378(224,...), += 0xE0, ctor sub_1810A6D98).  dtor sub_1833BD8F0
 // (unregisters the cvar via console vtbl+80).
 // -----------------------------------------------
-// RTTI TD rva 0x4FC69C0.  Vtable rva 0x3B03488 -- 3 slots ([0] dtor
-// sub_181025124, [1]sub_1810250D8, [2]sub_1833BDA70): one MORE than the
+// RTTI TD rva 0x4FC69C0. Vtable rva 0x3B03488 -- 3 slots ([0]
+// sub_181025124 and [1] sub_1810250D8 are side-effect handlers; [2] sub_1833BDA70): one MORE than the
 // 2-slot iface -> [2] modeled as an appended own virtual [U].  ctor interns
 // name-ids "interior"/"settlement"/"city" (+0x08/+0x0C/+0x10) and binds cvar
 // wh_ai_TorchDropBeforeMoveEndDistance to +0x14 (sub_1823D8ABC).  Container
@@ -21,8 +21,8 @@ namespace wh::xgenaimodule {
 class C_LightSourceManager : public game::I_EntitySideEffectCallback {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_LightSourceManager;
-    void OnEntitySideEffectAdded(void* sideEffect) override;    // [0] sub_181025124 (previously misread as dtor; ESEC has no vdtor -- RTM proof)
-    void OnEntitySideEffectRemoved(void* sideEffect) override;  // [1] sub_1810250D8
+    void OnEntitySideEffectAdded(std::uint8_t sideEffectId, ::wh::framework::WUID entityWuid) override;   // [0] sub_181025124
+    void OnEntitySideEffectRemoved(std::uint8_t sideEffectId, ::wh::framework::WUID entityWuid) override; // [1] sub_1810250D8
     virtual void _vf2();                                  // [2] sub_1833BDA70 (appended own virtual) [U role]
 
     uint32_t m_nameIdInterior;    // +0x08  interned "interior"

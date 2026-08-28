@@ -19,6 +19,16 @@ namespace wh::entitymodule::clothing {
 
 class C_Clothing : public C_Component {
 public:
+    ~C_Clothing() override;                              // [0] 0x182917328
+    std::shared_ptr<C_Component> Clone() const override; // [1] 0x181E96050
+    const CryStringT<char>& GetName() const override;    // [2] 0x181A71D30
+    void unk_03(const C_Component* source) override;     // [3] 0x180FE3048
+    bool unk_04() const override;                        // [4] 0x181315968
+    bool unk_05() const override;                        // [5] 0x180971C20
+    const void* unk_09() const override;                 // [9] 0x18158F550
+    void unk_11() override;                              // [11] 0x180E11D3C
+    RTTR_ENABLE(C_Component)                              // [12..14], vtable 0x183A4F760
+
     // +0x120  backing store of RTTR "ArmorType" (BY-VALUE string getter 0x182917678 projects this
     // id through C_ArmorTypeDatabase 0x185325470; setter 0x180D65284 writes {id, has=1}).
     // Optional payload int32 vs enum UNVERIFIED.

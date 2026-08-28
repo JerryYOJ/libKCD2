@@ -20,7 +20,9 @@ class C_Assert : public C_TemplatedNode {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_Assert;
     RTTR_ENABLE(C_TemplatedNode)   // [5..7] trio overrides
-    void EnumerateNodeVariants() override;  // [27] 0x18268E334
+    void EnumerateNodeVariants(
+        wh::conceptmodule::definition::NodeDefinitionSink sink,
+        bool allVariants) override;  // [27] 0x18268E334
     void OnExecute(S_NodeExecuteContext const& ctx) override;  // [33] 0x18268E058
 
     C_TypedPortRef<S_Trigger> m_exec;        // +0x48  "Exec"   In trigger

@@ -46,6 +46,24 @@ class CGameRules
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_CGameRules;
 
+    struct EHitType {
+        enum Type : std::uint8_t {
+            Invalid       = 0,
+            Melee         = 1,
+            MeleeStealth  = 2,
+            Collision     = 3,
+            Punish        = 4,
+            Fall          = 5,
+            Bullet        = 6,
+            WeaponDestroy = 7,
+            Decoy         = 8,
+            Stone         = 9,
+            Shock         = 10,
+        };
+    };
+    static_assert(sizeof(EHitType::Type) == 1,
+                  "CGameRules::EHitType::Type size mismatch");
+
     CGameRules();
     ~CGameRules() override; // [0]
     void ProcessEvent(SEntityEvent& event) override; // [1]

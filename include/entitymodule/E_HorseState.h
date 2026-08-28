@@ -10,7 +10,7 @@
 namespace wh::entitymodule {
 
 struct E_HorseState {
-    enum Type : int32_t {
+    enum Type : std::uint8_t {
         idle           = 0,
         idle2move      = 1,
         move2idle      = 2,
@@ -25,5 +25,7 @@ struct E_HorseState {
         headHitting    = 11,
     };
 };
+static_assert(sizeof(E_HorseState::Type) == 1,
+              "E_HorseState::Type size mismatch");
 
 }  // namespace wh::entitymodule

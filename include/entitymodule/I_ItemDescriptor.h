@@ -26,11 +26,10 @@ public:
     // Collect up to GetAmount() matches from `items` (-1 = unlimited); per-item test = vf[3].
     virtual std::vector<C_Item*> GetMatchingItems(const std::vector<C_Item*>& items) const = 0; // [1] 0x18096EF4C (RTTR name; sig-matched)
     virtual void unk2() = 0;                                                      // [2] 0x18096E81C match/partial/overflow partition; sig UNVERIFIED
-    virtual bool MatchesItem(C_Item* item, std::uint32_t flags) const = 0;        // [3] 0x18096F1A4 = (vf[4]==0); name reconstructed
+    virtual bool MatchesItem(C_Item* item, std::uint32_t flags) const;            // [3] 0x18096F1A4 = (vf[4]==0); name reconstructed
     virtual std::uint32_t GetMatchFailReason(C_Item* item, std::uint32_t flags) const = 0; // [4] 0 = match; reason codes (9 quality, 0xA condition, ...)
-    virtual std::int32_t unk5() const = 0;                                        // [5] 0x1804C88CC tail-calls [9]; role UNVERIFIED
+    virtual std::int32_t unk5() const = 0;                                        // [5] role UNVERIFIED
     RTTR_ENABLE()  // [6..8]: get_type / get_ptr / get_derived_info
-    virtual std::int32_t GetAmount() const = 0;                                   // [9] 0x181A72970 -> +0x08 on Property; -1 = unlimited
 };
 
 }  // namespace wh::entitymodule

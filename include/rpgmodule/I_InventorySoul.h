@@ -1,10 +1,13 @@
 #pragma once
 #include <cstdint>
+#include "../CryEngine/CryCommon/CryString.h"
 
 namespace wh::entitymodule {
 class C_EquipmentManager;
 class C_Inventory;
 class C_Item;
+struct S_ClothingPresetGUID;
+struct S_WeaponPresetGUID;
 }
 
 namespace wh::playermodule {
@@ -29,10 +32,22 @@ public:
     virtual C_Soul* GetSoul() = 0;                                            // [3]  sub_1809DD2D0
     virtual const C_Soul* GetSoulConst() const = 0;                            // [4]  sub_1809DD2D0
     virtual void InventorySoulUnk05() = 0;                                    // [5]  sub_1808F1964 [U signature]
-    virtual void InventorySoulUnk06() = 0;                                    // [6]  sub_181058674 [U signature]
-    virtual void InventorySoulUnk07() = 0;                                    // [7]  sub_181057828 [U signature]
-    virtual void InventorySoulUnk08() = 0;                                    // [8]  sub_181058738 [U signature]
-    virtual void InventorySoulUnk09() = 0;                                    // [9]  sub_1810578C8 [U signature]
+    virtual bool ApplyClothingPreset(
+        const entitymodule::S_ClothingPresetGUID& preset,
+        const CryStringT<char>& key,
+        bool priorityEquip,
+        bool initialApplication) = 0;                                           // [6]  sub_181058674
+    virtual void RemoveClothingPreset(
+        const entitymodule::S_ClothingPresetGUID& preset,
+        const CryStringT<char>& key) = 0;                                       // [7]  sub_181057828
+    virtual bool ApplyWeaponPreset(
+        const entitymodule::S_WeaponPresetGUID& preset,
+        const CryStringT<char>& key,
+        bool priorityEquip,
+        bool initialApplication) = 0;                                           // [8]  sub_181058738
+    virtual void RemoveWeaponPreset(
+        const entitymodule::S_WeaponPresetGUID& preset,
+        const CryStringT<char>& key) = 0;                                       // [9]  sub_1810578C8
     virtual void InventorySoulUnk10() = 0;                                    // [10] sub_181FE1A00 [U signature]
     virtual void InventorySoulUnk11() = 0;                                    // [11] sub_181FE1AE0 [U signature]
     virtual void InventorySoulUnk12() = 0;                                    // [12] sub_181FE05B0 [U signature]

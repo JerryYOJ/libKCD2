@@ -22,7 +22,8 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_EventFunction;
     RTTR_ENABLE(C_EventNode<C_Function>)   // [5..7] trio overrides
     rttr::variant GetPortValue(_smart_ptr<I_Port> const& port) override;  // [12] 0x18127FAA4 event-map lookup
-    void GetPortDefinitions(std::function<void(std::shared_ptr<definition::I_PortDefinition> const&)> sink) override;  // [28] 0x18101E2C0 base + Exec/OnExec
+    void GetPortDefinitions(
+        definition::PortDefinitionSink sink, bool includeAll) override;  // [28] 0x18101E2C0 base + Exec/OnExec
     void OnExecute(S_NodeExecuteContext const& ctx) override;  // [33] 0x180618A94 invoke once -> snapshot -> EmitEvent(OnExec)
 };
 static_assert(sizeof(C_EventFunction) == 0x90, "C_EventFunction adds no data over C_EventNode<C_Function>");

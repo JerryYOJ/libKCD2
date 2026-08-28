@@ -15,7 +15,9 @@
 namespace wh::xgenaimodule {
 
 struct E_AddRemove {
-    enum Type : int32_t { Remove = 0, Add = 1 };
+    enum Type : std::uint8_t { Remove = 0, Add = 1 };
 };
+static_assert(sizeof(E_AddRemove::Type) == 1,
+              "E_AddRemove::Type size mismatch");
 
 }  // namespace wh::xgenaimodule

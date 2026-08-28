@@ -12,15 +12,14 @@
 // each builder passes its page id as an immediate and its widget set uniquely matches
 // one menu_pages.xml row (full evidence: analysis/ui_survey/menu_page_builders.md §2-3;
 // anchor: 14 = SoundSettings volume sliders 60/61/62).
-// Value 0 is presumably Invalid and value 17 has NO PreparePage caller (identity
-// UNVERIFIED -- the menu_pages.xml candidate tail order does not match the code:
-// HelpOverlays=18, DLCList=19, RootPhotomode=20 are code-proven) -- both omitted here;
-// do not invent them.
+// RTTR closes the two prior call-site gaps: None=0 and Credits=17. The remaining
+// values retain their independently identified PreparePage call-site evidence.
 
 namespace wh::guimodule {
 
 struct E_MenuPage {
-    enum Type : uint8_t {
+    enum Type : std::uint8_t {
+        None                   = 0,
         RootMain               = 1,    // builder sub_180F6820C (also the mode-4 death variant)
         RootIngame             = 2,    // builder sub_1805598CC -- the in-game ESC pause menu
         RootPause              = 3,    // builder sub_182BAA95C -- restricted pause (save/settings disabled)
@@ -37,11 +36,13 @@ struct E_MenuPage {
         SoundSettings          = 14,   // builder sub_180F6A0E0 -- anchor
         Controls               = 15,   // builder sub_180F6A51C
         Keybinds               = 16,   // builder sub_180F68614
-        // 17 = unused/unknown (no PreparePage caller in 1.5.6)
+        Credits                = 17,
         HelpOverlays           = 18,   // builder sub_180821504
         DLCList                = 19,   // builder sub_182BA9D18
         RootPhotomode          = 20,   // builder sub_181F8DE50 (cvar-widget page)
     };
 };
+static_assert(sizeof(E_MenuPage::Type) == 1,
+              "E_MenuPage::Type size mismatch");
 
 }  // namespace wh::guimodule
