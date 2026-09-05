@@ -22,6 +22,7 @@
 #include "Offsets/vtables/ILog.h"
 #include "Offsets/vtables/ISystem.h"
 #include "Offsets/vtables/IXmlNode.h"
+#include "Offsets/vtables/IXmlUtils.h"
 #include "playermodule/C_ActionSets.h"
 #include "playermodule/C_Keybinds.h"
 #include "mod_index.h"
@@ -150,13 +151,41 @@ bool GlobMatch(const char* pat, const char* str)
     return same && GlobMatch(pat + 1, str + 1);
 }
 
+// The path a family glob is matched against.
+//
+// SPELLING VARIES BY CALLER, measured from a launch-load-quit that logged all 28,019 paths the
+// engine asked for:
+//
+//     levels/kutnohorsko/LevelData.xml            mixed case, no prefix
+//     levels/kutnohorsko/Objects_Mission0.xml
+//     levels/kutnohorsko/whdata_1                 no extension at all
+//     data/levels/kutnohorsko/WaitingLinks.xml    ...and this one carries `data/`
+//
+// A glob written one way would silently miss three of the four. Lowercase, forward slashes, and a
+// leading `data/` removed -- CryPak is rooted there, so the two spellings name one file. The
+// ORIGINAL string is still what FindFirst is given, because that is what the engine resolved.
+std::string NormalisePath(const char* p)
+{
+    std::string v(p ? p : "");
+    for (char& c : v) {
+        if (c == '\\')
+            c = '/';
+        else
+            c = static_cast<char>(::tolower(static_cast<unsigned char>(c)));
+    }
+    if (v.compare(0, 5, "data/") == 0)
+        v.erase(0, 5);
+    return v;
+}
+
 // Which family, if any, describes this virtual path.
 const ptf::Family* FamilyFor(const char* vpath)
 {
     if (!vpath)
         return nullptr;
+    const std::string v = NormalisePath(vpath);
     for (std::size_t i = 0; i < ptf::kFamilyCount; ++i)
-        if (GlobMatch(ptf::kFamilies[i].glob, vpath))
+        if (GlobMatch(ptf::kFamilies[i].glob, v.c_str()))
             return &ptf::kFamilies[i];
     return nullptr;
 }
@@ -500,6 +529,85 @@ protected:
     static inline REL::Relocation<decltype(&LoadFromXML)> orig;
 } hkLoadFromXML;
 
+// ------------------------------------------------------ hook: LEVEL FILES ---
+//
+// ONE HOOK REACHES ALL OF THEM. Measured: 37,768 calls over 28,019 distinct paths in a single
+// launch-load-quit, and every file family a level-content mod claims comes through
+// `IXmlUtils::LoadXmlFromFile` -- leveldata, objects_mission0, waitinglinks and whdata_1 alike.
+// So this is a hook plus a path lookup, and every future family is a descriptor rather than a
+// reverse-engineering job.
+//
+// IXmlUtils SLOT [1], NOT ISystem [131]. The latter is a thin forwarder into the former, so hooking
+// IXmlUtils catches both routes and no direct caller slips past. The target is read out of the live
+// vtable via `gEnv->pSystem->GetXmlUtils()`, which is why this one installs on a KCSE message
+// rather than at plugin load: the pointer does not exist yet when the DLL is loaded.
+//
+// `patching=1` on all 37,768 calls -- the stock XML patcher already runs inside this function, on
+// every file. A merge placed here sits exactly where the engine already expects one.
+namespace {
+
+using LoadXmlFn = IXmlNode** (*)(Offsets::IXmlUtils*, IXmlNode**, const char*, bool, bool, bool,
+                                 bool);
+LoadXmlFn g_origLoadXml = nullptr;
+
+// RE-ENTRANCY. ApplyPtfPatches loads each part through this very function, so without a guard the
+// first patched file recurses until the stack ends. Thread-local because XML loading is not
+// single-threaded here -- two loader threads were observed interleaving in the same session.
+thread_local int t_inPatchLoad = 0;
+
+struct PatchLoadGuard {
+    PatchLoadGuard() { ++t_inPatchLoad; }
+    ~PatchLoadGuard() { --t_inPatchLoad; }
+};
+
+IXmlNode** LoadXmlDetour(Offsets::IXmlUtils* pThis, IXmlNode** out, const char* sFilename,
+                         bool bEnablePatching, bool b5, bool b6, bool b7)
+{
+    IXmlNode** r = g_origLoadXml(pThis, out, sFilename, bEnablePatching, b5, b6, b7);
+    if (t_inPatchLoad || !out || !*out || !sFilename)
+        return r;
+    if (!FamilyFor(sFilename))
+        return r;                    // not a described file: the engine's own result, untouched
+    PatchLoadGuard guard;
+    ApplyPtfPatches(sFilename, out);
+    return r;
+}
+
+bool InstallLevelHook()
+{
+    auto* env = SSystemGlobalEnvironment::GetInstance();
+    if (!env || !env->pSystem)
+        return false;
+    auto* utils = reinterpret_cast<Offsets::IXmlUtils*>(env->pSystem->GetXmlUtils());
+    if (!utils)
+        return false;
+    void** vtbl = *reinterpret_cast<void***>(utils);
+    void*  target = vtbl[1];
+    if (MH_CreateHook(target, reinterpret_cast<void*>(&LoadXmlDetour),
+                      reinterpret_cast<void**>(&g_origLoadXml)) != MH_OK)
+        return false;
+    if (MH_EnableHook(target) != MH_OK)
+        return false;
+    if (env->pLog)
+        env->pLog->LogAlways("[PTFextender] level families armed on IXmlUtils::LoadXmlFromFile "
+                             "at %p -- %zu family descriptor(s)", target, ptf::kFamilyCount);
+    return true;
+}
+
+bool g_levelHookArmed = false;
+
+void OnKcseMessage(KCSE::Message* msg)
+{
+    if (g_levelHookArmed || !msg)
+        return;
+    // PreDataLoaded is the earliest point gEnv->pSystem is usable; DataLoaded is the fallback.
+    if (msg->type == KCSE::IMessagingInterface::kMessage_PreDataLoaded ||
+        msg->type == KCSE::IMessagingInterface::kMessage_DataLoaded)
+        g_levelHookArmed = InstallLevelHook();
+}
+
+}  // namespace
+
 // ---------------------------------------------------------------- install ---
 
 static bool InstallHooks()
@@ -519,6 +627,10 @@ KCSE_PLUGIN_INFO("PTF Extender", "JerryYOJ", 1);
 KCSE_PLUGIN_LOAD(kcse)
 {
     KCSE::AllocTrampoline(1 << 10);
-    
-    return InstallHooks();
+
+    if (!InstallHooks())
+        return false;
+    // The level hook needs gEnv->pSystem, which does not exist yet -- arm it on the first message.
+    auto* msg = kcse->GetMessagingInterface();
+    return msg && msg->RegisterListener(&OnKcseMessage);
 }
