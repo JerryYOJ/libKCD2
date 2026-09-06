@@ -36,7 +36,7 @@ public:
     // ---- own data (+0x18..+0x48) ----
     bool     m_setupFlag;      // +0x18  set 0/1 by sub_180909E68 (via _vf12 sub_1819DE250)
     bool     m_activeFlag;     // +0x19  set 0/1 individually (packed pair, not an enum)
-    uint8_t  _pad1A;           // +0x1A
+    bool m_flag1A; // +0x1A
     bool     m_isActive;       // +0x1B  slot-open flag (init 0)   [KCD1-correlated]
     float    m_duration;       // +0x1C  timing-window duration (init 0)   [KCD1-correlated]
     float    m_scaleFactor;    // +0x20  blend/scale factor (init 1.0f)   [KCD1-correlated]

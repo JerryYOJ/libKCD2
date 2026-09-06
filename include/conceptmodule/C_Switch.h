@@ -32,7 +32,7 @@ public:
         definition::PortDefinitionSink sink, bool includeAll) override;  // [28] 0x1804F22BC case groups (emitter sub_1804F2EC8)
 
     C_PortRef m_switch;             // +0x48  rttr "Switch" -- the discriminator pin (untyped/TypeT)
-    std::vector<uint64_t> m_unk88;  // +0x88  ctor-zeroed, never touched in analyzed paths [element type U]
+    std::vector<CryStringT<char>> m_valueTypeNames; // +0x88  ctor-zeroed, never touched in analyzed paths [element type U]
     std::vector<CryStringT<char>> m_switchValues;  // +0xA0  rttr "SwitchValues" -- the case names
     std::vector<rttr::type> m_valueTypes;          // +0xB8  rttr "ValueTypes" -- one routed value slot per entry
 };

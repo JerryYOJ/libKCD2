@@ -10,9 +10,9 @@ public:
     explicit C_ChangingDieValueDiceGameState(C_DiceGameModel* model);
     ~C_ChangingDieValueDiceGameState() override;                // [0]
     const char* GetStateName() const override;                  // [1]
-    void unk_05(void* context) override;                        // [5]
-    bool unk_07(void* context) override;                        // [7]
-    bool unk_43() override;                                    // [43]
+    void OnEnter(I_DiceGameModelDelegate* delegate) override; // [5]
+    bool AdvanceState(I_DiceGameModelDelegate* delegate) override; // [7]
+    bool IsChangingDieValueState() override; // [43]
     RTTR_ENABLE(I_DiceGameModelState) // [48..50]
 
     std::uint8_t m_runtime20[8];                               // +0x20

@@ -55,8 +55,13 @@ public:
 
     enum : uint32_t { ePVRNChunkMagic = 0xCAFEBAB6 };  // sector stream ("pvrn") chunk magic
 
-    // element of the +0x2B8 vector -- only the 0x10 stride is proven (dtor frees (cap-begin)&~0xF)
-    struct SUnkElem10 { uint8_t _raw[0x10]; };
+    // element of the +0x2B8 precache scratch vector (filled by IRenderNode slot 52 from
+    // m_groups: material via IMeshObj::GetMaterial / StatInstGroup override, then fed to
+    // the precache walker sub_18078D2A0; struct spelling inferred)
+    struct SMergedMeshPrecacheItem {
+        Offsets::IMaterial* pMaterial;   // +0x00
+        Offsets::IStatObj*  pStatObj;    // +0x08
+    };
 
     int32_t             m_lastDrawFrameId = 0;      // +0x60  (shares +0x60 with the empty base) Update compares to passInfo+0xC to activate/deactivate
     int32_t             _unk64 = 0;                 // +0x64  Render takes &this->_unk64 as a cursor (0x1804a0833)
@@ -100,7 +105,7 @@ public:
     void*               m_spineJobState = nullptr;  // +0x280 SJobState handle #3 (InitializeSpines, priority 2)
     std::vector<void*>  m_spineBufA;                // +0x288 spine/deform buffer; {begin,end,cap} triple proven, ELEMENT TYPE UNKNOWN (elem dtor sub_180492FAC) -- void* is a layout placeholder
     std::vector<void*>  m_spineBufB;                // +0x2A0 same shape; both cleared by Prepare and RemoveRenderResources
-    std::vector<SUnkElem10> m_unkVec2B8;            // +0x2B8 16-byte elements proven; truncated by Prepare; purpose unknown
+    std::vector<SMergedMeshPrecacheItem> m_precacheItems; // +0x2B8 per-precache scratch (slot 52 fills when empty; Prepare truncates)
     void*               m_pReadStream = nullptr;    // +0x2D0 pending IReadStreamPtr (ref-counted; released via pointee vfunc +0x80/+0x30 then swap-null sub_180396184) [IReadStream identity = inference]
     void*               _unk2D8 = nullptr;          // +0x2D8 ref-counted ptr (dtor releases via sub_1804F6588)
 };

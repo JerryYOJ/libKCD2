@@ -18,41 +18,40 @@ class C_ClothingAttachmentManager : public I_ClothingAttachmentManager {
 public:
     explicit C_ClothingAttachmentManager(I_ClothingAttachmentOwner* owner); // 0x1807540C4
     ~C_ClothingAttachmentManager() override;                             // [0] 0x18291735C
-    void unk_01() override;                                             // [1] 0x18064072C
+    void OnPrePhysicsUpdate() override; // [1] 0x18064072C
     void* GetClothingConfig() const override;                            // [2] 0x1809DD2D0
-    void unk_03() override;                                             // [3] 0x181E95F30
-    void unk_04(bool value) override;                                   // [4] 0x1803B6E80
-    bool unk_05() const override;                                       // [5] 0x18090F5B8
-    void unk_06() override;                                             // [6] 0x1809115E0
-    ICharacterInstance* GetCharacterInstance() const override;           // [7] 0x180638480
+    void unk_03() override; // [3] 0x181E95F30
+    void SetHandsExcluded(bool excluded) override; // [4] 0x1803B6E80
+    bool HasEquippedHeadFaceComponent() const override; // [5] 0x18090F5B8
+    ICharacterInstance* GetCharacterInstance() const override; // [6] 0x1809115E0
+    Offsets::IEntity* GetEntity() const override;                        // [7] 0x180638480 mov rax,[rcx+10h]
     const char* GetOwnerName() const override;                           // [8] 0x181350034
     I_ClothingAttachmentOwner* GetOwner() const override;                // [9] 0x180947210
-    void unk_10(bool value) override;                                   // [10] 0x181E96290
-    bool unk_11() const override;                                       // [11] 0x18060D9F0
-    void* unk_12() const override;                                      // [12] 0x180753EA8
-    void unk_13(const I_ClothingAttachmentManager* source) override;     // [13] 0x1803B6E80
-    bool unk_14() const override = 0;                                   // [14] purecall
-    bool unk_15() const override = 0;                                   // [15] purecall
-    bool unk_16() const override = 0;                                   // [16] purecall
+    void SetEnabled(bool enabled) override; // [10] 0x181E96290
+    bool IsResetPending() const override; // [11] 0x18060D9F0
+    std::uint32_t GetBloodMaskSeed() const override; // [12] 0x180753EA8
+    void CopyStateFrom(const I_ClothingAttachmentManager* source) override; // [13] 0x1803B6E80
+    bool IsReady() const override = 0; // [14] purecall
+    bool IsAttachmentLodReady() const override = 0; // [15] purecall
+    bool IsAttachmentLodActive() const override = 0; // [16] purecall
     void ProcessEvent(SEntityEvent& event) override;                     // [17] 0x1804A92A0
-    void unk_18(std::uint32_t value) override = 0;                       // [18] purecall
-    void unk_19() override = 0;                                         // [19] purecall
-    void unk_20() override = 0;                                         // [20] purecall
+    void OverrideBloodZoneMask(std::uint32_t zoneIdx, const clothing::S_BloodMaskName& mask) override = 0; // [18] purecall
+    void ApplyBloodMaskOverride(const clothing::S_BloodMaskName& mask) override = 0; // [19] purecall
+    void ResetBloodMaskOverride(const clothing::S_BloodMaskName& mask) override = 0; // [20] purecall
     std::uint32_t GetLoadedAttachmentCount() const override;             // [21] 0x1809DF938
-    bool unk_22() override;                                             // [22] 0x1809DF974
-    void unk_23() override;                                             // [23] 0x181E96D10
-    void unk_24() override = 0;                                         // [24] purecall
-    bool unk_25(void* value) override = 0;                              // [25] purecall
-    bool unk_26(void* value) override = 0;                              // [26] purecall
-    void unk_27() override = 0;                                         // [27] purecall
-    void unk_28() override = 0;                                         // [28] purecall
-    void unk_29() override = 0;                                         // [29] purecall
-    void unk_30(void* value, bool enabled) override = 0;                 // [30] purecall
-    void* unk_31(const CryStringT<char>& name, void* value) override = 0;// [31] purecall
-    const void* unk_32() const override = 0;                             // [32] purecall
-    const void* unk_33() const override = 0;                             // [33] purecall
-    std::vector<void*> unk_34(std::int32_t key,
-                              void* predicate) const override = 0;       // [34] purecall
+    bool Initialize() override; // [22] 0x1809DF974
+    void unk_23() override; // [23] 0x181E96D10
+    void RebuildAttachments() override = 0; // [24] purecall
+    bool AddItem(C_Item* item) override = 0; // [25] purecall
+    bool RemoveItem(C_Item* item) override = 0; // [26] purecall
+    void ClearItems() override = 0; // [27] purecall
+    void ReloadComponentData() override = 0; // [28] purecall
+    void ReloadBloodMasks() override = 0; // [29] purecall
+    void SetHidingGroupActive(const std::shared_ptr<clothing::C_ClothingHidingGroup>& group, bool active) override = 0; // [30] purecall
+    void SetAttachmentMask(const CryStringT<char>& attachmentName, const AttachmentMask& mask) override = 0; // [31] purecall
+    const AttachmentMaskMap& GetAttachmentMasks() const override = 0; // [32] purecall
+    const BloodMaskArray& GetBloodMasks() const override = 0; // [33] purecall
+    std::vector<clothing::C_ElementBase*> CollectElements(std::uint32_t equipmentPartId, ElementPredicate predicate) const override = 0; // [34] purecall
     RTTR_ENABLE(I_ClothingAttachmentManager)                             // [35..37], vtable 0x183A4EA98
 
     virtual void unk_38();                                              // [38] 0x180666D24

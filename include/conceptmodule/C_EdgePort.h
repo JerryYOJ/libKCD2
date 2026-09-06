@@ -29,8 +29,8 @@ public:
     virtual void AddIncoming(_smart_ptr<I_Port> port);  // [26] base "not supported"; called by Connect @0x18069870F
     virtual void ClearOutgoing();                       // [27] base "not supported" [sig U]
     virtual void ClearIncoming();                       // [28] base "not supported" [sig U]
-    virtual void unk29();                               // [29] base nullsub; overridden by every connectable leaf [U -- serialization candidate]
-    virtual void unk30();                               // [30] base nullsub; overridden by Interface*/OutputTrigger leaves [U]
+    virtual void ResetConnections(int phase); // [29] base nullsub; overridden by every connectable leaf [U -- serialization candidate]
+    virtual void RemoveLastOutgoing(); // [30] base nullsub; overridden by Interface*/OutputTrigger leaves [U]
 };
 static_assert(sizeof(C_EdgePort) == 0x30, "C_EdgePort adds no data");
 

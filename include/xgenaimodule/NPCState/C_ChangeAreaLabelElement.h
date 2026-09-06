@@ -16,10 +16,10 @@ class C_ChangeAreaLabelElement : public I_Element {
 public:
     ~C_ChangeAreaLabelElement() override;
     E_ElementType::Type unk_02() override;
-    I_Element* unk_09() override;
-    std::uint64_t unk_10() override;
-    bool unk_24() override;
-    bool unk_25() override;
+    I_Element* Clone() const override;
+    std::uint64_t GetHash() const override;
+    bool WritePayload(void* writer) const override;
+    bool ReadPayload(void* reader, void* ctxA, void* ctxB, bool* ok) override;
     RTTR_ENABLE(I_Element)
     std::uint8_t m_unknown18[0x20];                // +0x18
 };

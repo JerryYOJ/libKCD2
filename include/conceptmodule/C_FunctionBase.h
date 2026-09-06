@@ -40,7 +40,7 @@ public:
     CryStringT<char> m_methodName;     // +0x48  rttr "MethodName" (from the XML Constant)
     rttr::type   m_declaringType;      // +0x50  rttr "DeclaringType"; invalid on free-function nodes
     bool         m_methodResolved;     // +0x58  lazy-cache flag
-    uint8_t      _pad59[7];            // +0x59
+    uint8_t _pad59[7]; // +0x59
     rttr::method m_method;             // +0x60  the resolved method handle
 };
 static_assert(sizeof(C_FunctionBase) == 0x68, "C_FunctionBase must be 0x68");

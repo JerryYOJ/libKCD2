@@ -11,6 +11,10 @@
 #include "I_GameObjectLight.h"
 #include "S_ItemClassGUID.h"
 
+// engine smart-handle types (global scope; used by ref only)
+class XmlNodeRef;
+class SmartScriptTable;
+
 namespace wh::entitymodule {
 
 class C_Item;
@@ -34,20 +38,20 @@ public:
     void _vf10(C_Item* item, E_ItemHolderChangeFlags flags,
                std::uint32_t amount) override;                           // [10] 0x1813E74C0
     RTTR_ENABLE(C_ItemHolder)                                            // [21..23], vtable 0x183A2DE30
-    virtual void* unk_24();                                              // [24] 0x18066CD10
-    virtual void unk_25();                                               // [25] 0x181F0F810
-    virtual void unk_26();                                               // [26] 0x181F0EC70
+    virtual std::int32_t GetItemSlotKind() const; // [24] 0x18066CD10
+    virtual void LinkCurrentItemAiObject(); // [25] 0x181F0F810
+    virtual Matrix34 GetItemLocalTransform(C_Item* item) const; // [26] 0x181F0EC70
     virtual S_ItemClassGUID GetItemClass() const;                        // [27] 0x181F0EC00 copies +0x70
-    virtual void unk_28();                                               // [28] 0x181F0DA40
-    virtual void unk_29();                                               // [29] 0x1808CCFA8
-    virtual void unk_30();                                               // [30] 0x1815663C8
+    virtual bool AcceptsItemClass(const S_ItemClassGUID& itemClass) const; // [28] 0x181F0DA40
+    virtual QuatT GetItemWorldTransform(C_Item* item) const; // [29] 0x1808CCFA8
+    virtual QuatT GetCurrentItemWorldTransform() const; // [30] 0x1815663C8
     virtual void unk_31();                                               // [31] 0x1809F1948
-    virtual void unk_32();                                               // [32] 0x1803C314C
-    virtual void unk_33();                                               // [33] 0x1803C38F4
-    virtual void unk_34();                                               // [34] 0x182A6A37C
-    virtual void unk_35();                                               // [35] 0x181F0F910
-    virtual std::int32_t unk_36();                                       // [36] 0x181A74280 returns 7
-    virtual std::int32_t unk_37();                                       // [37] 0x181A74280 returns 7
+    virtual void LoadFromXml(const XmlNodeRef& entityNode); // [32] 0x1803C314C
+    virtual void LoadPropertiesXml(const XmlNodeRef& properties); // [33] 0x1803C38F4
+    virtual void LoadPropertiesScript(const SmartScriptTable& properties); // [34] 0x182A6A37C
+    virtual void FinalizeLoadedProperties(); // [35] 0x181F0F910
+    virtual std::uint16_t GetDefaultRestockPeriodDays() const; // [36] 0x181A74280 returns 7
+    virtual std::uint16_t GetDefaultDestockPeriodDays() const; // [37] 0x181A74280 returns 7
 
     void ScheduleUpdate(std::int32_t value) override;                    // +0x68 [0] 0x1808F3018
 
@@ -56,17 +60,17 @@ public:
     S_ItemClassGUID m_itemClass;                                         // +0x70 slot 27 / RTTR GetItemClass
     CryStringT<char> m_string80;                                         // +0x80 ctor empty
     CryStringT<char> m_string88;                                         // +0x88 ctor empty
-    std::uint64_t m_unknown90;                                           // +0x90 ScheduleUpdate gate
+    C_Item* m_secondaryItem; // +0x90 ScheduleUpdate gate
     C_Item* m_item;                                                      // +0x98 HasItem
     std::uint8_t m_unknownA0[0x10];                                      // +0xA0 ctor 0
     std::uint64_t m_unknownB0;                                           // +0xB0
-    std::uint32_t m_unknownB8;                                           // +0xB8 ctor 0xFFFFFFFF
+    std::int32_t m_lastStockUpdateDay; // +0xB8 ctor 0xFFFFFFFF
     std::uint32_t m_unknownBC;                                           // +0xBC ctor 0x70007
-    std::uint8_t m_unknownC0;                                            // +0xC0 ctor 1
+    std::uint8_t m_flagsC0; // +0xC0 ctor 1
     std::uint8_t m_flagsC1;                                              // +0xC1
     std::uint16_t m_unknownC2;                                           // +0xC2 ctor 0
     std::uint8_t m_unknownC4[0x10];                                      // +0xC4
-    std::uint32_t m_unknownD4;                                           // +0xD4 ctor 0xFFFFFFFF
+    std::int32_t m_viewDistRatio; // +0xD4 ctor 0xFFFFFFFF
     std::uint64_t m_unknownD8;                                           // +0xD8 ctor 0xFFFFFFFFFFFFFFFF
 };
 

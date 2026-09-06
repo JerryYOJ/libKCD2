@@ -14,9 +14,12 @@
 
 namespace wh::combatmodule {
 
+// forward decls for not-yet-RE'd pointee types (stage-2 auto)
+class S_CombatActionAttackData;
+
 struct S_CombatActorActionSyncPerfectBlockHitParams {
-    void*   m_pField00;      // +0x00  factory sub_1810F3148 stores a3 = *(originating-action+0x78); source/context object ptr (pointee class unrecovered)
-    uint8_t m_field08;       // +0x08  factory arg a4 = sub_180688B44(actor state+0x210, 4) bit-test; flag
+    S_CombatActionAttackData* m_pAttackData; // +0x00  factory sub_1810F3148 stores a3 = *(originating-action+0x78); source/context object ptr (pointee class unrecovered)
+    bool m_combatFlag4; // +0x08  factory arg a4 = sub_180688B44(actor state+0x210, 4) bit-test; flag
                              //        (bool candidate -- helper's return range unproven, kept uint8_t)
     uint8_t _pad09[7];       // +0x09
 };

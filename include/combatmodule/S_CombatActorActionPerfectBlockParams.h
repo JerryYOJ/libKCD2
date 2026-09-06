@@ -27,13 +27,16 @@
 
 namespace wh::combatmodule {
 
+// forward decls for not-yet-RE'd pointee types (stage-2 auto)
+class S_CombatActionAttackData;
+
 struct S_CombatActorActionPerfectBlockParams
     : public S_CombatActorActionPerfectBlockBaseParams,   // +0x00  (0x10)
       public I_CombatActionBlockHelperParams,             // +0x10  (0x08, vtable-only)
       public I_CombatActionAttackHelperParams             // +0x18  (0x10: vtable + m_pAttackData @+0x20)
 {
     inline static constexpr auto RTTI = Offsets::RTTI_S_CombatActorActionPerfectBlockParams;
-    uint64_t m_field28;      // +0x28  (payload; UNVERIFIED)
+    S_CombatActionAttackData* m_pAttackCandidate; // +0x28  (payload; UNVERIFIED)
 };
 static_assert(sizeof(S_CombatActorActionPerfectBlockParams) == 0x30,
               "S_CombatActorActionPerfectBlockParams = 3 poly subobjects (0x28) + 0x08 payload");

@@ -22,7 +22,7 @@ public:
 
     int32_t m_direction;      // +0x30  runtime E_PortDirection (0 until assigned)
     S_ResourceRef m_incoming; // +0x34  upstream link (ctor {-1, 0})
-    uint8_t _pad3C[4];        // +0x3C
+    uint8_t _pad3C[4]; // +0x3C
     std::vector<S_ResourceRef> m_outgoing;  // +0x40  downstream fan-out
 };
 static_assert(sizeof(C_InterfaceDataPort) == 0x58, "C_InterfaceDataPort must be 0x58");

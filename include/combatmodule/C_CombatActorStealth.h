@@ -41,6 +41,9 @@
 
 namespace wh::combatmodule {
 
+// forward decls for not-yet-RE'd pointee types (stage-2 auto)
+class S_CombatStealthActionMapBinder;
+
 class C_CombatActorStealth : public C_CombatActorUpdatedObject,
                              public I_CombatActorStealth {
 public:
@@ -89,7 +92,7 @@ public:
     uint8_t  m_flag9B;               // +0x9B  cb1 = 1 [U role]
     E_StealthKillResult m_resultCode;// +0x9C  default fail(3); cb2/cb4 write; cb3 passes to C_RPGCombat slot 51
     uint8_t  _pad9D[3];              // +0x9D
-    void*    m_pOwnedSub;            // +0xA0  optional owned subobject (ctor sub_1810EB4A8 if entity valid; custom delete)
+    S_CombatStealthActionMapBinder* m_pActionMapBinder; // +0xA0  optional owned subobject (ctor sub_1810EB4A8 if entity valid; custom delete)
     uint8_t  m_wuidSlots[2][0x10];   // +0xA8  2 x 16-byte WUID/model default records (ctor sub_18050B734(this+0xA8,16,2,sub_18192BB90); default qword_18531EC48)
 };
 static_assert(sizeof(C_CombatActorStealth) == 0xC8, "C_CombatActorStealth must be 0xC8 (delete(this,200))");

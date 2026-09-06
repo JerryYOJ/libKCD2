@@ -28,8 +28,13 @@
 // Global singleton pointer set by ctor: CScriptSystem* @ 0x18549CFB0.
 // Shared lua_State* also cached at global 0x18549CFA0.
 
+#include <vector>
+#include <set>
+
 typedef struct lua_State lua_State;
 struct ISystem;
+struct IScriptTable;
+struct ICVar;
 class CScriptTimerMgr;   // owned timer manager (+0xB0, 0x40 bytes)
 class CLUADbg;           // lazy Lua debugger (+0x43D0, 0x390 bytes)
 
@@ -51,7 +56,7 @@ public:
     int          m_nParamCount;                  // +0x28  active-call param counter (BeginCall sets 0/-1, PushFuncParam++)  VERIFIED
     int          _pad2C;                         // +0x2C
     void*        _field30;                       // +0x30  (ctor 0)
-    void*        _field38;                       // +0x38  (ctor 0)
+    IScriptTable* m_pPrecacheTable; // +0x38  (ctor 0)
 
     std::vector<void*> m_memBlocks;              // +0x40  {first,last,end}; dtor sub_1803F70D8 frees each elem-12 via pool free (sub_1804FD898), then buffer
     void*        _field58;                       // +0x58  (ctor 0; no writer found)
@@ -61,9 +66,9 @@ public:
     ISystem*     m_pSystem;                       // +0x98  Init 0x181449215 a1[19]=pSystem arg; dtor GetISystemEventDispatcher()->RemoveListener(this)
 
     float        m_fGCFreq;                      // +0xA0  GC frequency, seconds (ctor 10.0f; SetGCFrequency stores here)  VERIFIED
-    uint8_t      _padA4[4];                      // +0xA4
+    float m_fLastGCTime; // +0xA4
     int          m_nLastGCCount;                 // +0xA8  Init 0x18144934a & Update 0x180a26c93 store GetCGCount() (vtbl[36]) as dword
-    uint8_t      _padAC[4];                       // +0xAC
+    int m_nForceReload; // +0xAC
     CScriptTimerMgr* m_pTimerMgr;                // +0xB0  Init a1[22]=new CScriptTimerMgr(this) (sub_1814494CC, 0x40 bytes); dtor deletes via vtbl[0]
     int          m_nCallFrameDepth;              // +0xB8  active call-frame count for the +0xC0 frame pool; EnableDebugger 0x180a26f48 stores 0
     uint8_t      _padBC[4];                       // +0xBC

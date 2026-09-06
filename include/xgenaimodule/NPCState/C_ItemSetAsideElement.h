@@ -17,8 +17,8 @@ public:
     C_ItemSetAsideElement();                                             // 0x180FD7190
     ~C_ItemSetAsideElement() override;                                   // [0]
     E_ElementType::Type unk_02() override;
-    I_Element* unk_09() override;
-    std::uint64_t unk_10() override;
+    I_Element* Clone() const override;
+    std::uint64_t GetHash() const override;
     void OnAfterAcquire(wh::entitymodule::C_Item* item) override;
     void OnBeforeLose(wh::entitymodule::C_Item* item) override;
     void OnSlotItem(wh::entitymodule::C_Item* item) override;

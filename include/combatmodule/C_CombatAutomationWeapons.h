@@ -39,7 +39,7 @@ public:
     CTimeValue m_overrideReplaceTimer;     // +0x78  "OverRepl %.2fs"
     int32_t    m_stateFlags80;             // +0x80  state/flags; the side-effect callback sets the byte at +0x82
     uint8_t    _pad84[4];                  // +0x84
-    uint64_t   m_field88;                  // +0x88  (ctor 0; no reader observed)
+    void* m_pOwned; // +0x88  (ctor 0; no reader observed)
 };
 static_assert(sizeof(C_CombatAutomationWeapons) == 0x90, "C_CombatAutomationWeapons must be 0x90");
 

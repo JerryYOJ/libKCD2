@@ -4,6 +4,8 @@
 #include "../CryEngine/CryCommon/CryString.h"
 #include "../CryEngine/CryCommon/Cry_Math.h"
 
+class CAnimEventData;   // CryCharAnimationParams.h (AnimEventInstance::m_pEventData pointee)
+
 namespace wh::animationmodule {
 
 // Source-reconstructed name; exact KCD2 animation-event payload copied by 0x180AE781C.
@@ -19,7 +21,7 @@ struct S_LODAnimEventData {
     CryStringT<char> m_boneName;              // +0x28, exact role/spelling OPEN
     Vec3 m_offset;                            // +0x30
     Vec3 m_direction;                         // +0x3C
-    const void* m_pSourceEventData;           // +0x48, pointee type OPEN
+    const CAnimEventData* m_pEventData; // +0x48, pointee type OPEN
 };
 static_assert(sizeof(S_LODAnimEventData) == 0x50,
               "LOD animation-event payload must be 0x50");
@@ -27,7 +29,7 @@ static_assert(offsetof(S_LODAnimEventData, m_eventName) == 0x10,
               "LOD event name must be at 0x10");
 static_assert(offsetof(S_LODAnimEventData, m_offset) == 0x30,
               "LOD event offset must be at 0x30");
-static_assert(offsetof(S_LODAnimEventData, m_pSourceEventData) == 0x48,
+static_assert(offsetof(S_LODAnimEventData, m_pEventData) == 0x48,
               "LOD source event pointer must be at 0x48");
 
 }  // namespace wh::animationmodule

@@ -8,12 +8,12 @@ class C_CheckBustBadgeDiceGameState : public I_DiceGameModelState {
 public:
     explicit C_CheckBustBadgeDiceGameState(C_DiceGameModel* model);
     const char* GetStateName() const override;                  // [1]
-    void unk_05(void* context) override;                        // [5]
-    bool unk_07(void* context) override;                        // [7]
-    bool unk_14(void* context) override;                        // [14]
-    bool unk_22(void* context, bool flag) override;             // [22]
-    bool unk_27(void* context) override;                        // [27]
-    bool unk_41() override;                                    // [41]
+    void OnEnter(I_DiceGameModelDelegate* delegate) override; // [5]
+    bool AdvanceState(I_DiceGameModelDelegate* delegate) override; // [7]
+    bool ContinueAfterBustProtection(I_DiceGameModelDelegate* delegate) override; // [14]
+    bool Pass(I_DiceGameModelDelegate* delegate, bool fromBadge) override; // [22]
+    bool ApplyBadgeEffect(I_DiceGameModelDelegate* delegate) override; // [27]
+    bool IsCheckBustBadgeState() override; // [41]
     RTTR_ENABLE(I_DiceGameModelState) // [48..50]
 };
 

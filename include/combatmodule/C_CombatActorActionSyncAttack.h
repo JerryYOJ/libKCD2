@@ -26,6 +26,8 @@
 
 namespace wh::combatmodule {
 
+class C_CombatActorActionSyncHit;
+
 class C_CombatActionHelperAttack;   // owned attack helper (alloc 0x50; ctor sub_180915088; module-core wave)
 class C_CombatActionEarlyExitHelper;   // owned early-exit/sync helper (alloc 0x18; ctor sub_180914FA4; RTTI-named)
 
@@ -37,7 +39,7 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_CombatActorActionSyncAttack;
     C_CombatActionHelperAttack* m_pAttackHelper;  // +0x90  (alloc 0x50; owner = this HelperAttackOwner subobject @+0x88)
     C_CombatActionEarlyExitHelper* m_pSyncHelper;    // +0x98  (alloc 0x18)
-    void*                       m_pSyncPartner;   // +0xA0  owning _smart_ptr back-ref to the paired sync action (pointee class unresolved); OnStop sub_180D4BA30 SetPriority(2) @0x180D4BA59, zeroes pointee+0xC0 @0x180D4BA61, then releases null+slot2 via sub_180C5385C @0x180D4BA6C -- identical +0xA0 back-ref mechanism documented in C_CombatActorActionSyncHit / C_CombatActorActionSyncPerfectBlock
+    _smart_ptr<C_CombatActorActionSyncHit> m_pSyncPartner; // +0xA0  owning _smart_ptr back-ref to the paired sync action (pointee class unresolved); OnStop sub_180D4BA30 SetPriority(2) @0x180D4BA59, zeroes pointee+0xC0 @0x180D4BA61, then releases null+slot2 via sub_180C5385C @0x180D4BA6C -- identical +0xA0 back-ref mechanism documented in C_CombatActorActionSyncHit / C_CombatActorActionSyncPerfectBlock
     bool                        m_syncFlag;       // +0xA8  (init 0)
     uint8_t                     _padA9[7];        // +0xA9
 };

@@ -44,7 +44,7 @@ public:
     C_TypedPortRef<unsigned int> m_index; // +0x1F0 "Index"   Out (event-scoped)
     bool m_isRunning;                     // +0x230 re-entrancy guard
     bool m_breakRequested;                // +0x231
-    uint8_t _pad232[6];                   // +0x232
+    uint8_t _pad232[6]; // +0x232
 };
 static_assert(sizeof(C_ForEach) == 0x238, "C_ForEach must be 0x238");
 

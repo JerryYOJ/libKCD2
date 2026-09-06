@@ -14,6 +14,9 @@
 
 namespace wh::combatmodule {
 
+// forward decls for not-yet-RE'd pointee types (stage-2 auto)
+class I_CombatActor;
+
 // Generated/override attack parameters (0x14, heap; owned by m_pOverride, freed with size 20).
 struct S_AttackOverride {
     float   staminaLimit;   // +0x00
@@ -48,7 +51,7 @@ public:
     CTimeValue m_aktWindow;           // +0x80  "Akt %.2f"
     CTimeValue m_huntTimer;           // +0x88  "Hunt %.2f"
     void*      m_pOwnedA;             // +0x90  OWNED ref-counted ptr; Released (slot2 / vf+0x10) in dtor at 0x18194C256; only zero-init in ctor, setter is external (director) -- pointee class unresolved
-    void*      m_pThreatTarget;       // +0x98  weak polymorphic ptr; dump 0x182767EB9 reads GetName via vf[7] (+0x38) -> sub_18041B838 -> "Threat %s"; setter external -- pointee class unresolved
+    I_CombatActor* m_pThreatTarget; // +0x98  weak polymorphic ptr; dump 0x182767EB9 reads GetName via vf[7] (+0x38) -> sub_18041B838 -> "Threat %s"; setter external -- pointee class unresolved
     bool       m_confirmed;           // +0xA0  "Confirmed: %s"
     bool       m_retryFlag;           // +0xA1  read/cleared by sub_18072E784
     uint8_t    _padA2[2];             // +0xA2

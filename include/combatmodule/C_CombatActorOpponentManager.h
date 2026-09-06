@@ -31,7 +31,7 @@ public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_CombatActorOpponentManager;
     S_ActionLock m_lockActions[2];   // +0x18  [0] pending, [1] active exclusive lock
     int32_t  m_suppressCounter;      // +0x38  ++ when a new opponent lock is taken
-    uint32_t _pad3C;                 // +0x3C
+    uint32_t _pad3C; // +0x3C tail alignment to sizeof 0x40
 };
 static_assert(sizeof(C_CombatActorOpponentManager) == 0x40, "C_CombatActorOpponentManager must be 0x40");
 

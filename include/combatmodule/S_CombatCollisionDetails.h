@@ -18,7 +18,8 @@ namespace wh::combatmodule {
 struct S_CombatCollisionDetails {
     Vec3    m_hitPosition;       // +0x00  world-space contact point consumed by the melee-hit path
     Vec3    m_unk0C;             // +0x0C  collision geometry vector; semantic unverified
-    Vec3    m_unk18;             // +0x18  collision geometry vector; semantic unverified
+    IPhysicalEntity* pEntity[1]; // +0x18  collision geometry vector; semantic unverified
+    uint8_t _pad20[0x4]; // +0x20 residual of former m_unk18
     uint8_t m_unk24[0xB4];       // +0x24  collision participants/material/filter/result data
 };
 static_assert(sizeof(S_CombatCollisionDetails) == 0xD8, "S_CombatCollisionDetails must be 0xD8");

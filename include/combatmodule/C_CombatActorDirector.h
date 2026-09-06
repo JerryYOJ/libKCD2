@@ -30,7 +30,7 @@ public:
     // handle per KCD1 correspondence, insert site not decompiled).
     std::map<int32_t, void*> m_channelSubscriptions;   // +0xA0
     int32_t  m_pendingActionId;                        // +0xB0  armed by notification event 0, consumed by event 1 (name tentative)
-    uint32_t _padB4;                                   // +0xB4
+    uint32_t _padB4; // +0xB4 tail alignment
 };
 static_assert(sizeof(C_CombatActorDirector) == 0xB8, "C_CombatActorDirector must be 0xB8");
 static_assert(offsetof(C_CombatActorDirector, m_channelSubscriptions) == 0xA0, "m_channelSubscriptions offset");

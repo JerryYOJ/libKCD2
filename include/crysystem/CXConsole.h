@@ -1,8 +1,12 @@
 #pragma once
 
 #include <cstdint>
+#include <list>
+#include <map>
 #include "../Offsets/vtables/IConsole.h"
 #include "../Offsets/vtables/IInputEventListener.h"
+#include "../CryEngine/CryCommon/StlUtils.h"     // stl::less_stricmp
+#include "../CryEngine/CryCommon/TimeValue.h"    // CTimeValue
 
 // -----------------------------------------------
 // CXConsole - CryEngine 3 engine console (CryEngine + Warhorse, KCD2)
@@ -92,6 +96,53 @@ struct IConsoleArgumentAutoComplete {
     virtual const char* GetValue(int nIndex) const = 0;
 };
 
+// ---- registry value/support types (t1_006; node sizes binary-fixed) ----
+
+typedef void (*ConsoleCommandFunc)(IConsoleCmdArgs*);
+
+struct CConsoleCommand {
+    CryStringT<char> m_sName;       // +0x00
+    CryStringT<char> m_sCommand;    // +0x08
+    CryStringT<char> m_sHelp;       // +0x10
+    int32_t          m_nFlags;      // +0x18
+    uint32_t         _pad1C;        // +0x1C
+    ConsoleCommandFunc m_func;      // +0x20
+};
+static_assert(sizeof(CConsoleCommand) == 0x28, "CConsoleCommand size mismatch");
+
+struct SDeferredCommand {
+    CryStringT<char> command;       // +0x00
+    bool             silentMode;    // +0x08
+    uint8_t          _pad09[7];     // +0x09
+};
+static_assert(sizeof(SDeferredCommand) == 0x10, "SDeferredCommand size mismatch");
+
+struct SConfigVar {
+    CryStringT<char> m_value;       // +0x00
+    bool             m_partOfGroup; // +0x08
+    uint8_t          _pad09[3];     // +0x09
+    uint32_t         nCVarOrFlags;  // +0x0C  zero-inited only in KCD2
+};
+static_assert(sizeof(SConfigVar) == 0x10, "SConfigVar size mismatch");
+
+enum ScrollDir {
+    sdDOWN = 0,
+    sdUP   = 1,
+    sdNONE = 2,
+};
+
+using ConsoleCommandsMap = std::map<CryStringT<char>, CConsoleCommand,
+                                    stl::less_stricmp<CryStringT<char>>>;
+using ConsoleBindsMap = std::map<CryStringT<char>, CryStringT<char>,
+                                 stl::less_stricmp<CryStringT<char>>>;
+using ConsoleVariablesMap = std::map<CryStringT<char>, ICVar*,
+                                     stl::less_stricmp<CryStringT<char>>>;
+using ArgumentAutoCompleteMap = std::map<CryStringT<char>, IConsoleArgumentAutoComplete*,
+                                         stl::less_stricmp<CryStringT<char>>>;
+using ConfigVars = std::map<CryStringT<char>, SConfigVar,
+                            stl::less_stricmp<CryStringT<char>>>;
+using TDeferredCommandList = std::list<SDeferredCommand>;
+
 // ---------------------------------------------------------------------------
 // CXConsole - concrete engine console.
 // ---------------------------------------------------------------------------
@@ -110,30 +161,26 @@ public:
     uint8_t   m_dqHistory[0x28];         // +0x40  command/scroll history deque (ctor sub_1803DF440) /* tentative */
 
     uint8_t   m_bStaticBackground;       // +0x68  StaticBackground(bool)[19]                       VERIFIED
-    uint8_t   _pad69[3];                 // +0x69
+    uint8_t _pad69[3]; // +0x69
     int32_t   m_nLoadingBackTexID;       // +0x6C  loading-screen tex id (SetLoadingImage[20]@0x182482e64 stores GetIRenderer()->LoadTexture id here)
     uint8_t   _blk70[8];                 // +0x70  ctor-zeroed (likely white/font tex ids)
     int32_t   m_progressRange;           // +0x78  ResetProgressBar[47]@0x18247f9dc sets / TickProgressBar[48] checks   VERIFIED
-    uint8_t   _pad7C[4];                 // +0x7C
+    uint8_t _pad7C[4]; // +0x7C
 
-    void*     m_sInputBuffer;            // +0x80  CryStringT<char> current input line
-    void*     m_sReturnString;           // +0x88  CryStringT<char> ExecuteString return string
-    void*     m_sPrevTab;                // +0x90  CryStringT<char> autocomplete buffer; ResetAutoCompletion()[45] clears VERIFIED
+    CryStringT<char> m_sInputBuffer; // +0x80  CryStringT<char> current input line
+    CryStringT<char> m_sReturnString; // +0x88  CryStringT<char> ExecuteString return string
+    CryStringT<char> m_sPrevTab; // +0x90  CryStringT<char> autocomplete buffer; ResetAutoCompletion()[45] clears VERIFIED
     int32_t   m_nTabCount;               // +0x98  autocomplete match index; reset by [45]          VERIFIED
-    uint8_t   _pad9C[4];                 // +0x9C
+    uint8_t _pad9C[4]; // +0x9C
 
     // std::map<CryStringT<char>, CConsoleCommand> - console COMMAND registry (AddCommand[32/33]@0x18100f1d4 -> this+0xA0).
     //   80-byte _Tree node: key CryStringT<char>@+32, value CConsoleCommand(~40B: CryString name/exec + CryString help + int flags)@+40.
-    void*     m_mapCommands_head;        // +0xA0  _Tree sentinel (ctor 3-way self-ref + isnil word 0x0101; node=80 via sub_1807B46D8)
-    size_t    m_mapCommands_size;        // +0xA8  _Mysize
+    ConsoleCommandsMap m_mapCommands; // +0xA0..0xAF  _Tree {sentinel,_Mysize} (node=80 via sub_1807B46D8)
     // std::map<CryStringT<char>, CryStringT<char>> - KEYBIND registry (CreateKeyBind[16]@0x180b908a4 -> this+0xB0).
     //   48-byte _Tree node: key CryStringT<char>@+32, value CryStringT<char>@+40.
-    void*     m_mapBinds_head;           // +0xB0  _Tree sentinel (ctor sub_180452BA4: node=48, 3-way self-ref + isnil 0x0101)
-    size_t    m_mapBinds_size;           // +0xB8  _Mysize
+    ConsoleBindsMap m_mapBinds; // +0xB0..0xBF  _Tree {sentinel,_Mysize} (ctor sub_180452BA4: node=48)
 
-    void*     m_pCVarRegistry;           // +0xC0  variable registry root; a1+0xC0 used by all Register*/GetCVar/Unregister VERIFIED (use)
-    uint32_t  m_nCVarCount;              // +0xC8  GetNumVars()[38] = *(u32)0xC8                     VERIFIED
-    uint8_t   _padCC[4];                 // +0xCC
+    ConsoleVariablesMap m_mapVariables; // +0xC0..0xCF  {sentinel,_Mysize}; GetNumVars()[38] reads low dword of _Mysize @+0xC8
 
     // std::vector<std::pair<const char*, ICVar*>> - cheat-checkable cvars; 16B elem {const char* name@0, ICVar* pVar@8}.
     // GetNumCheatVars[52]=(end-begin)/16; CalcCheatVarHash[54]@0x182475d9c -> sub_182474C34 walks this+0xD0 stride 16.
@@ -146,56 +193,52 @@ public:
     std::vector<IOutputPrintSink*> m_OutputSinks;  // +0x100  {first,last,end}; Add/RemoveOutputPrintSink[12/13] push/erase at this+0x100
 
     // std::list<T> (T = 16-byte element) - role unresolved. 32-byte list node {_Next,_Prev,T(16)}.
-    void*     m_list118_head;            // +0x118  std::list sentinel (ctor sub_1804F75C0(32): _Next=_Prev=self, no color/isnil word)
-    size_t    m_list118_size;            // +0x120  _Mysize
-    uint8_t   m_flag128;                 // +0x128  (ctor=0)
+    TDeferredCommandList m_deferredCommands; // +0x118..0x127  std::list {sentinel,_Mysize} (node=32; queue via 0x18246FCFC)
+    uint8_t   m_flag128;                 // +0x128  (ctor=0)  deferred-execution guard
     uint8_t   _pad129[3];                // +0x129
-    uint32_t  m_unk12C;                  // +0x12C  (ctor=0)
-    void*     m_unk130;                  // +0x130  (ctor=0)
-    uint32_t  m_unk138;                  // +0x138  (ctor=0)
-    uint8_t   _pad13C[4];                // +0x13C
+    int32_t m_waitFrames; // +0x12C  (ctor=0)
+    CTimeValue m_waitSeconds; // +0x130  (ctor=0)
+    int32_t m_blockCounter; // +0x138  (ctor=0)
+    uint8_t _pad13C[4]; // +0x13C
 
     // std::map<CryStringT<char>, IConsoleArgumentAutoComplete*> - AUTOCOMPLETE registry (RegisterAutoComplete[43]@0x18100f524 -> this+0x140).
     //   48-byte _Tree node: key CryStringT<char>@+32, value IConsoleArgumentAutoComplete*@+40.
-    void*     m_mapArgAutoComplete_head; // +0x140  _Tree sentinel (ctor sub_181AB55C0(sub_180451E4C(1)=48) + 3-way self-ref + 0x0101)
-    size_t    m_mapArgAutoComplete_size; // +0x148  _Mysize
+    ArgumentAutoCompleteMap m_mapArgumentAutoComplete; // +0x140..0x14F  {sentinel,_Mysize} (node=48)
 
-    uint8_t   m_conVarSinks[0x10];       // +0x150  std::list<IConsoleVarSink*> {sentinel,size} (Add[59]@0x181684790 push_back; dispatched by OnBefore/OnAfterVarChange[74/75]) VERIFIED (body)
-    void*     m_pListHead160;            // +0x160  56-byte intrusive list head (ctor sub_181AB55C0(56)) /* tentative */
-    void*     m_unk168;                  // +0x168  (ctor=0)
+    std::list<IConsoleVarSink*> m_conVarSinks;   // +0x150..0x15F  (Add[59]@0x181684790 push_back; dispatched by OnBefore/OnAfterVarChange[74/75])
+    ConfigVars m_configVars; // +0x160..0x16F  {sentinel,_Mysize} (node=56; pending values consumed by Register 0x180B9442C)
 
     int32_t   m_scrollCurrent;           // +0x170  current drop position; IsOpened()[37] cmp 0x170==0x174 VERIFIED
     int32_t   m_scrollHeight;            // +0x174  SetScrollMax()[11] target (init 300)             VERIFIED
     int32_t   m_scrollMax;               // +0x178  SetScrollMax()[11] max    (init 300)             VERIFIED
-    uint32_t  m_unk17C;                  // +0x17C  (ctor=0)
-    int32_t   m_unk180;                  // +0x180  (ctor=-1)
-    uint8_t   _pad184[4];                // +0x184
-    void*     m_unk188;                  // +0x188  (ctor=0)
+    int32_t m_nScrollLine; // +0x17C  (ctor=0)
+    int32_t m_nHistoryPos; // +0x180  (ctor=-1)
+    uint8_t _pad184[4]; // +0x184
+    size_t m_nCursorPos; // +0x188  (ctor=0)
     ITexture* m_pImage;                  // +0x190  background image (ctor=0); GetImage[18]@0x181a73a30 returns it, SetImage[17]@0x182482e34 stores  VERIFIED
-    uint32_t  m_unk198;                  // +0x198  (ctor=0)
-    uint8_t   _pad19C[4];                // +0x19C
+    float m_fRepeatTimer; // +0x198  (ctor=0)
+    uint8_t _pad19C[4]; // +0x19C
 
-    uint8_t   m_flag1A0;                 // +0x1A0  (ctor=0xFF)
-    uint8_t   _pad1A1[7];                // +0x1A1
-    const char* m_pLoadingImageName;     // +0x1A8  non-owning const char* (ctor lea &byte_183A3D1E0 = empty ""); NOT an owned CryStringT (base dtor never decrefs +0x1A8)
-    int32_t   m_unk1B0;                  // +0x1B0  (ctor=-1)
-    uint8_t   _blk1B4[0x1C];             // +0x1B4  ctor-zeroed block (0x1B4,0x1C0,0x1C8 stores)
-    uint32_t  m_unk1D0;                  // +0x1D0  (ctor=0)
+    // +0x1A0..0x1CF is ONE key-repeat event: ctor writes eDI_Unknown(0xFF)@+0x1A0,
+    // empty ""@keyName(+0x1A8), eKI_Unknown@keyId(+0x1B0); OnInputEvent copies 48 bytes
+    // of the incoming event here; Update 0x18052F3FC replays it into ProcessInput.
+    Offsets::SInputEvent m_nRepeatEvent; // +0x1A0  (former m_flag1A0/m_pLoadingImageName/m_unk1B0/_blk1B4 were false splits)
+    float m_fCursorBlinkTimer; // +0x1D0  (ctor=0)
     uint8_t   m_flag1D4;                 // +0x1D4  (ctor=1)
-    uint8_t   _pad1D5[3];                // +0x1D5
-    int32_t   m_unk1D8;                  // +0x1D8  (ctor=2)
+    uint8_t _pad1D5[3]; // +0x1D5
+    ScrollDir m_sdScrollDir; // +0x1D8  (ctor=2)
 
     uint8_t   m_bConsoleActive;          // +0x1DC  GetStatus()[28]                                  VERIFIED
     uint8_t   m_bActivationKeyEnabled;   // +0x1DD  EnableActivationKey(bool)[65] (ctor=1)           VERIFIED
     uint8_t   m_flag1DE;                 // +0x1DE  (ctor=0)
-    uint8_t   _pad1DF;                   // +0x1DF
+    uint8_t _pad1DF; // +0x1DF
 
     // Cheat-var hashing (anti-cheat). SetCheatVarHashRange[53] writes first/last + sets the flag;
     // IsHashCalculated[55]=!flag; GetCheatVarHash[56] returns the 64-bit hash.
     uint64_t  m_cheatHashFirstVar;       // +0x1E0                                                   VERIFIED
     uint64_t  m_cheatHashLastVar;        // +0x1E8                                                   VERIFIED
     uint8_t   m_bCheatHashRangeSet;      // +0x1F0                                                   VERIFIED
-    uint8_t   _pad1F1[7];                // +0x1F1
+    uint8_t _pad1F1[7]; // +0x1F1
     uint64_t  m_cheatVarHash;            // +0x1F8  GetCheatVarHash()[56]                            VERIFIED
 
     ISystem*  m_pSystem;                 // +0x200  engine ISystem* (ctor=0, set post-init); GetIRenderer via vtbl+0x2D8 in SetLoadingImage@0x182482e64; used by GetCVar@0x1809d8d38 (vtbl+0x5F8)

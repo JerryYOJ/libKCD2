@@ -39,12 +39,12 @@ public:
     CryStringT<char> m_description;                           // +0x18 RTTR "Description"
     CryStringT<char> m_category;                              // +0x20 RTTR "Category"
     E_NodeStyle m_style;                                      // +0x28 RTTR "Style"
-    std::uint8_t m_unknown2C[4];                              // +0x2C
+    std::uint8_t _pad2C[4]; // +0x2C
     std::vector<I_NodeDefinition::S_PropertyDef> m_properties; // +0x30 RTTR "Properties"
     std::vector<std::shared_ptr<C_BaseAsset>> m_assets;       // +0x48 RTTR "Assets"
     bool m_autoTriggerSupport;                                // +0x60 RTTR "AutoTriggerSupport"
     bool m_affectsGameSave;                                  // +0x61 RTTR "AffectsGameSave"
-    std::uint8_t m_unknown62[6];                              // +0x62
+    std::uint8_t _pad62[6]; // +0x62
 };
 
 static_assert(offsetof(C_NodeDefinition, m_node) == 0x08,

@@ -17,9 +17,13 @@
 
 namespace wh::combatmodule {
 
+// forward decls for not-yet-RE'd pointee types (stage-2 auto)
+class C_CombatActor;
+class S_CombatActionAttackData;
+
 struct S_CombatActorActionHitParams {
-    uint64_t m_field0;   // +0x00  (init 0)
-    uint64_t m_field8;   // +0x08  (init 0)
+    S_CombatActionAttackData* m_pAttackData; // +0x00  (init 0)
+    C_CombatActor* m_pOtherActor; // +0x08  (init 0)
     uint32_t m_flags;    // +0x10  (init: low 2 bits cleared)
     uint32_t _pad14;     // +0x14
 };

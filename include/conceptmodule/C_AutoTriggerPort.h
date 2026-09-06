@@ -21,7 +21,7 @@ public:
     RTTR_ENABLE(C_InputTriggerPort)   // [5] 0x1806B1BCC, [7] 0x18262CEC4
 
     S_ResourceRef m_wrapped;          // +0x30  weak handle to the wrapped port (0x180693A70)
-    std::vector<S_ResourceRef> m_unk38;  // +0x38  zero-init, never written in any examined path [U]
+    std::vector<S_ResourceRef> m_unk38; // +0x38  zero-init, never written in any examined path [U]
 };
 static_assert(sizeof(C_AutoTriggerPort) == 0x50, "C_AutoTriggerPort must be 0x50");
 

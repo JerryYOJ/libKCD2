@@ -16,6 +16,9 @@
 
 namespace wh::combatmodule {
 
+// forward decls for not-yet-RE'd pointee types (stage-2 auto)
+class S_CombatAutomationModels;
+
 class C_CombatAutomationAction : public C_CombatActorUpdatedObject {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_CombatAutomationAction;
@@ -30,7 +33,7 @@ public:
     int32_t    m_stateFlags;    // +0x18  (ctor 0; role unresolved)
     uint32_t   _pad1C;          // +0x1C
     CTimeValue m_lastTime;      // +0x20  init -100000 ("never")
-    int64_t    m_field28;       // +0x28  (ctor 0; init 0 is a VALID time, so CTimeValue lean weak -- unresolved)
+    S_CombatAutomationModels* m_pModels; // +0x28  (ctor 0; init 0 is a VALID time, so CTimeValue lean weak -- unresolved)
 };
 static_assert(sizeof(C_CombatAutomationAction) == 0x30, "C_CombatAutomationAction must be 0x30");
 

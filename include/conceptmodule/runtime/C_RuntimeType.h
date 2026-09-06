@@ -13,15 +13,15 @@ class C_RuntimeType : public C_Resource {
 public:
     C_RuntimeType();                                         // 0x181068ADC
     ~C_RuntimeType() override;                               // [0] 0x180928B30
-    void unk_01() override;                                  // [1] nullsub
-    void unk_02() override;                                  // [2] nullsub
-    void unk_03() override;                                  // [3] nullsub
-    void unk_04() override;                                  // [4] 0x181120540 registers the type name
+    void OnBeforeSerialization() override; // [1] nullsub
+    void OnAfterSerialization() override; // [2] nullsub
+    void OnBeforeDeserialization() override; // [3] nullsub
+    void OnAfterDeserialization() override; // [4] 0x181120540 registers the type name
     RTTR_ENABLE(C_Resource)                                  // [5..7]
 
     CryStringT<char> m_typeName;                             // +0x08 RTTR "TypeName"
     definition::E_TypeClass m_typeClass;                     // +0x10 RTTR "TypeClass"
-    std::uint8_t m_unknown14[4];                             // +0x14
+    std::uint8_t _pad14[4]; // +0x14
     std::vector<definition::S_Enumeration> m_enums;          // +0x18 RTTR "Enums"
 };
 

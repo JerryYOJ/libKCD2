@@ -20,7 +20,7 @@ public:
     Id GetInvalidId() const override;                   // [3] 0x181A72600
     std::uint8_t GetGeneration(Id id) const override;   // [4] 0x1806991D0
 
-    void* m_lock;                                      // +0x08, SRWLOCK storage
+    SRWLOCK m_lock; // +0x08, SRWLOCK storage
     std::uint32_t m_lockDepth;                         // +0x10
     std::uint32_t m_lockOwnerThreadId;                 // +0x14
     std::vector<S_ConceptResourceResolverEntry> m_entries; // +0x18

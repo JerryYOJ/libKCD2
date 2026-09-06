@@ -27,12 +27,12 @@ class I_CombatActor {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_I_CombatActor;
     virtual ~I_CombatActor() = default;                 // [0]
-    virtual void unk_1() = 0;                           // [1]
-    virtual void unk_2() = 0;                           // [2]
-    virtual void unk_3() = 0;                           // [3]
-    virtual void unk_4() = 0;                           // [4]
+    virtual bool IsInCombat() const = 0; // [1]
+    virtual bool IsActiveInCombat() const = 0; // [2]
+    virtual bool HasGuardRequest() const = 0; // [3]
+    virtual bool TryPushActorStateAction(/*query*/ void* params) = 0; // [4]
     virtual void unk_5() = 0;                           // [5]
-    virtual void unk_6() = 0;                           // [6]
+    virtual bool IsGuardTypePermitted() const = 0; // [6]
     virtual Offsets::IEntity* GetEntity() const = 0;    // [7]  0x181A739B0  returns *(this+0x1F8)  VERIFIED
     virtual uint32_t GetEntityId() const = 0;           // [8]  0x180C57690  returns *(m_pEntity+0x30) VERIFIED
 };

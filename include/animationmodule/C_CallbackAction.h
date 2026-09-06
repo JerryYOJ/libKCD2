@@ -22,9 +22,9 @@
 // m_onExit) · [4] Enter 0x180682CD4 (clears bit 0x20, fires m_onEnter) · [8] status/transition
 // 0x181E3E120 · [12] Clone 0x18275D56C (allocs a fresh 0x90 TAction<SAnimationContext>) ·
 // [14]/[17]/[20] delegate fires 0x180683010/0x180683144/0x180683084.
-// Field order +0x20..+0x50 follows stock IAction (forcedScopeMask, priority, eStatus, flags,
-// ..., fragmentID, fragTags 16B+4, optionIdx) -- fingerprinted by m_optionIdx's stock default
-// OPTION_IDX_RANDOM (-2) at +0x50 in the base init.
+// Field order +0x10..+0x50 follows stock IAction (activeTime, queueTime, forcedScopeMask,
+// installedScopeMask, subContext, priority, eStatus, flags, ..., fragmentID, fragTags 16B+4,
+// optionIdx) -- fingerprinted by m_optionIdx's stock default OPTION_IDX_RANDOM (-2) at +0x50.
 //
 // Helpers: keyed-param write sub_1806825C4(&m_paramArray, crc32Key, &value28B) appends/updates a
 // 32-byte { int32 crcKey; byte[28] posrot } record (e.g. "TargetPos"); delegate reset
@@ -34,32 +34,38 @@
 
 namespace wh::animationmodule {
 
+// forward decls for not-yet-RE'd pointee types (stage-2 auto)
+class IScope;
+class SAnimationContext;
+class SMannParameter;
+
 class C_CallbackAction {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_CallbackAction;
 
     // ---- IAction/TAction<SAnimationContext> base region (from sub_180682DA8) ----
     void*    _vtbl_dummy_do_not_use;   // +0x00 modeled explicitly: engine vtable (see banner -- no virtuals declared)
-    uint64_t _pad08;                   // +0x08
-    uint32_t _pad10;                   // +0x10
-    float    m_activeTime;             // +0x14  init -1.0f [name TENTATIVE]
-    uint64_t _pad18;                   // +0x18
-    uint32_t m_forcedScopeMask;        // +0x20  init -1 (ACTION_SCOPES_ALL)
+    SAnimationContext* m_context; // +0x08
+    float    m_activeTime;             // +0x10  UpdatePending 0x1804AD9E8 accumulates timePassed here (SDK slot)
+    float    m_queueTime;              // +0x14  init -1.0f (SDK m_queueTime; UpdatePending compares against it)
+    uint32_t m_forcedScopeMask;        // +0x18  ActionScopes; Clone writes 0/-1 by fragment validity
+    uint32_t m_installedScopeMask;     // +0x1C  ActionScopes; Clone zeroes
+    uint32_t m_subContext;             // +0x20  TagID, init -1 (TAG_ID_INVALID) -- NOT forcedScopeMask
     int32_t  m_priority;               // +0x24  ctor arg a2 (autocook montage passes 5)
     uint32_t m_eStatus;                // +0x28  cleared by Enter (stock IAction::EStatus)
     uint32_t m_flags;                  // +0x2C  ctor arg a5; bit 0x20 = exited/stopping, 0x10 tested by [8]
-    uint64_t _pad30;                   // +0x30
+    IScope* m_rootScope; // +0x30
     int32_t  m_fragmentID;             // +0x38  ctor arg a3 -- Mannequin fragment id (runtime-resolved)
     uint8_t  m_tagState[16];           // +0x3C  Mannequin tag state (ctor arg, 16B)
     int32_t  m_tagStateExtra;          // +0x4C  ctor arg a4[4]
-    int32_t  m_unk50;                  // +0x50  init -2
-    int32_t  m_unk54;                  // +0x54  init 55432 (0xD888)
-    uint32_t _pad58;                   // +0x58
+    uint32_t m_optionIdx; // +0x50  init -2
+    uint32_t m_userToken; // +0x54  init 55432 (0xD888)
+    int m_refCount; // +0x58
     float    m_playbackWeight;         // +0x5C  init 1.0f [name TENTATIVE]
     float    m_playbackSpeed;          // +0x60  init 1.0f [name TENTATIVE]
     uint32_t _pad64;                   // +0x64
     // keyed 32-byte {crc32, posrot28} param records ("TargetPos" etc.; sub_1806825C4)
-    void*    m_paramArrayHead;         // +0x68  init &unk_185666AA8 (empty-array sentinel)
+    SMannParameter* m_paramList; // +0x68  init &unk_185666AA8 (empty-array sentinel)
     uint8_t  m_paramArrayState[0x18];  // +0x70  init xmmword_18409E678 + tail
     void*    m_paramArray2Head;        // +0x88  init &unk_185666AB8 (second keyed array)
     // ---- the 7 lifecycle std::function delegate slots (reset by sub_180682EA0) ----

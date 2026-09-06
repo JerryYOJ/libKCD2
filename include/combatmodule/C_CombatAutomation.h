@@ -45,7 +45,8 @@ public:
 
     wh::shared::C_Signal<> m_onAutomationSignal;   // +0x020  (sentinel unk_185666898; listener wired in GetOrCreate; args unverified)
     wh::shared::C_Signal<> m_onEvent;              // +0x030  (sentinel unk_1855D4D50; args unverified)
-    uint16_t m_flags40;                            // +0x040  (ctor 0)
+    bool m_isActive; // +0x040  (ctor 0)
+    uint8_t _pad41[0x1]; // +0x41 residual of former m_flags40
     uint8_t  _pad42[6];                            // +0x042
     S_CombatAutomationModels* m_pModels;           // +0x048  heap 0x1B0 (built by sub_1810EEA54)
     C_CombatAutomationDirector m_director;         // +0x050  (0x90)

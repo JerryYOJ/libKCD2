@@ -7,10 +7,10 @@ namespace wh::conceptmodule {
 class C_Resource {
 public:
     virtual ~C_Resource();                                // [0]
-    virtual void unk_01() = 0;                            // [1]
-    virtual void unk_02() = 0;                            // [2]
-    virtual void unk_03() = 0;                            // [3]
-    virtual void unk_04() = 0;                            // [4]
+    virtual void OnBeforeSerialization()= 0; // [1]
+    virtual void OnAfterSerialization()= 0; // [2]
+    virtual void OnBeforeDeserialization()= 0; // [3]
+    virtual void OnAfterDeserialization()= 0; // [4]
     RTTR_ENABLE()                                         // [5..7]
 };
 

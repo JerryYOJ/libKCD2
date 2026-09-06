@@ -21,7 +21,7 @@ public:
     RTTR_ENABLE(C_ActiveTriggerPort)   // [5] 0x18061B924, [7] 0x180F8C07C
 
     int32_t m_direction;               // +0x30  runtime E_PortDirection (0 until assigned)
-    uint8_t _pad34[4];                 // +0x34
+    uint8_t _pad34[4]; // +0x34
     std::vector<S_ResourceRef> m_outgoing;  // +0x38  downstream side [LIKELY]
     std::vector<S_ResourceRef> m_incoming;  // +0x50  upstream side [LIKELY]
 };

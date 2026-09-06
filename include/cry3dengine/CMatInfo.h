@@ -146,14 +146,14 @@ public:
     std::int32_t m_flags;                                       // +0x40
     bool m_deleted;                                             // +0x44
     bool m_deletePending;                                       // +0x45
-    bool m_unknown46;                                           // +0x46
+    bool m_isDirty;                                             // +0x46  set by SetGetMaterialParam{Float,Vec3} on override; 0->1 notifies renderer once (Lumberyard spelling)
     std::uint8_t m_padding47;                                  // +0x47
     SShaderItem m_shaderItem;                                   // +0x48
     std::uint8_t m_shaderItemState[8];                          // +0x60
     std::uint32_t m_modificationId;                             // +0x68
     std::uint32_t m_padding6C;                                 // +0x6C
     DynArray<_smart_ptr<CMatInfo>> m_subMaterials;              // +0x70
-    void* m_userData;                                          // +0x78
+    void* m_pUserData;                                         // +0x78  SDK "User data used by Editor"; Set/GetUserData slots 42/43; pointee intentionally opaque
     CryStringT<char> m_materialLinkName;                        // +0x80
     CryStringT<char> m_materialTemplate;                        // +0x88
     std::vector<_smart_ptr<CMaterialLayer>>* m_materialLayers;  // +0x90

@@ -51,13 +51,44 @@ struct ICryPak {
     virtual void _vf3() = 0;   // [3]
     virtual void _vf4() = 0;   // [4]
     virtual void _vf5() = 0;   // [5]
-    virtual void _vf6() = 0;   // [6]
-    virtual void _vf7() = 0;   // [7]
-    virtual void _vf8() = 0;   // [8]
-    virtual void _vf9() = 0;   // [9]
-    virtual void _vf10() = 0;  // [10]
-    virtual void _vf11() = 0;  // [11]
-    virtual void _vf12() = 0;  // [12]
+    // OpenPack overload pair (MSVC-reversed: bindRoot version first), then
+    // ClosePack, then the OpenPacks pair. VERIFIED 2026-08-29; duplicate/
+    // lock semantics RE'd 2026-08-30 (analysis/MCM/dispatch_trace/
+    // crypak_priority.md):
+    //   [6] 0x180DA1A5C adjusts BOTH names (vfunc[1] AdjustFileName, bindRoot
+    //       with 0x50000) then OpenPackCommon 0x1804D45C4. THE mount lever:
+    //       bindRoot is a lookup PREFIX -- FOpen walks the pak vector
+    //       TAIL->begin and serves the first pak whose bindRoot prefixes the
+    //       adjusted path, so pass "Data" to serve "Libs/..." requests.
+    //       nFlags 0x400 inserts at the tail = wins duplicate paths
+    //       (ModManager mounts every Mods/<mod>/Data/*.pak with 0x10400 in
+    //       lowercased strcmp order; later mounts shadow earlier ones).
+    //   [7] 0x18193CCA4 derives bindRoot = dirname(adjusted pak path)
+    //       (strrchr '\\') -- WRONG ROOT for mod-style content: such a mount
+    //       can never serve a "data\libs\..." lookup, it only opens a second
+    //       OS handle on the file. (The earlier note here claiming this is
+    //       "the same root the mod loader uses" was FALSE: the mod loader
+    //       binds at GetGameFolder()="Data".)
+    //   [8] ClosePack matches the STORED archive name only (path-only
+    //       _stricmp after AdjustFileName; startup mod mounts store the
+    //       lowercased glob form). NOT-FOUND RETURNS TRUE (silent no-op);
+    //       found-but-referenced retries 10ms x200 (2s) then returns false
+    //       and leaves the pak mounted. A re-OpenPack of the same
+    //       path+bindRoot is a no-op that does NOT reread a replaced zip.
+    //   [9] consumed in-binary by ModManager.cpp:0x115 sub_181DDCFD0
+    //       ("[Mod] Opening paks in %s"): OpenPacks(bindRoot, "<dir>/*.pak",
+    //       0x10400, 0) -- source of the nFlags value used below.
+    virtual bool OpenPack_BindRoot(const char* szBindRoot, const char* pName,
+                                   unsigned nFlags = 0x10400, void* pData = nullptr,
+                                   void* pFullPath = nullptr) = 0;             // [6] 0x180DA1A5C
+    virtual bool OpenPack(const char* pName, unsigned nFlags = 0x10400,
+                          void* pData = nullptr,
+                          void* pFullPath = nullptr) = 0;                      // [7] 0x18193CCA4
+    virtual bool ClosePack(const char* pName, unsigned nFlags = 0) = 0;        // [8] 0x1804D92A8 (retries with adjusted name)
+    virtual void _vf9() = 0;   // [9]  OpenPacks(szBindRoot, pWildcard, nFlags, pFullPaths) -- consumer-verified, unused here
+    virtual void _vf10() = 0;  // [10] OpenPacks(pWildcard, ...) by pair order
+    virtual void _vf11() = 0;  // [11] ClosePacks(pWildcard, nFlags) 0x1804D91AC -- globs DISK then ClosePack each (crypak_priority.md)
+    virtual void _vf12() = 0;  // [12] is-open-by-path 0x18241BA54 -- forward _stricmp on stored archive names (crypak_priority.md)
     virtual void _vf13() = 0;  // [13]
     virtual void _vf14() = 0;  // [14]
     virtual void _vf15() = 0;  // [15]

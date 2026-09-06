@@ -16,7 +16,7 @@ namespace wh::combatmodule {
 struct S_CombatAnimCollision {
     Vec3    m_hitPosition;       // +0x00  collision contact point
     Vec3    m_unk0C;             // +0x0C  collision geometry vector; semantic unverified
-    Vec3    m_unk18;             // +0x18  collision geometry vector; semantic unverified
+    Vec3 m_hitDirection; // +0x18  collision geometry vector; semantic unverified
     uint8_t m_unk24[0x74];       // +0x24
     int32_t m_hitIndex;          // +0x98  source animation hit index
     uint8_t m_unk9C[0x04];       // +0x9C

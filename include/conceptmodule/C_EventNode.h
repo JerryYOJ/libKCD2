@@ -31,8 +31,8 @@ public:
     rttr::variant GetPortValue(_smart_ptr<I_Port> const& port) override;  // [12] event-data map lookup (<C_Node>: 0x18127F9F4)
     virtual void EmitEvent(I_Port* port, void* eventData);  // [+1 slot] install map -> port->Trigger() -> clear map [eventData = the variant map, container type U]
 
-    void*    m_eventDataHead;      // +0x00  hash-map sentinel node (16B alloc, self-linked)
-    void*    m_eventDataBuckets;   // +0x08  [container internals LIKELY -- custom hash map]
+    void* m_eventDataHead; // +0x00  hash-map sentinel node (16B alloc, self-linked)
+    void** m_eventDataBuckets; // +0x08  [container internals LIKELY -- custom hash map]
     uint64_t m_eventDataMask;      // +0x10
     uint64_t m_eventDataSize;      // +0x18
     uint64_t m_activeEventGuard;   // +0x20  0 = outside event-trigger execution

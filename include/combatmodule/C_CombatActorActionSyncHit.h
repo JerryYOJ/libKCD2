@@ -27,6 +27,9 @@
 
 namespace wh::combatmodule {
 
+// forward decls for not-yet-RE'd pointee types (stage-2 auto)
+class C_CombatActorActionSyncAttack;
+
 class C_CombatActionHelperHit;    // embedded by value below (module-core wave)
 class C_CombatActionEarlyExitHelper;   // owned early-exit/sync helper (alloc 0x18; ctor sub_180914FA4; RTTI-named)
 
@@ -40,7 +43,7 @@ public:
     // +0x88  embedded wh::combatmodule::C_CombatActionHelperHit (by value, 0x30); raw storage.
     alignas(8) uint8_t      m_hitHelper[0x30];  // +0x88
     C_CombatActionEarlyExitHelper* m_pSyncHelper;    // +0xB8  (alloc 0x18)
-    void*                   m_pSyncPartner;     // +0xC0  weak ptr to a paired sync object; OnStop 0x180D4B2C8 does sub_180C5385C(partner+0xA0) (releases a _smart_ptr back-ref, slot2) then nulls this. Pointee class unresolved
+    C_CombatActorActionSyncAttack* m_pSyncPartner; // +0xC0  weak ptr to a paired sync object; OnStop 0x180D4B2C8 does sub_180C5385C(partner+0xA0) (releases a _smart_ptr back-ref, slot2) then nulls this. Pointee class unresolved
 };
 static_assert(sizeof(C_CombatActorActionSyncHit) == 0xC8);
 

@@ -8,6 +8,9 @@
 
 namespace wh::conceptmodule {
 
+// forward decls for not-yet-RE'd pointee types (stage-2 auto)
+class C_ConceptGraphDeserializer;
+
 struct S_RandomEventStreamingState {
     S_RandomEventStreamingState();   // 0x1807CEAE0
     ~S_RandomEventStreamingState();  // 0x182627090
@@ -19,7 +22,7 @@ struct S_RandomEventStreamingState {
     std::vector<_smart_ptr<C_SharedResource>>
         m_resources;                         // +0x20
     _smart_ptr<C_SharedResource> m_owner;    // +0x38
-    void* m_stream;                          // +0x40, owned polymorphic object
+    C_ConceptGraphDeserializer* m_stream; // +0x40, owned polymorphic object
     bool m_active;                           // +0x48
     std::uint8_t m_unknown49[7];
 };

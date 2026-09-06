@@ -33,7 +33,7 @@ public:
     CTimeValue m_aimedSince;           // +0x70  init -100000; "IsAimed %.2fs"
     CTimeValue m_time78;               // +0x78  init -100000 (not in the debug dump)
     CTimeValue m_estimatingSince;      // +0x80  init -100000; "Estimating %f s"
-    int64_t    m_field88;              // +0x88  (ctor 0; no reader observed)
+    bool* m_pForceUncertain; // +0x88  (ctor 0; no reader observed)
 };
 static_assert(sizeof(C_CombatAutomationDirector) == 0x90, "C_CombatAutomationDirector must be 0x90");
 

@@ -66,7 +66,7 @@ public:
     C_ConceptGraphDeserializer* m_pOwner;   // +0x30  the embedding deserializer
     CryStringT<char> m_levelName;           // +0x38  set while instantiating a <Level> definition (read by the prune gate)
     bool m_randomEventPlaceMode;            // +0x40  set while instantiating a <RandomEventPlace> definition
-    uint8_t _pad41[7];                      // +0x41
+    uint8_t _pad41[7]; // +0x41
     CryStringT<char> m_nameRuntimeType;             // +0x48  rttr name of runtime::C_RuntimeType   (<Type> tag)
     CryStringT<char> m_nameInterfaceDataPort;       // +0x50  ... of C_InterfaceDataPort            (<Port>)
     CryStringT<char> m_nameInterfaceTriggerPort;    // +0x58  ... of C_InterfaceTriggerPort         (<Port Type="trigger">)

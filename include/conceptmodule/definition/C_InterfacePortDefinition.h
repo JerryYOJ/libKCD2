@@ -18,18 +18,18 @@ public:
     E_TemplateTypename GetTemplate() const override;           // [7] None
     rttr::variant GetDefaultValue() const override;            // [8] invalid
     bool IsHidden() const override;                             // [9] false
-    bool unk_10() const override;                               // [10] false
+    bool IsDeprecated() const override; // [10] false
     bool IsVariadic() const override;                           // [11] false
     bool IsSequential() const override;                         // [12] false
     bool IsOptional() const override;                           // [13] false
-    bool unk_14() const override;                               // [14] false
+    bool IsInternal() const override; // [14] false
     bool IsAutoTriggerable() const override;                    // [15] false
     bool IsTriggerableWhenHibernated() const override;          // [16] false
     bool IsInterface() const override;                          // [17] true
     std::vector<CryStringT<char>>
         GetLinkedTriggerPorts() const override;                 // [18] empty
-    std::vector<CryStringT<char>> unk_19() const override;      // [19] empty
-    std::shared_ptr<I_PortDefinition> unk_20() const override;  // [20] null
+    std::vector<CryStringT<char>> GetValueOriginConstraints() const override; // [19] empty
+    std::shared_ptr<I_PortDefinition> GetRuntimeDefinition() const override; // [20] null
     RTTR_ENABLE(I_PortDefinition)                               // [21..23]
 
     rttr::type m_type;                                         // +0x08

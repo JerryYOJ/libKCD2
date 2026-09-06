@@ -23,7 +23,7 @@ struct S_CombatActorActionPerfectBlockBaseParams {
     inline static constexpr auto RTTI = Offsets::RTTI_S_CombatActorActionPerfectBlockBaseParams;
     virtual void _vf0() {}     // [0] 0x181A73BA0  (only virtual; role UNVERIFIED -- reflect/accessor)
 
-    uint8_t m_field08;       // +0x08  init 0  (UNVERIFIED semantic)
+    bool m_flag08; // +0x08  init 0  (UNVERIFIED semantic)
     uint8_t _pad09[7];       // +0x09
 };
 static_assert(sizeof(S_CombatActorActionPerfectBlockBaseParams) == 0x10,

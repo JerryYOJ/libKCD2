@@ -31,8 +31,8 @@ public:
     void Destroy() override;                             // [4] forwards to destructor
     ~C_Minigame() override;                              // [5] sub_1809F0E60
     void DestroySession() override;                      // [6] forwards to destructor
-    void unk_08() override;                              // [8]
-    void unk_09() override;                              // [9]
+    bool IsStarted() const override; // [8]
+    std::uint32_t GetTargetEntityId() const override; // [9]
     uint32_t GetPlayerId() const override;               // [10]
     void unk_11() override;                              // [11]
     void unk_12() override;                              // [12]
@@ -42,14 +42,14 @@ public:
     bool Begin() override;                               // [18] sub_18061885C
     void unk_20() override;                              // [20] nullsub
     uint32_t GetUserId() const override;                 // [22]
-    void unk_23() override;                              // [23]
+    bool ShouldBindMinigameActionMap() const override; // [23]
     void unk_24() override;                              // [24]
-    void unk_25() override;                              // [25]
+    bool CheckPrimitiveWorldIntersection(const float* fromXform, const float* toPos) override; // [25]
     void unk_26() override;                              // [26]
     void unk_27() override;                              // [27]
     void unk_28() override;                              // [28]
-    void unk_29() override;                              // [29]
-    void unk_30() override;                              // [30]
+    _smart_ptr<framework::I_Action> CreatePlayerAction() override; // [29]
+    void FillSessionInfo(/*S_MinigameSessionInfo*/ void* out) override; // [30]
     void unk_31() override;                              // [31]
     std::uint8_t unk_32() override;                      // [32] default 0
     void SelfDestruct() override;                        // [33] base nullsub
@@ -59,10 +59,10 @@ public:
     void unk_37() override;                              // [37]
     void unk_38() override;                              // [38]
     bool unk_39() override;                              // [39] default true
-    void unk_40() override;                              // [40]
-    void unk_41() override;                              // [41]
-    void unk_42() override;                              // [42]
-    void unk_43() override;                              // [43]
+    bool TransformByEntitySlot(void* entity, void* slotKey, bool skipWorldTM, float* outVec3, const float* inVec3) override; // [40]
+    void* GetEntityCharacter(void* entity) override; // [41]
+    std::uint32_t StartEntityAnimation(CryStringT<char> name, void* entity) override; // [42]
+    void StopEntityAnimation(std::uint32_t animId, std::uint32_t entityId) override; // [43]
     void unk_44() override;                              // [44]
     uint8_t unk_45() const override;                     // [45] default true
     void RequestExit() override;                         // [46]

@@ -56,7 +56,14 @@ public:
     virtual void SetActionEnabled(const CryStringT<char>& context, const CryStringT<char>& action,
                                   bool enabled, char flag) = 0;
     // [5] 0x1803F6EBC -- show/hide the action's helpbar row (writes row visible@+41; invoke
-    // 0x181FFEEF0).  Refresh is live: any channel change -> sub_18085AABC -> hint-manager rebuild.
+    // 0x181FFEEF0).  bindLive is MUTATE-ONLY (decompile 0x1803F6FA0; in-game 2026-08-29): the
+    // live half equal-range-looks-up the action in the hint manager's ACTIVE list and applies
+    // the write to rows found there -- it never INSTALLS one.  A row that failed the install
+    // gate at the last map-event rebuild (e.g. shipped enabled="false" visible="false") stays
+    // absent from chips AND dispatch no matter how its registry fields are flipped afterward.
+    // After flipping, force the full rebuild sub_1811EFDF0 (addresslib id 99245; exactly what
+    // OnActionMapEvent runs on type-2 events: suspend hint mgr byte +0x124, RebuildActionHints
+    // per enabled context, resume + push) -- it takes the C_ActionSets BASE (this iface - 8).
     // CAVEAT: visibility only gates the final UI push (0x1808E6C7A).  An INVISIBLE row still
     // occupies its key in the helpbar's candidate list -- the conflict filter (0x181FFD960)
     // drops any later same-type row sharing a key binding (sub_1806480E8) BEFORE visibility is

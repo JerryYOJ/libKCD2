@@ -17,6 +17,9 @@
 #include "SLandBobParams.h"
 #include "SRagdollizeParams.h"
 
+// forward decls for not-yet-RE'd pointee types (stage-2 auto)
+class IPhysicalEntity;
+
 class CAnimationPlayerProxy;
 class IActionController;
 class IDebugHistoryManager;
@@ -227,7 +230,7 @@ public:
     std::uint32_t m_previousProcessedFrame; // +0x138
     std::int32_t m_shadowCharacterSlot; // +0x13C
     bool m_shadowCharacterEnabled; // +0x140
-    bool m_unknown141; // +0x141
+    bool m_bSimpleMovementSetOnce; // +0x141
     std::uint8_t _pad142[2]; // +0x142
     EWeaponRaisedPose m_weaponRaisedPose; // +0x144
     SCharacterMoveRequest m_moveRequest; // +0x148
@@ -320,8 +323,8 @@ public:
     std::uint8_t _pad7A2[2]; // +0x7A2
     SRagdollizeParams m_ragdollParams; // +0x7A4
     std::uint32_t m_ragdollState; // +0x7B0
-    bool m_blendFromRagdollQueued; // +0x7B4
-    std::uint8_t _pad7B5[3]; // +0x7B5
+    bool m_blendFromRagdollQueued; // +0x7B4  event 0xF write 0x180703EAC; consumer 0x18083D64C
+    std::uint8_t _pad7B5[3]; // +0x7B5  alignment (t1_004: no access; do NOT compose SBlendFromRagdollParams here)
     bool m_unknown7B8; // +0x7B8
     std::uint8_t _pad7B9[3]; // +0x7B9
     float m_unknown7BC; // +0x7BC
@@ -331,13 +334,13 @@ public:
     std::int32_t m_movementSmoothingFrameId; // +0x7C8
     std::uint32_t m_unknown7CC; // +0x7CC
     Vec3 m_movementSmoothingStages[4]; // +0x7D0
-    void* m_pSpecialColliderHandle; // +0x800, service-owned; type OPEN
-    void* m_pRigidColliderHandle; // +0x808, service-owned; type OPEN
+    IPhysicalEntity* m_pExtraSolidColliderPE; // +0x800, service-owned; type OPEN
+    IPhysicalEntity* m_pRigidColliderPE; // +0x808, service-owned; type OPEN
     std::uint32_t m_characterCollisionFlags; // +0x810
     std::uint32_t _pad814; // +0x814
     IDebugHistoryManager* m_pDebugHistoryManager; // +0x818, owning/refcounted
     std::shared_ptr<IAnimationPoseAligner> m_poseAligner; // +0x820
-    std::uint32_t m_unknown830; // +0x830
+    std::int32_t m_lastAnimationUpdateFrameId; // +0x830
     bool m_grabbed; // +0x834
     bool m_useMannequinAgState; // +0x835, spelling inferred
     bool m_postInitComplete; // +0x836

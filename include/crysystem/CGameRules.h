@@ -166,9 +166,7 @@ public:
     virtual const char* GetTeamName(std::int32_t teamId) const; // [65]
     virtual void OnItemDropped(EntityId actorId, EntityId itemId); // [66]
     virtual void OnItemPickedUp(EntityId actorId, EntityId itemId); // [67]
-    virtual bool unk_68(std::uintptr_t unusedRdx,
-                        EntityId first,
-                        EntityId second); // [68]
+    virtual bool unk_68(std::uintptr_t unusedRdx, EntityId first, EntityId second); // [68]
     virtual void unk_69_LAYOUT_ONLY(); // [69], arguments/return role OPEN
     virtual void ResetGameTime(); // [70]
     virtual bool unk_71_LAYOUT_ONLY(); // [71], scalar return class OPEN
@@ -212,11 +210,7 @@ public:
                                         Offsets::IEntity* excludedEntity); // [97]
     virtual bool IsNameTaken(const char* name,
                              Offsets::IEntity* excludedEntity) const; // [98]
-    virtual void unk_99(Offsets::IActor* actor,
-                        std::uintptr_t unusedR8,
-                        bool doRagdoll,
-                        std::uintptr_t unusedStack28,
-                        EntityId entityId); // [99]
+    virtual void KillPlayer(Offsets::IActor* actor, std::uintptr_t unusedR8, bool doRagdoll, std::int32_t unusedStack, EntityId entityId); // [99]
     virtual void MovePlayer(Offsets::IActor* actor,
                             const Vec3& position,
                             const Quat& orientation); // [100]
@@ -270,18 +264,9 @@ public:
                                       float* outFallbackValue); // [131]
     virtual EntityId GetSpawnLocationByIdx(std::int32_t index) const; // [132]
     virtual void GetSpawnLocations(std::vector<EntityId>& out) const; // [133]
-    virtual bool unk_134(EntityId playerId,
-                         EntityId spawnLocationId,
-                         float radius,
-                         bool unusedFilter,
-                         float secondaryDistance); // [134]
-    virtual bool unk_135(EntityId locationId,
-                         float minimumDistance,
-                         const Vec3* referencePosition); // [135]
-    virtual bool unk_136(EntityId spawnLocationId,
-                         EntityId ignoredEntityId,
-                         float verticalOffset,
-                         float rayLength); // [136]
+    virtual bool IsSpawnLocationSafe(EntityId playerId, EntityId spawnLocationId, float safeDistance, bool unusedFilter, float minDistToEnemies); // [134]
+    virtual bool IsSpawnLocationFarEnough(EntityId locationId, float minimumDistance, const Vec3* referencePosition); // [135]
+    virtual bool TestSpawnLocationWithEnvironment(EntityId spawnLocationId, EntityId ignoredEntityId, float verticalOffset, float rayLength); // [136]
     virtual EntityId GetFirstSpawnLocation(std::int32_t teamId,
                                            std::int32_t groupId) const; // [137]
     virtual void AddSpawnLocationGroup(std::int32_t groupId); // [138]

@@ -32,18 +32,18 @@ public:
     E_TemplateTypename GetTemplate() const override;         // [7] +0x58
     rttr::variant GetDefaultValue() const override;          // [8] +0x60
     bool IsHidden() const override;                           // [9] bit 0
-    bool unk_10() const override;                             // [10] bit 1
+    bool IsDeprecated() const override; // [10] bit 1
     bool IsVariadic() const override;                         // [11] bit 3
     bool IsSequential() const override;                       // [12] bit 4
     bool IsOptional() const override;                         // [13] bit 2
-    bool unk_14() const override;                             // [14] bit 5
+    bool IsInternal() const override; // [14] bit 5
     bool IsAutoTriggerable() const override;                  // [15] bit 6
     bool IsTriggerableWhenHibernated() const override;        // [16] bit 7
     bool IsInterface() const override;                        // [17] visibility Internal/External
     std::vector<CryStringT<char>>
         GetLinkedTriggerPorts() const override;               // [18] +0x28
-    std::vector<CryStringT<char>> unk_19() const override;    // [19] +0x40
-    std::shared_ptr<I_PortDefinition> unk_20() const override; // [20] copied shared definition
+    std::vector<CryStringT<char>> GetValueOriginConstraints() const override; // [19] +0x40
+    std::shared_ptr<I_PortDefinition> GetRuntimeDefinition() const override; // [20] copied shared definition
     RTTR_ENABLE(I_PortDefinition)                             // [21..23]
 
     CryStringT<char> m_name;                                 // +0x08
@@ -53,10 +53,10 @@ public:
     E_PortConnectionType m_connectionType;                   // +0x1C
     rttr::type m_type;                                       // +0x20
     std::vector<CryStringT<char>> m_linkedTriggerPorts;      // +0x28
-    std::vector<CryStringT<char>> m_unknownStringList;       // +0x40 metadata key 16
+    std::vector<CryStringT<char>> m_valueOriginConstraints; // +0x40 metadata key 16
     E_TemplateTypename m_template;                           // +0x58
     std::uint8_t m_flags;                                    // +0x5C E_Flag
-    std::uint8_t m_unknown5D[3];                             // +0x5D
+    std::uint8_t _pad5D[3]; // +0x5D
     rttr::variant m_defaultValue;                            // +0x60
 };
 
@@ -68,8 +68,8 @@ static_assert(offsetof(C_RunTimePortDefinition, m_type) == 0x20,
               "C_RunTimePortDefinition::m_type offset mismatch");
 static_assert(offsetof(C_RunTimePortDefinition, m_linkedTriggerPorts) == 0x28,
               "C_RunTimePortDefinition::m_linkedTriggerPorts offset mismatch");
-static_assert(offsetof(C_RunTimePortDefinition, m_unknownStringList) == 0x40,
-              "C_RunTimePortDefinition::m_unknownStringList offset mismatch");
+static_assert(offsetof(C_RunTimePortDefinition, m_valueOriginConstraints) == 0x40,
+              "C_RunTimePortDefinition::m_valueOriginConstraints offset mismatch");
 static_assert(offsetof(C_RunTimePortDefinition, m_template) == 0x58,
               "C_RunTimePortDefinition::m_template offset mismatch");
 static_assert(offsetof(C_RunTimePortDefinition, m_flags) == 0x5C,

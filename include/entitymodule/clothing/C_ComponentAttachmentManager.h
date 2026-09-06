@@ -27,27 +27,26 @@ class C_ComponentAttachmentManager : public C_ClothingAttachmentManager {
 public:
     explicit C_ComponentAttachmentManager(I_ClothingAttachmentOwner* owner); // 0x180754870
     ~C_ComponentAttachmentManager() override;                           // [0] 0x1809DEBFC
-    void unk_01() override;                                             // [1] 0x181E96A00
-    void unk_04(bool value) override;                                   // [4] 0x180897FF4
-    void unk_13(const I_ClothingAttachmentManager* source) override;     // [13] 0x180AB0C00
-    bool unk_14() const override;                                       // [14] 0x181E96630
-    bool unk_15() const override;                                       // [15] 0x181E96520
-    bool unk_16() const override;                                       // [16] 0x181E96650
-    void unk_18(std::uint32_t value) override;                          // [18] 0x182917E00
-    void unk_19() override;                                             // [19] 0x182917DAC
-    void unk_20() override;                                             // [20] 0x18291758C
-    void unk_24() override;                                             // [24] 0x1809DE388
-    bool unk_25(void* value) override;                                  // [25] 0x1809DDB58
-    bool unk_26(void* value) override;                                  // [26] 0x1809DD5B4
-    void unk_27() override;                                             // [27] 0x1809DD4AC
-    void unk_28() override;                                             // [28] 0x1829185BC
-    void unk_29() override;                                             // [29] 0x182918564
-    void unk_30(void* value, bool enabled) override;                    // [30] 0x18068C7C8
-    void* unk_31(const CryStringT<char>& name, void* value) override;    // [31] 0x181E96E30
-    const void* unk_32() const override;                                // [32] 0x181A9E5C0
-    const void* unk_33() const override;                                // [33] 0x181A84670
-    std::vector<void*> unk_34(std::int32_t key,
-                              void* predicate) const override;          // [34] 0x180F1EF94
+    void OnPrePhysicsUpdate() override; // [1] 0x181E96A00
+    void SetHandsExcluded(bool excluded) override; // [4] 0x180897FF4
+    void CopyStateFrom(const I_ClothingAttachmentManager* source) override; // [13] 0x180AB0C00
+    bool IsReady() const override; // [14] 0x181E96630
+    bool IsAttachmentLodReady() const override; // [15] 0x181E96520
+    bool IsAttachmentLodActive() const override; // [16] 0x181E96650
+    void OverrideBloodZoneMask(std::uint32_t zoneIdx, const clothing::S_BloodMaskName& mask) override; // [18] 0x182917E00
+    void ApplyBloodMaskOverride(const clothing::S_BloodMaskName& mask) override; // [19] 0x182917DAC
+    void ResetBloodMaskOverride(const clothing::S_BloodMaskName& mask) override; // [20] 0x18291758C
+    void RebuildAttachments() override; // [24] 0x1809DE388
+    bool AddItem(C_Item* item) override; // [25] 0x1809DDB58
+    bool RemoveItem(C_Item* item) override; // [26] 0x1809DD5B4
+    void ClearItems() override; // [27] 0x1809DD4AC
+    void ReloadComponentData() override; // [28] 0x1829185BC
+    void ReloadBloodMasks() override; // [29] 0x182918564
+    void SetHidingGroupActive(const std::shared_ptr<clothing::C_ClothingHidingGroup>& group, bool active) override; // [30] 0x18068C7C8
+    void SetAttachmentMask(const CryStringT<char>& attachmentName, const AttachmentMask& mask) override; // [31] 0x181E96E30
+    const AttachmentMaskMap& GetAttachmentMasks() const override; // [32] 0x181A9E5C0
+    const BloodMaskArray& GetBloodMasks() const override; // [33] 0x181A84670
+    std::vector<C_ElementBase*> CollectElements(std::uint32_t equipmentPartId, wh::entitymodule::ElementPredicate predicate) const override; // [34] 0x180F1EF94
     RTTR_ENABLE(C_ClothingAttachmentManager)                            // [35..37], vtable 0x183E8B740
 
     void unk_38() override;                                             // [38] 0x180666CEC

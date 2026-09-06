@@ -20,7 +20,7 @@ public:
     virtual E_InputDeviceClass::Type GetInputDeviceClass() const = 0;  // [0] 0x181A727F0  returns +0x20 (KeyboardMouse=1, XboxPad=2, PsPadP=16)
     virtual void _vf1() = 0;                              // [1] 0x180F69D48  forwards to the +0x30 cached object vf[+0x10] (UNVERIFIED)
     virtual bool IsGamepadConnected() const = 0;          // [2] 0x180F69CA8  scans pInput devices (type 4, connected) (name UNVERIFIED)
-    virtual void _vf3() = 0;                              // [3] 0x180A106CC  action -> hint-text composition (UNVERIFIED)
+    virtual int GetButtonId(CryStringT<char> action, CryStringT<char> actionMap) = 0;  // [3] 0x180A106CC  action+map -> button/key glyph id; -1 = none; by-value callee-destroy; empty map = all maps; device class from +0x20
     virtual void GetKeyLabel(CryStringT<char>& out, const char* keyName) const = 0;  // [4] 0x181519B88  key -> "@ui_control_uc_%d" / "@ui_key_%s" loc label
     virtual ~I_UIActionHintManager();                     // [5] deleting dtor slot (impl 0x182BB8630)
 };

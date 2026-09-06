@@ -17,9 +17,12 @@
 
 namespace wh::combatmodule {
 
+// forward decls for not-yet-RE'd pointee types (stage-2 auto)
+class C_CombatActor;
+
 struct S_CombatActorActionSyncTransitionParams {
-    void*    m_field0;    // +0x00  source/target combat-object ptr; writer sub_1810F296C@0x1810f2997 stores ctx arg a3, sub_1810F29BC@0x1810f2aee stores queried actor v9
-    void*    m_field8;    // +0x08  secondary combat-object ptr; writer sub_1810F29BC@0x1810f2aff stores queried v5 (else 0); simple creator leaves 0
+    C_CombatActor* m_pTarget; // +0x00  source/target combat-object ptr; writer sub_1810F296C@0x1810f2997 stores ctx arg a3, sub_1810F29BC@0x1810f2aee stores queried actor v9
+    C_CombatActor* m_pSecondary; // +0x08  secondary combat-object ptr; writer sub_1810F29BC@0x1810f2aff stores queried v5 (else 0); simple creator leaves 0
     uint8_t  m_flag10;    // +0x10  flag copied from request+0x10 (writer sub_1810F29BC@0x1810f2b0b; simple creator sub_1810F296C@0x1810f299b sets 0)
     uint8_t  m_flag11;    // +0x11  flag copied from request+0x11 (writer sub_1810F29BC@0x1810f2b11)
     uint16_t _pad12[3];   // +0x12

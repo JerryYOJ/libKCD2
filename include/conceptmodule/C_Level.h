@@ -19,9 +19,9 @@ public:
     E_HibernateMode::Type GetHibernateMode() const override; // [43] Auto
     std::uint8_t GetModuleKind() const override;             // [44] kind 1
     bool GetVoiceNamespace() const override;                 // [45] 0x1817951D8, defaults true
-    void* unk47() override;                                  // [47] 0x180A6D628, resolves LevelHolder context
-    bool unk48() override;                                   // [48] 0x180A6D46C
-    bool unk49(void* value) override;                        // [49] 0x180A6BF20
+    void* ResolveScope() override;                           // [47] 0x180A6D628, resolves LevelHolder context
+    bool HasScope() override;                                // [48] 0x180A6D46C
+    bool IsScopeActive(void* host) override;                 // [49] 0x180A6BF20
 };
 
 static_assert(sizeof(C_Level) == 0xA0,

@@ -65,7 +65,7 @@ public:
     CryRWLock m_updateLock;                     // +0x58
     void* m_unknown60;                          // +0x60, role/pointee OPEN
     C_LODAnimationController m_lodController;   // +0x68
-    std::uint32_t m_unknown170;                 // +0x170, reset before update; role OPEN
+    float m_pendingDeltaTime; // +0x170, reset before update; role OPEN
     bool m_updateRegistered;                    // +0x174, manager-list registration flag
     bool m_parallelUpdateRegistered;            // +0x175, manager-list registration flag
     std::uint8_t m_suspendCount;                // +0x176
@@ -77,7 +77,7 @@ static_assert(offsetof(C_AnimationController, m_initialized) == 0x48,
               "animation-controller initialized flag must be at 0x48");
 static_assert(offsetof(C_AnimationController, m_lodController) == 0x68,
               "LOD animation controller must be at 0x68");
-static_assert(offsetof(C_AnimationController, m_unknown170) == 0x170,
+static_assert(offsetof(C_AnimationController, m_pendingDeltaTime) == 0x170,
               "animation-controller update state must be at 0x170");
 
 }  // namespace wh::animationmodule

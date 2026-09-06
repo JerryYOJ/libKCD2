@@ -35,7 +35,7 @@ class C_LockPicking : public C_Minigame, public I_ExactPositioningListener {
 public:
     inline static constexpr auto RTTI = Offsets::RTTI_C_LockPicking;
     E_MinigameType::Type GetMinigameType() const override;  // [0] 0x181A78ED0 -> 5
-    void unk_02(std::uint32_t entityId) override;           // [2] 0x182E8835C pick-break
+    void unk_02(std::uint32_t entityId) override; // [2] 0x182E8835C pick-break fail ("LOCKPICKING_FAIL"); interface-level name OPEN (t1_011)
     void Destroy() override;                                // [4] 0x180899D48
     ~C_LockPicking() override;                              // [5] 0x180899EA4
     bool IsFinished() const override;                       // [7] 0x181783FA8 m_state == Finished

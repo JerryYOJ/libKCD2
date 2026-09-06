@@ -27,8 +27,8 @@ public:
     IRenderMesh* GetIRenderMesh(std::uint32_t lod) const override;      // [3] 0x1804A2F60
     const char* GetModelFilePath() const override;             // [4] 0x18113CE50
     IMaterial* GetIMaterial(std::uint32_t lod) const override; // [5] 0x180F56528
-    void unk_06(void* output) const override;                  // [6] 0x180977724
-    bool unk_07(void* context) const override;                 // [7] 0x1820F57C0
+    std::uint32_t GetMeshLodInfo(Array<SMeshLodInfo> lods) const override; // [6] 0x180977724
+    bool AreRenderMeshesReady(int* pKey) const override; // [7] 0x1820F57C0
     Vec3 GetRenderMeshOffset(std::uint32_t lod) const override; // [8] 0x1837A5398
     std::uint32_t GetNumJoints() const override;               // [9] 0x181AAF020
     std::uint32_t GetJointIDByCRC32(std::uint32_t crc32) const override; // [10] 0x1837A51F8

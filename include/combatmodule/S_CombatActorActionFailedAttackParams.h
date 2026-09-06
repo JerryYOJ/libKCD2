@@ -16,8 +16,11 @@
 
 namespace wh::combatmodule {
 
+// forward decls for not-yet-RE'd pointee types (stage-2 auto)
+class S_CombatActionFailedAttackData;
+
 struct S_CombatActorActionFailedAttackParams {
-    void* m_field0;   // +0x00  writer sub_180D53B74@0x180D53BF9 stores action+0x50 = *v9 (first elem of the failed-attack candidate query sub_180D53C40); a candidate pointer (qword). Exact pointee class UNVERIFIED.
+    S_CombatActionFailedAttackData* m_pDataRow; // +0x00  writer sub_180D53B74@0x180D53BF9 stores action+0x50 = *v9 (first elem of the failed-attack candidate query sub_180D53C40); a candidate pointer (qword). Exact pointee class UNVERIFIED.
 };
 static_assert(sizeof(S_CombatActorActionFailedAttackParams) == 0x08);
 

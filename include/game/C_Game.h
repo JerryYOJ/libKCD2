@@ -7,6 +7,31 @@
 #include "../Offsets/vtables/ILevelSystemListener.h"
 #include "../Offsets/vtables/IInputEventListener.h"
 #include "../framework/I_ModuleMessageListener.h"
+#include <map>
+#include <string>
+#include <vector>
+
+// KCD2 flow variant: tag dword + 0x18 payload + 2 flag bits = 0x20 (copy 0x180BFDE0C).
+// Stock TFlowInputData (IFlowSystem.h) declares 2-pointer storage — MISMATCH; do not
+// use the SDK alias until reconciled. Pointer member below never needs completeness.
+struct S_FlowInputVariant20;
+
+// file-profiling payloads (t1_018 [INFERRED]; layouts binary-proven)
+struct S_FileProfileSample {
+    float    m_durationMsA;   // +0x00 semantic ordering OPEN
+    float    m_durationMsB;   // +0x04
+    uint32_t m_count;         // +0x08
+};
+struct S_FileProfileSeries {
+    uint32_t                         m_sampleIndex; // +0x00 wraps at 0x200
+    uint32_t                         _pad04;        // +0x04
+    std::vector<S_FileProfileSample> m_samples;     // +0x08
+};
+static_assert(sizeof(S_FileProfileSeries) == 0x20, "S_FileProfileSeries size mismatch");
+
+// forward decls for not-yet-RE'd pointee types (stage-2 auto)
+namespace wh::game { class CGameCache; class CScriptBindGame; class C_GamePhysicsSettings; }
+namespace wh::framework { class CGameMechanismBase; }
 
 // -----------------------------------------------
 // C_Game — Warhorse KCD2 game module (CryEngine IGame implementation)
@@ -62,28 +87,27 @@ public:
     // Data members (+0x28 onwards, after the five interface vptrs)
     // ===================================================================
 
-    void*       m_unk28;                    // +0x28  (ctor=0)
+    Offsets::IConsole* m_pConsole; // +0x28  (ctor=0)
     uint32_t    m_levelLoadState;           // +0x30  load-state FSM, PARTIAL: 0=ctor, 1=IGame[34] init-once (0x1839d91e4); 5->6 via ILevelSystemListener; full value set UNRECOVERED
     uint32_t    m_unk34;                    // +0x34  (ctor=0)
     uint8_t     m_flag38;                   // +0x38  (ctor=0)
     uint8_t     _pad39[3];                  // +0x39
-    uint32_t    m_unk3C;                    // +0x3C  int32 written by IGame vtable[11] setter sub_180B855F4 (mov [this+3Ch], a2); role/enum unknown
-    void*       m_unk40;                    // +0x40  (ctor=0)
+    EntityId m_clientActorId; // +0x3C  int32 written by IGame vtable[11] setter sub_180B855F4 (mov [this+3Ch], a2); role/enum unknown
+    ICVar* m_pShowHelpCVar; // +0x40  (ctor=0)
     uint8_t     m_flag48;                   // +0x48  (ctor=0)
     uint8_t     _pad49[3];                  // +0x49
     uint8_t     _blk4C[0x20];               // +0x4C  zero-init region (coalesced unaligned stores; ~4 ptr/id pairs) /* tentative */
     uint8_t     m_flag6C;                   // +0x6C  (ctor=0)
     uint8_t     _pad6D[3];                  // +0x6D
-    void*       m_pInputHandler;            // +0x70  read by IInputEventListener::OnInputEventUI /* tentative */ (ctor=0)
+    Offsets::IInputEventListener* m_pInputHandler; // +0x70  read by IInputEventListener::OnInputEventUI /* tentative */ (ctor=0)
 
     // File-profiling holder (+0x78..+0x98, 0x28; ctor sub_180C10D70 registers the
     // "WH_Enable_FileProfiling" CVar callback). Holds a std::vector + a std::set/map:
     std::vector<std::string> m_profRecords;    // +0x78  begin/end/cap (0x18); element std::string (0x20), elem dtor sub_1804F44F4 = std::string::_Tidy
-    void*       m_pProfListNode;            // +0x90  std::set/map _Myhead: RB-tree sentinel head (3 self-links + WORD 0x0101 {_Color=1,_Isnil=1}); nodes 0x60 (0x40 payload), recursive _Erase sub_1839D6F1C, freed 0x60 in dtor
-    size_t      m_profList_x98;             // +0x98  std::set/map _Mysize (element count; ctor=0)
+    std::map<std::string, S_FileProfileSeries> m_fileProfiles; // +0x90..0x9F {_Myhead,_Mysize}; nodes 0x60 (0x40 payload), _Erase sub_1839D6F1C
 
     // Sub-managers (all heap-allocated in the ctor; types from their own ctor vtables)
-    void*                         m_pManagerA0;             // +0xA0  ptr to heap std::set/map (_Tree{_Myhead,_Mysize}=0x10; sentinel sub_180C11954: 3 self-links + WORD 0x0101; ctor sub_180C10E04; _Erase sub_180C130FC, freed 0x10 in dtor)
+    std::map<CryStringT<char>, S_FlowInputVariant20>* m_pGameModeStartupValues; // +0xA0  ptr to heap std::set/map (_Tree{_Myhead,_Mysize}=0x10; sentinel sub_180C11954: 3 self-links + WORD 0x0101; ctor sub_180C10E04; _Erase sub_180C130FC, freed 0x10 in dtor)
     wh::game::C_LevelManager*     m_pLevelManager;          // +0xA8  0xF8 bytes (sub_180C10CB0)  VERIFIED type
     wh::game::C_ExtraRewardsManager* m_pExtraRewardsManager;// +0xB0  0x68 bytes (sub_180C10BFC)  VERIFIED type
     wh::game::C_NewGameHelper*    m_pNewGameHelper;         // +0xB8  0xC0 bytes (sub_180C12704)  VERIFIED type
@@ -91,10 +115,10 @@ public:
     // Embedded C_GameModeStartupScript (derives CScriptableBase); ctor sub_180C126E0.
     uint8_t     m_gameModeStartupScript[0x70];              // +0xC0  size 0x70  VERIFIED (dtor rebinds &CScriptableBase::vftable @+0xC0)
 
-    void*       m_pReleasable130;           // +0x130  polymorphic heap obj (has vtable), deleted via vtable[0](this,1) in dtor; IGame[40] sub_180EC7810 writes its arg to pointee+0x70 (ctor=0)
-    void*       m_pReleasable138;           // +0x138  polymorphic heap obj, deleted via vtable[0](this,1) in dtor; memory-reported via IGame[3] GetMemoryStatistics (sub_1839D9030) (ctor=0)
-    void*       m_pReleasable140;           // +0x140  polymorphic heap obj, deleted via vtable[0](this,1) in dtor; returned by IGame[32] getter sub_180834590 (ctor=0)
-    void*       m_pSingleton148;            // +0x148  ptr to 8-byte {T* head} intrusive registry (alloc sub_1804F75C0(8), head=0); aliased by global qword_18547E6C0; dtor sub_18257D59C releases the head chain via vtable[0](this,1) then frees 0x08
+    wh::game::CScriptBindGame* m_pScriptBindGame; // +0x130  polymorphic heap obj (has vtable), deleted via vtable[0](this,1) in dtor; IGame[40] sub_180EC7810 writes its arg to pointee+0x70 (ctor=0)
+    wh::game::CGameCache* m_pGameCache; // +0x138  polymorphic heap obj, deleted via vtable[0](this,1) in dtor; memory-reported via IGame[3] GetMemoryStatistics (sub_1839D9030) (ctor=0)
+    wh::game::C_GamePhysicsSettings* m_pGamePhysicsSettings; // +0x140  polymorphic heap obj, deleted via vtable[0](this,1) in dtor; returned by IGame[32] getter sub_180834590 (ctor=0)
+    wh::framework::CGameMechanismBase** m_ppGameMechanismHead; // +0x148  ptr to 8-byte {T* head} intrusive registry (alloc sub_1804F75C0(8), head=0); aliased by global qword_18547E6C0; dtor sub_18257D59C releases the head chain via vtable[0](this,1) then frees 0x08
     wh::framework::C_RuntimePrefabManager* m_pRuntimePrefabManager; // +0x150  0x68 bytes (sub_180C10A34)  VERIFIED type
     void*       m_unk158;                    // +0x158  uninitialised in ctor (reserved/padding) /* tentative */
 
@@ -104,10 +128,10 @@ public:
     wh::game::C_GameModel*  m_pGameModel;   // +0x178  0x2F0 bytes (alloc sub_180C127C0, ctor sub_180C12834 stores &wh::game::C_GameModel::vftable); IGame vtable[35] getter sub_181A77FA0
     wh::game::C_PlatformActivityManager* m_pPlatformActivityManager; // +0x180  8-byte heap obj (sub_180C12760)  VERIFIED type
 
-    uint32_t    m_unk188;                    // +0x188  (unreferenced) /* tentative */
+    uint32_t m_contentFilterMask; // +0x188  (unreferenced) /* tentative */
     uint8_t     m_flag18C;                   // +0x18C  (ctor=0)
     uint8_t     _pad18D[3];                  // +0x18D
-    uint32_t    m_unk190;                    // +0x190  int32 written by IGame vtable[36] setter sub_181AB4D00 (mov [this+190h], a2); read in shutdown (slot 5) -> sub_1823DD420
+    uint32_t m_exitCode; // +0x190  int32 written by IGame vtable[36] setter sub_181AB4D00 (mov [this+190h], a2); read in shutdown (slot 5) -> sub_1823DD420
     uint32_t    _pad194;                     // +0x194
 };
 static_assert(sizeof(C_Game) == 0x198);

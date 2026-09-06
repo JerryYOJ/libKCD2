@@ -34,17 +34,19 @@ public:
 
     wh::shared::C_Signal<const S_CombatCollisionDetails&, bool&> m_collisionFilter; // +0x18
     wh::shared::C_Signal<const S_CombatCollisionDetails&> m_onCollision;        // +0x28
-    uint8_t                   m_unk38[0x50];                                    // +0x38
+    int32_t m_callbackId; // +0x38
+    uint8_t _pad3C[0x4C]; // +0x3C residual of former m_unk38[0x50]
     C_WeaponProcSolver*       m_pWeaponProcSolver;                              // +0x88 owned
     C_WeaponSolver*           m_pWeaponSolver;                                  // +0x90 owned
     S_CombatCollisionDetails  m_collisionDetails[2];                            // +0x98
-    uint8_t                   m_unk248[0x20];                                   // +0x248
+    std::set<uint64_t> m_collisionKeys0; // +0x248  {_Myhead,_Mysize}; ctor 0x181481C7F, clear 0x180D4F997
+    std::set<uint64_t> m_collisionKeys1; // +0x258  OnCollision inserts packed {dw@+0x74,dw@+0x70} of EventPhysCollision (0x180D518D2)
 };
 static_assert(sizeof(C_CombatActorCollisions) == 0x268,
               "C_CombatActorCollisions must be 0x268");
 static_assert(offsetof(C_CombatActorCollisions, m_collisionFilter) == 0x18);
 static_assert(offsetof(C_CombatActorCollisions, m_pWeaponProcSolver) == 0x88);
 static_assert(offsetof(C_CombatActorCollisions, m_collisionDetails) == 0x98);
-static_assert(offsetof(C_CombatActorCollisions, m_unk248) == 0x248);
+static_assert(offsetof(C_CombatActorCollisions, m_collisionKeys0) == 0x248);
 
 }  // namespace wh::combatmodule

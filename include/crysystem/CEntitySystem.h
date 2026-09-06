@@ -42,6 +42,13 @@ class CEntityPoolManager;
 class CBreakableManager;
 namespace wh { class C_EntityStreamingManager; }
 
+// forward decls for not-yet-RE'd pointee types (stage-2 auto)
+class CEntityArchetypeManager;
+class CEntityLoadManager;
+class CPartitionGrid;
+class CPhysicsEventListener;
+class CSlicedLayerProcessor;
+
 // ----------------------------------------------------------------------------
 // IEntitySystem — lean vtable base (binary order of CEntitySystem::`vftable').
 // 98 slots. Named where identified from decompilation / accessor fingerprints;
@@ -189,11 +196,11 @@ public:
     int64_t     m_int600238;                // +0x600238  ctor init = -100000
     CScriptBind_Entity* m_pMgr240;          // +0x600240  lazy ctor sub_18144DCB4 (0x388); RTTI .?AVCScriptBind_Entity@@; virtual dtor
     CEntityClassRegistry* m_pMgr248;        // +0x600248  lazy ctor sub_180D24580 (0x58); RTTI .?AVCEntityClassRegistry@@; getter [slot 11]
-    void*       m_pMgr250;                  // +0x600250  lazy 0x10 obj {CEntitySystem* owner, void* h}; ctor sub_180E1C8D0; non-polymorphic; dtor sub_183809674  /* type unnamed */
+    CPhysicsEventListener* m_pPhysicsEventListener; // +0x600250  lazy 0x10 obj {CEntitySystem* owner, void* h}; ctor sub_180E1C8D0; non-polymorphic; dtor sub_183809674  /* type unnamed */
     CAreaManager* m_pMgr258;                // +0x600258  ctor sub_1810D4FF0 (0x180); RTTI .?AVCAreaManager@@; getter [slots 50/59]
     wh::C_EntityStreamingManager* m_pMgr260; // +0x600260  ctor sub_181684A64 (0x158); RTTI .?AVC_EntityStreamingManager@wh@@
-    void*       m_pDelegateMgr268;          // +0x600268  ctor sub_180D24984 (0x90); non-polymorphic POD (owner back-ptr @+0x60, 2x sub_1803F7FAC lock @+0x50/+0x80); delegate slots 35-44,48  /* type unnamed */
-    void*       m_pMgr270;                  // +0x600270  ctor sub_180D24D84 (0x70); non-polymorphic POD (owner back-ptr @+0x00); getter [slot 51]  /* type unnamed */
+    CEntityLoadManager* m_pEntityLoadManager; // +0x600268  ctor sub_180D24984 (0x90); non-polymorphic POD (owner back-ptr @+0x60, 2x sub_1803F7FAC lock @+0x50/+0x80); delegate slots 35-44,48  /* type unnamed */
+    CSlicedLayerProcessor* m_pSlicedLayerProcessor; // +0x600270  ctor sub_180D24D84 (0x70); non-polymorphic POD (owner back-ptr @+0x00); getter [slot 51]  /* type unnamed */
     CEntityPoolManager* m_pMgr278;          // +0x600278  ctor sub_1816C931C (0xA8); RTTI .?AVCEntityPoolManager@@; getter [slot 53]; used by RemoveEntity
     uint8_t     m_eventListeners[0x400];    // +0x600280  64 event-listener buckets (0x10 each); ctor sub_18050B734(,16,64,)
     uint8_t     m_guidMap680[0x40];         // +0x600680  GUID->EntityId hash map (FindEntityByGuid); ctor sub_1806030C0
@@ -203,10 +210,10 @@ public:
     uint8_t     _pad600759[7];              // +0x600759
     uint8_t     m_obj600760[0x1390];        // +0x600760  large embedded sub-object; ctor sub_180D24A14; used in SpawnEntity (reserved-id path)  /* tentative */
     CBreakableManager* m_pMgrAF0;           // +0x601AF0  ctor sub_180D25E6C (0x48); RTTI .?AVCBreakableManager@@; getter [slot 52]
-    void*       m_pMgrAF8;                  // +0x601AF8  ctor sub_180D24A6C (0x18); {node* head, size, void* cmp=&unk_18566A0C8}; std::set/map-like _Tree; getter [slots 54/56]  /* elem type unnamed */
+    CEntityArchetypeManager* m_pEntityArchetypeManager; // +0x601AF8  ctor sub_180D24A6C (0x18); {node* head, size, void* cmp=&unk_18566A0C8}; std::set/map-like _Tree; getter [slots 54/56]  /* elem type unnamed */
     void*       m_pMgrB00;                  // +0x601B00  ptr to 0x18 3-ptr container (empty-init unknown_libname_15); dtor sub_1838095E0  /* elem type unnamed */
     void*       m_pMgrB08;                  // +0x601B08  ptr to 0x18 3-ptr container (empty-init unknown_libname_15); dtor sub_1838094BC  /* elem type unnamed */
-    void*       m_pMgrB10;                  // +0x601B10  ctor sub_180D24154 (0x58); non-polymorphic (+0x00=1.0f load-factor, embeds sub_18091865C obj @+0x28); slot 26  /* type unnamed */
+    CPartitionGrid* m_pPartitionGrid; // +0x601B10  ctor sub_180D24154 (0x58); non-polymorphic (+0x00=1.0f load-factor, embeds sub_18091865C obj @+0x28); slot 26  /* type unnamed */
     void*       m_pMgrB18;                  // +0x601B18  ctor sub_18193C984 (0x138); non-polymorphic manager (allocs 2x 0x20 buckets w/ 0x80000000 sentinel + 0x68 pool)  /* type unnamed */
     EntityId    m_idForced;                 // +0x601B20  SetNextSpawnId value (consumed by SpawnEntity)
     uint8_t     m_bSpawnLock;               // +0x601B24  LockSpawning() [slot 62]; checked by Spawn/RemoveEntity

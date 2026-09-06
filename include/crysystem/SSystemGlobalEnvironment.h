@@ -1,22 +1,20 @@
 #pragma once
 #include <cstdint>
+#include <cstddef>
 #include "REL/ID.h"
 
 // -----------------------------------------------
 // SSystemGlobalEnvironment (gEnv) -- KCD2 binary layout
 // -----------------------------------------------
-// Address: WHGame+0x492D7F8 (.data, IDA labels as gEnv)
-// Non-polymorphic global; every +0x08 slot from +0x00 to +0x1B8 named.
-// VERIFIED slots recovered from direct-absolute field reads + the vtable call each reader makes.
-// Offsets that differ from KCD1: pPhysicalWorld +0x28->+0x38, pLog +0xE0->+0xE8,
-// pFlashUI +0x130->+0x140, pHardwareMouse +0x110->+0x120.
-//
-// gEnv base note: CSystem keeps its gEnv pointer at CSystem+0x20, pointing at
-// 0x18492D800 (== this struct base 0x18492D7F8 + 8). So a writer that stores to
-// "gEnv+0xE0" in code coordinates lands at header offset +0xE8 (both = 0x18492D8E8).
-// The +0x08 skew was cross-checked on three known slots: code+0xA8 -> pConsole
-// (header +0xB0, 0x18492D8A8), code+0xE0 -> pLog (header +0xE8, 0x18492D8E8),
-// code+0x118 -> pHardwareMouse (header +0x120, 0x18492D918).
+// Address: WHGame+0x492D800 (.data). REBASED 2026-09-01 (t1_002): the old header sat
+// 8 bytes early (0x492D7F8, a zero-xref qword); CSystem ctor 0x180A52DC1 lea's
+// 0x18492D800 and stores it to CSystem+0x20 (m_env), so every old offset shifted -0x08.
+// Size: ctor memsets 0x440 bytes (0x180A53156/0x180A53163); next address-taken global
+// off_18492DC40 = base+0x440.
+// Non-polymorphic; no vtable. Coordinates now match Offsets/vtables/ISystem.h
+// "gEnv->+0xNN" notes and CSystem.h's m_env.
+// Slot names: VERIFIED = live-traced earlier; [RTTI]/[STRING]/[INFERRED] per
+// t1_002 dossier + adversarial verdict (analysis/re_quality/dossiers/track1/).
 
 namespace Offsets {
     struct IScriptSystem; struct IPhysicalWorld; struct IInput; struct ITimer;
@@ -26,70 +24,90 @@ namespace Offsets {
     struct IParticleManager;
 }
 
+// Engine interfaces at global scope (CryCommon definitions where present in-tree).
+struct IDialogSystem; struct INetwork; struct ICryLobby; struct IFlowSystem;
+struct IFileChangeMonitor; struct IProfileLogSystem; class IOpticsManager;
+struct IFrameProfileSystem; struct ICryFont; struct ILocalMemoryUsage;
+struct IAudioSystem; struct IAISystem; struct ICodeCheckpointMgr;
+struct IMovieSystem; struct INameTable; struct IVisualLog; struct IRenderAuxGeom;
+struct IMaterialEffects; struct IOverloadSceneManager; struct IServiceNetwork;
+struct IRemoteCommandManager; struct IThreadManager; struct IScaleformHelper;
+struct IFModAudio; class I_VideoPlayer;
+namespace Telemetry { struct ITelemetrySystem; }
+namespace JobManager { struct IJobManager; }
+namespace DRS { struct IDynamicResponseSystem; }
+namespace LiveCreate { struct IManager; struct IHost; }
+namespace Cry::PluginManager { struct ISystem; }
+namespace wh::game { struct S_GameContext; }
+
 struct SSystemGlobalEnvironment {
-    void*                       pDialogSystem;          // +0x00
-    void*                       p3DEngine_DEAD;         // +0x08  guarded dead slot (as in KCD1)
-    Offsets::I3DEngine*         p3DEngine;              // +0x10  VERIFIED live I3DEngine* (CScriptBind_System +
-                                                        //        e_TimeOfDay handler dispatch through it, 833 refs;
-                                                        //        earlier "pNetwork" label was wrong)
-    void*                       pLobby;                 // +0x18
-    void*                       _unk20;                 // +0x20
-    void*                       _unk28;                 // +0x28
-    Offsets::IScriptSystem*     pScriptSystem;          // +0x30  VERIFIED: GetGlobalValue/ExecuteBuffer
-    Offsets::IPhysicalWorld*    pPhysicalWorld;         // +0x38  VERIFIED: RayWorldIntersection (was +0x28)
-    void*                       _unk40;                 // +0x40
-    Offsets::IInput*            pInput;                 // +0x48  VERIFIED: AddEventListener("C_Keybinds")
-    void*                       _unk50;                 // +0x50
-    Offsets::ICryPak*           pCryPak;                // +0x58  VERIFIED: IActorSystem::Scan 0x180E46CE8 runs the FindFirst/FindNext wildcard loop (vtable +0x1F8/+0x200) on qword_18492D850, matching CCryPak vtable 0x183a97328 slots [63]/[64]; single most-referenced gEnv slot (681 reads); KCD1 pCryPak also +0x58.
-    void*                       _unk60;                 // +0x60
-    void*                       _unk68;                 // +0x68
-    Offsets::IParticleManager*  pParticleManager;       // +0x70  VERIFIED: FindEffect this-adjust -8; abs 0x18492D868 = gEnv+0x70
-    void*                       _unk78;                 // +0x78
-    void*                       _unk80;                 // +0x80
-    Offsets::ITimer*            pTimer;                 // +0x88  VERIFIED: GetCurrTime
-    void*                       _unk90;                 // +0x90
-    Offsets::IGame*             pGame;                  // +0x98  VERIFIED: GetIGameFramework chain
-    void*                       _unkA0;                 // +0xA0
-    Offsets::IEntitySystem*     pEntitySystem;          // +0xA8  VERIFIED: GetEntity(entityId)
-    Offsets::IConsole*          pConsole;               // +0xB0  VERIFIED: GetCVar/RegisterVariable
-    void*                       _unkB8;                 // +0xB8
-    void*                       _unkC0;                 // +0xC0
-    Offsets::ISystem*           pSystem;                // +0xC8  VERIFIED: == CSystem self
-    void*                       _unkD0;                 // +0xD0
-    Offsets::ICharacterManager* pCharacterManager;      // +0xD8  ICharacterManager* set by the CryAnimation engine module (sub_18099B504 @0x18099B672 stores its manager to gEnv+0xD8, also mirrored to g_pCharacterManager qword_185189BE0; module string "CEngineModule_CryAnimation")
-    void*                       _unkE0;                 // +0xE0  NOT pCharacterManager (that is +0xD8, proven via CryAnimation module). Inferred pAISystem: reader sub_1803CF0D0 @0x1803CF0F3 calls vtable[0x1D0] (slot 58, a very large iface); KCD1 pAISystem +0xD8 -> +0xE0 with the +8 shift; 281 reads. UNVERIFIED interface name.
-    Offsets::ILog*              pLog;                   // +0xE8  VERIFIED: Log/LogError (was +0xE0)
-    void*                       _unkF0;                 // +0xF0
-    void*                       _unkF8;                 // +0xF8
-    void*                       _unk100;                // +0x100
-    void*                       _unk108;                // +0x108
-    Offsets::IRenderer*         pRenderer;              // +0x110  VERIFIED: renderer vtable calls
-    void*                       _unk118;                // +0x118
-    Offsets::IHardwareMouse*    pHardwareMouse;         // +0x120  VERIFIED: writer sub_18079FFD4 @ 0x1807A110F stores (CHardwareMouse*)+8 (the IHardwareMouse subobject) into gEnv->pHardwareMouse; abs 0x18492D918. Reader: CHardwareMouse dtor sub_1824226F0 unregisters from gEnv->pInput. (KCD1 was +0x110; that slot is now pRenderer in KCD2.)
-    void*                       _unk128;                // +0x128
-    void*                       _unk130;                // +0x130
-    void*                       _unk138;                // +0x138
-    Offsets::IFlashUI*          pFlashUI;               // +0x140  VERIFIED: abs 0x18492D938 = the CFlashUI self-singleton (qword_18492D938) read by the whole CFlashUI method family via its own vtable (e.g. GetUIElement(int) +0xA8); CFlashUI::Shutdown (vtable [10] sub_1835C0FB0 @ 0x1835C1265) zeroes it. GetUIElement("hud"). (was +0x130)
-    void*                       _unk148;                // +0x148
-    void*                       _unk150;                // +0x150
-    void*                       _unk158;                // +0x158
-    void*                       _unk160;                // +0x160
-    void*                       _unk168;                // +0x168
-    void*                       _unk170;                // +0x170
-    void*                       pAudioSystem;           // +0x178  audio system singleton = CB_FmodStudioWrapper*; its ctor sub_180E3C9E4 (sets *this = CB_FmodStudioWrapper::vftable) stores `this` here at 0x180E3D06C
-    void*                       _unk180;                // +0x180
-    void*                       _unk188;                // +0x188
-    void*                       _unk190;                // +0x190
-    void*                       _unk198;                // +0x198
-    void*                       _unk1A0;                // +0x1A0
-    void*                       _unk1A8;                // +0x1A8
-    uint32_t                    mMainThreadId;          // +0x1B0  GetCurrentThreadId() cached at init (sub_18079FFD4: 0x1807A002D call GetCurrentThreadId -> 0x1807A0038 mov cs:dword_18492D9A8, eax); 4-byte scalar, NOT a pointer
-    uint8_t                     _pad1B4[4];             // +0x1B4
-    void*                       _unk1B8;                // +0x1B8
+    IDialogSystem*                  pDialogSystem;          // +0x00  [INFERRED] CCryAction+0x598 -> CSystem setter slot 110 (0x181A71804 mov [rax],rdx); "DialogSystem" save section 0x18477C778
+    Offsets::I3DEngine*             p3DEngine;              // +0x08  VERIFIED live I3DEngine* (e_TimeOfDay dispatch; abs 0x18492D808, 833 refs)
+    INetwork*                       pNetwork;               // +0x10  [RTTI] CEngineModule_CryNetwork::Initialize stores CNetwork @0x180B6B3D6; "Error creating Network System!"
+    void*                           _unk18;                 // +0x18  OPEN: zero xrefs to 0x18492D818; stock-order candidate IOnline* (unproven)
+    ICryLobby*                      pLobby;                 // +0x20  [STRING] getter 0x180669540 reads 0x18492D820; "Error running pLobby->ProcessEvents (%d)" 0x184086448
+    Offsets::IScriptSystem*         pScriptSystem;          // +0x28  VERIFIED: GetGlobalValue/ExecuteBuffer
+    Offsets::IPhysicalWorld*        pPhysicalWorld;         // +0x30  VERIFIED: RayWorldIntersection
+    IFlowSystem*                    pFlowSystem;            // +0x38  [RTTI] CSystem setter slot 109 0x181A717E4; CFlowSystem vtable 0x184049628
+    Offsets::IInput*                pInput;                 // +0x40  VERIFIED: AddEventListener("C_Keybinds")
+    void*                           _unk48;                 // +0x48  OPEN: Init zeroes it; only null-test readers 0x18066C953/0x183732543; candidate IStatoscope* (unproven)
+    Offsets::ICryPak*               pCryPak;                // +0x50  VERIFIED: FindFirst/FindNext wildcard loop on abs 0x18492D850 matches CCryPak vtable 0x183A97328 [63]/[64]; most-referenced slot (681 reads)
+    IFileChangeMonitor*             pFileChangeMonitor;     // +0x58  [INFERRED] setter slot 114 0x181A73774; IFileChangeListener registrations 0x180BC363E/0x180BC3660
+    IProfileLogSystem*              pProfileLogSystem;      // +0x60  [RTTI] Init stores @0x1807A086E; CProfileLogSystem vtable 0x183C62F50
+    Offsets::IParticleManager*      pParticleManager;       // +0x68  VERIFIED: FindEffect this-adjust -8; abs 0x18492D868
+    IOpticsManager*                 pOpticsManager;         // +0x70  [RTTI] setter slot 113 0x181A717B4; COpticsManager vtable 0x183A96A28
+    IFrameProfileSystem*            pFrameProfileSystem;    // +0x78  [RTTI] ctor 0x180A531AF publishes embedded CSystem+0xCE8; vtable 0x183DC2668
+    Offsets::ITimer*                pTimer;                 // +0x80  VERIFIED: GetCurrTime
+    ICryFont*                       pCryFont;               // +0x88  [RTTI] "EngineModule_CryFont" loader checks it @0x1812DC063; CCryFont vtable 0x184078630
+    Offsets::IGame*                 pGame;                  // +0x90  VERIFIED: GetIGameFramework chain
+    ILocalMemoryUsage*              pLocalMemoryUsage;      // +0x98  [INFERRED] OnRender/OnUpdate/DeleteGlobalData 3-slot protocol 0x18043F1CE/0x180667C6D/0x1805F9E81 matches ILocalMemoryUsage.h
+    Offsets::IEntitySystem*         pEntitySystem;          // +0xA0  VERIFIED: GetEntity(entityId)
+    Offsets::IConsole*              pConsole;               // +0xA8  VERIFIED: GetCVar/RegisterVariable
+    Telemetry::ITelemetrySystem*    pTelemetrySystem;       // +0xB0  [RTTI] Init stores @0x1807A1496; "Failed to initialize telemetry system!"
+    IAudioSystem*                   pAudioSystem;           // +0xB8  [RTTI] CryEngine audio iface (NOT the FMOD wrapper, see +0x170); NULL fallback CNULLAudioSystem stored @0x1807A1344
+    Offsets::ISystem*               pSystem;                // +0xC0  VERIFIED: == CSystem self (ctor 0x180A53183)
+    Offsets::ISystem*               _unkC8;                 // +0xC8  same CSystem* stored again (ctor 0x180A5318E); ISystem-dispatched (GetViewCamera 0x180935700); source name unknown
+    Offsets::ICharacterManager*     pCharacterManager;      // +0xD0  VERIFIED: CryAnimation module stores manager (sub_18099B504 @0x18099B672)
+    IAISystem*                      pAISystem;              // +0xD8  [RTTI] "EngineModule_CryAISystem" loader checks it; "Cannot create AI System!"; CAISystem vtable 0x183F934A8
+    Offsets::ILog*                  pLog;                   // +0xE0  VERIFIED: Log/LogError
+    ICodeCheckpointMgr*             pCodeCheckpointMgr;     // +0xE8  [INFERRED] ../USER/CodeCheckpointList.txt pipeline reads 0x18492D8E8 (submit 0x1839D47CD, lookup 0x1839D4C28)
+    IMovieSystem*                   pMovieSystem;           // +0xF0  [RTTI] "EngineModule_CryMovie" loader; CMovieSystem vtable 0x18407E648
+    INameTable*                     pNameTable;             // +0xF8  [RTTI] ctor 0x180A531A4 publishes embedded CSystem+0xD58; CNameTable vtable 0x183DC3F20
+    IVisualLog*                     pVisualLog;             // +0x100 [RTTI] setter slot 115 0x181A71794; CVisualLog vtable 0x183C42640
+    Offsets::IRenderer*             pRenderer;              // +0x108 VERIFIED: renderer vtable calls
+    IRenderAuxGeom*                 pAuxGeomRenderer;       // +0x110 [RTTI] writer 0x1809A7EAF publishes thread-local CAuxGeomCB (vtable 0x183BE6808)
+    Offsets::IHardwareMouse*        pHardwareMouse;         // +0x118 VERIFIED: writer 0x1807A110F stores (CHardwareMouse*)+8 subobject; abs 0x18492D918
+    IMaterialEffects*               pMaterialEffects;       // +0x120 [RTTI] setter slot 111 0x181A717C4; CMaterialEffects vtable 0x184056C88
+    JobManager::IJobManager*        pJobManager;            // +0x128 [RTTI] ctor 0x180A5379D stores &qword_1855CD110 (runtime-filled with CJobManager, vtable 0x183DBE290)
+    IOverloadSceneManager*          pOverloadSceneManager;  // +0x130 [RTTI] Init stores @0x1807A0FDE; COverloadSceneManager vtable 0x183C339F0
+    Offsets::IFlashUI*              pFlashUI;               // +0x138 VERIFIED: abs 0x18492D938 = CFlashUI self-singleton; Shutdown zeroes it @0x1835C1265
+    void*                           _unk140;                // +0x140 OPEN: setter slot 118 0x181A73794; UI layout service (creates "layout", applies "CE_NoAutoUpdate") -- no RTTI/producer identity
+    IServiceNetwork*                pServiceNetwork;        // +0x148 [RTTI] Init stores @0x1807A1667; CServiceNetwork vtable 0x183C333F8
+    IRemoteCommandManager*          pRemoteCommandManager;  // +0x150 [RTTI] Init stores @0x1807A168F; CRemoteCommandManager vtable 0x183C42F58
+    DRS::IDynamicResponseSystem*    pDynamicResponseSystem; // +0x158 [RTTI] "EngineModule_CryDynamicResponseSystem"; NULL fallback stored @0x1807A1B5F
+    IThreadManager*                 pThreadManager;         // +0x160 [RTTI] ctor 0x180A53261 stores sub_180BBA838 result; CThreadManager vtable 0x183DCEF00
+    IScaleformHelper*               pScaleformHelper;       // +0x168 [RTTI] CEngineModule_ScaleformHelper::Initialize stores @0x1819DEB2A; vtable 0x1846A75C0
+    IFModAudio*                     pFmodAudio;             // +0x170 [INFERRED] WH FMOD wrapper (was mislabeled pAudioSystem): CB_FmodStudioWrapper ctor publishes this @0x180E3D06C; runtime object is CWh_FmodStudioWrapper
+    Cry::PluginManager::ISystem*    pPluginManager;         // +0x178 [RTTI] "PluginManager initialization"; stored @0x181736277; vtable 0x183DBBDE0
+    wh::game::S_GameContext*        pGameContext;           // +0x180 [INFERRED] ctor 0x180A5320A calls S_GameContext::Instance_1809155C8, stores @0x180A53213
+    void*                           _unk188;                // +0x188 OPEN (HARD_OPENS C5): 0x128-byte lock-pool, 2 elements stride 0x90, acquire helper sub_1803D47D8 (Mtx_trylock); no RTTI
+    I_VideoPlayer*                  pVideoPlayer;           // +0x190 [RTTI] setter slot 117 0x181A71774; C_BinkVideoPlayer vtable 0x183DBA4A8
+    LiveCreate::IManager*           pLiveCreateManager;     // +0x198 [STRING] "LiveCreateManager not created, using NULL implementation." @0x1819B1357
+    LiveCreate::IHost*              pLiveCreateHost;        // +0x1A0 [STRING] "LiveCreateHost not created, using NULL implementation." @0x1819B12DA
+    uint32_t                        mMainThreadId;          // +0x1A8 VERIFIED: GetCurrentThreadId cached at init (0x1807A0038 mov cs:dword_18492D9A8, eax)
+    uint32_t                        nMainFrameID;           // +0x1AC [INFERRED] renderer frame id, dword writers 0x18052EA5D mov / 0x18052EAAF inc (was _pad1B4)
+    const char*                     szCmdLine;              // +0x1B0 [INFERRED] Init publishes CryStringT buffer ptr @0x1807A011A; logged as "Cmdline: '%s'"
+    uint8_t                         _tail1B8[0x288];        // +0x1B8 unresolved tail (outside t1_002 scope): ctor writes byte +0x1B8, +0x238..+0x252, +0x3CC, +0x3D1/+0x3D3/+0x3D4; ISystem slot 184 tests byte +0x250
 
     static SSystemGlobalEnvironment* GetInstance()
     {
-        return reinterpret_cast<SSystemGlobalEnvironment*>(REL::ID(1300).address());
+        // id 1181143 = RVA 0x492D800, the pointer CSystem ctor stores to m_env.
+        // (Old id 1300 = 0x492D7F8 was one qword early -- the pre-rebase phantom base.)
+        return reinterpret_cast<SSystemGlobalEnvironment*>(REL::ID(1181143).address());
     }
 };
-static_assert(sizeof(SSystemGlobalEnvironment) == 0x1C0);
+static_assert(sizeof(SSystemGlobalEnvironment) == 0x440);   // ctor memset span 0x180A53156; next address-taken global off_18492DC40 = base+0x440
+static_assert(offsetof(SSystemGlobalEnvironment, pConsole) == 0xA8);
+static_assert(offsetof(SSystemGlobalEnvironment, pLog) == 0xE0);
+static_assert(offsetof(SSystemGlobalEnvironment, pGameContext) == 0x180);
+static_assert(offsetof(SSystemGlobalEnvironment, mMainThreadId) == 0x1A8);

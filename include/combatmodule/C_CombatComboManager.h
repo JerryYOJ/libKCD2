@@ -74,7 +74,7 @@ public:
     E_CombatZoneId m_comboFireGateZone;            // +0xE0  init -1 (KCD1 +0x220)
     E_CombatZoneId m_lastComboZone;                // +0xE4  init -1 (KCD1 +0x224)
     uint8_t  m_pendingAdvanceFlag;                 // +0xE8  deferred advance vs reset
-    uint8_t  _padE9;                               // +0xE9
+    bool m_rpgListenerBound; // +0xE9
     uint8_t  m_stepAppliedFlag;                    // +0xEA
     uint8_t  m_lastSlotNotifyValue;                // +0xEB  cached last broadcast bool
     uint8_t  _padEC[4];                            // +0xEC

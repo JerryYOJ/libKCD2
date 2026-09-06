@@ -27,7 +27,7 @@ public:
     wh::shared::C_Signal<const S_CombatAnimCollision&> m_onCollision;          // +0x18
     bool        m_enabled;                                                     // +0x28
     bool        m_deferredCollisionPending;                                    // +0x29
-    bool        m_unk2A;                                                       // +0x2A
+    bool m_skipAnimHitQuery; // +0x2A
     uint8_t     _pad2B;                                                        // +0x2B
     int32_t     m_hitIndex;                                                    // +0x2C
     uint32_t    m_unk30;                                                       // +0x30

@@ -63,9 +63,9 @@ public:
     virtual std::uint8_t GetModuleKind() const;              // [44] 0x181A78EB0, base kind 3
     virtual bool GetVoiceNamespace() const;                  // [45] 0x180AD0178
     virtual void SetScopedName(CryStringT<char> const& name); // [46] 0x180690450
-    virtual void* unk47();                                   // [47] 0x1804C4390
-    virtual bool unk48();                                    // [48] 0x1826DD088
-    virtual bool unk49(void* value);                         // [49] base true
+    virtual void* ResolveScope(); // [47] 0x1804C4390
+    virtual bool HasScope(); // [48] 0x1826DD088
+    virtual bool IsScopeActive(void* host); // [49] base true
     virtual std::vector<CryStringT<char>> GetScopedNameParts() const; // [50] 0x18070EE14
     virtual _smart_ptr<C_ModuleBase> GetParentModule() const; // [51] 0x180AD018C
     virtual std::int32_t GetRuntimeOrder() const;            // [52] 0x181623518

@@ -49,7 +49,7 @@ public:
     // ---- data members (four vtable pointers occupy +0x00..+0x1F) ----
     std::vector<C_CombatActor*>  m_actors;            // +0x20  {begin,end,cap}; reserved to 100
     C_CombatLodManager*          m_pLodManager;       // +0x38  owned sub-object (0x18)
-    uint64_t                     m_field40;           // +0x40  zero-init; OnSideEffectDeactivated (store 0x1827C7D8A) caches the first qword of the object returned by qword_18492D880 vfunc[5] (sub_1809D385C) [value role UNVERIFIED]
+    CTimeValue m_frameStartTime; // +0x40  zero-init; OnSideEffectDeactivated (store 0x1827C7D8A) caches the first qword of the object returned by qword_18492D880 vfunc[5] (sub_1809D385C) [value role UNVERIFIED]
     // Scratch container rebuilt by RefreshActorRelations: per-actor relation entries (8-byte
     // smart-ptr-like elements built via sub_18192DB38 / assigned via sub_18136657C). [element type UNVERIFIED]
     std::vector<void*>           m_relationEntries;   // +0x48  {begin,end,cap}

@@ -10,7 +10,7 @@ class C_BaseAsset {
 public:
     C_BaseAsset();
     virtual ~C_BaseAsset();                                      // [0] 0x181220028
-    virtual rttr::variant unk_01(_smart_ptr<C_SharedResource> resource); // [1] 0x1804C48D4
+    virtual rttr::variant Resolve(_smart_ptr<C_SharedResource> resource); // [1] 0x1804C48D4
     RTTR_ENABLE()                                                // [2..4]
 
     CryStringT<char> m_name;                                     // +0x08 RTTR "Name"

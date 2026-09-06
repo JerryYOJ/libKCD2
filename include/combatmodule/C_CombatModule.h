@@ -33,6 +33,9 @@
 
 namespace wh::combatmodule {
 
+// forward decls for not-yet-RE'd pointee types (stage-2 auto)
+class C_CombatPlayer;
+
 class I_CombatActor;
 class C_CombatScene;      // owned; ctor sub_180A46140, alloc 0x78
 class C_BattleManager;    // owned; ctor sub_180D24624, alloc 0x110
@@ -58,7 +61,7 @@ public:
     // Non-owning cached pointer to an external subsystem (dtor never releases it). OnModuleMessage
     // dereferences its +0x450/+0x458 fields; the soul-ability query sub_1809D43FC treats it as an
     // actor-like target. Set post-Init by an external system. [UNVERIFIED role]
-    void*                                 m_pExternalSubsystem;     // +0x28  non-owning; actor/soul-like target (module+0x28 passed to soul-query sub_180D5CF54 at 0x1809D44FC), OnModuleMessage derefs +0x450/+0x458 [pointee class UNVERIFIED]
+    C_CombatPlayer* m_pPlayer; // +0x28  non-owning; actor/soul-like target (module+0x28 passed to soul-query sub_180D5CF54 at 0x1809D44FC), OnModuleMessage derefs +0x450/+0x458 [pointee class UNVERIFIED]
     C_BattleManager*                      m_pBattleManager;         // +0x30  owned (Init)
     C_DeadBodyManager*                    m_pDeadBodyManager;       // +0x38  owned (Init)
     // Per-frame updated combat object (0x128, ctor sub_180D23FE0). Non-polymorphic (six wh::shared::

@@ -36,7 +36,13 @@
 // byte @+0xE8 -- so it is typed here as the soul-side SORTED modifier list heads (cross-dossier
 // synthesis, MED confidence, flagged).
 
+namespace wh::rpgmodule { struct S_SoulArchetype; struct S_SocialClass; struct S_SoulClassDBData; class C_NPCFactionNode; }
 namespace wh::rpgmodule {
+
+// forward decls for not-yet-RE'd pointee types (stage-2 auto)
+class C_CompanionEventListener;
+class C_RandomEventSoulComponent;
+class S_SoulNotifyHook;
 
 class C_DogSoulComponent;           // dog-archetype component (vtable via dtor sub_180964110)
 class C_SkillTeacherSoulComponent;  // 0xF0 skill-teacher component (ctor sub_180A1A4A8)
@@ -103,10 +109,10 @@ public:
                                                //         (slot 60) returns &m_inventorySoul -- the equip/
                                                //         unequip route (0x1808ED9E4 / 0x1808C73D0)
     C_DogSoulComponent* m_pDogComponent;       // +0x2E0  owned; alloc'd when archetype-desc(+0xCB8)[+0x18]==6 via sub_180964FDC; dtor sub_180964110 stores C_DogSoulComponent vtable
-    void*    m_pOwned2E8;                      // +0x2E8  owned ptr, POD pointee (dtor sub_1809662EC just frees via sub_181AB5160); pointee class unresolved
+    C_RandomEventSoulComponent* m_pRandomEventComponent; // +0x2E8  owned ptr, POD pointee (dtor sub_1809662EC just frees via sub_181AB5160); pointee class unresolved
     C_SkillTeacherSoulComponent* m_pSkillTeacher; // +0x2F0  owned 0xF0 obj; ctor sub_180A1A4A8 stores C_SkillTeacherSoulComponent vtable; dtor sub_1809662FC deletes via vslot+0x10
-    void*    m_pOwned2F8;                      // +0x2F8  owned ptr to 8-byte soul-listener holding C_Soul* (ctor sub_1809649C8 when archetype-desc(+0xCB8)[+0x18]==1; dtor sub_180964298 unregisters + frees)
-    uint64_t m_unk300[2];                      // +0x300  OWORD zero-init
+    S_SoulNotifyHook* m_pNotifyHook; // +0x2F8  owned ptr to 8-byte soul-listener holding C_Soul* (ctor sub_1809649C8 when archetype-desc(+0xCB8)[+0x18]==1; dtor sub_180964298 unregisters + frees)
+    CryGUID m_sharedSoulGuid; // +0x300  OWORD zero-init
     uint32_t m_unk310;                         // +0x310
     uint32_t _pad314;                          // +0x314
     uint64_t m_lock318;                        // +0x318  lock/handle (unknown_libname_5 init; dtor sub_180966374)
@@ -124,17 +130,17 @@ public:
     uint32_t _padC94;                          // +0xC94
     uint64_t m_unkC98[2];                      // +0xC98  OWORD zero-init
     uint64_t m_unkCA8[2];                      // +0xCA8  OWORD zero-init
-    const void* m_pDescriptorCB8;              // +0xCB8  non-owning; interned from registry qword_1853302B0 by id@soul+0x374 (sub_1803F354C), default &qword_185584090; [+0x18]=archetype/race enum (6->dog,1->listener)
-    const void* m_pDescriptorCC0;              // +0xCC0  non-owning; interned from registry qword_185330030 by id@soul+0x370 (sub_1803F354C), default &dword_1855840F0
-    const void* m_pDescriptorCC8;              // +0xCC8  non-owning; interned from registry qword_1853322A0 by id@soul+0x368 (sub_1803F36E0), default &unk_18493C848 (=0xFFFFFFFF null record)
-    void*    m_weakRefCD0[2];                  // +0xCD0  intrusive weak-observer hook {subject+0x10, subject}; sub_1803F28C8 links into subject+0x78/+0x80 with refcounts; dtor sub_18096638C + TaskStack-like unlink
-    uint64_t m_unkCE0[2];                      // +0xCE0  non-owning 16-byte pair, zero-init (ctor sub_1823C92A0 duplicates a source handle into both slots); NO dtor -> not owning; exact type unresolved
+    const S_SoulArchetype* m_pArchetype; // +0xCB8  non-owning; interned from registry qword_1853302B0 by id@soul+0x374 (sub_1803F354C), default &qword_185584090; [+0x18]=archetype/race enum (6->dog,1->listener)
+    const S_SocialClass* m_pSocialClass; // +0xCC0  non-owning; interned from registry qword_185330030 by id@soul+0x370 (sub_1803F354C), default &dword_1855840F0
+    const S_SoulClassDBData* m_pSoulClass; // +0xCC8  non-owning; interned from registry qword_1853322A0 by id@soul+0x368 (sub_1803F36E0), default &unk_18493C848 (=0xFFFFFFFF null record)
+    std::shared_ptr<C_NPCFactionNode> m_npcFactionNode; // +0xCD0  intrusive weak-observer hook {subject+0x10, subject}; sub_1803F28C8 links into subject+0x78/+0x80 with refcounts; dtor sub_18096638C + TaskStack-like unlink
+    Offsets::IEntity* m_boundEntities[2]; // +0xCE0  non-owning 16-byte pair, zero-init (ctor sub_1823C92A0 duplicates a source handle into both slots); NO dtor -> not owning; exact type unresolved
     uint32_t m_flagsCF0;                       // +0xCF0  bit5 = byte_1856698FA (ctor sub_1803F1ED4)
     uint32_t _padCF4;                          // +0xCF4
-    void*    m_pOwnedCF8;                      // +0xCF8  owned, lazily-alloc'd heap object (ctor 0); dtor sub_180966574 destroys a 16-byte-element sub-container@pointee+0x20 then frees
-    void*    m_pManagerD00;                    // +0xD00  non-owning cached ptr to the global soul-manager singleton qword_1854B95A0 (sub_180966488/sub_18063BC1C register the soul and cache the singleton); never freed
+    C_CompanionEventListener* m_pCompanionEventListener; // +0xCF8  owned, lazily-alloc'd heap object (ctor 0); dtor sub_180966574 destroys a 16-byte-element sub-container@pointee+0x20 then frees
+    void* m_pActiveRegistration; // +0xD00  non-owning cached ptr to the global soul-manager singleton qword_1854B95A0 (sub_180966488/sub_18063BC1C register the soul and cache the singleton); never freed
     S_SoulMailboxSub m_mailboxSub;             // +0xD08  (0x10; msg id 102)
-    void*    m_srwLock;                        // +0xD18  SRWLOCK (ctor sub_180BBD62C zeroes Ptr then InitializeSRWLock)
+    SRWLOCK m_srwLock; // +0xD18  SRWLOCK (ctor sub_180BBD62C zeroes Ptr then InitializeSRWLock)
 };
 static_assert(sizeof(C_Soul) == 0xD20, "C_Soul must be 0xD20");
 static_assert(offsetof(C_Soul, m_sortedModifierLists) == 0xA8, "sorted modifier lists at 0xA8");

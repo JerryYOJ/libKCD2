@@ -50,6 +50,9 @@ struct SGameObjectEvent;
 
 namespace Offsets { class IActor; }
 
+// forward decls for not-yet-RE'd pointee types (stage-2 auto)
+class S_CombatActorInCombatAimListener;
+
 namespace wh::entitymodule {
 enum class E_HandSlot : int32_t;
 struct S_WeaponClass;
@@ -358,7 +361,7 @@ public:
     C_CombatActorVirtualWeapon*   m_pVirtualWeapon;    // +0x258  (0x20)   VERIFIED
     C_CombatModifierAim*          m_pModifierAim;      // +0x260  (0x20)   VERIFIED
     C_CombatModifierLookEnemy*    m_pModifierLookEnemy; // +0x268 (0x20)   VERIFIED
-    void*                         m_pActorRef0;        // +0x270  -> 8-byte heap cell holding C_CombatActor* back-ref (builder alloc(8); *cell=this)
+    C_CombatActor** m_pActorRef0; // +0x270  -> 8-byte heap cell holding C_CombatActor* back-ref (builder alloc(8); *cell=this)
 
     // ---- scalars + listeners (+0x278..+0x386) ----
     uint16_t m_flags278;                               // +0x278  (init 0)
@@ -388,9 +391,9 @@ public:
 
     // ---- subsystem region 2 (+0x388..+0x438) ----
     C_CombatRPG*                    m_pCombatRPG;       // +0x388  (0x60)  VERIFIED
-    void*                           m_pActorRef1;       // +0x390  -> 8-byte heap cell holding C_CombatActor* back-ref (builder alloc(8); *cell=this)
+    C_CombatActor** m_pActorRef1; // +0x390  -> 8-byte heap cell holding C_CombatActor* back-ref (builder alloc(8); *cell=this)
     C_CombatHumanPhysics*           m_pHumanPhysics;    // +0x398  (0x18)  VERIFIED
-    void*                           m_pStateListener;   // +0x3A0  -> heap 0x20 non-poly obj (ctor sub_1809179E4): {C_CombatActor* owner; ListNode* conn; qword; qword}; subscribes cb sub_180C5B160 to m_pState(+0x210) signal @+0x18
+    S_CombatActorInCombatAimListener* m_pInCombatAimListener; // +0x3A0  -> heap 0x20 non-poly obj (ctor sub_1809179E4): {C_CombatActor* owner; ListNode* conn; qword; qword}; subscribes cb sub_180C5B160 to m_pState(+0x210) signal @+0x18
     C_CombatActorActionManager*     m_pActionManager;   // +0x3A8  (0x70)  VERIFIED
     C_CombatComboManager*           m_pComboManager;    // +0x3B0  (0xF0)  VERIFIED
     C_CombatActorOpponentManager*   m_pOpponentManager; // +0x3B8  (0x40)  VERIFIED
@@ -410,7 +413,7 @@ public:
     C_CombatActorClenchedHand*      m_pClenchedHand;    // +0x428  (0x48)  VERIFIED (NEW in KCD2)
     C_CombatActorActivity*          m_pActivity;        // +0x430  (0x10)  VERIFIED (NEW in KCD2)
     void*                           m_field438;         // +0x438  ctor 0x1810F05CC zero-init; no writer in ctor/builder/dtor/reset; sits directly before m_lock (lock-guarded lazy ptr candidate, unconfirmed)
-    void*                           m_lock;             // +0x440  SRWLOCK.Ptr -- ctor 0x1810F05D3 InitializeSRWLock(&this+0x440); field IS the lock (one pointer-sized word), not a pointer to a lock
+    void* m_lock; // +0x440 SRWLOCK  SRWLOCK.Ptr -- ctor 0x1810F05D3 InitializeSRWLock(&this+0x440); field IS the lock (one pointer-sized word), not a pointer to a lock
 };
 static_assert(sizeof(C_CombatActor) == 0x448, "C_CombatActor must be 0x448");
 

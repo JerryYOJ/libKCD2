@@ -112,7 +112,7 @@ struct CStatObj : public Offsets::IStatObj,
     int32_t                    m_nSpines = 0;                  // +0x1D0
     uint32_t                   _pad1D4 = 0;                    // +0x1D4
     void*                      m_unk1D8 = nullptr;             // +0x1D8 foliage aux buffer
-    std::vector<uint16_t>      m_unk1E0;                       // +0x1E0 2-byte-element triple (vertex indices)
+    std::vector<uint16_t>      m_idxFoliage;                   // +0x1E0 foliage spine-group vertex runs (CopyFoliageData walks; filler is a non-virtual CGF builder)
     void*                      m_unk1F8 = nullptr;             // +0x1F8 async mesh source smart ptr (IRendermeshOwner slot 0; pointee NOT CMesh)
     std::vector<SSubObject>    m_subObjects;                   // +0x200 element 0xB0
     CStatObj*                  m_pClonedSourceObject = nullptr;// +0x218

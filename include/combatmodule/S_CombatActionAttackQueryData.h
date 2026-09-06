@@ -43,10 +43,10 @@ struct S_CombatActionAttackQueryData : S_CombatQueryData<S_CombatActionAttackQue
     int32_t   m_id48;                  // +0x48  ctor -1
     int32_t   m_id4C;                  // +0x4C  ctor -1
     uint8_t   m_flag50;                // +0x50  ctor 0
-    int32_t   m_field54;               // +0x54  filler 0x180687F17: = vfunc[+0x20] of (ctx+0x3B0)+0x10 (ctor leaves indeterminate)
+    int32_t m_comboDirtySlotCounter; // +0x54  filler 0x180687F17: = vfunc[+0x20] of (ctx+0x3B0)+0x10 (ctor leaves indeterminate)
     uint8_t   m_flag58;                // +0x58  ctor 0
     uint8_t   m_flag5C;                // +0x5C  ctor 0
-    int32_t   m_field60;               // +0x60  filler 0x180687ED6: = vfunc[+0xB0] of (opponent+0x1F8)+0x990 (opponent branch; ctor leaves indeterminate)
+    uint32_t m_opponentActorModelId; // +0x60  filler 0x180687ED6: = vfunc[+0xB0] of (opponent+0x1F8)+0x990 (opponent branch; ctor leaves indeterminate)
     int32_t   m_ids64[12];             // +0x64..+0x90  ctor all -1 (zone/sub-id key block; per-field roles UNVERIFIED)
     uint8_t   m_flag94;                // +0x94  ctor 0
     int32_t   m_field98;               // +0x98  filler 0x180687EFC / builder 0x18170D3ED: constant = 2 (enum candidate {2}); ctor 0

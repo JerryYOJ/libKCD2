@@ -5,7 +5,7 @@
 // Auxiliary current-hit context; canonical native type name remains open.
 struct SHitAuxContext {
     void* m_retainedObject;           // +0x00, retained through its virtual AddRef/Release surface
-    const void* m_pValueSource;       // +0x08, optional dword source
+    const std::int32_t* m_pValueSource; // +0x08, optional dword source
     std::uint64_t m_identity;         // +0x10, exact identity type OPEN
     std::int32_t m_unknown18;         // +0x18, default -1
     std::int32_t m_unknown1C;         // +0x1C, default -1

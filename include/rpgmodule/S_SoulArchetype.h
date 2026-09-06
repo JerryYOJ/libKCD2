@@ -17,25 +17,25 @@ struct S_SoulArchetype {
     virtual ~S_SoulArchetype() = 0;   // +0x00 vfptr (slot set NOT enumerated; abstract in this mirror)
 
     int32_t  m_id;          // +0x08  I_DynamicEnum::GetValue reads row+0x08
-    uint32_t _pad0C;        // +0x0C
+    std::uint8_t _pad0C[4]; // +0x0C
     CryStringT<char> m_name;  // +0x10  RTTR member_object_ptr CryStringT<char> (GetName returns its char*)
-    int32_t  m_field18;     // +0x18  ctor default -1 (index/id sentinel; loader copies DBData+0x10)
-    int32_t  m_field1C;     // +0x1C  ctor default 4 (small int/enum)
-    float    m_field20;     // +0x20  ctor default 1.0f (SSE-init lane0 @xmmword_18409EE30)
-    float    m_field24;     // +0x24  ctor default 0.0f (SSE block +0x20..+0x2F) [float inferred]
-    float    m_field28;     // +0x28  ctor default 0.0f (SSE block) [float inferred]
-    float    m_field2C;     // +0x2C  ctor default 0.0f (SSE block) [float inferred]
-    int32_t  m_field30;     // +0x30  ctor default 0 [int/float ambiguous]
-    float    m_field34;     // +0x34  ctor default 100.0f
-    float    m_field38;     // +0x38  ctor default 100.0f
-    uint8_t  m_field3C;     // +0x3C  1-byte field (bool candidate; loader copies DBData+0x34)
-    uint8_t  _pad3D[3];     // +0x3D  align pad
-    float    m_field40;     // +0x40  ctor fmaxf(0,x) clamp>=0; loader parses via sub_1823D9D34
-    int32_t  m_field44;     // +0x44  ctor default 0 [int/float ambiguous]
-    int32_t  m_field48;     // +0x48  ctor default 0 [int/float ambiguous]
-    int32_t  m_field4C;     // +0x4C  ctor default 0 [int/float ambiguous]
-    int32_t  m_field50;     // +0x50  ctor default 0 [int/float ambiguous]
-    uint8_t  _pad54[4];     // +0x54  tail pad to 0x58 (not copied by copy-ctor)
+    wh::entitymodule::E_Race::Type m_race; // +0x18  ctor default -1 (index/id sentinel; loader copies DBData+0x10)
+    std::int32_t m_genderId; // +0x1C  ctor default 4 (small int/enum)
+    float m_normalBodyWeight; // +0x20  ctor default 1.0f (SSE-init lane0 @xmmword_18409EE30)
+    float m_bodyBaseArmor; // +0x24  ctor default 0.0f (SSE block +0x20..+0x2F) [float inferred]
+    float m_bodyBaseVisibility; // +0x28  ctor default 0.0f (SSE block) [float inferred]
+    float m_bodyBaseConspicuousness; // +0x2C  ctor default 0.0f (SSE block) [float inferred]
+    float m_inventoryCapacityMultiplier; // +0x30  ctor default 0 [int/float ambiguous]
+    float m_baseStamina; // +0x34  ctor default 100.0f
+    float m_relativeVitalityToStamina; // +0x38  ctor default 100.0f
+    bool m_needsHomeLink; // +0x3C  1-byte field (bool candidate; loader copies DBData+0x34)
+    std::uint8_t _pad3D[3]; // +0x3D  align pad
+    float m_unarmedAttackBase; // +0x40  ctor fmaxf(0,x) clamp>=0; loader parses via sub_1823D9D34
+    float m_jumpCostModifier; // +0x44  ctor default 0 [int/float ambiguous]
+    float m_badassnessBias; // +0x48  ctor default 0 [int/float ambiguous]
+    float m_attackDistanceOptimal; // +0x4C  ctor default 0 [int/float ambiguous]
+    float m_attackDistanceMax; // +0x50  ctor default 0 [int/float ambiguous]
+    std::uint8_t _pad54[4]; // +0x54  tail pad to 0x58 (not copied by copy-ctor)
 };
 static_assert(sizeof(S_SoulArchetype) == 0x58, "S_SoulArchetype must be 0x58 (I_DynamicEnum stride 88)");
 

@@ -18,13 +18,13 @@ public:
     C_VClothElement();                                                   // 0x180E71D8C
     ~C_VClothElement() override;                                         // [0] 0x18295C580
     std::uint32_t GetElementType() const override;                       // [1] 0x181A724F0
-    void unk_03(void* target) const override;                            // [3] 0x180CBD9C0
-    bool unk_04() const override;                                       // [4] 0x1813C2BD8
-    CryStringT<char> unk_05() const override;                            // [5] 0x18295E63C
-    bool unk_17() const override;                                       // [17] 0x1813D3DB0
-    std::vector<CryStringT<char>> unk_20() const override;               // [20] 0x18295E2B8
-    void unk_21(const C_ElementBase* source) override;                   // [21] 0x181239828
-    bool unk_22(const C_ElementBase* other) const override;              // [22] 0x18119BA30
+    void ApplyToAttachment(IAttachment* target) const override; // [3] 0x180CBD9C0
+    bool IsComplete() const override; // [4] 0x1813C2BD8
+    CryStringT<char> GetMissingAttributes() const override; // [5] 0x18295E63C
+    bool HasModelAsset() const override; // [17] 0x1813D3DB0
+    std::vector<CryStringT<char>> GetAssetPaths() const override; // [20] 0x18295E2B8
+    void MergeFrom(const C_ElementBase* source) override; // [21] 0x181239828
+    bool IsEquivalentTo(const C_ElementBase* other) const override; // [22] 0x18119BA30
     RTTR_ENABLE(C_SkinElement)                                           // [25..27], vtable 0x183AC1920
 
     std::optional<CryStringT<char>> m_simBinding;                        // +0x38 RTTR "SimBinding"

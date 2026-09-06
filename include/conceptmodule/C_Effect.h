@@ -35,7 +35,7 @@ public:
 
     C_TypedPortRef<bool> m_isActive;   // +0x40  rttr "IsActive" input pin
     bool    m_lastActiveState;         // +0x80  edge-detect cache; cleared by [38]/[39]
-    uint8_t _pad81[7];                 // +0x81
+    uint8_t _pad81[7]; // +0x81
 };
 static_assert(sizeof(C_Effect) == 0x88, "conceptmodule::C_Effect must be 0x88 (leaf members start at +0x88)");
 

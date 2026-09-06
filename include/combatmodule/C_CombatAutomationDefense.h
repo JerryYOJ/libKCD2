@@ -35,7 +35,7 @@ public:
     // Drop the override; reactions revert to the RPG-computed weights. sub_18194C270(this, nullptr).
     void ClearReactionWeights();
 
-    uint64_t m_field30;                    // +0x30  (ctor 0; no reader in ANY Defense method -- reserved/unused)
+    uint8_t _pad30[8]; // +0x30  (ctor 0; no reader in ANY Defense method -- reserved/unused)
     S_ReactionWeights* m_pWeightOverride;  // +0x38  OWNED heap 20B; null = none (writer = SetReactionWeights sub_18194C270)
     uint64_t m_rngState;                   // +0x40  LCG state (reaction roll)
     bool     m_bUseBlockQueryModifier;     // +0x48  gates the extra weight modifier (sub_182766C10)

@@ -34,7 +34,7 @@ public:
     C_TypedPortRef<S_Trigger> m_onExec;  // +0x68  rttr "OnExec" Out trigger
     int32_t m_inputPortGroups;           // +0xA8  rttr "InputPortGroups" -- number of Select groups
     uint8_t _padAC[4];                   // +0xAC
-    std::vector<uint64_t> m_unkB0;       // +0xB0  ctor-zeroed, purpose unknown [U]
+    std::vector<CryStringT<char>> m_unkB0; // +0xB0  ctor-zeroed, purpose unknown [U]
     std::vector<rttr::type> m_valueTypes;  // +0xC8  rttr "ValueTypes" -- one value pin per entry per group
 };
 static_assert(sizeof(C_Select) == 0xE0, "C_Select must be 0xE0");

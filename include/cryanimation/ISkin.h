@@ -1,6 +1,13 @@
 #pragma once
 #include <cstdint>
 #include "../CryEngine/CryCommon/Cry_Math.h"
+#include "../CryEngine/CryCommon/CryArray.h"   // Array<T>
+
+// CryEngine 8-byte LOD pair filled by GetMeshLodInfo (CModelMesh+0x48/+0x4C)
+struct SMeshLodInfo {
+    float         fGeometricMean;   // +0x00
+    std::uint32_t nFaceCount;       // +0x04
+};
 
 struct ICrySizer;
 struct IMaterial;
@@ -16,8 +23,8 @@ struct ISkin {
     virtual IRenderMesh* GetIRenderMesh(std::uint32_t lod) const = 0;      // [3]
     virtual const char* GetModelFilePath() const = 0;             // [4]
     virtual IMaterial* GetIMaterial(std::uint32_t lod) const = 0; // [5]
-    virtual void unk_06(void* output) const = 0;                  // [6]
-    virtual bool unk_07(void* context) const = 0;                 // [7]
+    virtual std::uint32_t GetMeshLodInfo(Array<SMeshLodInfo> lods) const = 0; // [6]
+    virtual bool AreRenderMeshesReady(int* pKey) const = 0; // [7]
     virtual Vec3 GetRenderMeshOffset(std::uint32_t lod) const = 0; // [8]
     virtual std::uint32_t GetNumJoints() const = 0;               // [9]
     virtual std::uint32_t GetJointIDByCRC32(std::uint32_t crc32) const = 0; // [10]
