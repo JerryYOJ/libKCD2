@@ -101,9 +101,25 @@ struct IXmlNode {
     // [46] 0x18045840C -- first child with the given tag, NEW reference to *out (NULL *out
     // when absent).
     virtual IXmlNode** findChild(IXmlNode** out, const char* tag) const = 0;
-    virtual void _vf47() = 0;  // [47] 0x180459EDC
+    // [47] 0x180459EDC -- the PARENT node. MEASURED 2026-09-05: the only slot that touches +0x40,
+    // a load at byte 6 (it needs a null test -- a root's parent IS null). On a <Name> leaf +0x40
+    // pointed at an object whose first qword is the CXmlNode vtable, i.e. another node.
+    virtual void _vf47() = 0;  // [47] 0x180459EDC  getParent (not declared: return type is a
+                               //      hidden-pointer XmlNodeRef and no caller here needs it)
     virtual void _vf48() = 0;  // [48] 0x181A73BE0
-    virtual void _vf49() = 0;  // [49] 0x1819A2A90
+    // [49] 0x1819A2A90 -- the element's own TEXT. MEASURED IN GAME 2026-09-05: the trivial getter
+    // `mov rax,[rcx+0x48]; ret` of the content member, found by dumping the node's 0x58-byte header
+    // and scanning every vtable slot for one that reads that offset. Confirmed by READING rather
+    // than by elimination -- the <Name> leaf under
+    // /Root/GameProfileManager/GameProfiles/GameProfile returned "apolena_abandonedCampsEnviro".
+    //
+    // NEVER NULL: a node with no text carries the shared static empty string (0x183A3D1E0), the
+    // same convention [33] getAttr uses -- which is why this one CAN be a trivial getter while
+    // [47] getParent needs a branch.
+    //
+    // The header is 0x58, not the 0x48 the clone impl's allocation suggests: on every node the tag
+    // pointer is exactly node+0x58, where the inline string pool begins.
+    virtual const char* getContent() const = 0;
     virtual void _vf50() = 0;  // [50] 0x182488BA0
     // [51] 0x18045A3F4 (shared by both vtables) -- internal deep-clone taking the string-
     // intern-table context as arg (impl 0x18045A7A0: allocs 0x48, plants the CXmlNode
